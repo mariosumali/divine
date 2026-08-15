@@ -1,4 +1,4 @@
-export type SoundCue = 'enter' | 'tick' | 'shuffle' | 'deal' | 'reveal' | 'liquid' | 'crack' | 'resolve';
+export type SoundCue = 'enter' | 'tick' | 'shuffle' | 'deal' | 'peel' | 'reveal' | 'liquid' | 'crack' | 'resolve';
 
 let context: AudioContext | null = null;
 let enabled = false;
@@ -61,6 +61,7 @@ export function playSound(cue: SoundCue) {
   if (cue === 'tick') tone(ctx, 880, 0.07, 0.025);
   if (cue === 'shuffle') { noise(ctx, 0.34, 0.06, 1300); tone(ctx, 120, 0.28, 0.018); }
   if (cue === 'deal') { noise(ctx, 0.1, 0.045, 900); tone(ctx, 164, 0.12, 0.018); }
+  if (cue === 'peel') { noise(ctx, 0.24, 0.038, 1450); tone(ctx, 168, 0.2, 0.02); tone(ctx, 246, 0.16, 0.014, 0.07); }
   if (cue === 'reveal') { noise(ctx, 0.08, 0.025, 1800); tone(ctx, 523, 0.55, 0.04); tone(ctx, 784, 0.5, 0.018, 0.05); }
   if (cue === 'liquid') { noise(ctx, 0.55, 0.05, 280); tone(ctx, 95, 0.5, 0.04); }
   if (cue === 'crack') { noise(ctx, 0.18, 0.09, 2400); tone(ctx, 196, 0.22, 0.035, 0.1); }

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, animate as motionAnimate, motion, useMotionValue, useTransform } from 'motion/react';
 import { ArrowLeft, ArrowRight, BookMarked, Check, ChevronLeft, Heart, RotateCcw, Share2, Sparkles } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -181,22 +181,50 @@ function Progress({ stage }: { stage: Stage }) {
   );
 }
 
-function CardFace({ draw, revealed, index, compact, disabled, onReveal }: { draw: DrawnCard; revealed: boolean; index: number; compact: boolean; disabled: boolean; onReveal: () => void }) {
+function CardFace({ draw, revealed, index, compact, disabled, onPeelStart, onReveal }: { draw: DrawnCard; revealed: boolean; index: number; compact: boolean; disabled: boolean; onPeelStart: () => void; onReveal: () => void }) {
+  const peel = useMotionValue(revealed ? 1 : 0);
+  const coverRotation = useTransform(peel, [0, 1], [0, -178]);
+  const edgeOpacity = useTransform(peel, [0, 0.18, 0.82, 1], [0, 1, 0.65, 0]);
+  const suppressClick = useRef(false);
+
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      peel.set(revealed ? 1 : 0);
+      return;
+    }
+    motionAnimate(peel, revealed ? 1 : 0, { type: 'spring', stiffness: 155, damping: 21, mass: 0.82 });
+  }, [peel, revealed]);
+
+  const completePeel = () => {
+    if (revealed || disabled) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) peel.set(1);
+    else motionAnimate(peel, 1, { type: 'spring', stiffness: 138, damping: 19, mass: 0.86 });
+    onReveal();
+  };
+  const peelProgress = (x: number, y: number) => Math.min(0.96, Math.max(0, (-x + Math.max(0, y) * 0.28) / (compact ? 76 : 125)));
+
   return (
     <motion.button
       type="button"
       className={`reading-card ${revealed ? 'is-revealed' : ''} ${compact ? 'is-compact' : ''}`}
-      onClick={onReveal}
+      onClick={() => {
+        if (suppressClick.current) return;
+        completePeel();
+      }}
+      onKeyDown={(event) => {
+        if (event.key !== 'Enter' && event.key !== ' ') return;
+        event.preventDefault();
+        completePeel();
+      }}
       disabled={disabled}
-      aria-label={revealed ? `${draw.position}: ${draw.card.name}${draw.reversed ? ', reversed' : ''}` : `Reveal card ${index + 1}, ${draw.position}`}
+      aria-label={revealed ? `${draw.position}: ${draw.card.name}${draw.reversed ? ', reversed' : ''}` : `Peel card ${index + 1}, ${draw.position}`}
       initial={{ opacity: 0, x: (index % 2 ? 1 : -1) * (compact ? 55 : 120), y: compact ? -55 : -160, rotateY: 82, rotateZ: index % 2 ? 10 : -10, scale: 0.72 }}
       animate={{ opacity: 1, x: 0, y: 0, rotateY: 0, rotateZ: 0, scale: 1 }}
       transition={{ type: 'spring', stiffness: 125, damping: 18, mass: 0.9, delay: Math.min(index * (compact ? 0.025 : 0.065), 0.9) }}
       whileHover={{ y: compact ? -2 : -7 }}
     >
-      <span className="card-inner">
-        <span className="card-back" aria-hidden="true"><i /><b>DIVINE</b><i /></span>
-        <span className={`card-front ${draw.reversed ? 'is-reversed' : ''}`}>
+      <span className="card-scene">
+        <span className={`card-front ${draw.reversed ? 'is-reversed' : ''}`} aria-hidden={revealed ? undefined : true}>
           <small>{draw.position}</small>
           {draw.card.image ? (
             <span className="card-art"><Image src={draw.card.image} alt="" width={520} height={820} sizes="(max-width: 720px) 25vw, 18vw" /></span>
@@ -204,6 +232,29 @@ function CardFace({ draw, revealed, index, compact, disabled, onReveal }: { draw
           <span>{draw.card.name}</span>
           {draw.reversed && <em>Reversed</em>}
         </span>
+        <motion.span className="card-peel" style={{ rotateY: coverRotation }} aria-hidden="true">
+          <span className="card-back"><i /><b>DIVINE</b><i /></span>
+          <motion.span className="peel-edge" style={{ opacity: edgeOpacity }} />
+        </motion.span>
+        {!revealed && !disabled && (
+          <motion.span
+            className="peel-corner"
+            aria-hidden="true"
+            onPanStart={() => onPeelStart()}
+            onPan={(_, info) => {
+              peel.set(peelProgress(info.offset.x, info.offset.y));
+            }}
+            onPanEnd={(_, info) => {
+              const progress = peelProgress(info.offset.x, info.offset.y);
+              if (progress > 0.03) {
+                suppressClick.current = true;
+                window.setTimeout(() => { suppressClick.current = false; }, 0);
+              }
+              if (progress >= 0.22) completePeel();
+              else motionAnimate(peel, 0, { type: 'spring', stiffness: 225, damping: 22 });
+            }}
+          ><i /></motion.span>
+        )}
       </span>
     </motion.button>
   );
@@ -340,6 +391,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
         : deckPhase === 'fanned'
           ? 'The field is open.'
           : 'The cards have chosen their path.';
+  const introductionLine = `${system.introduction.split('.')[0]}.`;
 
   const beginRecord = () => {
     setRecordId(createId());
@@ -573,7 +625,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
   }
 
   return (
-    <main className="reading-shell">
+    <main className={`reading-shell stage-${stage}`}>
       <header className="reading-titlebar">
         <Link href="/#systems" className="back-link"><ArrowLeft /> All systems</Link>
         <span>{system.index} / 08</span>
@@ -588,8 +640,8 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
             <div className="stage-copy">
               <p className="eyebrow">{system.eyebrow}</p>
               <h1>{system.name}</h1>
-              <p className="lede">{system.introduction}</p>
-              <Button className="primary-action" onClick={() => move('frame')}>Begin the reading <ArrowRight /></Button>
+              <p className="lede">{introductionLine}</p>
+              <Button className="primary-action" onClick={() => move('frame')}>Enter <ArrowRight /></Button>
             </div>
             <div className="stage-art"><Image src={system.cover} alt="" width={1122} height={1402} priority /><span>{system.index}</span></div>
           </motion.section>
@@ -598,7 +650,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
         {stage === 'frame' && (
           <motion.section className="reading-stage centered-stage" key="frame" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
             <p className="eyebrow">Frame the question</p>
-            <h2>What are you ready to know?</h2>
+            <h2>Name it.</h2>
             <label className="field-label" htmlFor="question">Your question <span>Optional · kept on this device</span></label>
             <Input id="question" className="question-input" maxLength={180} value={question} onChange={(event) => setQuestion(event.target.value)} onKeyDown={(event) => { if (event.key === 'Enter' && !event.nativeEvent.isComposing) continueFromFrame(); }} placeholder={system.kind === 'ball' ? 'Ask a yes or no question…' : 'Write the question without explaining it…'} />
             <fieldset className="focus-field">
@@ -611,11 +663,11 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
 
         {stage === 'method' && (
           <motion.section className="reading-stage method-stage" key="method" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <header><p className="eyebrow">Choose the depth</p><h2>How much should the pattern reveal?</h2></header>
+            <header><p className="eyebrow">The spread</p><h2>Choose a shape.</h2></header>
             <div className="spread-list">
               {system.spreads.map((item, index) => (
                 <button type="button" key={item.id} className={spread?.id === item.id ? 'selected' : ''} aria-pressed={spread?.id === item.id} onClick={() => { setSpread(item); cue('tick'); }}>
-                  <span>0{index + 1}</span><strong>{item.name}</strong><p>{item.description}</p><em>{item.positions.length} {item.positions.length === 1 ? 'card' : 'cards'}</em>
+                  <span>0{index + 1}</span><strong>{item.name}</strong><em>{item.positions.length} {item.positions.length === 1 ? 'card' : 'cards'}</em>
                 </button>
               ))}
             </div>
@@ -626,7 +678,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
 
         {stage === 'ritual' && system.kind === 'cards' && (
           <motion.section className="reading-stage ritual-stage" key="ritual-cards" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <p className="eyebrow">The ritual</p><h2>{deckHeadline}</h2><p>{system.instruction}</p>
+            <p className="eyebrow">The ritual</p><h2>{deckHeadline}</h2>
             <div className={`deck-ritual-surface phase-${deckPhase}`}>
               {deckPhase === 'fanned' || deckPhase === 'dealing' ? (
                 <div className={`card-fan phase-${deckPhase}`} aria-hidden="true">
@@ -665,7 +717,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
 
         {stage === 'ritual' && system.kind === 'ball' && (
           <motion.section className="reading-stage ritual-stage" key="ritual-ball" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <p className="eyebrow">The ritual</p><h2>Disturb the certainty.</h2><p>{system.instruction}</p>
+            <p className="eyebrow">The ritual</p><h2>Disturb certainty.</h2>
             <motion.button drag dragConstraints={{ left: -90, right: 90, top: -40, bottom: 40 }} dragElastic={0.25} onDragEnd={performObjectRitual} onClick={performObjectRitual} disabled={objectAnimating} className={`eight-ball ${objectAnimating ? 'is-resolving' : ''}`} aria-label="Drag or tap to shake and reveal the answer" animate={objectAnimating ? { x: [0, -25, 23, -19, 16, -12, 8, -4, 0], y: [0, 4, -3, 3, -2, 2, -1, 0], rotate: [0, -10, 11, -9, 8, -6, 4, -2, 0], scale: [1, 1.035, .99, 1.025, 1] } : { x: 0, y: 0, rotate: 0, scale: 1 }} transition={{ duration: 1.2, ease: [0.22, 0.8, 0.2, 1] }} whileDrag={{ rotate: [0, -8, 9, -6, 0] }}><span>8</span><i aria-hidden="true">···</i></motion.button>
             <Button className="primary-action" onClick={performObjectRitual} disabled={objectAnimating}>{objectAnimating ? 'The answer is rising…' : 'Shake for the answer'}</Button>
             {motionSupported && <Button className="quiet-action" onClick={() => void enableDeviceMotion()} disabled={objectAnimating}>{motionEnabled ? 'Shake your device…' : 'Use device motion'}</Button>}
@@ -674,7 +726,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
 
         {stage === 'ritual' && system.kind === 'cookie' && (
           <motion.section className="reading-stage ritual-stage" key="ritual-cookie" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <p className="eyebrow">The ritual</p><h2>{cookieChoice === null ? 'Choose without studying.' : 'Break the quiet open.'}</h2><p>{system.instruction}</p>
+            <p className="eyebrow">The ritual</p><h2>{cookieChoice === null ? 'Choose blindly.' : 'Break it open.'}</h2>
             {cookieChoice === null ? (
               <fieldset className="cookie-choices"><legend className="sr-only">Choose one of three fortune cookies</legend>
                 {[0, 1, 2].map((choice) => <motion.button type="button" className="cookie-choice" key={choice} onClick={() => { setCookieChoice(choice); cue('tick'); }} whileHover={{ y: -12, rotate: choice === 0 ? -4 : choice === 2 ? 4 : 0 }} whileTap={{ scale: .96 }} aria-label={`Choose fortune cookie ${choice + 1}`}><span className="cookie-choice-index">0{choice + 1}</span><Image src="/art/fortune-cookie-object-v2.webp" alt="" width={550} height={367} sizes="(max-width: 720px) 30vw, 220px" /></motion.button>)}
@@ -699,9 +751,10 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
 
         {stage === 'reveal' && spread && (
           <motion.section className="reading-stage reveal-stage" key="reveal" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <header><p className="eyebrow">{spread.name}</p><h2>{revealed.size === draws.length ? 'The pattern is visible.' : 'Turn each card when you are ready.'}</h2></header>
+            <header><p className="eyebrow">{spread.name}</p><h2>{revealed.size === draws.length ? 'The pattern is open.' : 'Peel the cards.'}</h2></header>
+            {revealed.size < draws.length && <p className="peel-instruction">Drag a corner—or tap.</p>}
             <div className={`cards-layout spread-${spread.layout} count-${draws.length} ${draws.length > 10 ? 'many-cards' : ''}`}>
-              {draws.map((draw, index) => <CardFace key={`${draw.card.id}-${index}`} draw={draw} index={index} compact={draws.length > 10} disabled={isRevealingAll} revealed={revealed.has(index)} onReveal={() => revealCard(index)} />)}
+              {draws.map((draw, index) => <CardFace key={`${draw.card.id}-${index}`} draw={draw} index={index} compact={draws.length > 10} disabled={isRevealingAll} revealed={revealed.has(index)} onPeelStart={() => cue('peel')} onReveal={() => revealCard(index)} />)}
             </div>
             <div className="reveal-actions">
               {revealed.size < draws.length && <Button className="quiet-action" onClick={revealAll} disabled={isRevealingAll}>{isRevealingAll ? `Revealing ${revealed.size} / ${draws.length}…` : 'Reveal all'}</Button>}
@@ -712,24 +765,25 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
 
         {stage === 'result' && interpretation && record && (
           <motion.section className="reading-stage result-stage" key="result" initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }}>
-            <header className="result-hero"><p className="eyebrow">The reading</p><h1>{interpretation.headline}</h1><p>{interpretation.overview}</p></header>
-            {system.kind !== 'cards' && <div className={`object-result ${system.kind}`}><span>{objectMessage}</span>{luckyNumbers.length > 0 && <small>Lucky numbers · {luckyNumbers.join(' · ')}</small>}</div>}
-            {interpretation.reflectionPrompt && <p className="fortune-reflection"><small>Reflection</small>{interpretation.reflectionPrompt}</p>}
-            {draws.length > 0 && <div className={`result-cards ${draws.length > 10 ? 'dense' : ''}`}>{draws.map((draw, index) => <div key={`${draw.card.id}-${index}`}><span>{draw.position}</span><strong>{draw.card.name}</strong><p>{interpretation.positions[index]?.text}</p></div>)}</div>}
-            <blockquote>{interpretation.synthesis}</blockquote>
-            <p className="closing-reading">{interpretation.closing}</p>
-            <div className="journal-compose">
-              <label htmlFor="note">Your reflection</label>
-              <Textarea id="note" value={note} onChange={(event) => { setNote(event.target.value); setSaved(false); }} placeholder="Write what you noticed…" />
-              <label className="privacy-check"><input type="checkbox" checked={includeQuestion} onChange={(event) => setIncludeQuestion(event.target.checked)} /><span>Include my question in shared images</span></label>
-              {storageError && <output className="error-note">The private journal is unavailable. You can still download this reading.</output>}
-              {shareStatus === 'error' && <output className="error-note">The share image could not be created. Your reading is unchanged.</output>}
-              <div className="result-actions">
-                <Button className={`quiet-action ${favorite ? 'is-active' : ''}`} onClick={() => { setFavorite((value) => !value); setSaved(false); }}><Heart fill={favorite ? 'currentColor' : 'none'} /> Favorite</Button>
-                <Button className="quiet-action" onClick={() => void share()} disabled={shareStatus === 'working'}><Share2 /> {shareStatus === 'working' ? 'Preparing image…' : shareStatus === 'downloaded' ? 'Image downloaded' : shareStatus === 'shared' ? 'Shared' : 'Share / download'}</Button>
-                <Button className="primary-action" onClick={() => void save()}>{saved ? <Check /> : <BookMarked />}{saved ? 'Saved' : 'Save to journal'}</Button>
+            <header className="result-hero"><p className="eyebrow">The reading</p><h1>{interpretation.headline}</h1>{interpretation.reflectionPrompt && <p>{interpretation.reflectionPrompt}</p>}</header>
+            {system.kind !== 'cards' && luckyNumbers.length > 0 && <div className={`object-result ${system.kind}`}><small>Lucky numbers · {luckyNumbers.join(' · ')}</small></div>}
+            {draws.length > 0 && <div className={`result-cards ${draws.length > 10 ? 'dense' : ''}`}>{draws.map((draw, index) => <details key={`${draw.card.id}-${index}`}><summary><span>{draw.position}</span><strong>{draw.card.name}</strong></summary><p>{interpretation.positions[index]?.text}</p></details>)}</div>}
+            <blockquote>{interpretation.synthesis.split(/(?<=[.!?])\s+/)[0]}</blockquote>
+            <details className="reflection-drawer">
+              <summary>Keep this reading <ArrowRight /></summary>
+              <div className="journal-compose">
+                <label htmlFor="note">Your reflection</label>
+                <Textarea id="note" value={note} onChange={(event) => { setNote(event.target.value); setSaved(false); }} placeholder="What stayed with you?" />
+                <label className="privacy-check"><input type="checkbox" checked={includeQuestion} onChange={(event) => setIncludeQuestion(event.target.checked)} /><span>Include my question in shared images</span></label>
+                {storageError && <output className="error-note">The private journal is unavailable. You can still download this reading.</output>}
+                {shareStatus === 'error' && <output className="error-note">The share image could not be created. Your reading is unchanged.</output>}
+                <div className="result-actions">
+                  <Button className={`quiet-action ${favorite ? 'is-active' : ''}`} onClick={() => { setFavorite((value) => !value); setSaved(false); }}><Heart fill={favorite ? 'currentColor' : 'none'} /> Favorite</Button>
+                  <Button className="quiet-action" onClick={() => void share()} disabled={shareStatus === 'working'}><Share2 /> {shareStatus === 'working' ? 'Preparing image…' : shareStatus === 'downloaded' ? 'Image downloaded' : shareStatus === 'shared' ? 'Shared' : 'Share / download'}</Button>
+                  <Button className="primary-action" onClick={() => void save()}>{saved ? <Check /> : <BookMarked />}{saved ? 'Saved' : 'Save to journal'}</Button>
+                </div>
               </div>
-            </div>
+            </details>
             <div className="reading-again"><Button className="quiet-action" onClick={restart}><RotateCcw /> Begin another reading</Button><Link href="/#systems">Choose another system <ArrowRight /></Link></div>
           </motion.section>
         )}
