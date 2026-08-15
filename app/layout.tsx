@@ -9,7 +9,7 @@ const bodoni = Bodoni_Moda({ variable: '--font-bodoni', subsets: ['latin'] });
 export const metadata: Metadata = {
   title: 'DIVINE — Eight instruments for the unknown',
   description: 'Private, authored readings across eight divination systems.',
-  metadataBase: new URL('https://divine.openai.site'),
+  metadataBase: new URL('https://divine-readings.grassy-peony-5538.chatgpt.site'),
   openGraph: {
     title: 'DIVINE',
     description: 'Eight instruments for the unknown.',
