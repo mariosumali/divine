@@ -2,14 +2,14 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, animate as motionAnimate, motion, useMotionValue, useTransform } from 'motion/react';
-import { ArrowLeft, ArrowRight, BookMarked, Check, ChevronLeft, Heart, RotateCcw, Share2, Sparkles } from 'lucide-react';
+import { ArrowLeft, ArrowRight, BookMarked, Check, ChevronLeft, Heart, RotateCcw, Share2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useExperience } from '@/app/providers';
-import { drawBallAnswer, drawCards, drawFortune, interpretReading, objectInterpretation } from '@/lib/divine/reading';
+import { OBJECT_RITUAL_STEPS, drawBallAnswer, drawCards, drawFortune, interpretReading, nextObjectRitualStep, objectInterpretation } from '@/lib/divine/reading';
 import { composeShare } from '@/lib/divine/share';
 import { saveReading } from '@/lib/divine/storage';
 import type { DrawnCard, Focus, InterpretationBlock, ReadingRecord, SpreadDefinition, SystemDefinition } from '@/lib/divine/types';
@@ -19,7 +19,7 @@ type ShareStatus = 'idle' | 'working' | 'shared' | 'downloaded' | 'cancelled' | 
 type DeckPhase = 'stacked' | 'shuffling' | 'cut' | 'fanned' | 'dealing';
 
 interface StoredReadingSession {
-  version: 1;
+  version: 1 | 2;
   system: string;
   stage: Stage;
   question: string;
@@ -37,6 +37,7 @@ interface StoredReadingSession {
   recordId: string;
   createdAt: string;
   cookieChoice: number | null;
+  objectStep?: number;
 }
 const focuses: Array<{ value: Focus; label: string }> = [
   { value: 'general', label: 'General' }, { value: 'love', label: 'Love' }, { value: 'work', label: 'Work' }, { value: 'growth', label: 'Growth' },
@@ -183,6 +184,8 @@ function Progress({ stage }: { stage: Stage }) {
 
 function CardFace({ draw, revealed, index, compact, disabled, onPeelStart, onReveal }: { draw: DrawnCard; revealed: boolean; index: number; compact: boolean; disabled: boolean; onPeelStart: () => void; onReveal: () => void }) {
   const peel = useMotionValue(revealed ? 1 : 0);
+  const tiltX = useMotionValue(0);
+  const tiltY = useMotionValue(0);
   const coverRotation = useTransform(peel, [0, 1], [0, -178]);
   const edgeOpacity = useTransform(peel, [0, 0.18, 0.82, 1], [0, 1, 0.65, 0]);
   const suppressClick = useRef(false);
@@ -202,6 +205,10 @@ function CardFace({ draw, revealed, index, compact, disabled, onPeelStart, onRev
     onReveal();
   };
   const peelProgress = (x: number, y: number) => Math.min(0.96, Math.max(0, (-x + Math.max(0, y) * 0.28) / (compact ? 76 : 125)));
+  const settleTilt = () => {
+    motionAnimate(tiltX, 0, { type: 'spring', stiffness: 180, damping: 20 });
+    motionAnimate(tiltY, 0, { type: 'spring', stiffness: 180, damping: 20 });
+  };
 
   return (
     <motion.button
@@ -217,9 +224,26 @@ function CardFace({ draw, revealed, index, compact, disabled, onPeelStart, onRev
         completePeel();
       }}
       disabled={disabled}
+      drag={revealed && !disabled}
+      dragConstraints={{ left: compact ? -12 : -32, right: compact ? 12 : 32, top: compact ? -10 : -24, bottom: compact ? 10 : 24 }}
+      dragElastic={0.12}
+      dragMomentum={false}
+      style={{ rotateX: tiltX, rotateY: tiltY }}
+      onPointerMove={(event) => {
+        if (event.pointerType === 'touch') return;
+        const bounds = event.currentTarget.getBoundingClientRect();
+        tiltY.set(((event.clientX - bounds.left) / bounds.width - 0.5) * 18);
+        tiltX.set(-((event.clientY - bounds.top) / bounds.height - 0.5) * 14);
+      }}
+      onPointerLeave={settleTilt}
+      onDrag={(_, info) => {
+        tiltY.set(Math.max(-18, Math.min(18, info.offset.x * 0.18)));
+        tiltX.set(Math.max(-14, Math.min(14, -info.offset.y * 0.18)));
+      }}
+      onDragEnd={settleTilt}
       aria-label={revealed ? `${draw.position}: ${draw.card.name}${draw.reversed ? ', reversed' : ''}` : `Peel card ${index + 1}, ${draw.position}`}
-      initial={{ opacity: 0, x: (index % 2 ? 1 : -1) * (compact ? 55 : 120), y: compact ? -55 : -160, rotateY: 82, rotateZ: index % 2 ? 10 : -10, scale: 0.72 }}
-      animate={{ opacity: 1, x: 0, y: 0, rotateY: 0, rotateZ: 0, scale: 1 }}
+      initial={{ opacity: 0, x: (index % 2 ? 1 : -1) * (compact ? 55 : 120), y: compact ? -55 : -160, rotateZ: index % 2 ? 10 : -10, scale: 0.72 }}
+      animate={{ opacity: 1, x: 0, y: 0, rotateZ: 0, scale: 1 }}
       transition={{ type: 'spring', stiffness: 125, damping: 18, mass: 0.9, delay: Math.min(index * (compact ? 0.025 : 0.065), 0.9) }}
       whileHover={{ y: compact ? -2 : -7 }}
     >
@@ -284,6 +308,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
   const [motionEnabled, setMotionEnabled] = useState(false);
   const [announcement, setAnnouncement] = useState('');
   const [cookieChoice, setCookieChoice] = useState<number | null>(null);
+  const [objectStep, setObjectStep] = useState(0);
   const [objectAnimating, setObjectAnimating] = useState(false);
   const [isRevealingAll, setIsRevealingAll] = useState(false);
   const [deckPhase, setDeckPhase] = useState<DeckPhase>('stacked');
@@ -291,9 +316,12 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
   const [sessionReady, setSessionReady] = useState(false);
   const motionHandler = useRef<((event: DeviceMotionEvent) => void) | null>(null);
   const ritualLock = useRef(false);
+  const completionQueued = useRef(false);
   const revealTimers = useRef<number[]>([]);
   const objectTimer = useRef<number | null>(null);
   const deckTimer = useRef<number | null>(null);
+  const fieldTiltX = useMotionValue(-3);
+  const fieldTiltY = useMotionValue(5);
   const sessionKey = `divine-session:${system.slug}`;
 
   useEffect(() => {
@@ -317,7 +345,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
     }
     queueMicrotask(() => {
       if (cancelled) return;
-      if (restored?.version === 1 && restored.system === system.slug) {
+      if ((restored?.version === 1 || restored?.version === 2) && restored.system === system.slug) {
         const restoredSpread = system.spreads.find((item) => item.id === restored.spreadId) ?? system.spreads[0] ?? null;
         const restoredDraws = (Array.isArray(restored.draws) ? restored.draws : []).flatMap((draw) => {
           const card = system.cards.find((item) => item.id === draw.cardId);
@@ -325,7 +353,8 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
         });
         const candidateStage = readingStages.includes(restored.stage) ? restored.stage : 'intro';
         const canRestoreStage = candidateStage !== 'reveal' || restoredDraws.length > 0;
-        const nextStage = candidateStage === 'result' && !restored.interpretation ? 'frame' : canRestoreStage ? candidateStage : 'method';
+        const resolvedObject = candidateStage === 'ritual' && system.kind !== 'cards' && restored.objectStep === OBJECT_RITUAL_STEPS && restored.interpretation;
+        const nextStage = resolvedObject ? 'result' : candidateStage === 'result' && !restored.interpretation ? 'frame' : canRestoreStage ? candidateStage : 'method';
         setStage(nextStage);
         setQuestion(typeof restored.question === 'string' ? restored.question : '');
         setFocus(focuses.some((item) => item.value === restored.focus) ? restored.focus : 'general');
@@ -343,6 +372,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
         setRecordId(typeof restored.recordId === 'string' ? restored.recordId : createId());
         setCreatedAt(typeof restored.createdAt === 'string' ? restored.createdAt : new Date().toISOString());
         setCookieChoice(restored.cookieChoice === 0 || restored.cookieChoice === 1 || restored.cookieChoice === 2 ? restored.cookieChoice : null);
+        setObjectStep(typeof restored.objectStep === 'number' ? Math.max(0, Math.min(OBJECT_RITUAL_STEPS, restored.objectStep)) : 0);
         ritualLock.current = nextStage === 'result';
         if (nextStage !== 'intro') setAnnouncement('Your unfinished reading has been restored.');
       }
@@ -354,7 +384,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
   useEffect(() => {
     if (!sessionReady) return;
     const session: StoredReadingSession = {
-      version: 1,
+      version: 2,
       system: system.slug,
       stage,
       question,
@@ -372,9 +402,10 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
       recordId,
       createdAt,
       cookieChoice,
+      objectStep,
     };
     try { sessionStorage.setItem(sessionKey, JSON.stringify(session)); } catch { /* Session recovery is an enhancement. */ }
-  }, [sessionReady, sessionKey, system.slug, stage, question, focus, spread, reversals, shuffled, draws, revealed, interpretation, objectMessage, luckyNumbers, note, favorite, recordId, createdAt, cookieChoice]);
+  }, [sessionReady, sessionKey, system.slug, stage, question, focus, spread, reversals, shuffled, draws, revealed, interpretation, objectMessage, luckyNumbers, note, favorite, recordId, createdAt, cookieChoice, objectStep]);
 
   const record = useMemo<ReadingRecord | null>(() => interpretation ? {
     id: recordId, system: system.slug, systemName: system.name, spreadId: spread?.id ?? system.kind,
@@ -382,18 +413,26 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
     focus, question: question.trim() || undefined, draws, interpretation, note, favorite,
   } : null, [interpretation, system, spread, focus, question, draws, note, favorite, recordId, createdAt]);
 
-  const deckHeadline = deckPhase === 'stacked'
-    ? 'Cut through the noise.'
-    : deckPhase === 'shuffling'
-      ? 'Release the fixed order.'
-      : deckPhase === 'cut'
-        ? 'Divide the known from the unknown.'
-        : deckPhase === 'fanned'
-          ? 'The field is open.'
-          : 'The cards have chosen their path.';
   const beginRecord = () => {
     setRecordId(createId());
     setCreatedAt(new Date().toISOString());
+  };
+
+  const tiltField = (event: React.PointerEvent<HTMLElement>) => {
+    if (event.pointerType === 'touch') return;
+    const bounds = event.currentTarget.getBoundingClientRect();
+    fieldTiltY.set(((event.clientX - bounds.left) / bounds.width - 0.5) * 24);
+    fieldTiltX.set(-((event.clientY - bounds.top) / bounds.height - 0.5) * 18);
+  };
+
+  const settleField = () => {
+    motionAnimate(fieldTiltX, -3, { type: 'spring', stiffness: 165, damping: 20 });
+    motionAnimate(fieldTiltY, 5, { type: 'spring', stiffness: 165, damping: 20 });
+  };
+
+  const dragField = (_: MouseEvent | TouchEvent | PointerEvent, info: { offset: { x: number; y: number } }) => {
+    fieldTiltY.set(Math.max(-24, Math.min(24, info.offset.x * 0.14)));
+    fieldTiltX.set(Math.max(-18, Math.min(18, -info.offset.y * 0.14)));
   };
 
   const clearRevealTimers = () => {
@@ -407,6 +446,11 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
     deckTimer.current = null;
   };
 
+  const clearObjectTimer = () => {
+    if (objectTimer.current !== null) window.clearTimeout(objectTimer.current);
+    objectTimer.current = null;
+  };
+
   const move = (next: Stage) => {
     cue('tick');
     setStage(next);
@@ -418,6 +462,9 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
   const goBack = () => {
     clearRevealTimers();
     clearDeckTimer();
+    clearObjectTimer();
+    ritualLock.current = false;
+    completionQueued.current = false;
     if (motionHandler.current) {
       window.removeEventListener('devicemotion', motionHandler.current);
       motionHandler.current = null;
@@ -430,6 +477,9 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
         setShuffled(false);
         setDeckPhase('stacked');
       }
+      setCookieChoice(null);
+      setObjectStep(0);
+      setObjectAnimating(false);
       move(system.kind === 'cards' ? 'method' : 'frame');
     }
     if (stage === 'reveal') {
@@ -437,6 +487,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
       setRevealed(new Set());
       setShuffled(false);
       setDeckPhase('stacked');
+      completionQueued.current = false;
       move('method');
     }
   };
@@ -463,9 +514,17 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
     setAnnouncement('The deck is fanned. The field is open.');
   };
 
+  const advanceDeckRitual = () => {
+    if (deckPhase === 'stacked') shuffleDeck();
+    else if (deckPhase === 'cut') fanDeck();
+    else if (deckPhase === 'fanned') deal();
+  };
+
   const deal = () => {
     if (!spread || deckPhase !== 'fanned') return;
     const next = drawCards(system, spread, reversals);
+    completionQueued.current = false;
+    ritualLock.current = false;
     setDraws(next);
     setRevealed(new Set());
     cue('deal');
@@ -480,11 +539,35 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
     else deckTimer.current = window.setTimeout(reveal, 720);
   };
 
+  const finishCards = () => {
+    if (!spread || ritualLock.current) return;
+    ritualLock.current = true;
+    beginRecord();
+    const result = interpretReading(system, spread, draws, focus);
+    setInterpretation(result);
+    cue('resolve');
+    move('result');
+  };
+
+  const queueCardFinish = (delay = 1500) => {
+    if (completionQueued.current) return;
+    completionQueued.current = true;
+    const timer = window.setTimeout(() => {
+      finishCards();
+      revealTimers.current = [];
+    }, delay);
+    revealTimers.current.push(timer);
+  };
+
   const revealCard = (index: number) => {
-    if (revealed.has(index)) return;
-    cue('reveal');
-    setRevealed((current) => new Set(current).add(index));
-    setAnnouncement(`${draws[index].position}: ${draws[index].card.name}${draws[index].reversed ? ', reversed' : ''}.`);
+    setRevealed((current) => {
+      if (current.has(index)) return current;
+      cue('reveal');
+      const next = new Set(current).add(index);
+      setAnnouncement(`${draws[index].position}: ${draws[index].card.name}${draws[index].reversed ? ', reversed' : ''}.`);
+      if (next.size === draws.length) queueCardFinish();
+      return next;
+    });
   };
 
   const revealAll = () => {
@@ -493,6 +576,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       setRevealed(new Set(draws.map((_, index) => index)));
       setAnnouncement(`All ${draws.length} cards revealed.`);
+      queueCardFinish(80);
       return;
     }
     setIsRevealingAll(true);
@@ -504,14 +588,14 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
         if (index === draws.length - 1) {
           setIsRevealingAll(false);
           setAnnouncement(`All ${draws.length} cards revealed.`);
-          revealTimers.current = [];
+          queueCardFinish();
         }
       }, index * interval);
       revealTimers.current.push(timer);
     });
   };
 
-  const performObjectRitual = () => {
+  const resolveObjectRitual = () => {
     if (system.kind === 'cookie' && cookieChoice === null) return;
     if (ritualLock.current) return;
     ritualLock.current = true;
@@ -537,6 +621,26 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
     }, system.kind === 'cookie' ? 1900 : 1450);
   };
 
+  const advanceObjectRitual = () => {
+    if (system.kind === 'cookie' && cookieChoice === null) return;
+    if (objectAnimating || ritualLock.current) return;
+    const next = nextObjectRitualStep(objectStep);
+    setObjectStep(next);
+    setObjectAnimating(true);
+    if (next === OBJECT_RITUAL_STEPS) {
+      resolveObjectRitual();
+      return;
+    }
+    cue(system.kind === 'ball' ? 'liquid' : 'crack');
+    setAnnouncement(system.kind === 'ball'
+      ? next === 1 ? 'The answer is moving. Shake again.' : 'The window is clouding. One final shake.'
+      : next === 1 ? 'A hairline crack appears. Press again.' : 'The shell gives way. One final press.');
+    objectTimer.current = window.setTimeout(() => {
+      setObjectAnimating(false);
+      objectTimer.current = null;
+    }, 560);
+  };
+
   const enableDeviceMotion = async () => {
     type PermissionMotionEvent = typeof DeviceMotionEvent & { requestPermission?: () => Promise<'granted' | 'denied'> };
     const motionEvent = window.DeviceMotionEvent as PermissionMotionEvent;
@@ -553,22 +657,13 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
       window.removeEventListener('devicemotion', handler);
       motionHandler.current = null;
       setMotionEnabled(false);
-      performObjectRitual();
+      advanceObjectRitual();
     };
     motionHandler.current = handler;
     window.addEventListener('devicemotion', handler, { passive: true });
     setMotionEnabled(true);
     setAnnouncement('Motion enabled. Shake your device for the answer.');
     cue('tick');
-  };
-
-  const finishCards = () => {
-    if (!spread) return;
-    beginRecord();
-    const result = interpretReading(system, spread, draws, focus);
-    setInterpretation(result);
-    cue('resolve');
-    move('result');
   };
 
   const save = async () => {
@@ -599,7 +694,9 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
   const restart = () => {
     clearRevealTimers();
     clearDeckTimer();
+    clearObjectTimer();
     ritualLock.current = false;
+    completionQueued.current = false;
     setStage('frame');
     setShuffled(false);
     setDeckPhase('stacked');
@@ -613,6 +710,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
     setSaved(false);
     setAnnouncement('');
     setCookieChoice(null);
+    setObjectStep(0);
     setObjectAnimating(false);
     setShareStatus('idle');
     cue('tick');
@@ -624,12 +722,17 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
 
   return (
     <main className={`reading-shell stage-${stage}`}>
-      <header className="reading-titlebar">
-        <Link href="/#systems" className="back-link"><ArrowLeft /> All systems</Link>
-        <span>{system.shortName}</span>
-      </header>
-      <Progress stage={stage} />
-      {stage !== 'intro' && stage !== 'result' && <button type="button" className="stage-back" onClick={goBack}><ChevronLeft /> Back</button>}
+      {stage !== 'ritual' && stage !== 'reveal' && (
+        <>
+          <header className="reading-titlebar">
+            <Link href="/#systems" className="back-link"><ArrowLeft /> All systems</Link>
+            <span>{system.shortName}</span>
+          </header>
+          <Progress stage={stage} />
+          {stage !== 'intro' && stage !== 'result' && <button type="button" className="stage-back" onClick={goBack}><ChevronLeft /> Back</button>}
+        </>
+      )}
+      {(stage === 'ritual' || stage === 'reveal') && <button type="button" className="field-exit sr-only" onClick={goBack}><ChevronLeft /> Leave the ritual</button>}
 
       <AnimatePresence mode="wait">
         {stage === 'intro' && (
@@ -674,10 +777,26 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
 
         {stage === 'ritual' && system.kind === 'cards' && (
           <motion.section className="reading-stage ritual-stage" key="ritual-cards" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <p className="ritual-status">{deckHeadline}</p>
             <div className={`deck-ritual-surface phase-${deckPhase}`}>
               {deckPhase === 'fanned' || deckPhase === 'dealing' ? (
-                <div className={`card-fan phase-${deckPhase}`} aria-hidden="true">
+                <motion.button
+                  type="button"
+                  className={`card-fan phase-${deckPhase}`}
+                  onClick={advanceDeckRitual}
+                  onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); advanceDeckRitual(); } }}
+                  disabled={deckPhase === 'dealing'}
+                  drag={deckPhase === 'fanned'}
+                  dragConstraints={{ left: -70, right: 70, top: -35, bottom: 35 }}
+                  dragElastic={0.14}
+                  dragMomentum={false}
+                  style={{ rotateX: fieldTiltX, rotateY: fieldTiltY }}
+                  onPointerMove={tiltField}
+                  onPointerLeave={settleField}
+                  onDrag={dragField}
+                  onDragEnd={settleField}
+                  whileTap={{ scale: .985 }}
+                  aria-label={deckPhase === 'fanned' ? `Rotate the card fan or press to deal ${spread?.positions.length} cards` : 'The cards are being dealt'}
+                >
                   <i className="fan-orbit" />
                   {fanCards.map((index) => {
                     const middle = (fanCards.length - 1) / 2;
@@ -693,67 +812,100 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
                       />
                     );
                   })}
-                </div>
+                </motion.button>
               ) : (
-                <div className={`deck-object phase-${deckPhase}`}>
-                  {deckLayers.map((layer) => <span key={layer} style={{ '--layer': layer, '--direction': layer % 2 ? 1 : -1 } as React.CSSProperties} />)}
-                  <motion.button type="button" drag={deckPhase !== 'shuffling'} dragConstraints={{ left: -80, right: 80, top: -20, bottom: 20 }} dragElastic={0.18} onDragEnd={shuffleDeck} onClick={shuffleDeck} disabled={deckPhase === 'shuffling'} whileTap={{ scale: 0.97 }} aria-label="Drag or tap to shuffle the deck"><b>DIVINE</b><i>{system.shortName}</i></motion.button>
-                </div>
+                <motion.button
+                  type="button"
+                  className={`deck-object phase-${deckPhase}`}
+                  onClick={advanceDeckRitual}
+                  onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); advanceDeckRitual(); } }}
+                  disabled={deckPhase === 'shuffling'}
+                  drag={deckPhase !== 'shuffling'}
+                  dragConstraints={{ left: -70, right: 70, top: -45, bottom: 45 }}
+                  dragElastic={0.14}
+                  dragMomentum={false}
+                  style={{ rotateX: fieldTiltX, rotateY: fieldTiltY }}
+                  onPointerMove={tiltField}
+                  onPointerLeave={settleField}
+                  onDrag={dragField}
+                  onDragEnd={settleField}
+                  whileTap={{ scale: 0.97 }}
+                  aria-label={deckPhase === 'cut' ? 'Rotate the deck or press to cut and open the fan' : deckPhase === 'shuffling' ? 'The deck is shuffling' : 'Rotate the deck or press to shuffle'}
+                >
+                  {deckLayers.map((layer) => <span className="deck-layer" aria-hidden="true" key={layer} style={{ '--layer': layer, '--direction': layer % 2 ? 1 : -1 } as React.CSSProperties} />)}
+                  <span className="deck-face"><b>DIVINE</b><i>{system.shortName}</i></span>
+                </motion.button>
               )}
-            </div>
-            <div className="ritual-actions">
-              {deckPhase === 'stacked' && <Button className="quiet-action" onClick={shuffleDeck}>Shuffle the deck</Button>}
-              {deckPhase === 'shuffling' && <Button className="quiet-action" disabled>Cards in motion…</Button>}
-              {deckPhase === 'cut' && <Button className="primary-action" onClick={fanDeck}>Cut &amp; fan the deck <Sparkles /></Button>}
-              {deckPhase === 'fanned' && <Button className="primary-action" onClick={deal}>Deal {spread?.positions.length} {spread?.positions.length === 1 ? 'card' : 'cards'} <Sparkles /></Button>}
-              {deckPhase === 'dealing' && <Button className="quiet-action" disabled>Dealing the pattern…</Button>}
             </div>
           </motion.section>
         )}
 
         {stage === 'ritual' && system.kind === 'ball' && (
           <motion.section className="reading-stage ritual-stage" key="ritual-ball" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <p className="ritual-status">Disturb certainty.</p>
-            <motion.button drag dragConstraints={{ left: -90, right: 90, top: -40, bottom: 40 }} dragElastic={0.25} onDragEnd={performObjectRitual} onClick={performObjectRitual} disabled={objectAnimating} className={`eight-ball ${objectAnimating ? 'is-resolving' : ''}`} aria-label="Drag or tap to shake and reveal the answer" animate={objectAnimating ? { x: [0, -25, 23, -19, 16, -12, 8, -4, 0], y: [0, 4, -3, 3, -2, 2, -1, 0], rotate: [0, -10, 11, -9, 8, -6, 4, -2, 0], scale: [1, 1.035, .99, 1.025, 1] } : { x: 0, y: 0, rotate: 0, scale: 1 }} transition={{ duration: 1.2, ease: [0.22, 0.8, 0.2, 1] }} whileDrag={{ rotate: [0, -8, 9, -6, 0] }}><span>8</span><i aria-hidden="true">···</i></motion.button>
-            <Button className="primary-action" onClick={performObjectRitual} disabled={objectAnimating}>{objectAnimating ? 'The answer is rising…' : 'Shake for the answer'}</Button>
-            {motionSupported && <Button className="quiet-action" onClick={() => void enableDeviceMotion()} disabled={objectAnimating}>{motionEnabled ? 'Shake your device…' : 'Use device motion'}</Button>}
+            <motion.button
+              drag
+              dragConstraints={{ left: -110, right: 110, top: -70, bottom: 70 }}
+              dragElastic={0.16}
+              dragMomentum={false}
+              style={{ rotateX: fieldTiltX, rotateY: fieldTiltY }}
+              onPointerMove={tiltField}
+              onPointerLeave={settleField}
+              onDrag={dragField}
+              onDragEnd={settleField}
+              onClick={advanceObjectRitual}
+              onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); advanceObjectRitual(); } }}
+              disabled={objectAnimating}
+              className={`eight-ball object-step-${objectStep} ${objectAnimating ? 'is-moving' : ''}`}
+              aria-label={objectStep === 0 ? 'Rotate the ball or press for the first shake' : objectStep === 1 ? 'Rotate the ball or press for the second shake' : 'Rotate the ball or press for the final shake'}
+              animate={objectAnimating ? { x: [0, -28, 25, -21, 17, -12, 8, -4, 0], y: [0, 5, -4, 3, -3, 2, -1, 0], rotateZ: [0, -9, 10, -8, 7, -5, 3, -1, 0], scale: [1, 1.035, .99, 1.025, 1] } : { x: 0, y: 0, rotateZ: 0, scale: 1 }}
+              transition={{ duration: objectStep === OBJECT_RITUAL_STEPS ? 1.25 : .54, ease: [0.22, 0.8, 0.2, 1] }}
+              whileDrag={{ scale: 1.035 }}
+            ><span className="ball-mark">8</span><i className="ball-window" aria-hidden="true">{objectStep >= OBJECT_RITUAL_STEPS ? objectMessage : '···'}</i></motion.button>
+            {motionSupported && <button type="button" className="field-shortcut sr-only" onClick={() => void enableDeviceMotion()} disabled={objectAnimating}>{motionEnabled ? 'Device motion enabled' : 'Use device motion'}</button>}
           </motion.section>
         )}
 
         {stage === 'ritual' && system.kind === 'cookie' && (
           <motion.section className="reading-stage ritual-stage" key="ritual-cookie" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <p className="ritual-status">{cookieChoice === null ? 'Choose blindly.' : 'Break it open.'}</p>
             {cookieChoice === null ? (
               <fieldset className="cookie-choices"><legend className="sr-only">Choose one of three fortune cookies</legend>
-                {[0, 1, 2].map((choice) => <motion.button type="button" className="cookie-choice" key={choice} onClick={() => { setCookieChoice(choice); cue('tick'); }} whileHover={{ y: -12, rotate: choice === 0 ? -4 : choice === 2 ? 4 : 0 }} whileTap={{ scale: .96 }} aria-label={`Choose fortune cookie ${choice + 1}`}><span className="cookie-choice-index">0{choice + 1}</span><Image src="/art/fortune-cookie-object-v2.webp" alt="" width={550} height={367} sizes="(max-width: 720px) 30vw, 220px" /></motion.button>)}
+                {[0, 1, 2].map((choice) => <motion.button type="button" className="cookie-choice" key={choice} onClick={() => { setCookieChoice(choice); setObjectStep(0); settleField(); cue('tick'); }} whileHover={{ y: -16, rotateX: -7, rotateY: choice === 0 ? -12 : choice === 2 ? 12 : 0, rotateZ: choice === 0 ? -4 : choice === 2 ? 4 : 0 }} whileTap={{ scale: .95 }} aria-label={`Choose fortune cookie ${choice + 1}`}><Image src="/art/fortune-cookie-object-v2.webp" alt="" width={550} height={367} sizes="(max-width: 720px) 30vw, 220px" /></motion.button>)}
               </fieldset>
             ) : (
-              <>
-                <motion.button drag="x" dragConstraints={{ left: -45, right: 45 }} dragElastic={0.25} onDragEnd={performObjectRitual} onClick={performObjectRitual} disabled={objectAnimating} className={`cookie-object ${objectAnimating ? 'is-cracking' : ''}`} aria-label="Drag or tap to crack the fortune cookie">
+                <motion.button
+                  drag
+                  dragConstraints={{ left: -100, right: 100, top: -60, bottom: 60 }}
+                  dragElastic={0.16}
+                  dragMomentum={false}
+                  style={{ rotateX: fieldTiltX, rotateY: fieldTiltY }}
+                  onPointerMove={tiltField}
+                  onPointerLeave={settleField}
+                  onDrag={dragField}
+                  onDragEnd={settleField}
+                  onClick={advanceObjectRitual}
+                  onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); advanceObjectRitual(); } }}
+                  disabled={objectAnimating}
+                  className={`cookie-object object-step-${objectStep} ${objectStep === OBJECT_RITUAL_STEPS ? 'is-cracking' : ''} ${objectAnimating ? 'is-moving' : ''}`}
+                  aria-label={objectStep === 0 ? 'Rotate the cookie or press to begin cracking it' : objectStep === 1 ? 'Rotate the cookie or press again to widen the crack' : 'Rotate the cookie or press a third time to break it open'}
+                  animate={objectAnimating && objectStep < OBJECT_RITUAL_STEPS ? { rotateZ: [0, -1.7, 1.3, -.8, 0], scale: [1, .985, 1.008, 1] } : { rotateZ: 0, scale: 1 }}
+                  transition={{ duration: .52, ease: [0.22, 0.8, 0.2, 1] }}
+                  whileDrag={{ scale: 1.025 }}
+                >
                   <span className="cookie-aura" aria-hidden="true" />
                   <span className="cookie-half cookie-half-left" aria-hidden="true"><Image src="/art/fortune-cookie-object-v2.webp" alt="" width={1100} height={733} priority /></span>
                   <span className="cookie-half cookie-half-right" aria-hidden="true"><Image src="/art/fortune-cookie-object-v2.webp" alt="" width={1100} height={733} priority /></span>
                   <span className="cookie-paper" aria-hidden="true"><em>{objectMessage}</em></span>
                   <span className="cookie-crumbs" aria-hidden="true">{cookieCrumbs.map((crumb, index) => <b key={index} style={{ '--crumb-x': `${crumb.x}px`, '--crumb-y': `${crumb.y}px`, '--crumb-r': `${crumb.r}deg`, '--crumb-index': index } as React.CSSProperties} />)}</span>
                 </motion.button>
-                <div className="ritual-actions object-actions">
-                  <Button className="quiet-action" onClick={() => setCookieChoice(null)} disabled={objectAnimating}>Choose another</Button>
-                  <Button className="primary-action" onClick={performObjectRitual} disabled={objectAnimating}>{objectAnimating ? 'The paper is opening…' : 'Crack the cookie'}</Button>
-                </div>
-              </>
             )}
           </motion.section>
         )}
 
         {stage === 'reveal' && spread && (
           <motion.section className="reading-stage reveal-stage" key="reveal" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <p className="ritual-status">{spread.name} · {revealed.size === draws.length ? 'Open' : 'Peel to reveal'}</p>
+            {revealed.size < draws.length && <button type="button" className="field-shortcut sr-only" onClick={revealAll} disabled={isRevealingAll}>{isRevealingAll ? `Revealing ${revealed.size} of ${draws.length} cards` : 'Reveal every card'}</button>}
             <div className={`cards-layout spread-${spread.layout} count-${draws.length} ${draws.length > 10 ? 'many-cards' : ''}`}>
               {draws.map((draw, index) => <CardFace key={`${draw.card.id}-${index}`} draw={draw} index={index} compact={draws.length > 10} disabled={isRevealingAll} revealed={revealed.has(index)} onPeelStart={() => cue('peel')} onReveal={() => revealCard(index)} />)}
-            </div>
-            <div className="reveal-actions">
-              {revealed.size < draws.length && <Button className="quiet-action" onClick={revealAll} disabled={isRevealingAll}>{isRevealingAll ? `Revealing ${revealed.size} / ${draws.length}…` : 'Reveal all'}</Button>}
-              {revealed.size === draws.length && <motion.div className="pattern-ready" initial={{ opacity: 0, scaleX: .75 }} animate={{ opacity: 1, scaleX: 1 }} transition={{ duration: .7, ease: [0.16, 1, 0.3, 1] }}><span aria-hidden="true" /><Button className="primary-action" onClick={finishCards}>Read the pattern <ArrowRight /></Button><span aria-hidden="true" /></motion.div>}
             </div>
           </motion.section>
         )}

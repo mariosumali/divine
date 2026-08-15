@@ -1,6 +1,12 @@
 import { BALL_ANSWERS, FORTUNES, FORTUNE_PROMPTS } from './systems';
 import type { CardDefinition, DrawnCard, Focus, InterpretationBlock, SpreadDefinition, SystemDefinition } from './types';
 
+export const OBJECT_RITUAL_STEPS = 3;
+
+export function nextObjectRitualStep(current: number): number {
+  return Math.min(OBJECT_RITUAL_STEPS, Math.max(0, Math.floor(current)) + 1);
+}
+
 export function secureIndex(max: number): number {
   if (max <= 0) return 0;
   const ceiling = Math.floor(0x1_0000_0000 / max) * max;

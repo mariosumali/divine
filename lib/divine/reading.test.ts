@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { drawCards, drawFortune, interpretReading, lenormandPairText, secureShuffle } from './reading';
+import { OBJECT_RITUAL_STEPS, drawCards, drawFortune, interpretReading, lenormandPairText, nextObjectRitualStep, secureShuffle } from './reading';
 import { FORTUNES, SYSTEM_MAP, SYSTEMS } from './systems';
 
 describe('DIVINE content libraries', () => {
@@ -73,5 +73,12 @@ describe('reading engine', () => {
     expect(result.numbers).toHaveLength(6);
     expect(new Set(result.numbers).size).toBe(6);
     expect(result.numbers.every((number) => number >= 1 && number <= 49)).toBe(true);
+  });
+
+  it('requires three deliberate object interactions and never advances beyond resolution', () => {
+    expect(nextObjectRitualStep(0)).toBe(1);
+    expect(nextObjectRitualStep(1)).toBe(2);
+    expect(nextObjectRitualStep(2)).toBe(OBJECT_RITUAL_STEPS);
+    expect(nextObjectRitualStep(OBJECT_RITUAL_STEPS)).toBe(OBJECT_RITUAL_STEPS);
   });
 });
