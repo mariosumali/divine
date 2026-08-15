@@ -38,6 +38,10 @@ export function JournalClient() {
     try { await saveReading(record); } catch { setError(true); }
   };
 
+  const updateLocal = (record: ReadingRecord) => {
+    setRecords((items) => items.map((item) => item.id === record.id ? record : item));
+  };
+
   const remove = async (id: string) => {
     try { await deleteReading(id); setRecords((items) => items.filter((item) => item.id !== id)); } catch { setError(true); }
   };
@@ -57,10 +61,10 @@ export function JournalClient() {
       {error && <output className="journal-warning">The private journal is unavailable. Readings can still be completed and downloaded.</output>}
 
       <div className="journal-tools">
-        <label htmlFor="journal-search"><Search /><span className="sr-only">Search readings</span><Input id="journal-search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search the journal" /></label>
+        <label htmlFor="journal-search"><Search /><span className="sr-only">Search readings</span><Input id="journal-search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search the journal" autoComplete="off" /></label>
         <div className="filter-row">
-          <button type="button" className={filter === 'all' ? 'active' : ''} onClick={() => setFilter('all')}>All</button>
-          {systems.map((system) => <button type="button" key={system} className={filter === system ? 'active' : ''} onClick={() => setFilter(system)}>{records.find((record) => record.system === system)?.systemName}</button>)}
+          <button type="button" className={filter === 'all' ? 'active' : ''} aria-pressed={filter === 'all'} onClick={() => setFilter('all')}>All</button>
+          {systems.map((system) => <button type="button" key={system} className={filter === system ? 'active' : ''} aria-pressed={filter === system} onClick={() => setFilter(system)}>{records.find((record) => record.system === system)?.systemName}</button>)}
         </div>
       </div>
 
@@ -80,10 +84,16 @@ export function JournalClient() {
                 {record.question && <blockquote>“{record.question}”</blockquote>}
                 <p>{record.interpretation.overview}</p>
                 <div className="journal-draws">{record.interpretation.positions.map((position, itemIndex) => <div key={`${position.card}-${itemIndex}`}><span>{position.label}</span><strong>{position.card}</strong><p>{position.text}</p></div>)}</div>
-                <label htmlFor={`note-${record.id}`}>Reflection<Textarea id={`note-${record.id}`} value={record.note} onChange={(event) => void update({ ...record, note: event.target.value })} /></label>
+                <label htmlFor={`note-${record.id}`}>Reflection<Textarea id={`note-${record.id}`} value={record.note} onChange={(event) => updateLocal({ ...record, note: event.target.value })} onBlur={(event) => void update({ ...record, note: event.currentTarget.value })} /></label>
                 <div className="journal-actions">
                   <Button className="quiet-action" onClick={() => void update({ ...record, favorite: !record.favorite })}><Heart fill={record.favorite ? 'currentColor' : 'none'} /> {record.favorite ? 'Favorited' : 'Favorite'}</Button>
-                  <Button className="quiet-action" onClick={() => void remove(record.id)}><Trash2 /> Delete</Button>
+                  <AlertDialog>
+                    <AlertDialogTrigger render={<Button className="quiet-action" />}><Trash2 /> Delete</AlertDialogTrigger>
+                    <AlertDialogContent className="divine-dialog">
+                      <AlertDialogHeader><AlertDialogTitle>Delete this reading?</AlertDialogTitle><AlertDialogDescription>The reading, its private question, and your reflection will be permanently removed from this browser.</AlertDialogDescription></AlertDialogHeader>
+                      <AlertDialogFooter><AlertDialogCancel>Keep reading</AlertDialogCancel><AlertDialogAction onClick={() => void remove(record.id)}>Delete reading</AlertDialogAction></AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </div>
               </div>}
             </motion.article>

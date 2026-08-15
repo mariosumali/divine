@@ -1,4 +1,10 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
+
+export const metadata: Metadata = {
+  title: 'Method and privacy — DIVINE',
+  description: 'How DIVINE approaches randomness, authored interpretation, privacy, and tradition.',
+};
 
 export default function AboutPage() {
   return (

@@ -44,6 +44,16 @@ describe('reading engine', () => {
     expect(drawCards(system, spread, false).map((draw) => draw.card.domain)).toEqual(['sign', 'planet', 'house']);
   });
 
+  it('never duplicates a Zodiac anchor in the five-card pattern', () => {
+    const system = SYSTEM_MAP.zodiac;
+    const spread = system.spreads.find((item) => item.id === 'celestial-pattern')!;
+    for (let iteration = 0; iteration < 250; iteration += 1) {
+      const draws = drawCards(system, spread, false);
+      expect(new Set(draws.map((draw) => draw.card.id)).size).toBe(5);
+      expect(draws.slice(0, 3).map((draw) => draw.card.domain)).toEqual(['sign', 'planet', 'house']);
+    }
+  });
+
   it('applies curated Lenormand relationships and house context', () => {
     const heart = SYSTEM_MAP.lenormand.cards.find((card) => card.name === 'Heart')!;
     const ring = SYSTEM_MAP.lenormand.cards.find((card) => card.name === 'Ring')!;
@@ -59,6 +69,7 @@ describe('reading engine', () => {
   it('produces unique lucky numbers within the expected range', () => {
     const result = drawFortune();
     expect(FORTUNES).toContain(result.fortune);
+    expect(result.reflectionPrompt.length).toBeGreaterThan(20);
     expect(result.numbers).toHaveLength(6);
     expect(new Set(result.numbers).size).toBe(6);
     expect(result.numbers.every((number) => number >= 1 && number <= 49)).toBe(true);

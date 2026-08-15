@@ -42,17 +42,21 @@ function noise(ctx: AudioContext, duration: number, gainValue: number, frequency
 
 export async function setSoundEnabled(value: boolean) {
   enabled = value;
-  if (value) {
-    const ctx = audio();
-    if (ctx?.state === 'suspended') await ctx.resume();
+  if (value && context?.state === 'suspended') {
+    try { await context.resume(); } catch { /* The next user gesture will unlock audio. */ }
   } else if (context?.state === 'running') {
-    await context.suspend();
+    try { await context.suspend(); } catch { /* Audio may already be closing. */ }
   }
 }
 
 export function playSound(cue: SoundCue) {
   const ctx = enabled ? audio() : null;
-  if (!ctx || ctx.state !== 'running') return;
+  if (!ctx) return;
+  if (ctx.state === 'suspended') {
+    void ctx.resume().then(() => playSound(cue)).catch(() => undefined);
+    return;
+  }
+  if (ctx.state !== 'running') return;
   if (cue === 'enter') { tone(ctx, 82, 1.2, 0.055); tone(ctx, 246, 1.1, 0.025, 0.08); }
   if (cue === 'tick') tone(ctx, 880, 0.07, 0.025);
   if (cue === 'shuffle') { noise(ctx, 0.34, 0.06, 1300); tone(ctx, 120, 0.28, 0.018); }

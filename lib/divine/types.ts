@@ -65,6 +65,7 @@ export interface InterpretationBlock {
   positions: Array<{ label: string; card: string; text: string }>;
   synthesis: string;
   closing: string;
+  reflectionPrompt?: string;
 }
 
 export interface ReadingRecord {

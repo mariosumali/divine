@@ -289,6 +289,21 @@ const fortuneClosings = [
 
 export const FORTUNES = fortuneOpenings.flatMap((opening) => fortuneClosings.map((closing) => `${opening} ${closing}`));
 
+export const FORTUNE_PROMPTS = [
+  'What answer have you mistaken for a delay?',
+  'Which invitation deserves a clean yes or no?',
+  'Who becomes an ally when you stop performing certainty?',
+  'What small fact changes the whole pattern?',
+  'Where would courage be quieter—and more useful?',
+  'What ending have you already survived in private?',
+  'What can be completed before the day closes?',
+  'How has the familiar road become unfamiliar?',
+  'Whose recognition would make the risk feel real?',
+  'Which boundary would return your energy immediately?',
+  'What message are you finally ready to answer?',
+  'What private practice is already becoming visible?',
+];
+
 export function isSystemSlug(value: string): value is SystemSlug {
   return value in SYSTEM_MAP;
 }

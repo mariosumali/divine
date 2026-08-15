@@ -1,4 +1,4 @@
-import { BALL_ANSWERS, FORTUNES } from './systems';
+import { BALL_ANSWERS, FORTUNES, FORTUNE_PROMPTS } from './systems';
 import type { CardDefinition, DrawnCard, Focus, InterpretationBlock, SpreadDefinition, SystemDefinition } from './types';
 
 export function secureIndex(max: number): number {
@@ -29,12 +29,13 @@ function zodiacDraws(system: SystemDefinition, spread: SpreadDefinition): CardDe
     const sign = system.cards.filter((card) => card.domain === 'sign');
     const planet = system.cards.filter((card) => card.domain === 'planet');
     const house = system.cards.filter((card) => card.domain === 'house');
-    return [
+    const anchors = [
       sign[secureIndex(sign.length)],
       planet[secureIndex(planet.length)],
       house[secureIndex(house.length)],
-      ...secureShuffle(system.cards).filter((card, index, all) => all.findIndex((item) => item.id === card.id) === index).slice(0, 2),
     ];
+    const anchorIds = new Set(anchors.map((card) => card.id));
+    return [...anchors, ...secureShuffle(system.cards.filter((card) => !anchorIds.has(card.id))).slice(0, 2)];
   }
   return [system.cards[secureIndex(system.cards.length)]];
 }
@@ -91,7 +92,14 @@ export function interpretReading(system: SystemDefinition, spread: SpreadDefinit
   const positions = draws.map((draw, index) => {
     let text = cardText(draw, focus);
     if (system.slug === 'lenormand') {
-      const neighbors = [draws[index - 1], draws[index + 1]].filter(Boolean);
+      const neighborIndexes = spread.id === 'grand-tableau'
+        ? [index - 8, index - 1, index + 1, index + 8].filter((neighborIndex) => {
+            if (neighborIndex < 0 || neighborIndex >= draws.length) return false;
+            if (neighborIndex === index - 1 || neighborIndex === index + 1) return Math.floor(neighborIndex / 8) === Math.floor(index / 8);
+            return true;
+          })
+        : [index - 1, index + 1].filter((neighborIndex) => neighborIndex >= 0 && neighborIndex < draws.length);
+      const neighbors = neighborIndexes.map((neighborIndex) => draws[neighborIndex]);
       const relationship = neighbors.map((neighbor) => lenormandPairText(draw.card, neighbor.card)).join('; ');
       const house = spread.id === 'grand-tableau' ? spread.positions[index].replace('House of ', '') : null;
       text += `${house ? ` In the house of ${house}, ${draw.card.name} places ${draw.card.subject} inside that domain.` : ''}${relationship ? ` Nearest neighbors: ${relationship}.` : ''} Timing: ${draw.card.timing}.`;
@@ -125,17 +133,23 @@ export function drawBallAnswer(): string {
   return BALL_ANSWERS[secureIndex(BALL_ANSWERS.length)];
 }
 
-export function drawFortune(): { fortune: string; numbers: number[] } {
+export function drawFortune(): { fortune: string; reflectionPrompt: string; numbers: number[] } {
+  const fortuneIndex = secureIndex(FORTUNES.length);
   const pool = secureShuffle(Array.from({ length: 49 }, (_, index) => index + 1));
-  return { fortune: FORTUNES[secureIndex(FORTUNES.length)], numbers: pool.slice(0, 6).sort((a, b) => a - b) };
+  return {
+    fortune: FORTUNES[fortuneIndex],
+    reflectionPrompt: FORTUNE_PROMPTS[Math.floor(fortuneIndex / FORTUNE_PROMPTS.length)],
+    numbers: pool.slice(0, 6).sort((a, b) => a - b),
+  };
 }
 
-export function objectInterpretation(system: SystemDefinition, message: string, focus: Focus): InterpretationBlock {
+export function objectInterpretation(system: SystemDefinition, message: string, focus: Focus, reflectionPrompt?: string): InterpretationBlock {
   return {
     headline: message,
     overview: `${focusLenses[focus]}, chance has answered without qualification. Notice whether relief or resistance arrived first; that reaction is part of the message.`,
     positions: [{ label: system.kind === 'ball' ? 'The answer' : 'The fortune', card: system.name, text: message }],
     synthesis: 'The object has done its work. What remains is the decision you were hoping it would make for you.',
     closing: 'Keep the sentence if it sharpens your direction. Leave it if it only deepens the fog.',
+    reflectionPrompt,
   };
 }
