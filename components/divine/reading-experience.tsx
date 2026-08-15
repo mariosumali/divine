@@ -391,8 +391,6 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
         : deckPhase === 'fanned'
           ? 'The field is open.'
           : 'The cards have chosen their path.';
-  const introductionLine = `${system.introduction.split('.')[0]}.`;
-
   const beginRecord = () => {
     setRecordId(createId());
     setCreatedAt(new Date().toISOString());
@@ -628,8 +626,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
     <main className={`reading-shell stage-${stage}`}>
       <header className="reading-titlebar">
         <Link href="/#systems" className="back-link"><ArrowLeft /> All systems</Link>
-        <span>{system.index} / 08</span>
-        <span>{system.countLabel}</span>
+        <span>{system.shortName}</span>
       </header>
       <Progress stage={stage} />
       {stage !== 'intro' && stage !== 'result' && <button type="button" className="stage-back" onClick={goBack}><ChevronLeft /> Back</button>}
@@ -637,24 +634,23 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
       <AnimatePresence mode="wait">
         {stage === 'intro' && (
           <motion.section className="reading-stage intro-stage" key="intro" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, y: -20 }}>
+            <span className="stage-index" aria-hidden="true">{system.index}</span>
             <div className="stage-copy">
               <p className="eyebrow">{system.eyebrow}</p>
               <h1>{system.name}</h1>
-              <p className="lede">{introductionLine}</p>
-              <Button className="primary-action" onClick={() => move('frame')}>Enter <ArrowRight /></Button>
+              <Button className="primary-action" onClick={() => move('frame')}>Begin <ArrowRight /></Button>
             </div>
-            <div className="stage-art"><Image src={system.cover} alt="" width={1122} height={1402} priority /><span>{system.index}</span></div>
           </motion.section>
         )}
 
         {stage === 'frame' && (
           <motion.section className="reading-stage centered-stage" key="frame" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
-            <p className="eyebrow">Frame the question</p>
-            <h2>Name it.</h2>
-            <label className="field-label" htmlFor="question">Your question <span>Optional · kept on this device</span></label>
+            <p className="eyebrow">Focus</p>
+            <h2>Ask.</h2>
+            <label className="field-label" htmlFor="question">Question <span>Optional · private</span></label>
             <Input id="question" className="question-input" maxLength={180} value={question} onChange={(event) => setQuestion(event.target.value)} onKeyDown={(event) => { if (event.key === 'Enter' && !event.nativeEvent.isComposing) continueFromFrame(); }} placeholder={system.kind === 'ball' ? 'Ask a yes or no question…' : 'Write the question without explaining it…'} />
             <fieldset className="focus-field">
-              <legend>Choose a focus</legend>
+              <legend>Lens</legend>
               <div>{focuses.map((item) => <label key={item.value} className={focus === item.value ? 'selected' : ''}><input type="radio" name="focus" value={item.value} checked={focus === item.value} onChange={() => { setFocus(item.value); cue('tick'); }} /><span>{item.label}</span></label>)}</div>
             </fieldset>
             <Button className="primary-action" onClick={continueFromFrame}>Continue <ArrowRight /></Button>
@@ -663,7 +659,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
 
         {stage === 'method' && (
           <motion.section className="reading-stage method-stage" key="method" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <header><p className="eyebrow">The spread</p><h2>Choose a shape.</h2></header>
+            <header><p className="eyebrow">Spread</p><h2>Choose.</h2></header>
             <div className="spread-list">
               {system.spreads.map((item, index) => (
                 <button type="button" key={item.id} className={spread?.id === item.id ? 'selected' : ''} aria-pressed={spread?.id === item.id} onClick={() => { setSpread(item); cue('tick'); }}>
@@ -678,7 +674,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
 
         {stage === 'ritual' && system.kind === 'cards' && (
           <motion.section className="reading-stage ritual-stage" key="ritual-cards" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <p className="eyebrow">The ritual</p><h2>{deckHeadline}</h2>
+            <p className="ritual-status">{deckHeadline}</p>
             <div className={`deck-ritual-surface phase-${deckPhase}`}>
               {deckPhase === 'fanned' || deckPhase === 'dealing' ? (
                 <div className={`card-fan phase-${deckPhase}`} aria-hidden="true">
@@ -717,7 +713,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
 
         {stage === 'ritual' && system.kind === 'ball' && (
           <motion.section className="reading-stage ritual-stage" key="ritual-ball" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <p className="eyebrow">The ritual</p><h2>Disturb certainty.</h2>
+            <p className="ritual-status">Disturb certainty.</p>
             <motion.button drag dragConstraints={{ left: -90, right: 90, top: -40, bottom: 40 }} dragElastic={0.25} onDragEnd={performObjectRitual} onClick={performObjectRitual} disabled={objectAnimating} className={`eight-ball ${objectAnimating ? 'is-resolving' : ''}`} aria-label="Drag or tap to shake and reveal the answer" animate={objectAnimating ? { x: [0, -25, 23, -19, 16, -12, 8, -4, 0], y: [0, 4, -3, 3, -2, 2, -1, 0], rotate: [0, -10, 11, -9, 8, -6, 4, -2, 0], scale: [1, 1.035, .99, 1.025, 1] } : { x: 0, y: 0, rotate: 0, scale: 1 }} transition={{ duration: 1.2, ease: [0.22, 0.8, 0.2, 1] }} whileDrag={{ rotate: [0, -8, 9, -6, 0] }}><span>8</span><i aria-hidden="true">···</i></motion.button>
             <Button className="primary-action" onClick={performObjectRitual} disabled={objectAnimating}>{objectAnimating ? 'The answer is rising…' : 'Shake for the answer'}</Button>
             {motionSupported && <Button className="quiet-action" onClick={() => void enableDeviceMotion()} disabled={objectAnimating}>{motionEnabled ? 'Shake your device…' : 'Use device motion'}</Button>}
@@ -726,7 +722,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
 
         {stage === 'ritual' && system.kind === 'cookie' && (
           <motion.section className="reading-stage ritual-stage" key="ritual-cookie" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <p className="eyebrow">The ritual</p><h2>{cookieChoice === null ? 'Choose blindly.' : 'Break it open.'}</h2>
+            <p className="ritual-status">{cookieChoice === null ? 'Choose blindly.' : 'Break it open.'}</p>
             {cookieChoice === null ? (
               <fieldset className="cookie-choices"><legend className="sr-only">Choose one of three fortune cookies</legend>
                 {[0, 1, 2].map((choice) => <motion.button type="button" className="cookie-choice" key={choice} onClick={() => { setCookieChoice(choice); cue('tick'); }} whileHover={{ y: -12, rotate: choice === 0 ? -4 : choice === 2 ? 4 : 0 }} whileTap={{ scale: .96 }} aria-label={`Choose fortune cookie ${choice + 1}`}><span className="cookie-choice-index">0{choice + 1}</span><Image src="/art/fortune-cookie-object-v2.webp" alt="" width={550} height={367} sizes="(max-width: 720px) 30vw, 220px" /></motion.button>)}
@@ -751,8 +747,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
 
         {stage === 'reveal' && spread && (
           <motion.section className="reading-stage reveal-stage" key="reveal" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <header><p className="eyebrow">{spread.name}</p><h2>{revealed.size === draws.length ? 'The pattern is open.' : 'Peel the cards.'}</h2></header>
-            {revealed.size < draws.length && <p className="peel-instruction">Drag a corner—or tap.</p>}
+            <p className="ritual-status">{spread.name} · {revealed.size === draws.length ? 'Open' : 'Peel to reveal'}</p>
             <div className={`cards-layout spread-${spread.layout} count-${draws.length} ${draws.length > 10 ? 'many-cards' : ''}`}>
               {draws.map((draw, index) => <CardFace key={`${draw.card.id}-${index}`} draw={draw} index={index} compact={draws.length > 10} disabled={isRevealingAll} revealed={revealed.has(index)} onPeelStart={() => cue('peel')} onReveal={() => revealCard(index)} />)}
             </div>

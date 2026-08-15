@@ -54,9 +54,9 @@ export function HomeCatalog() {
       <section className="home-statement">
         <p className="eyebrow">Private by design</p>
         <p>No accounts. No audience. No answer leaves your device unless you choose to share it.</p>
-        <Link href="/about">Read the method <ArrowUpRight /></Link>
+        <Link href="/library">Open the library <ArrowUpRight /></Link>
       </section>
-      <footer className="site-footer"><Link href="/about">Method & privacy</Link><span>For reflection and entertainment</span><span>© DIVINE</span></footer>
+      <footer className="site-footer"><Link href="/library">History & meanings</Link><span>For reflection and entertainment</span><span>© DIVINE</span></footer>
     </main>
   );
 }

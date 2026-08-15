@@ -88,7 +88,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
           <nav aria-label="Primary navigation">
             <Link href="/#systems">Readings</Link>
             <Link href="/journal">Journal</Link>
-            <Link href="/about">About</Link>
+            <Link href="/library">Library</Link>
           </nav>
           <div className="header-controls">
             <button type="button" onClick={value.toggleTheme} aria-label={`Use ${theme === 'light' ? 'dark' : 'light'} theme`}>
