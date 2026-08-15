@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { drawCards, drawFortune, interpretReading, secureShuffle } from './reading';
+import { drawCards, drawFortune, interpretReading, lenormandPairText, secureShuffle } from './reading';
 import { FORTUNES, SYSTEM_MAP, SYSTEMS } from './systems';
 
 describe('DIVINE content libraries', () => {
@@ -42,6 +42,18 @@ describe('reading engine', () => {
     const system = SYSTEM_MAP.zodiac;
     const spread = system.spreads.find((item) => item.id === 'celestial-triad')!;
     expect(drawCards(system, spread, false).map((draw) => draw.card.domain)).toEqual(['sign', 'planet', 'house']);
+  });
+
+  it('applies curated Lenormand relationships and house context', () => {
+    const heart = SYSTEM_MAP.lenormand.cards.find((card) => card.name === 'Heart')!;
+    const ring = SYSTEM_MAP.lenormand.cards.find((card) => card.name === 'Ring')!;
+    expect(lenormandPairText(heart, ring)).toContain('explicit bond');
+    const spread = SYSTEM_MAP.lenormand.spreads.find((item) => item.id === 'grand-tableau')!;
+    const draws = drawCards(SYSTEM_MAP.lenormand, spread, false);
+    const result = interpretReading(SYSTEM_MAP.lenormand, spread, draws, 'general');
+    expect(result.positions[0].text).toContain('In the house of Rider');
+    expect(result.positions[0].text).toContain('Nearest neighbors');
+    expect(result.positions[0].text).toContain('Timing:');
   });
 
   it('produces unique lucky numbers within the expected range', () => {

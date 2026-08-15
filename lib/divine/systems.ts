@@ -33,6 +33,12 @@ const majorArcana: Array<[string, string, string, string, string]> = [
   ['The World', 'XXI', 'completion', 'The cycle closes with integration. Stand inside what you completed.', 'The final step remains undone because completion changes your identity.'],
 ];
 
+const focusModifiers = (keyword: string): CardDefinition['focusModifiers'] => ({
+  love: `In relationship, ${keyword} changes what can be asked of one another.`,
+  work: `In work, ${keyword} must become a concrete decision rather than an idea.`,
+  growth: `For growth, practice ${keyword} where your usual defense is strongest.`,
+});
+
 const tarotMajors: CardDefinition[] = majorArcana.map(([name, glyph, keyword, meaning, reversedMeaning], index) => ({
   id: `major-${index}`,
   name,
@@ -42,6 +48,9 @@ const tarotMajors: CardDefinition[] = majorArcana.map(([name, glyph, keyword, me
   meaning,
   reversedMeaning,
   domain: 'major',
+  element: 'spirit',
+  numerology: index,
+  focusModifiers: focusModifiers(keyword),
   provenance: 'Rider–Waite–Smith tradition; original DIVINE interpretation.',
 }));
 
@@ -79,6 +88,9 @@ const tarotMinors: CardDefinition[] = suits.flatMap((suit) =>
     meaning: `${rank.light} In ${suit.domain}, ${suit.gift.toLowerCase()}`,
     reversedMeaning: `${rank.dark} In ${suit.domain}, ${suit.shadow.toLowerCase()}`,
     domain: suit.id,
+    element: suit.element,
+    numerology: ranks.indexOf(rank) + 1,
+    focusModifiers: focusModifiers(rank.theme),
     provenance: 'Rider–Waite–Smith structure; original DIVINE interpretation.',
   })),
 );
@@ -173,7 +185,24 @@ const simpleSpreads = (singleName: string, threeName: string, fiveName: string, 
 
 const tarot = [...tarotMajors, ...tarotMinors];
 const oracle = makeNamedDeck('oracle', oracleEntries, ['◌', '◇', '☾', '∴'], 'Let its image change how you approach the next true choice.', 'the invitation is present, but your attention is split.');
-const lenormand = makeNamedDeck('lenormand', lenormandEntries, ['♢', '✣', '○', '⌁'], 'Read it plainly, then notice which neighboring symbol changes its tone.', 'the signal is indirect; context and proximity decide its force.');
+const positiveLenormand = new Set(['Rider', 'Clover', 'Bouquet', 'Child', 'Stars', 'Stork', 'Dog', 'Heart', 'Ring', 'Lilies', 'Sun', 'Moon', 'Key', 'Fish', 'Anchor']);
+const challengingLenormand = new Set(['Clouds', 'Snake', 'Coffin', 'Scythe', 'Whip', 'Mountain', 'Mice', 'Cross']);
+const lenormandTiming = [
+  'very soon', 'within days', 'over distance', 'within a month', 'slow and seasonal', 'briefly delayed',
+  'through a winding delay', 'at a final ending', 'within a week', 'suddenly', 'repeatedly', 'within days',
+  'immediately', 'through careful timing', 'over months', 'at night or in winter', 'during a change of season', 'steadily',
+  'after a long interval', 'at a public occasion', 'after a delay', 'at the decision point', 'gradually', 'in the near present',
+  'through an agreement', 'when information is revealed', 'with the next message', 'by the querent’s timing', 'by the querent’s timing', 'in maturity',
+  'quickly and clearly', 'within a lunar month', 'at the destined opening', 'in cycles', 'for the long term', 'through a necessary trial',
+];
+const lenormand = makeNamedDeck('lenormand', lenormandEntries, ['♢', '✣', '○', '⌁'], 'Read it plainly, then notice which neighboring symbol changes its tone.', 'the signal is indirect; context and proximity decide its force.').map((card, index) => ({
+  ...card,
+  subject: lenormandEntries[index][1],
+  modifier: positiveLenormand.has(card.name) ? 'opens or strengthens nearby cards' : challengingLenormand.has(card.name) ? 'delays, tests, or diminishes nearby cards' : 'redirects the subject named by nearby cards',
+  polarity: positiveLenormand.has(card.name) ? 'positive' as const : challengingLenormand.has(card.name) ? 'challenging' as const : 'neutral' as const,
+  timing: lenormandTiming[index],
+  domain: lenormandEntries[index][1],
+}));
 const spellcraft = makeNamedDeck('spellcraft', spellEntries, ['✦', '△', '○', '╳'], 'Give the intention one material action before the day closes.', 'the ritual has form but not yet honest intention.');
 const egypt = makeNamedDeck('egypt', egyptEntries, ['☉', '☥', '◇', 'Ⅱ'], 'Its enduring image names the force now moving through the threshold.', 'the symbol asks for respect, context, and a slower reading.');
 const zodiac = makeNamedDeck('zodiac', [...signs, ...planets, ...houses], ['☉', '☾', '○', '✦'], 'This archetype shows where celestial pressure becomes personal choice.', 'the archetype is being performed rather than embodied.').map((card, index) => ({

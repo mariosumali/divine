@@ -149,6 +149,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
   const [motionEnabled, setMotionEnabled] = useState(false);
   const [announcement, setAnnouncement] = useState('');
   const motionHandler = useRef<((event: DeviceMotionEvent) => void) | null>(null);
+  const ritualLock = useRef(false);
 
   useEffect(() => {
     queueMicrotask(() => setMotionSupported('DeviceMotionEvent' in window));
@@ -199,6 +200,8 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
   };
 
   const performObjectRitual = () => {
+    if (ritualLock.current) return;
+    ritualLock.current = true;
     beginRecord();
     if (system.kind === 'ball') {
       cue('liquid');
@@ -262,7 +265,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
   };
 
   const restart = () => {
-    setStage('frame'); setShuffled(false); setDraws([]); setRevealed(new Set()); setInterpretation(null); setObjectMessage(''); setLuckyNumbers([]); setNote(''); setFavorite(false); setSaved(false); setAnnouncement(''); cue('tick');
+    ritualLock.current = false; setStage('frame'); setShuffled(false); setDraws([]); setRevealed(new Set()); setInterpretation(null); setObjectMessage(''); setLuckyNumbers([]); setNote(''); setFavorite(false); setSaved(false); setAnnouncement(''); cue('tick');
   };
 
   return (
@@ -349,7 +352,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
         {stage === 'reveal' && spread && (
           <motion.section className="reading-stage reveal-stage" key="reveal" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <header><p className="eyebrow">{spread.name}</p><h2>{revealed.size === draws.length ? 'The pattern is visible.' : 'Turn each card when you are ready.'}</h2></header>
-            <div className={`spread-grid spread-${spread.layout} ${draws.length > 10 ? 'many-cards' : ''}`}>
+            <div className={`cards-layout spread-${spread.layout} count-${draws.length} ${draws.length > 10 ? 'many-cards' : ''}`}>
               {draws.map((draw, index) => <CardFace key={`${draw.card.id}-${index}`} draw={draw} index={index} compact={draws.length > 10} revealed={revealed.has(index)} onReveal={() => revealCard(index)} />)}
             </div>
             <div className="reveal-actions">

@@ -60,22 +60,52 @@ const focusLenses: Record<Focus, string> = {
 
 function cardText(draw: DrawnCard, focus: Focus): string {
   const base = draw.reversed && draw.card.reversedMeaning ? draw.card.reversedMeaning : draw.card.meaning;
-  return `${focusLenses[focus]}, ${base.charAt(0).toLowerCase()}${base.slice(1)}`;
+  const modifier = draw.card.focusModifiers?.[focus];
+  return `${focusLenses[focus]}, ${base.charAt(0).toLowerCase()}${base.slice(1)}${modifier ? ` ${modifier}` : ''}`;
+}
+
+const lenormandExceptions: Record<string, string> = {
+  'Clouds|Sun': 'confusion breaks and the outcome turns favorable',
+  'Coffin|Scythe': 'an ending is immediate and should not be negotiated',
+  'Heart|Ring': 'affection becomes an explicit bond or promise',
+  'Key|Ring': 'an agreement is certain and consequential',
+  'Letter|Rider': 'news arrives quickly in written form',
+  'Mice|Ring': 'a commitment is being eroded by small repeated losses',
+  'Ship|Stork': 'relocation or long-distance change gathers momentum',
+};
+
+export function lenormandPairText(left: CardDefinition, right: CardDefinition): string {
+  const key = [left.name, right.name].sort().join('|');
+  const exception = lenormandExceptions[key];
+  if (exception) return exception;
+  const pressure = left.polarity === 'challenging' || right.polarity === 'challenging'
+    ? 'must pass through friction'
+    : left.polarity === 'positive' || right.polarity === 'positive' ? 'receives support' : 'changes direction';
+  return `${left.subject ?? left.keywords[0]} meets ${right.subject ?? right.keywords[0]} and ${pressure}`;
 }
 
 export function interpretReading(system: SystemDefinition, spread: SpreadDefinition, draws: DrawnCard[], focus: Focus): InterpretationBlock {
   const first = draws[0];
   const last = draws[draws.length - 1];
   const keywords = Array.from(new Set(draws.flatMap((draw) => draw.card.keywords))).slice(0, 4);
-  const positions = draws.map((draw) => ({
-    label: draw.position,
-    card: `${draw.card.name}${draw.reversed ? ' · reversed' : ''}`,
-    text: cardText(draw, focus),
-  }));
+  const positions = draws.map((draw, index) => {
+    let text = cardText(draw, focus);
+    if (system.slug === 'lenormand') {
+      const neighbors = [draws[index - 1], draws[index + 1]].filter(Boolean);
+      const relationship = neighbors.map((neighbor) => lenormandPairText(draw.card, neighbor.card)).join('; ');
+      const house = spread.id === 'grand-tableau' ? spread.positions[index].replace('House of ', '') : null;
+      text += `${house ? ` In the house of ${house}, ${draw.card.name} places ${draw.card.subject} inside that domain.` : ''}${relationship ? ` Nearest neighbors: ${relationship}.` : ''} Timing: ${draw.card.timing}.`;
+    }
+    return {
+      label: draw.position,
+      card: `${draw.card.name}${draw.reversed ? ' · reversed' : ''}`,
+      text,
+    };
+  });
 
   let synthesis = `The pattern moves from ${first.card.keywords[0]} toward ${last.card.keywords[0]}. ${focusLenses[focus]}, the decisive act is to let ${keywords[0]} shape what happens next without using certainty as a condition.`;
   if (system.slug === 'lenormand' && draws.length > 1) {
-    const links = draws.slice(0, Math.min(draws.length - 1, 8)).map((draw, index) => `${draw.card.name} modifies ${draws[index + 1].card.name}: ${draw.card.keywords[0]} changes the course of ${draws[index + 1].card.keywords[0]}`);
+    const links = draws.slice(0, Math.min(draws.length - 1, 8)).map((draw, index) => `${draw.card.name} with ${draws[index + 1].card.name}: ${lenormandPairText(draw.card, draws[index + 1].card)}`);
     synthesis = `${links.join('. ')}. The nearest symbols carry the greatest force; the outer field describes what follows.`;
   }
   if (spread.id === 'grand-tableau') {

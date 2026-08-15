@@ -20,6 +20,13 @@ export interface CardDefinition {
   meaning: string;
   reversedMeaning?: string;
   domain?: string;
+  element?: string;
+  numerology?: number;
+  subject?: string;
+  modifier?: string;
+  polarity?: 'positive' | 'neutral' | 'challenging';
+  timing?: string;
+  focusModifiers?: Partial<Record<Focus, string>>;
   provenance?: string;
 }
 
