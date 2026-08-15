@@ -16,6 +16,7 @@ import type { DrawnCard, Focus, InterpretationBlock, ReadingRecord, SpreadDefini
 
 type Stage = 'intro' | 'frame' | 'method' | 'ritual' | 'reveal' | 'result';
 type ShareStatus = 'idle' | 'working' | 'shared' | 'downloaded' | 'cancelled' | 'error';
+type DeckPhase = 'stacked' | 'shuffling' | 'cut' | 'fanned' | 'dealing';
 
 interface StoredReadingSession {
   version: 1;
@@ -41,6 +42,12 @@ const focuses: Array<{ value: Focus; label: string }> = [
   { value: 'general', label: 'General' }, { value: 'love', label: 'Love' }, { value: 'work', label: 'Work' }, { value: 'growth', label: 'Growth' },
 ];
 const readingStages: Stage[] = ['intro', 'frame', 'method', 'ritual', 'reveal', 'result'];
+const deckLayers = Array.from({ length: 9 }, (_, index) => index + 1);
+const fanCards = Array.from({ length: 15 }, (_, index) => index);
+const cookieCrumbs = [
+  { x: -114, y: -42, r: -18 }, { x: -76, y: 62, r: 22 }, { x: -35, y: 86, r: -8 },
+  { x: 42, y: 78, r: 14 }, { x: 88, y: 48, r: -24 }, { x: 126, y: -26, r: 18 },
+];
 
 function createId() {
   return typeof crypto.randomUUID === 'function' ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
@@ -182,9 +189,9 @@ function CardFace({ draw, revealed, index, compact, disabled, onReveal }: { draw
       onClick={onReveal}
       disabled={disabled}
       aria-label={revealed ? `${draw.position}: ${draw.card.name}${draw.reversed ? ', reversed' : ''}` : `Reveal card ${index + 1}, ${draw.position}`}
-      initial={{ opacity: 0, y: 30, rotate: index % 2 ? 1.5 : -1.5 }}
-      animate={{ opacity: 1, y: 0, rotate: 0 }}
-      transition={{ delay: Math.min(index * 0.035, 0.65), duration: 0.5 }}
+      initial={{ opacity: 0, x: (index % 2 ? 1 : -1) * (compact ? 55 : 120), y: compact ? -55 : -160, rotateY: 82, rotateZ: index % 2 ? 10 : -10, scale: 0.72 }}
+      animate={{ opacity: 1, x: 0, y: 0, rotateY: 0, rotateZ: 0, scale: 1 }}
+      transition={{ type: 'spring', stiffness: 125, damping: 18, mass: 0.9, delay: Math.min(index * (compact ? 0.025 : 0.065), 0.9) }}
       whileHover={{ y: compact ? -2 : -7 }}
     >
       <span className="card-inner">
@@ -228,12 +235,14 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
   const [cookieChoice, setCookieChoice] = useState<number | null>(null);
   const [objectAnimating, setObjectAnimating] = useState(false);
   const [isRevealingAll, setIsRevealingAll] = useState(false);
+  const [deckPhase, setDeckPhase] = useState<DeckPhase>('stacked');
   const [shareStatus, setShareStatus] = useState<ShareStatus>('idle');
   const [sessionReady, setSessionReady] = useState(false);
   const motionHandler = useRef<((event: DeviceMotionEvent) => void) | null>(null);
   const ritualLock = useRef(false);
   const revealTimers = useRef<number[]>([]);
   const objectTimer = useRef<number | null>(null);
+  const deckTimer = useRef<number | null>(null);
   const sessionKey = `divine-session:${system.slug}`;
 
   useEffect(() => {
@@ -242,6 +251,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
       if (motionHandler.current) window.removeEventListener('devicemotion', motionHandler.current);
       revealTimers.current.forEach((timer) => window.clearTimeout(timer));
       if (objectTimer.current !== null) window.clearTimeout(objectTimer.current);
+      if (deckTimer.current !== null) window.clearTimeout(deckTimer.current);
     };
   }, []);
 
@@ -271,6 +281,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
         setSpread(restoredSpread);
         setReversals(restored.reversals);
         setShuffled(restored.shuffled);
+        setDeckPhase(restored.shuffled ? 'cut' : 'stacked');
         setDraws(restoredDraws);
         setRevealed(new Set((Array.isArray(restored.revealed) ? restored.revealed : []).filter((index) => index >= 0 && index < restoredDraws.length)));
         setInterpretation(restored.interpretation ?? null);
@@ -320,6 +331,16 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
     focus, question: question.trim() || undefined, draws, interpretation, note, favorite,
   } : null, [interpretation, system, spread, focus, question, draws, note, favorite, recordId, createdAt]);
 
+  const deckHeadline = deckPhase === 'stacked'
+    ? 'Cut through the noise.'
+    : deckPhase === 'shuffling'
+      ? 'Release the fixed order.'
+      : deckPhase === 'cut'
+        ? 'Divide the known from the unknown.'
+        : deckPhase === 'fanned'
+          ? 'The field is open.'
+          : 'The cards have chosen their path.';
+
   const beginRecord = () => {
     setRecordId(createId());
     setCreatedAt(new Date().toISOString());
@@ -329,6 +350,11 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
     revealTimers.current.forEach((timer) => window.clearTimeout(timer));
     revealTimers.current = [];
     setIsRevealingAll(false);
+  };
+
+  const clearDeckTimer = () => {
+    if (deckTimer.current !== null) window.clearTimeout(deckTimer.current);
+    deckTimer.current = null;
   };
 
   const move = (next: Stage) => {
@@ -341,6 +367,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
 
   const goBack = () => {
     clearRevealTimers();
+    clearDeckTimer();
     if (motionHandler.current) {
       window.removeEventListener('devicemotion', motionHandler.current);
       motionHandler.current = null;
@@ -348,27 +375,59 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
     setMotionEnabled(false);
     if (stage === 'frame') move('intro');
     if (stage === 'method') move('frame');
-    if (stage === 'ritual') move(system.kind === 'cards' ? 'method' : 'frame');
+    if (stage === 'ritual') {
+      if (system.kind === 'cards') {
+        setShuffled(false);
+        setDeckPhase('stacked');
+      }
+      move(system.kind === 'cards' ? 'method' : 'frame');
+    }
     if (stage === 'reveal') {
       setDraws([]);
       setRevealed(new Set());
       setShuffled(false);
+      setDeckPhase('stacked');
       move('method');
     }
   };
 
   const shuffleDeck = () => {
+    if (deckPhase === 'shuffling' || deckPhase === 'dealing') return;
+    clearDeckTimer();
     cue('shuffle');
-    setShuffled(true);
+    setShuffled(false);
+    setDeckPhase('shuffling');
+    setAnnouncement('The deck is moving. Let the fixed order loosen.');
+    deckTimer.current = window.setTimeout(() => {
+      setShuffled(true);
+      setDeckPhase('cut');
+      setAnnouncement('The deck is shuffled. Cut and open the fan when ready.');
+      deckTimer.current = null;
+    }, 950);
+  };
+
+  const fanDeck = () => {
+    if (!shuffled || deckPhase === 'dealing') return;
+    cue('deal');
+    setDeckPhase('fanned');
+    setAnnouncement('The deck is fanned. The field is open.');
   };
 
   const deal = () => {
-    if (!spread) return;
+    if (!spread || deckPhase !== 'fanned') return;
     const next = drawCards(system, spread, reversals);
     setDraws(next);
     setRevealed(new Set());
     cue('deal');
-    move('reveal');
+    setDeckPhase('dealing');
+    setAnnouncement(`${spread.positions.length} ${spread.positions.length === 1 ? 'card is' : 'cards are'} leaving the fan.`);
+    const reveal = () => {
+      setStage('reveal');
+      window.scrollTo({ top: 0, behavior: 'auto' });
+      deckTimer.current = null;
+    };
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) reveal();
+    else deckTimer.current = window.setTimeout(reveal, 720);
   };
 
   const revealCard = (index: number) => {
@@ -387,6 +446,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
       return;
     }
     setIsRevealingAll(true);
+    const interval = draws.length > 16 ? 56 : draws.length > 6 ? 125 : 235;
     draws.forEach((draw, index) => {
       const timer = window.setTimeout(() => {
         setRevealed((current) => new Set(current).add(index));
@@ -396,7 +456,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
           setAnnouncement(`All ${draws.length} cards revealed.`);
           revealTimers.current = [];
         }
-      }, index * Math.max(45, Math.min(120, 650 / Math.max(draws.length - 1, 1))));
+      }, index * interval);
       revealTimers.current.push(timer);
     });
   };
@@ -424,7 +484,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
       cue('resolve');
       setStage('result');
       objectTimer.current = null;
-    }, 900);
+    }, system.kind === 'cookie' ? 1900 : 1450);
   };
 
   const enableDeviceMotion = async () => {
@@ -488,9 +548,11 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
 
   const restart = () => {
     clearRevealTimers();
+    clearDeckTimer();
     ritualLock.current = false;
     setStage('frame');
     setShuffled(false);
+    setDeckPhase('stacked');
     setDraws([]);
     setRevealed(new Set());
     setInterpretation(null);
@@ -564,13 +626,39 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
 
         {stage === 'ritual' && system.kind === 'cards' && (
           <motion.section className="reading-stage ritual-stage" key="ritual-cards" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <p className="eyebrow">The ritual</p><h2>{shuffled ? 'The deck is listening.' : 'Cut through the noise.'}</h2><p>{system.instruction}</p>
-            <div className={`deck-object ${shuffled ? 'is-shuffled' : ''}`}>
-              {[3, 2, 1].map((layer) => <span key={layer} style={{ '--layer': layer } as React.CSSProperties} />)}
-              <motion.button type="button" drag dragConstraints={{ left: -80, right: 80, top: -20, bottom: 20 }} dragElastic={0.18} onDragEnd={shuffleDeck} onClick={shuffleDeck} whileTap={{ scale: 0.97 }} aria-label="Drag or tap to shuffle the deck"><b>DIVINE</b><i>{system.shortName}</i></motion.button>
+            <p className="eyebrow">The ritual</p><h2>{deckHeadline}</h2><p>{system.instruction}</p>
+            <div className={`deck-ritual-surface phase-${deckPhase}`}>
+              {deckPhase === 'fanned' || deckPhase === 'dealing' ? (
+                <div className={`card-fan phase-${deckPhase}`} aria-hidden="true">
+                  <i className="fan-orbit" />
+                  {fanCards.map((index) => {
+                    const middle = (fanCards.length - 1) / 2;
+                    return (
+                      <span
+                        key={index}
+                        style={{
+                          '--angle': `${(index - middle) * 6.1}deg`,
+                          '--lift': `${Math.abs(index - middle) * 3.4}px`,
+                          '--fan-index': index,
+                          '--direction': index % 2 ? 1 : -1,
+                        } as React.CSSProperties}
+                      />
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className={`deck-object phase-${deckPhase}`}>
+                  {deckLayers.map((layer) => <span key={layer} style={{ '--layer': layer, '--direction': layer % 2 ? 1 : -1 } as React.CSSProperties} />)}
+                  <motion.button type="button" drag={deckPhase !== 'shuffling'} dragConstraints={{ left: -80, right: 80, top: -20, bottom: 20 }} dragElastic={0.18} onDragEnd={shuffleDeck} onClick={shuffleDeck} disabled={deckPhase === 'shuffling'} whileTap={{ scale: 0.97 }} aria-label="Drag or tap to shuffle the deck"><b>DIVINE</b><i>{system.shortName}</i></motion.button>
+                </div>
+              )}
             </div>
             <div className="ritual-actions">
-              {!shuffled ? <Button className="quiet-action" onClick={shuffleDeck}>Shuffle the deck</Button> : <Button className="primary-action" onClick={deal}>Deal {spread?.positions.length} {spread?.positions.length === 1 ? 'card' : 'cards'} <Sparkles /></Button>}
+              {deckPhase === 'stacked' && <Button className="quiet-action" onClick={shuffleDeck}>Shuffle the deck</Button>}
+              {deckPhase === 'shuffling' && <Button className="quiet-action" disabled>Cards in motion…</Button>}
+              {deckPhase === 'cut' && <Button className="primary-action" onClick={fanDeck}>Cut &amp; fan the deck <Sparkles /></Button>}
+              {deckPhase === 'fanned' && <Button className="primary-action" onClick={deal}>Deal {spread?.positions.length} {spread?.positions.length === 1 ? 'card' : 'cards'} <Sparkles /></Button>}
+              {deckPhase === 'dealing' && <Button className="quiet-action" disabled>Dealing the pattern…</Button>}
             </div>
           </motion.section>
         )}
@@ -578,7 +666,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
         {stage === 'ritual' && system.kind === 'ball' && (
           <motion.section className="reading-stage ritual-stage" key="ritual-ball" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <p className="eyebrow">The ritual</p><h2>Disturb the certainty.</h2><p>{system.instruction}</p>
-            <motion.button drag dragConstraints={{ left: -90, right: 90, top: -40, bottom: 40 }} dragElastic={0.25} onDragEnd={performObjectRitual} onClick={performObjectRitual} disabled={objectAnimating} className={`eight-ball ${objectAnimating ? 'is-resolving' : ''}`} aria-label="Drag or tap to shake and reveal the answer" animate={objectAnimating ? { x: [0, -18, 16, -12, 9, 0], rotate: [0, -7, 8, -5, 3, 0], scale: [1, 1.025, 1] } : { x: 0, rotate: 0, scale: 1 }} transition={{ duration: .75 }} whileDrag={{ rotate: [0, -8, 9, -6, 0] }}><span>8</span><i aria-hidden="true">···</i></motion.button>
+            <motion.button drag dragConstraints={{ left: -90, right: 90, top: -40, bottom: 40 }} dragElastic={0.25} onDragEnd={performObjectRitual} onClick={performObjectRitual} disabled={objectAnimating} className={`eight-ball ${objectAnimating ? 'is-resolving' : ''}`} aria-label="Drag or tap to shake and reveal the answer" animate={objectAnimating ? { x: [0, -25, 23, -19, 16, -12, 8, -4, 0], y: [0, 4, -3, 3, -2, 2, -1, 0], rotate: [0, -10, 11, -9, 8, -6, 4, -2, 0], scale: [1, 1.035, .99, 1.025, 1] } : { x: 0, y: 0, rotate: 0, scale: 1 }} transition={{ duration: 1.2, ease: [0.22, 0.8, 0.2, 1] }} whileDrag={{ rotate: [0, -8, 9, -6, 0] }}><span>8</span><i aria-hidden="true">···</i></motion.button>
             <Button className="primary-action" onClick={performObjectRitual} disabled={objectAnimating}>{objectAnimating ? 'The answer is rising…' : 'Shake for the answer'}</Button>
             {motionSupported && <Button className="quiet-action" onClick={() => void enableDeviceMotion()} disabled={objectAnimating}>{motionEnabled ? 'Shake your device…' : 'Use device motion'}</Button>}
           </motion.section>
@@ -589,11 +677,17 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
             <p className="eyebrow">The ritual</p><h2>{cookieChoice === null ? 'Choose without studying.' : 'Break the quiet open.'}</h2><p>{system.instruction}</p>
             {cookieChoice === null ? (
               <fieldset className="cookie-choices"><legend className="sr-only">Choose one of three fortune cookies</legend>
-                {[0, 1, 2].map((choice) => <motion.button type="button" key={choice} onClick={() => { setCookieChoice(choice); cue('tick'); }} whileHover={{ y: -12, rotate: choice === 0 ? -4 : choice === 2 ? 4 : 0 }} whileTap={{ scale: .96 }} aria-label={`Choose fortune cookie ${choice + 1}`}><span /><span /><i /></motion.button>)}
+                {[0, 1, 2].map((choice) => <motion.button type="button" className="cookie-choice" key={choice} onClick={() => { setCookieChoice(choice); cue('tick'); }} whileHover={{ y: -12, rotate: choice === 0 ? -4 : choice === 2 ? 4 : 0 }} whileTap={{ scale: .96 }} aria-label={`Choose fortune cookie ${choice + 1}`}><span className="cookie-choice-index">0{choice + 1}</span><Image src="/art/fortune-cookie-object-v2.webp" alt="" width={550} height={367} sizes="(max-width: 720px) 30vw, 220px" /></motion.button>)}
               </fieldset>
             ) : (
               <>
-                <motion.button drag="x" dragConstraints={{ left: -45, right: 45 }} dragElastic={0.25} onDragEnd={performObjectRitual} onClick={performObjectRitual} disabled={objectAnimating} className={`cookie-object ${objectAnimating ? 'is-cracking' : ''}`} aria-label="Drag or tap to crack the fortune cookie"><span /><span /><i /></motion.button>
+                <motion.button drag="x" dragConstraints={{ left: -45, right: 45 }} dragElastic={0.25} onDragEnd={performObjectRitual} onClick={performObjectRitual} disabled={objectAnimating} className={`cookie-object ${objectAnimating ? 'is-cracking' : ''}`} aria-label="Drag or tap to crack the fortune cookie">
+                  <span className="cookie-aura" aria-hidden="true" />
+                  <span className="cookie-half cookie-half-left" aria-hidden="true"><Image src="/art/fortune-cookie-object-v2.webp" alt="" width={1100} height={733} priority /></span>
+                  <span className="cookie-half cookie-half-right" aria-hidden="true"><Image src="/art/fortune-cookie-object-v2.webp" alt="" width={1100} height={733} priority /></span>
+                  <span className="cookie-paper" aria-hidden="true"><em>{objectMessage}</em></span>
+                  <span className="cookie-crumbs" aria-hidden="true">{cookieCrumbs.map((crumb, index) => <b key={index} style={{ '--crumb-x': `${crumb.x}px`, '--crumb-y': `${crumb.y}px`, '--crumb-r': `${crumb.r}deg`, '--crumb-index': index } as React.CSSProperties} />)}</span>
+                </motion.button>
                 <div className="ritual-actions object-actions">
                   <Button className="quiet-action" onClick={() => setCookieChoice(null)} disabled={objectAnimating}>Choose another</Button>
                   <Button className="primary-action" onClick={performObjectRitual} disabled={objectAnimating}>{objectAnimating ? 'The paper is opening…' : 'Crack the cookie'}</Button>
@@ -610,8 +704,8 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
               {draws.map((draw, index) => <CardFace key={`${draw.card.id}-${index}`} draw={draw} index={index} compact={draws.length > 10} disabled={isRevealingAll} revealed={revealed.has(index)} onReveal={() => revealCard(index)} />)}
             </div>
             <div className="reveal-actions">
-              {revealed.size < draws.length && <Button className="quiet-action" onClick={revealAll} disabled={isRevealingAll}>{isRevealingAll ? 'Revealing…' : 'Reveal all'}</Button>}
-              {revealed.size === draws.length && <Button className="primary-action" onClick={finishCards}>Read the pattern <ArrowRight /></Button>}
+              {revealed.size < draws.length && <Button className="quiet-action" onClick={revealAll} disabled={isRevealingAll}>{isRevealingAll ? `Revealing ${revealed.size} / ${draws.length}…` : 'Reveal all'}</Button>}
+              {revealed.size === draws.length && <motion.div className="pattern-ready" initial={{ opacity: 0, scaleX: .75 }} animate={{ opacity: 1, scaleX: 1 }} transition={{ duration: .7, ease: [0.16, 1, 0.3, 1] }}><span aria-hidden="true" /><Button className="primary-action" onClick={finishCards}>Read the pattern <ArrowRight /></Button><span aria-hidden="true" /></motion.div>}
             </div>
           </motion.section>
         )}
