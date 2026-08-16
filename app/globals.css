@@ -594,20 +594,76 @@ button {
   min-height: calc(100svh - 62px);
   padding: 0 clamp(14px, 2.4vw, 38px) clamp(14px, 2.4vw, 38px);
 }
-.index-masthead {
-  height: clamp(150px, 27svh, 270px);
-  display: flex;
-  align-items: center;
-  border-bottom: 1px solid var(--line);
+.divine-hero {
+  position: relative;
+  height: clamp(560px, calc(100svh - 62px), 860px);
+  min-height: 560px;
   overflow: hidden;
+  border-bottom: 1px solid var(--line);
+  isolation: isolate;
 }
-.index-masthead h1 {
+.divine-hero::before {
+  content: '';
+  position: absolute;
+  inset: 8% 20% 4%;
+  z-index: -1;
+  background: radial-gradient(
+    ellipse at 50% 54%,
+    color-mix(in srgb, var(--ink) 8%, transparent),
+    transparent 64%
+  );
+  filter: blur(20px);
+}
+.hero-shutters {
+  position: absolute;
+  z-index: 12;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  pointer-events: none;
+}
+.hero-shutters i {
+  display: block;
+  background: #050505;
+  transform-origin: top;
+}
+.hero-shutters i + i {
+  border-left: 1px solid rgba(244, 242, 236, 0.14);
+}
+.hero-meta {
+  position: absolute;
+  z-index: 5;
+  left: 0;
+  right: 0;
+  top: 18px;
+  display: flex;
+  justify-content: space-between;
+  color: var(--muted);
+  font-size: 8px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.hero-stage {
+  position: absolute;
+  inset: 42px 0 54px;
+  display: grid;
+  place-items: center;
+  perspective: 1500px;
+}
+.hero-stage h1 {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: 50%;
+  width: 100%;
   margin: 0;
+  display: flex;
+  justify-content: center;
   font-family: var(--font-bodoni), Georgia, serif;
-  font-size: clamp(5rem, 15vw, 13rem);
+  font-size: clamp(7rem, 17vw, 18rem);
   font-weight: 500;
   line-height: 0.72;
-  letter-spacing: -0.075em;
+  letter-spacing: -0.095em;
   background: linear-gradient(
     105deg,
     var(--ink) 28%,
@@ -618,7 +674,101 @@ button {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  transform: translate(-50%, -48%);
   animation: shimmer 7s 1.5s ease-in-out infinite;
+}
+.hero-letter-mask {
+  display: inline-flex;
+  overflow: hidden;
+  padding: 0.08em 0.015em 0.18em;
+}
+.hero-letter-mask > span {
+  display: inline-block;
+}
+.hero-crystal {
+  position: relative;
+  z-index: 2;
+  width: min(43vw, 580px, 74svh);
+  aspect-ratio: 1;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.hero-crystal::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: 18%;
+  right: 18%;
+  bottom: 4%;
+  height: 9%;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--ink) 22%, transparent);
+  filter: blur(20px);
+  transform: translateZ(-30px);
+}
+.hero-crystal-entry,
+.hero-crystal-float {
+  position: absolute;
+  inset: 0;
+  display: block;
+  transform-style: preserve-3d;
+}
+.hero-crystal-float {
+  animation: hero-crystal-float 7.8s ease-in-out infinite;
+}
+.hero-crystal img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: grayscale(1) sepia(0.08) contrast(0.92) brightness(1.02);
+  transform: translateZ(28px);
+}
+:root[data-theme='dark'] .hero-crystal img {
+  filter: invert(1) grayscale(1) sepia(0.06) contrast(0.9) brightness(1.04);
+}
+.hero-crystal-float > i {
+  position: absolute;
+  inset: 12% 14% 27%;
+  border-radius: 50%;
+  background: linear-gradient(
+    118deg,
+    transparent 27%,
+    rgba(244, 242, 236, 0.04) 42%,
+    rgba(244, 242, 236, 0.5) 49%,
+    rgba(244, 242, 236, 0.08) 56%,
+    transparent 68%
+  );
+  background-size: 250% 100%;
+  mix-blend-mode: screen;
+  opacity: 0.75;
+  animation: crystal-scan 5.8s 1.2s ease-in-out infinite;
+  pointer-events: none;
+}
+.hero-enter {
+  position: absolute;
+  z-index: 5;
+  left: 50%;
+  bottom: 18px;
+  min-width: 112px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+  padding: 0 4px;
+  border-bottom: 1px solid var(--ink);
+  font-size: 8px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  transform: translateX(-50%);
+}
+.hero-enter span {
+  font-size: 16px;
+  transition: transform 0.3s ease;
+}
+.hero-enter:hover span,
+.hero-enter:focus-visible span {
+  transform: translateY(4px);
 }
 .reading-index {
   display: grid;
@@ -658,8 +808,11 @@ button {
 }
 .reading-index-art img {
   object-fit: contain;
-  filter: contrast(1.08);
-  transition: filter 0.45s ease;
+  filter: grayscale(1) sepia(0.08) contrast(0.9) brightness(1.02);
+  opacity: 0.94;
+  transition:
+    filter 0.45s ease,
+    opacity 0.45s ease;
 }
 .reading-index-name {
   position: relative;
@@ -677,14 +830,18 @@ button {
 }
 .reading-index-item:hover .reading-index-art img,
 .reading-index-item:focus-visible .reading-index-art img {
-  filter: invert(1) contrast(1.05);
+  filter: invert(1) grayscale(1) sepia(0.06) contrast(0.9);
+  opacity: 1;
 }
 :root[data-theme='dark'] .reading-index-art img {
-  filter: invert(1) contrast(1.08);
+  filter: invert(1) grayscale(1) sepia(0.06) contrast(0.9);
 }
 :root[data-theme='dark'] .reading-index-item:hover .reading-index-art img,
-:root[data-theme='dark'] .reading-index-item:focus-visible .reading-index-art img {
-  filter: invert(0) contrast(1.05);
+:root[data-theme='dark']
+  .reading-index-item:focus-visible
+  .reading-index-art
+  img {
+  filter: invert(0) grayscale(1) sepia(0.08) contrast(0.9) brightness(1.02);
 }
 
 .reading-shell {
@@ -3094,6 +3251,30 @@ button {
     background-position: 0 0;
   }
 }
+@keyframes hero-crystal-float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-0.45deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(0.65deg);
+  }
+}
+@keyframes crystal-scan {
+  0%,
+  18% {
+    background-position: 120% 0;
+    opacity: 0.18;
+  }
+  48% {
+    opacity: 0.72;
+  }
+  76%,
+  100% {
+    background-position: -120% 0;
+    opacity: 0.18;
+  }
+}
 @keyframes orbit {
   to {
     transform: rotate(352deg);
@@ -3639,11 +3820,28 @@ button {
   .home-index {
     padding-inline: 10px;
   }
-  .index-masthead {
-    height: 150px;
+  .divine-hero {
+    height: min(650px, calc(100svh - 62px));
+    min-height: 520px;
   }
-  .index-masthead h1 {
-    font-size: clamp(4.6rem, 22vw, 7rem);
+  .divine-hero::before {
+    inset: 13% 2% 6%;
+  }
+  .hero-meta {
+    top: 12px;
+  }
+  .hero-stage {
+    inset: 36px 0 50px;
+  }
+  .hero-stage h1 {
+    font-size: clamp(4.8rem, 22vw, 7.6rem);
+    letter-spacing: -0.1em;
+  }
+  .hero-crystal {
+    width: min(78vw, 420px, 58svh);
+  }
+  .hero-enter {
+    bottom: 10px;
   }
   .reading-index {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -3668,5 +3866,21 @@ button {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+  .hero-shutters {
+    display: none;
+  }
+  .hero-meta,
+  .hero-letter-mask > span,
+  .hero-crystal,
+  .hero-crystal-entry,
+  .reading-index-art {
+    opacity: 1 !important;
+    filter: none !important;
+    transform: none !important;
+  }
+  .hero-enter {
+    opacity: 1 !important;
+    transform: translateX(-50%) !important;
   }
 }

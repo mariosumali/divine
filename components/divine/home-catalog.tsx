@@ -1,39 +1,147 @@
 'use client';
 
-import { motion, useReducedMotion } from 'motion/react';
+import { motion, useMotionValue, useSpring, useTransform } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useExperience } from '@/app/providers';
 import { SYSTEMS } from '@/lib/divine/systems';
 
 const INDEX_ART: Record<string, string> = {
-  tarot: '/index-art/tarot.webp',
-  oracle: '/index-art/oracle.webp',
+  tarot: '/index-art-v2/tarot.webp',
+  oracle: '/index-art-v2/oracle.webp',
   lenormand: '/index-art/lenormand.webp',
-  spellcraft: '/index-art/spellcraft.webp',
-  'ancient-egypt': '/index-art/ancient-egypt.webp',
-  zodiac: '/index-art/zodiac.webp',
-  'magic-8-ball': '/index-art/magic-8-ball.webp',
+  spellcraft: '/index-art-v2/spellcraft.webp',
+  'ancient-egypt': '/index-art-v2/ancient-egypt.webp',
+  zodiac: '/index-art-v2/zodiac.webp',
+  'magic-8-ball': '/index-art-v2/magic-8-ball.webp',
   'fortune-cookie': '/index-art/fortune-cookie.webp',
 };
 
-const RESTING_ANGLES = [-3, 2, -1, 3, 2, -2, -2, 2];
+const RESTING_ANGLES = [-2, 1.4, -1, 1.7, 1.2, -1.4, -1.2, 1.4];
+const HERO_LETTERS = 'DIVINE'.split('');
 
 export function HomeCatalog() {
   const { cue } = useExperience();
-  const reduceMotion = useReducedMotion();
+  const heroXSource = useMotionValue(0);
+  const heroYSource = useMotionValue(0);
+  const heroX = useSpring(heroXSource, { stiffness: 80, damping: 18 });
+  const heroY = useSpring(heroYSource, { stiffness: 80, damping: 18 });
+  const heroRotateY = useTransform(heroX, [-28, 28], [-5, 5]);
+  const heroRotateX = useTransform(heroY, [-20, 20], [4, -4]);
 
   return (
     <main className="home-index">
-      <section className="index-masthead" aria-labelledby="home-title">
-        <motion.h1
-          id="home-title"
-          initial={reduceMotion ? false : { clipPath: 'inset(100% 0 0)' }}
-          animate={{ clipPath: 'inset(0% 0 0)' }}
-          transition={{ duration: 1.05, ease: [0.22, 1, 0.36, 1] }}
+      <section
+        className="divine-hero"
+        aria-labelledby="home-title"
+        onPointerMove={(event) => {
+          if (event.pointerType === 'touch') return;
+          const bounds = event.currentTarget.getBoundingClientRect();
+          heroXSource.set(
+            ((event.clientX - bounds.left) / bounds.width - 0.5) * 56,
+          );
+          heroYSource.set(
+            ((event.clientY - bounds.top) / bounds.height - 0.5) * 40,
+          );
+        }}
+        onPointerLeave={() => {
+          heroXSource.set(0);
+          heroYSource.set(0);
+        }}
+      >
+        <div className="hero-shutters" aria-hidden="true">
+          {Array.from({ length: 6 }, (_, index) => (
+            <motion.i
+              key={index}
+              initial={{ scaleY: 1 }}
+              animate={{ scaleY: 0 }}
+              transition={{
+                duration: 0.82,
+                delay: 0.04 + index * 0.065,
+                ease: [0.76, 0, 0.24, 1],
+              }}
+            />
+          ))}
+        </div>
+
+        <motion.div
+          className="hero-meta"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.9, duration: 0.7 }}
         >
-          DIVINE
-        </motion.h1>
+          <span>Private divination</span>
+          <span>Read the unknown</span>
+        </motion.div>
+
+        <div className="hero-stage">
+          <h1 id="home-title" aria-label="DIVINE">
+            {HERO_LETTERS.map((letter, index) => (
+              <span className="hero-letter-mask" key={`${letter}-${index}`}>
+                <motion.span
+                  initial={{ y: '112%', rotate: index % 2 ? 3 : -3 }}
+                  animate={{ y: '0%', rotate: 0 }}
+                  transition={{
+                    duration: 0.92,
+                    delay: 0.42 + index * 0.065,
+                    ease: [0.16, 1, 0.3, 1],
+                  }}
+                >
+                  {letter}
+                </motion.span>
+              </span>
+            ))}
+          </h1>
+
+          <motion.div
+            className="hero-crystal"
+            style={{
+              x: heroX,
+              y: heroY,
+              rotateX: heroRotateX,
+              rotateY: heroRotateY,
+            }}
+          >
+            <motion.span
+              className="hero-crystal-entry"
+              initial={{
+                opacity: 0,
+                scale: 0.62,
+                y: 76,
+                filter: 'blur(16px)',
+              }}
+              animate={{ opacity: 1, scale: 1, y: 0, filter: 'blur(0px)' }}
+              transition={{
+                duration: 1.35,
+                delay: 0.24,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+            >
+              <span className="hero-crystal-float">
+                <Image
+                  src="/hero/divine-crystal.webp"
+                  alt="A clouded crystal ball"
+                  width={1080}
+                  height={1080}
+                  sizes="(max-width: 720px) 72vw, 42vw"
+                  priority
+                />
+                <i aria-hidden="true" />
+              </span>
+            </motion.span>
+          </motion.div>
+        </div>
+
+        <motion.a
+          className="hero-enter"
+          href="#readings"
+          onClick={() => cue('tick')}
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.25, duration: 0.65 }}
+        >
+          Enter <span aria-hidden="true">↓</span>
+        </motion.a>
       </section>
 
       <section className="reading-index" id="readings" aria-label="Readings">
@@ -46,29 +154,27 @@ export function HomeCatalog() {
           >
             <motion.span
               className="reading-index-art"
-              initial={
-                reduceMotion
-                  ? false
-                  : { opacity: 0, y: 28, rotate: RESTING_ANGLES[index] * 2 }
-              }
+              initial={{
+                opacity: 0,
+                y: 46,
+                rotate: RESTING_ANGLES[index] * 2,
+                filter: 'blur(8px)',
+              }}
               whileInView={{
                 opacity: 1,
                 y: 0,
                 rotate: RESTING_ANGLES[index],
+                filter: 'blur(0px)',
               }}
-              whileHover={
-                reduceMotion
-                  ? undefined
-                  : {
-                      y: -10,
-                      rotate: -RESTING_ANGLES[index] * 1.4,
-                      scale: 1.045,
-                    }
-              }
+              whileHover={{
+                y: -10,
+                rotate: -RESTING_ANGLES[index] * 1.4,
+                scale: 1.045,
+              }}
               viewport={{ once: true, amount: 0.3 }}
               transition={{
-                duration: 0.7,
-                delay: reduceMotion ? 0 : (index % 4) * 0.045,
+                duration: 0.82,
+                delay: (index % 4) * 0.07,
                 ease: [0.22, 1, 0.36, 1],
               }}
             >
