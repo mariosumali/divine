@@ -37,7 +37,6 @@ function CardPortrait({
       }
       aria-hidden="true"
     >
-      <small>{card.domain ?? 'symbol'}</small>
       {image ? (
         <Image
           src={image}
@@ -49,7 +48,6 @@ function CardPortrait({
       ) : (
         <strong>{card.glyph}</strong>
       )}
-      <span>DIVINE</span>
     </div>
   );
 }

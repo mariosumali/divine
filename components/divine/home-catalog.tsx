@@ -19,6 +19,12 @@ const INDEX_ART: Record<string, string> = {
 
 const RESTING_ANGLES = [-2, 1.4, -1, 1.7, 1.2, -1.4, -1.2, 1.4];
 const HERO_LETTERS = 'DIVINE'.split('');
+const HERO_SIGILS = [
+  { src: '/index-art-v2/tarot.webp', position: 'tarot' },
+  { src: '/index-art-v2/zodiac.webp', position: 'zodiac' },
+  { src: '/index-art/lenormand.webp', position: 'lenormand' },
+  { src: '/index-art-v2/ancient-egypt.webp', position: 'egypt' },
+] as const;
 
 export function HomeCatalog() {
   const { cue } = useExperience();
@@ -73,6 +79,26 @@ export function HomeCatalog() {
           <span>Private divination</span>
           <span>Read the unknown</span>
         </motion.div>
+
+        <div className="hero-sigils" aria-hidden="true">
+          {HERO_SIGILS.map((sigil, index) => (
+            <motion.span
+              className={`hero-sigil hero-sigil-${sigil.position}`}
+              key={sigil.position}
+              initial={{ opacity: 0, scale: 0.72, y: 18 }}
+              animate={{ opacity: 0.72, scale: 1, y: 0 }}
+              transition={{
+                duration: 1.1,
+                delay: 0.82 + index * 0.11,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+            >
+              <span>
+                <Image src={sigil.src} alt="" fill sizes="150px" />
+              </span>
+            </motion.span>
+          ))}
+        </div>
 
         <div className="hero-stage">
           <h1 id="home-title" aria-label="DIVINE">

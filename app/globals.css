@@ -643,6 +643,63 @@ button {
   letter-spacing: 0.18em;
   text-transform: uppercase;
 }
+.hero-sigils {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.hero-sigil {
+  position: absolute;
+  display: block;
+  width: clamp(76px, 9vw, 138px);
+  aspect-ratio: 1;
+  will-change: transform;
+}
+.hero-sigil > span {
+  position: absolute;
+  inset: 0;
+  display: block;
+  animation: hero-sigil-drift 8s ease-in-out infinite;
+}
+.hero-sigil img {
+  object-fit: contain;
+  filter: grayscale(1) sepia(0.08) contrast(0.88) opacity(0.78);
+  mix-blend-mode: multiply;
+}
+.hero-sigil-tarot {
+  left: 6%;
+  top: 18%;
+  rotate: -13deg;
+}
+.hero-sigil-zodiac {
+  right: 7%;
+  top: 14%;
+  width: clamp(66px, 8vw, 116px);
+  rotate: 10deg;
+}
+.hero-sigil-lenormand {
+  left: 2%;
+  bottom: 13%;
+  width: clamp(94px, 12vw, 176px);
+  rotate: -8deg;
+}
+.hero-sigil-egypt {
+  right: 5%;
+  bottom: 12%;
+  width: clamp(74px, 9vw, 132px);
+  rotate: 8deg;
+}
+.hero-sigil-zodiac > span,
+.hero-sigil-lenormand > span {
+  animation-delay: -3.8s;
+  animation-direction: reverse;
+}
+:root[data-theme='dark'] .hero-sigil img {
+  filter: invert(1) grayscale(1) sepia(0.05) contrast(0.86) opacity(0.72);
+  mix-blend-mode: screen;
+}
 .hero-stage {
   position: absolute;
   inset: 42px 0 54px;
@@ -3095,7 +3152,8 @@ button {
   align-items: center;
   justify-content: space-between;
   justify-self: center;
-  padding: 15px;
+  overflow: hidden;
+  padding: 0;
   border: 1px solid var(--line);
   background: var(--paper);
   box-shadow: 0 28px 65px color-mix(in srgb, #000 18%, transparent);
@@ -3108,13 +3166,13 @@ button {
 .library-card-portrait::after {
   content: '';
   position: absolute;
-  inset: 9px;
+  inset: 0;
   border: 1px solid var(--line);
   pointer-events: none;
 }
 .library-card-portrait img {
-  width: calc(100% - 10px);
-  height: calc(100% - 72px);
+  width: 100%;
+  height: 100%;
   object-fit: cover;
 }
 .library-card-portrait.deck-ink img {
@@ -3130,14 +3188,6 @@ button {
   font-family: var(--font-bodoni), Georgia, serif;
   font-size: clamp(5rem, 10vw, 10rem);
   font-weight: 400;
-}
-.library-card-portrait small,
-.library-card-portrait span {
-  position: relative;
-  z-index: 1;
-  font-size: 7px;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
 }
 .card-profile-copy .eyebrow {
   margin-top: 0;
@@ -3258,6 +3308,15 @@ button {
   }
   50% {
     transform: translateY(-12px) rotate(0.65deg);
+  }
+}
+@keyframes hero-sigil-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(-1deg);
+  }
+  50% {
+    transform: translate3d(7px, -12px, 12px) rotate(2deg);
   }
 }
 @keyframes crystal-scan {
@@ -3789,18 +3848,13 @@ button {
   }
   .library-card-portrait {
     width: 110px;
-    padding: 9px;
   }
   .library-card-portrait::after {
-    inset: 5px;
+    inset: 0;
   }
   .library-card-portrait img {
-    width: calc(100% - 5px);
-    height: calc(100% - 44px);
-  }
-  .library-card-portrait small,
-  .library-card-portrait span {
-    font-size: 5px;
+    width: 100%;
+    height: 100%;
   }
   .library-card-portrait strong {
     font-size: 4rem;
@@ -3840,6 +3894,23 @@ button {
   .hero-crystal {
     width: min(78vw, 420px, 58svh);
   }
+  .hero-sigil {
+    width: 72px;
+  }
+  .hero-sigil-tarot,
+  .hero-sigil-egypt {
+    display: none;
+  }
+  .hero-sigil-zodiac {
+    right: -12px;
+    top: 17%;
+    width: 62px;
+  }
+  .hero-sigil-lenormand {
+    left: -18px;
+    bottom: 13%;
+    width: 94px;
+  }
   .hero-enter {
     bottom: 10px;
   }
@@ -3871,6 +3942,7 @@ button {
     display: none;
   }
   .hero-meta,
+  .hero-sigil,
   .hero-letter-mask > span,
   .hero-crystal,
   .hero-crystal-entry,
@@ -3878,6 +3950,9 @@ button {
     opacity: 1 !important;
     filter: none !important;
     transform: none !important;
+  }
+  .hero-sigil > span {
+    animation: none !important;
   }
   .hero-enter {
     opacity: 1 !important;
