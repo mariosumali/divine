@@ -1,97 +1,89 @@
 'use client';
 
-import { useState } from 'react';
-import { AnimatePresence, motion } from 'motion/react';
-import { ArrowDown, ArrowUpRight } from 'lucide-react';
+import { motion, useReducedMotion } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { SYSTEMS } from '@/lib/divine/systems';
 import { useExperience } from '@/app/providers';
+import { SYSTEMS } from '@/lib/divine/systems';
+
+const INDEX_ART: Record<string, string> = {
+  tarot: '/index-art/tarot.webp',
+  oracle: '/index-art/oracle.webp',
+  lenormand: '/index-art/lenormand.webp',
+  spellcraft: '/index-art/spellcraft.webp',
+  'ancient-egypt': '/index-art/ancient-egypt.webp',
+  zodiac: '/index-art/zodiac.webp',
+  'magic-8-ball': '/index-art/magic-8-ball.webp',
+  'fortune-cookie': '/index-art/fortune-cookie.webp',
+};
+
+const RESTING_ANGLES = [-3, 2, -1, 3, 2, -2, -2, 2];
 
 export function HomeCatalog() {
-  const [active, setActive] = useState(0);
   const { cue } = useExperience();
+  const reduceMotion = useReducedMotion();
 
   return (
-    <main>
-      <section className="hero" aria-labelledby="hero-title">
-        <div className="hero-line" />
-        <span />
-        <h1 id="hero-title" className="wordmark">
+    <main className="home-index">
+      <section className="index-masthead" aria-labelledby="home-title">
+        <motion.h1
+          id="home-title"
+          initial={reduceMotion ? false : { clipPath: 'inset(100% 0 0)' }}
+          animate={{ clipPath: 'inset(0% 0 0)' }}
+          transition={{ duration: 1.05, ease: [0.22, 1, 0.36, 1] }}
+        >
           DIVINE
-        </h1>
-        <div className="hero-footer">
-          <p>Private. Local. Yours.</p>
-          <a href="#readings" className="text-link">
-            Begin <ArrowDown />
-          </a>
-        </div>
+        </motion.h1>
       </section>
 
-      <section
-        className="catalog"
-        id="readings"
-        aria-labelledby="readings-title"
-      >
-        <h2 className="sr-only" id="readings-title">
-          Readings
-        </h2>
-        <div className="catalog-layout">
-          <div className="system-list">
-            {SYSTEMS.map((system, index) => (
-              <Link
-                className={`system-row ${active === index ? 'active' : ''}`}
-                href={`/read/${system.slug}`}
-                key={system.slug}
-                onMouseEnter={() => setActive(index)}
-                onFocus={() => setActive(index)}
-                onClick={() => cue('tick')}
-              >
-                <span className="system-name">{system.name}</span>
-                <span className="system-arrow" aria-hidden="true">
-                  <ArrowUpRight />
-                </span>
-                <Image
-                  className="mobile-system-image"
-                  src={system.cover}
-                  alt=""
-                  width={1122}
-                  height={1402}
-                />
-              </Link>
-            ))}
-          </div>
-          <div className="catalog-art" aria-hidden="true">
-            <AnimatePresence mode="wait">
-              <motion.img
-                key={SYSTEMS[active].slug}
-                src={SYSTEMS[active].cover}
+      <section className="reading-index" id="readings" aria-label="Readings">
+        {SYSTEMS.map((system, index) => (
+          <Link
+            className="reading-index-item"
+            href={`/read/${system.slug}`}
+            key={system.slug}
+            onClick={() => cue('tick')}
+          >
+            <motion.span
+              className="reading-index-art"
+              initial={
+                reduceMotion
+                  ? false
+                  : { opacity: 0, y: 28, rotate: RESTING_ANGLES[index] * 2 }
+              }
+              whileInView={{
+                opacity: 1,
+                y: 0,
+                rotate: RESTING_ANGLES[index],
+              }}
+              whileHover={
+                reduceMotion
+                  ? undefined
+                  : {
+                      y: -10,
+                      rotate: -RESTING_ANGLES[index] * 1.4,
+                      scale: 1.045,
+                    }
+              }
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{
+                duration: 0.7,
+                delay: reduceMotion ? 0 : (index % 4) * 0.045,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+            >
+              <Image
+                src={INDEX_ART[system.slug]}
                 alt=""
-                initial={{
-                  opacity: 0,
-                  clipPath: 'inset(12% 0 88% 0)',
-                  scale: 1.04,
-                }}
-                animate={{ opacity: 1, clipPath: 'inset(0% 0 0% 0)', scale: 1 }}
-                exit={{ opacity: 0, clipPath: 'inset(88% 0 12% 0)' }}
-                transition={{ duration: 0.58, ease: [0.22, 1, 0.36, 1] }}
+                fill
+                sizes="(max-width: 720px) 45vw, 25vw"
+                priority={index < 4}
               />
-            </AnimatePresence>
-          </div>
-        </div>
+            </motion.span>
+            <span className="reading-index-name">{system.name}</span>
+          </Link>
+        ))}
       </section>
-
-      <section className="home-statement">
-        <Link href="/library">
-          <span>Library</span>
-          <small>History & meanings</small>
-          <ArrowUpRight />
-        </Link>
-      </section>
-      <footer className="site-footer">
-        <span>For reflection and entertainment</span>
-        <span>© DIVINE</span>
-      </footer>
     </main>
   );
 }
