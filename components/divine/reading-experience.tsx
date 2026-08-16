@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, animate as motionAnimate, motion, useMotionValue, useTransform } from 'motion/react';
-import { ArrowLeft, ArrowRight, BookMarked, Check, ChevronLeft, Heart, RotateCcw, Share2 } from 'lucide-react';
+import { ArrowLeft, ArrowRight, BookMarked, Check, ChevronLeft, ChevronRight, Heart, RotateCcw, Share2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -49,6 +49,10 @@ const cookieCrumbs = [
   { x: -114, y: -42, r: -18 }, { x: -76, y: 62, r: 22 }, { x: -35, y: 86, r: -8 },
   { x: 42, y: 78, r: 14 }, { x: 88, y: 48, r: -24 }, { x: 126, y: -26, r: 18 },
 ];
+
+function sentenceExcerpt(text: string, limit: number) {
+  return text.split(/(?<=[.!?])\s+/).filter(Boolean).slice(0, limit).join(' ');
+}
 
 function createId() {
   return typeof crypto.randomUUID === 'function' ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
@@ -186,8 +190,23 @@ function CardFace({ draw, revealed, index, compact, disabled, onPeelStart, onRev
   const peel = useMotionValue(revealed ? 1 : 0);
   const tiltX = useMotionValue(0);
   const tiltY = useMotionValue(0);
-  const coverRotation = useTransform(peel, [0, 1], [0, -178]);
-  const edgeOpacity = useTransform(peel, [0, 0.18, 0.82, 1], [0, 1, 0.65, 0]);
+  const coverX = useTransform(peel, [0, .34, 1], [0, compact ? -8 : -18, compact ? -54 : -132]);
+  const coverY = useTransform(peel, [0, .34, 1], [0, compact ? 7 : 16, compact ? 38 : 92]);
+  const coverRotateX = useTransform(peel, [0, .4, 1], [0, 15, 34]);
+  const coverRotateY = useTransform(peel, [0, .4, 1], [0, -16, -42]);
+  const coverRotateZ = useTransform(peel, [0, .4, 1], [0, -5, -17]);
+  const coverScale = useTransform(peel, [0, .5, 1], [1, .96, .76]);
+  const coverOpacity = useTransform(peel, [0, .84, 1], [1, 1, 0]);
+  const coverClip = useTransform(peel, [0, .45, .82, 1], [
+    'polygon(0 0,100% 0,100% 100%,0 100%)',
+    'polygon(0 0,48% 0,100% 48%,100% 100%,0 100%)',
+    'polygon(0 0,8% 0,100% 92%,100% 100%,0 100%)',
+    'polygon(0 0,0 0,100% 100%,100% 100%,0 100%)',
+  ]);
+  const foldScale = useTransform(peel, [0, .06, .72, 1], [0, .18, 1, .28]);
+  const foldOpacity = useTransform(peel, [0, .05, .82, 1], [0, 1, 1, 0]);
+  const foldRotate = useTransform(peel, [0, 1], [0, -10]);
+  const peelShadow = useTransform(peel, [0, .18, .75, 1], [0, .22, .54, 0]);
   const suppressClick = useRef(false);
 
   useEffect(() => {
@@ -195,13 +214,13 @@ function CardFace({ draw, revealed, index, compact, disabled, onPeelStart, onRev
       peel.set(revealed ? 1 : 0);
       return;
     }
-    motionAnimate(peel, revealed ? 1 : 0, { type: 'spring', stiffness: 155, damping: 21, mass: 0.82 });
+    motionAnimate(peel, revealed ? 1 : 0, { duration: revealed ? .48 : .3, ease: [0.22, 1, 0.36, 1] });
   }, [peel, revealed]);
 
   const completePeel = () => {
     if (revealed || disabled) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) peel.set(1);
-    else motionAnimate(peel, 1, { type: 'spring', stiffness: 138, damping: 19, mass: 0.86 });
+    else motionAnimate(peel, 1, { duration: .52, ease: [0.22, 1, 0.36, 1] });
     onReveal();
   };
   const peelProgress = (x: number, y: number) => Math.min(0.96, Math.max(0, (-x + Math.max(0, y) * 0.28) / (compact ? 76 : 125)));
@@ -256,10 +275,11 @@ function CardFace({ draw, revealed, index, compact, disabled, onPeelStart, onRev
           <span>{draw.card.name}</span>
           {draw.reversed && <em>Reversed</em>}
         </span>
-        <motion.span className="card-peel" style={{ rotateY: coverRotation }} aria-hidden="true">
+        <motion.span className="card-peel" style={{ x: coverX, y: coverY, rotateX: coverRotateX, rotateY: coverRotateY, rotateZ: coverRotateZ, scale: coverScale, opacity: coverOpacity, clipPath: coverClip }} aria-hidden="true">
           <span className="card-back"><i /><b>DIVINE</b><i /></span>
-          <motion.span className="peel-edge" style={{ opacity: edgeOpacity }} />
         </motion.span>
+        <motion.span className="peel-fold" style={{ scale: foldScale, opacity: foldOpacity, rotateZ: foldRotate }} aria-hidden="true"><i /></motion.span>
+        <motion.span className="peel-shadow" style={{ opacity: peelShadow }} aria-hidden="true" />
         {!revealed && !disabled && (
           <motion.span
             className="peel-corner"
@@ -275,7 +295,7 @@ function CardFace({ draw, revealed, index, compact, disabled, onPeelStart, onRev
                 window.setTimeout(() => { suppressClick.current = false; }, 0);
               }
               if (progress >= 0.22) completePeel();
-              else motionAnimate(peel, 0, { type: 'spring', stiffness: 225, damping: 22 });
+              else motionAnimate(peel, 0, { duration: .28, ease: [0.22, 1, 0.36, 1] });
             }}
           ><i /></motion.span>
         )}
@@ -313,6 +333,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
   const [isRevealingAll, setIsRevealingAll] = useState(false);
   const [deckPhase, setDeckPhase] = useState<DeckPhase>('stacked');
   const [shareStatus, setShareStatus] = useState<ShareStatus>('idle');
+  const [resultCardIndex, setResultCardIndex] = useState(0);
   const [sessionReady, setSessionReady] = useState(false);
   const motionHandler = useRef<((event: DeviceMotionEvent) => void) | null>(null);
   const ritualLock = useRef(false);
@@ -412,6 +433,13 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
     spreadName: spread?.name ?? (system.kind === 'ball' ? 'Ask & shake' : 'Crack & reveal'), createdAt,
     focus, question: question.trim() || undefined, draws, interpretation, note, favorite,
   } : null, [interpretation, system, spread, focus, question, draws, note, favorite, recordId, createdAt]);
+
+  const resultOverview = useMemo(() => interpretation
+    ? `${sentenceExcerpt(interpretation.overview, 2)} ${sentenceExcerpt(interpretation.synthesis, 1)}`.trim()
+    : '', [interpretation]);
+  const safeResultCardIndex = Math.min(resultCardIndex, Math.max(0, draws.length - 1));
+  const selectedResultDraw = draws[safeResultCardIndex] ?? null;
+  const selectedResultPosition = interpretation?.positions[safeResultCardIndex] ?? null;
 
   const beginRecord = () => {
     setRecordId(createId());
@@ -527,6 +555,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
     ritualLock.current = false;
     setDraws(next);
     setRevealed(new Set());
+    setResultCardIndex(0);
     cue('deal');
     setDeckPhase('dealing');
     setAnnouncement(`${spread.positions.length} ${spread.positions.length === 1 ? 'card is' : 'cards are'} leaving the fan.`);
@@ -713,6 +742,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
     setObjectStep(0);
     setObjectAnimating(false);
     setShareStatus('idle');
+    setResultCardIndex(0);
     cue('tick');
   };
 
@@ -834,6 +864,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
                 >
                   {deckLayers.map((layer) => <span className="deck-layer" aria-hidden="true" key={layer} style={{ '--layer': layer, '--direction': layer % 2 ? 1 : -1 } as React.CSSProperties} />)}
                   <span className="deck-face"><b>DIVINE</b><i>{system.shortName}</i></span>
+                  <span className="deck-band" aria-hidden="true"><i>Break the seal</i></span>
                 </motion.button>
               )}
             </div>
@@ -912,10 +943,75 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
 
         {stage === 'result' && interpretation && record && (
           <motion.section className="reading-stage result-stage" key="result" initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }}>
-            <header className="result-hero"><p className="eyebrow">The reading</p><h1>{interpretation.headline}</h1>{interpretation.reflectionPrompt && <p>{interpretation.reflectionPrompt}</p>}</header>
+            <header className="result-hero">
+              <p className="eyebrow">The reading</p>
+              <h1>{interpretation.headline}</h1>
+              <p className="result-overview">{resultOverview}</p>
+            </header>
             {system.kind !== 'cards' && luckyNumbers.length > 0 && <div className={`object-result ${system.kind}`}><small>Lucky numbers · {luckyNumbers.join(' · ')}</small></div>}
-            {draws.length > 0 && <div className={`result-cards ${draws.length > 10 ? 'dense' : ''}`}>{draws.map((draw, index) => <details key={`${draw.card.id}-${index}`}><summary><span>{draw.position}</span><strong>{draw.card.name}</strong></summary><p>{interpretation.positions[index]?.text}</p></details>)}</div>}
-            <blockquote>{interpretation.synthesis.split(/(?<=[.!?])\s+/)[0]}</blockquote>
+            {selectedResultDraw && selectedResultPosition && (
+              <section className="result-reading" aria-label="Cards in this reading">
+                <div className="result-reading-focus">
+                  <AnimatePresence mode="wait" initial={false}>
+                    <motion.article
+                      className="result-card-detail"
+                      key={`${selectedResultDraw.card.id}-${safeResultCardIndex}`}
+                      initial={{ opacity: 0, x: 74, rotateZ: 4 }}
+                      animate={{ opacity: 1, x: 0, rotateZ: 0 }}
+                      exit={{ opacity: 0, x: -58, rotateZ: -3 }}
+                      transition={{ duration: .42, ease: [0.22, 1, 0.36, 1] }}
+                    >
+                      <motion.div
+                        className="result-card-object"
+                        initial={{ y: 28, rotateX: -8, rotateY: 12, rotateZ: safeResultCardIndex % 2 ? 1.4 : -1.4, scale: .92 }}
+                        animate={{ y: 0, rotateX: 0, rotateY: 0, rotateZ: safeResultCardIndex % 2 ? .7 : -.7, scale: 1 }}
+                        transition={{ duration: .58, ease: [0.22, 1, 0.36, 1] }}
+                        whileHover={{ y: -9, rotateX: -2, rotateY: safeResultCardIndex % 2 ? -4 : 4, scale: 1.015 }}
+                      >
+                        <div className={`result-card-sticker ${selectedResultDraw.reversed ? 'is-reversed' : ''}`}>
+                          <small>{selectedResultDraw.position}</small>
+                          {selectedResultDraw.card.image ? (
+                            <span className="result-card-art"><Image src={selectedResultDraw.card.image} alt={`${selectedResultDraw.card.name} card artwork`} width={520} height={820} sizes="(max-width: 720px) 54vw, 260px" /></span>
+                          ) : <strong aria-hidden="true">{selectedResultDraw.card.glyph}</strong>}
+                          <span>{selectedResultDraw.card.name}</span>
+                          {selectedResultDraw.reversed && <em>Reversed</em>}
+                        </div>
+                      </motion.div>
+                      <div className="result-card-copy" aria-live="polite">
+                        <span className="result-card-count">{String(safeResultCardIndex + 1).padStart(2, '0')} / {String(draws.length).padStart(2, '0')}</span>
+                        <p className="eyebrow">{selectedResultDraw.position}</p>
+                        <h2>{selectedResultDraw.card.name}</h2>
+                        <p>{sentenceExcerpt(selectedResultPosition.text, 2)}</p>
+                        <div className="result-keywords" aria-label="Keywords">{selectedResultDraw.card.keywords.slice(0, 3).map((keyword) => <span key={keyword}>{keyword}</span>)}</div>
+                        <div className="result-card-nav">
+                          <button type="button" onClick={() => { setResultCardIndex((current) => Math.max(0, current - 1)); cue('deal'); }} disabled={safeResultCardIndex === 0}><ChevronLeft /> Previous</button>
+                          <button type="button" onClick={() => { setResultCardIndex((current) => Math.min(draws.length - 1, current + 1)); cue('deal'); }} disabled={safeResultCardIndex === draws.length - 1}>Next <ChevronRight /></button>
+                        </div>
+                      </div>
+                    </motion.article>
+                  </AnimatePresence>
+                </div>
+                {draws.length > 1 && (
+                  <div className="result-card-strip" role="tablist" aria-label="Choose a card to interpret">
+                    {draws.map((draw, index) => (
+                      <button
+                        type="button"
+                        role="tab"
+                        aria-selected={safeResultCardIndex === index}
+                        aria-label={`${index + 1}. ${draw.position}: ${draw.card.name}${draw.reversed ? ', reversed' : ''}`}
+                        className={safeResultCardIndex === index ? 'active' : ''}
+                        key={`${draw.card.id}-${index}`}
+                        onClick={() => { setResultCardIndex(index); cue('deal'); }}
+                      >
+                        {draw.card.image ? <Image src={draw.card.image} alt="" width={72} height={112} /> : <strong aria-hidden="true">{draw.card.glyph}</strong>}
+                        <span>{String(index + 1).padStart(2, '0')}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </section>
+            )}
+            {interpretation.reflectionPrompt && <p className="result-prompt">{interpretation.reflectionPrompt}</p>}
             <details className="reflection-drawer">
               <summary>Keep this reading <ArrowRight /></summary>
               <div className="journal-compose">
