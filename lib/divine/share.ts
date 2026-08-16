@@ -10,14 +10,21 @@ export interface ShareComposition {
   question?: string;
 }
 
-export function composeShare(record: ReadingRecord, includeQuestion = false): ShareComposition {
+export function composeShare(
+  record: ReadingRecord,
+  includeQuestion = false,
+): ShareComposition {
   return {
     title: 'DIVINE',
     subtitle: `${record.systemName} · ${record.spreadName}`,
     headline: record.interpretation.headline,
     synthesis: record.interpretation.synthesis,
     date: record.createdAt,
-    cards: record.draws.map((draw) => ({ name: draw.card.name, position: draw.position, reversed: draw.reversed })),
+    cards: record.draws.map((draw) => ({
+      name: draw.card.name,
+      position: draw.position,
+      reversed: draw.reversed,
+    })),
     question: includeQuestion ? record.question : undefined,
   };
 }

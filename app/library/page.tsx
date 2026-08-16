@@ -3,7 +3,7 @@ import { LibraryBrowser } from '@/components/divine/library-browser';
 
 export const metadata: Metadata = {
   title: 'Library — DIVINE',
-  description: 'The histories and symbols behind every DIVINE reading system.',
+  description: 'The histories, cards, and symbols behind DIVINE.',
 };
 
 export default function LibraryPage() {

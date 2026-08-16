@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { OBJECT_RITUAL_STEPS, drawCards, drawFortune, interpretReading, lenormandPairText, nextObjectRitualStep, secureShuffle } from './reading';
+import {
+  OBJECT_RITUAL_STEPS,
+  drawCards,
+  drawFortune,
+  interpretReading,
+  lenormandPairText,
+  nextObjectRitualStep,
+  secureShuffle,
+} from './reading';
 import { FORTUNES, SYSTEM_MAP, SYSTEMS } from './systems';
 
 describe('DIVINE content libraries', () => {
@@ -28,7 +36,9 @@ describe('reading engine', () => {
       it(`${system.name} · ${spread.name} draws the required unique cards`, () => {
         const draws = drawCards(system, spread, system.slug === 'tarot');
         expect(draws).toHaveLength(spread.positions.length);
-        expect(new Set(draws.map((draw) => draw.card.id)).size).toBe(draws.length);
+        expect(new Set(draws.map((draw) => draw.card.id)).size).toBe(
+          draws.length,
+        );
         expect(draws.map((draw) => draw.position)).toEqual(spread.positions);
         const result = interpretReading(system, spread, draws, 'growth');
         expect(result.positions).toHaveLength(draws.length);
@@ -40,27 +50,48 @@ describe('reading engine', () => {
 
   it('draws one sign, planet, and house for the Zodiac triad', () => {
     const system = SYSTEM_MAP.zodiac;
-    const spread = system.spreads.find((item) => item.id === 'celestial-triad')!;
-    expect(drawCards(system, spread, false).map((draw) => draw.card.domain)).toEqual(['sign', 'planet', 'house']);
+    const spread = system.spreads.find(
+      (item) => item.id === 'celestial-triad',
+    )!;
+    expect(
+      drawCards(system, spread, false).map((draw) => draw.card.domain),
+    ).toEqual(['sign', 'planet', 'house']);
   });
 
   it('never duplicates a Zodiac anchor in the five-card pattern', () => {
     const system = SYSTEM_MAP.zodiac;
-    const spread = system.spreads.find((item) => item.id === 'celestial-pattern')!;
+    const spread = system.spreads.find(
+      (item) => item.id === 'celestial-pattern',
+    )!;
     for (let iteration = 0; iteration < 250; iteration += 1) {
       const draws = drawCards(system, spread, false);
       expect(new Set(draws.map((draw) => draw.card.id)).size).toBe(5);
-      expect(draws.slice(0, 3).map((draw) => draw.card.domain)).toEqual(['sign', 'planet', 'house']);
+      expect(draws.slice(0, 3).map((draw) => draw.card.domain)).toEqual([
+        'sign',
+        'planet',
+        'house',
+      ]);
     }
   });
 
   it('applies curated Lenormand relationships and house context', () => {
-    const heart = SYSTEM_MAP.lenormand.cards.find((card) => card.name === 'Heart')!;
-    const ring = SYSTEM_MAP.lenormand.cards.find((card) => card.name === 'Ring')!;
+    const heart = SYSTEM_MAP.lenormand.cards.find(
+      (card) => card.name === 'Heart',
+    )!;
+    const ring = SYSTEM_MAP.lenormand.cards.find(
+      (card) => card.name === 'Ring',
+    )!;
     expect(lenormandPairText(heart, ring)).toContain('explicit bond');
-    const spread = SYSTEM_MAP.lenormand.spreads.find((item) => item.id === 'grand-tableau')!;
+    const spread = SYSTEM_MAP.lenormand.spreads.find(
+      (item) => item.id === 'grand-tableau',
+    )!;
     const draws = drawCards(SYSTEM_MAP.lenormand, spread, false);
-    const result = interpretReading(SYSTEM_MAP.lenormand, spread, draws, 'general');
+    const result = interpretReading(
+      SYSTEM_MAP.lenormand,
+      spread,
+      draws,
+      'general',
+    );
     expect(result.positions[0].text).toContain('In the house of Rider');
     expect(result.positions[0].text).toContain('Nearest neighbors');
     expect(result.positions[0].text).toContain('Timing:');
@@ -72,7 +103,9 @@ describe('reading engine', () => {
     expect(result.reflectionPrompt.length).toBeGreaterThan(20);
     expect(result.numbers).toHaveLength(6);
     expect(new Set(result.numbers).size).toBe(6);
-    expect(result.numbers.every((number) => number >= 1 && number <= 49)).toBe(true);
+    expect(result.numbers.every((number) => number >= 1 && number <= 49)).toBe(
+      true,
+    );
   });
 
   it('requires three deliberate object interactions and never advances beyond resolution', () => {

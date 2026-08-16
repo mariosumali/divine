@@ -15,11 +15,17 @@ describe('DIVINE library', () => {
   it('indexes every authored card with a standalone meaning', () => {
     const cards = SYSTEMS.flatMap((system) => system.cards);
     expect(cards).toHaveLength(264);
-    expect(cards.every((card) => card.name && card.meaning && card.keywords.length > 0)).toBe(true);
+    expect(
+      cards.every(
+        (card) => card.name && card.meaning && card.keywords.length > 0,
+      ),
+    ).toBe(true);
   });
 
   it('keeps the named historical variants explicit', () => {
     expect(METHOD_HISTORIES.tarot.variant).toContain('Tarot de Marseille');
-    expect(METHOD_HISTORIES.lenormand.variant).toContain('Grand Jeu de Mlle Lenormand');
+    expect(METHOD_HISTORIES.lenormand.variant).toContain(
+      'Grand Jeu de Mlle Lenormand',
+    );
   });
 });

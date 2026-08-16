@@ -37,9 +37,18 @@ describe('share composition privacy', () => {
   });
 
   it('retains the complete spread in the export composition', () => {
-    const draws = SYSTEMS[0].cards.slice(0, 12).map((card, index) => ({ card, position: `Position ${index + 1}`, reversed: index % 2 === 0 }));
+    const draws = SYSTEMS[0].cards
+      .slice(0, 12)
+      .map((card, index) => ({
+        card,
+        position: `Position ${index + 1}`,
+        reversed: index % 2 === 0,
+      }));
     const composition = composeShare({ ...record, draws });
     expect(composition.cards).toHaveLength(12);
-    expect(composition.cards[0]).toMatchObject({ position: 'Position 1', reversed: true });
+    expect(composition.cards[0]).toMatchObject({
+      position: 'Position 1',
+      reversed: true,
+    });
   });
 });

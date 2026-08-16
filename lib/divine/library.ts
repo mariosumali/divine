@@ -20,8 +20,12 @@ export const METHOD_HISTORIES: Record<SystemSlug, MethodHistory> = {
       'Tarot emerged in fifteenth-century northern Italy as a trick-taking card game: four familiar suits joined by a Fool and twenty-one trumps. Its occult and divinatory life developed much later, gathering force in France and Britain from the late eighteenth century onward.',
       'DIVINE follows the seventy-eight-card Rider–Waite–Smith structure published in 1909, with original interpretations and public-domain imagery.',
     ],
-    variant: 'Tarot de Marseille is a separate historical family with older continental designs, pip-based minor cards, and a distinct reading tradition.',
-    source: { label: 'The Metropolitan Museum of Art', url: 'https://www.metmuseum.org/perspectives/tarot-2' },
+    variant:
+      'Tarot de Marseille is a separate historical family with older continental designs, pip-based minor cards, and a distinct reading tradition.',
+    source: {
+      label: 'The Metropolitan Museum of Art',
+      url: 'https://www.metmuseum.org/perspectives/tarot-2',
+    },
   },
   oracle: {
     slug: 'oracle',
@@ -42,8 +46,12 @@ export const METHOD_HISTORIES: Record<SystemSlug, MethodHistory> = {
       'Marie Anne Adélaïde Lenormand was a celebrated card reader in Napoleonic France. The compact thirty-six-card oracle now called Petit Lenormand was published after her death and attached to her reputation.',
       'Its vocabulary is concrete—Rider, House, Key, Ring—and meaning changes through proximity. A British Museum example records a Berlin edition first published in 1854.',
     ],
-    variant: 'The Grand Jeu de Mlle Lenormand is a different, larger deck. DIVINE uses the familiar thirty-six-card Petit Lenormand, including a Grand Tableau spread.',
-    source: { label: 'The British Museum', url: 'https://www.britishmuseum.org/collection/object/P_1896-0501-413' },
+    variant:
+      'The Grand Jeu de Mlle Lenormand is a different, larger deck. DIVINE uses the familiar thirty-six-card Petit Lenormand, including a Grand Tableau spread.',
+    source: {
+      label: 'The British Museum',
+      url: 'https://www.britishmuseum.org/collection/object/P_1896-0501-413',
+    },
   },
   spellcraft: {
     slug: 'spellcraft',
@@ -64,7 +72,10 @@ export const METHOD_HISTORIES: Record<SystemSlug, MethodHistory> = {
       'Ancient Egyptian life included dreams, omens, protective objects, temple ritual, and the close relationship of medicine and magic. A surviving dream book from about 1220 BCE classifies visions as favorable or unfavorable signs.',
       'DIVINE’s thirty-six cards are a modern, Egyptian-inspired oracle—not an ancient recovered deck. Names and symbols are kept in historical context while the interpretations remain contemporary.',
     ],
-    source: { label: 'The British Museum', url: 'https://www.britishmuseum.org/sites/default/files/2022-10/Hieroglyphs_unlocking_ancient_Egypt_large_print_guide_The_British_Museum.pdf' },
+    source: {
+      label: 'The British Museum',
+      url: 'https://www.britishmuseum.org/sites/default/files/2022-10/Hieroglyphs_unlocking_ancient_Egypt_large_print_guide_The_British_Museum.pdf',
+    },
   },
   zodiac: {
     slug: 'zodiac',
@@ -75,7 +86,10 @@ export const METHOD_HISTORIES: Record<SystemSlug, MethodHistory> = {
       'Babylonian scholars divided the ecliptic into twelve zodiacal units and read celestial phenomena as signs. Horoscopic astrology later developed through exchange across the Hellenistic world.',
       'DIVINE separates the grammar into thirty-four cards: signs describe quality, planetary bodies describe impulse, and houses describe the field of life where that impulse appears.',
     ],
-    source: { label: 'The Metropolitan Museum of Art', url: 'https://resources.metmuseum.org/resources/metpublications/pdf/The_World_between_Empires_Art_and_Identity_in_the_Ancient_Middle_East.pdf' },
+    source: {
+      label: 'The Metropolitan Museum of Art',
+      url: 'https://resources.metmuseum.org/resources/metpublications/pdf/The_World_between_Empires_Art_and_Identity_in_the_Ancient_Middle_East.pdf',
+    },
   },
   'magic-8-ball': {
     slug: 'magic-8-ball',
@@ -96,6 +110,9 @@ export const METHOD_HISTORIES: Record<SystemSlug, MethodHistory> = {
       'The modern fortune cookie is an American form with Japanese roots. In early twentieth-century San Francisco, Japanese confectioner Benkyodo supplied folded tea cakes to the Japanese Tea Garden; their later association with Chinese American restaurants grew during and after World War II.',
       'DIVINE treats the cookie as a small chance ritual: choose, fracture, unfold. Its 144 fortunes and number sets are original.',
     ],
-    source: { label: 'Smithsonian National Museum of American History', url: 'https://americanhistory.si.edu/explore/stories/origins-fortune-cookie' },
+    source: {
+      label: 'Smithsonian National Museum of American History',
+      url: 'https://americanhistory.si.edu/explore/stories/origins-fortune-cookie',
+    },
   },
 };
