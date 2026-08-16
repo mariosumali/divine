@@ -44,13 +44,13 @@ export const METHOD_HISTORIES: Record<SystemSlug, MethodHistory> = {
     title: 'Her name outlived her deck.',
     history: [
       'Marie Anne Adélaïde Lenormand was a celebrated card reader in Napoleonic France. The compact thirty-six-card oracle now called Petit Lenormand was published after her death and attached to her reputation.',
-      'Its vocabulary is concrete—Rider, House, Key, Ring—and meaning changes through proximity. A British Museum example records a Berlin edition first published in 1854.',
+      'Its vocabulary is concrete—Rider, House, Key, Ring—and meaning changes through proximity. DIVINE uses the complete public-domain artwork from Johann Kaspar Hechtel’s 1799 Game of Hope, the deck whose sequence became the Petit Lenormand.',
     ],
     variant:
       'The Grand Jeu de Mlle Lenormand is a different, larger deck. DIVINE uses the familiar thirty-six-card Petit Lenormand, including a Grand Tableau spread.',
     source: {
-      label: 'The British Museum',
-      url: 'https://www.britishmuseum.org/collection/object/P_1896-0501-413',
+      label: 'Wikimedia Commons · The Game of Hope',
+      url: 'https://commons.wikimedia.org/wiki/File:Das_Spiel_der_Hofnung_(The_Game_of_Hope).png',
     },
   },
   spellcraft: {

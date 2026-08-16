@@ -1,3 +1,5 @@
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {
   OBJECT_RITUAL_STEPS,
@@ -27,6 +29,17 @@ describe('DIVINE content libraries', () => {
     const shuffled = secureShuffle(source);
     expect(shuffled).toHaveLength(source.length);
     expect(new Set(shuffled)).toEqual(new Set(source));
+  });
+
+  it('ships one distinct historical image for every Lenormand card', () => {
+    const images = SYSTEM_MAP.lenormand.cards.map((card) => card.image);
+    expect(new Set(images).size).toBe(36);
+    for (const image of images) {
+      expect(image).toMatch(/^\/lenormand\/game-of-hope-\d{2}\.webp$/);
+      expect(existsSync(join(process.cwd(), 'public', image!.slice(1)))).toBe(
+        true,
+      );
+    }
   });
 });
 

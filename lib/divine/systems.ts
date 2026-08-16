@@ -755,6 +755,7 @@ const lenormand = makeNamedDeck(
   'the signal is indirect; context and proximity decide its force.',
 ).map((card, index) => ({
   ...card,
+  image: `/lenormand/game-of-hope-${String(index + 1).padStart(2, '0')}.webp`,
   subject: lenormandEntries[index][1],
   modifier: positiveLenormand.has(card.name)
     ? 'opens or strengthens nearby cards'
@@ -768,6 +769,8 @@ const lenormand = makeNamedDeck(
       : ('neutral' as const),
   timing: lenormandTiming[index],
   domain: lenormandEntries[index][1],
+  provenance:
+    'Das Spiel der Hofnung (Johann Kaspar Hechtel, 1799), public-domain scan via Wikimedia Commons; original DIVINE interpretation.',
 }));
 const spellcraft = makeNamedDeck(
   'spellcraft',
