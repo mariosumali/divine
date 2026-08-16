@@ -129,6 +129,15 @@ export function LibraryBrowser() {
                 Source · {history.source.label} <ExternalLink />
               </a>
             )}
+            {system.slug === 'fortune-cookie' && (
+              <a
+                href="https://poly.pizza/m/8diHwxl9PEK"
+                target="_blank"
+                rel="noreferrer"
+              >
+                3D model · Poly by Google <ExternalLink />
+              </a>
+            )}
           </div>
         </div>
       </section>

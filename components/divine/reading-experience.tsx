@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import {
   AnimatePresence,
   animate as motionAnimate,
@@ -50,6 +50,12 @@ import type {
   SpreadDefinition,
   SystemDefinition,
 } from '@/lib/divine/types';
+
+const FortuneCookie3D = lazy(() =>
+  import('@/components/divine/fortune-cookie-3d').then((module) => ({
+    default: module.FortuneCookie3D,
+  })),
+);
 
 type Stage = 'intro' | 'frame' | 'method' | 'ritual' | 'reveal' | 'result';
 type ShareStatus =
@@ -590,7 +596,9 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
   const [motionSupported, setMotionSupported] = useState(false);
   const [motionEnabled, setMotionEnabled] = useState(false);
   const [announcement, setAnnouncement] = useState('');
-  const [cookieChoice, setCookieChoice] = useState<number | null>(null);
+  const [cookieChoice, setCookieChoice] = useState<number | null>(() =>
+    system.kind === 'cookie' ? 0 : null,
+  );
   const [objectStep, setObjectStep] = useState(0);
   const [objectAnimating, setObjectAnimating] = useState(false);
   const [isRevealingAll, setIsRevealingAll] = useState(false);
@@ -713,7 +721,9 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
             restored.cookieChoice === 1 ||
             restored.cookieChoice === 2
             ? restored.cookieChoice
-            : null,
+            : system.kind === 'cookie'
+              ? 0
+              : null,
         );
         setObjectStep(
           typeof restored.objectStep === 'number'
@@ -923,7 +933,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
         setShuffled(false);
         setDeckPhase('stacked');
       }
-      setCookieChoice(null);
+      setCookieChoice(system.kind === 'cookie' ? 0 : null);
       setObjectStep(0);
       setObjectAnimating(false);
       move(system.kind === 'cards' ? 'method' : 'frame');
@@ -1199,7 +1209,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
     setFavorite(false);
     setSaved(false);
     setAnnouncement('');
-    setCookieChoice(null);
+    setCookieChoice(system.kind === 'cookie' ? 0 : null);
     setObjectStep(0);
     setObjectAnimating(false);
     setShareStatus('idle');
@@ -1543,129 +1553,42 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            {cookieChoice === null ? (
-              <fieldset className="cookie-choices">
-                <legend className="sr-only">
-                  Choose one of three fortune cookies
-                </legend>
-                {[0, 1, 2].map((choice) => (
-                  <motion.button
-                    type="button"
-                    className="cookie-choice"
-                    key={choice}
-                    onClick={() => {
-                      setCookieChoice(choice);
-                      setObjectStep(0);
-                      settleField();
-                      cue('tick');
-                    }}
-                    whileHover={{
-                      y: -16,
-                      rotateX: -7,
-                      rotateY: choice === 0 ? -12 : choice === 2 ? 12 : 0,
-                      rotateZ: choice === 0 ? -4 : choice === 2 ? 4 : 0,
-                    }}
-                    whileTap={{ scale: 0.95 }}
-                    aria-label={`Choose fortune cookie ${choice + 1}`}
-                  >
-                    <Image
-                      src="/art/fortune-cookie-object-v2.webp"
-                      alt=""
-                      width={550}
-                      height={367}
-                      sizes="(max-width: 720px) 30vw, 220px"
-                    />
-                  </motion.button>
-                ))}
-              </fieldset>
-            ) : (
-              <motion.button
-                drag
-                dragConstraints={{
-                  left: -100,
-                  right: 100,
-                  top: -60,
-                  bottom: 60,
-                }}
-                dragElastic={0.16}
-                dragMomentum={false}
-                style={{ rotateX: fieldTiltX, rotateY: fieldTiltY }}
-                onPointerMove={tiltField}
-                onPointerLeave={settleField}
-                onDrag={dragField}
-                onDragEnd={settleField}
-                onClick={advanceObjectRitual}
-                onKeyDown={(event) => {
-                  if (event.key === 'Enter' || event.key === ' ') {
-                    event.preventDefault();
-                    advanceObjectRitual();
+            <div
+              className={`cookie-object object-step-${objectStep} ${objectStep === OBJECT_RITUAL_STEPS ? 'is-cracking' : ''} ${objectAnimating ? 'is-moving' : ''}`}
+            >
+              <Suspense fallback={<span className="cookie-webgl-fallback" />}>
+                <FortuneCookie3D
+                  step={objectStep}
+                  disabled={objectAnimating}
+                  onAdvance={advanceObjectRitual}
+                  ariaLabel={
+                    objectStep === 0
+                      ? 'Rotate the cookie or press to begin cracking it'
+                      : objectStep === 1
+                        ? 'Rotate the cookie or press again to widen the crack'
+                        : 'Rotate the cookie or press a third time to break it open'
                   }
-                }}
-                disabled={objectAnimating}
-                className={`cookie-object object-step-${objectStep} ${objectStep === OBJECT_RITUAL_STEPS ? 'is-cracking' : ''} ${objectAnimating ? 'is-moving' : ''}`}
-                aria-label={
-                  objectStep === 0
-                    ? 'Rotate the cookie or press to begin cracking it'
-                    : objectStep === 1
-                      ? 'Rotate the cookie or press again to widen the crack'
-                      : 'Rotate the cookie or press a third time to break it open'
-                }
-                animate={
-                  objectAnimating && objectStep < OBJECT_RITUAL_STEPS
-                    ? {
-                        rotateZ: [0, -1.7, 1.3, -0.8, 0],
-                        scale: [1, 0.985, 1.008, 1],
-                      }
-                    : { rotateZ: 0, scale: 1 }
-                }
-                transition={{ duration: 0.52, ease: [0.22, 0.8, 0.2, 1] }}
-                whileDrag={{ scale: 1.025 }}
-              >
-                <span className="cookie-aura" aria-hidden="true" />
-                <span
-                  className="cookie-half cookie-half-left"
-                  aria-hidden="true"
-                >
-                  <Image
-                    src="/art/fortune-cookie-object-v2.webp"
-                    alt=""
-                    width={1100}
-                    height={733}
-                    priority
+                />
+              </Suspense>
+              <span className="cookie-paper" aria-hidden="true">
+                <em>{objectMessage}</em>
+              </span>
+              <span className="cookie-crumbs" aria-hidden="true">
+                {cookieCrumbs.map((crumb, index) => (
+                  <b
+                    key={index}
+                    style={
+                      {
+                        '--crumb-x': `${crumb.x}px`,
+                        '--crumb-y': `${crumb.y}px`,
+                        '--crumb-r': `${crumb.r}deg`,
+                        '--crumb-index': index,
+                      } as React.CSSProperties
+                    }
                   />
-                </span>
-                <span
-                  className="cookie-half cookie-half-right"
-                  aria-hidden="true"
-                >
-                  <Image
-                    src="/art/fortune-cookie-object-v2.webp"
-                    alt=""
-                    width={1100}
-                    height={733}
-                    priority
-                  />
-                </span>
-                <span className="cookie-paper" aria-hidden="true">
-                  <em>{objectMessage}</em>
-                </span>
-                <span className="cookie-crumbs" aria-hidden="true">
-                  {cookieCrumbs.map((crumb, index) => (
-                    <b
-                      key={index}
-                      style={
-                        {
-                          '--crumb-x': `${crumb.x}px`,
-                          '--crumb-y': `${crumb.y}px`,
-                          '--crumb-r': `${crumb.r}deg`,
-                          '--crumb-index': index,
-                        } as React.CSSProperties
-                      }
-                    />
-                  ))}
-                </span>
-              </motion.button>
-            )}
+                ))}
+              </span>
+            </div>
           </motion.section>
         )}
 
