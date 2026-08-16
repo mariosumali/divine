@@ -603,6 +603,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
   const [objectAnimating, setObjectAnimating] = useState(false);
   const [isRevealingAll, setIsRevealingAll] = useState(false);
   const [deckPhase, setDeckPhase] = useState<DeckPhase>('stacked');
+  const [hoveredFanCard, setHoveredFanCard] = useState<number | null>(null);
   const [shareStatus, setShareStatus] = useState<ShareStatus>('idle');
   const [resultCardIndex, setResultCardIndex] = useState(0);
   const [sessionReady, setSessionReady] = useState(false);
@@ -978,6 +979,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
 
   const deal = () => {
     if (!spread || deckPhase !== 'fanned') return;
+    setHoveredFanCard(null);
     const next = drawCards(system, spread, reversals);
     completionQueued.current = false;
     ritualLock.current = false;
@@ -1388,7 +1390,10 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
                   dragMomentum={false}
                   style={{ rotateX: fieldTiltX, rotateY: fieldTiltY }}
                   onPointerMove={tiltField}
-                  onPointerLeave={settleField}
+                  onPointerLeave={() => {
+                    setHoveredFanCard(null);
+                    settleField();
+                  }}
                   onDrag={dragField}
                   onDragEnd={settleField}
                   whileTap={{ scale: 0.985 }}
@@ -1398,18 +1403,61 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
                       : 'The cards are being dealt'
                   }
                 >
-                  <i className="fan-orbit" />
                   {fanCards.map((index) => {
                     const middle = (fanCards.length - 1) / 2;
+                    const distance =
+                      hoveredFanCard === null
+                        ? Number.POSITIVE_INFINITY
+                        : Math.abs(index - hoveredFanCard);
+                    const side =
+                      hoveredFanCard === null
+                        ? 0
+                        : Math.sign(index - hoveredFanCard);
+                    const ruffleDelay =
+                      hoveredFanCard === null ? 0 : Math.min(distance, 3) * 22;
+                    const pull =
+                      distance === 0
+                        ? 92
+                        : distance === 1
+                          ? 28
+                          : distance === 2
+                            ? 13
+                            : distance === 3
+                              ? 5
+                              : 0;
+                    const ruffle =
+                      distance === 1
+                        ? side * 3.4
+                        : distance === 2
+                          ? side * 1.7
+                          : distance === 3
+                            ? side * 0.65
+                            : 0;
                     return (
                       <span
                         key={index}
+                        className={
+                          distance === 0
+                            ? 'is-hovered'
+                            : distance <= 3
+                              ? 'is-ruffling'
+                              : undefined
+                        }
+                        onPointerEnter={() => setHoveredFanCard(index)}
                         style={
                           {
                             '--angle': `${(index - middle) * 6.1}deg`,
                             '--lift': `${Math.abs(index - middle) * 3.4}px`,
                             '--fan-index': index,
                             '--direction': index % 2 ? 1 : -1,
+                            '--fan-pull': `${pull}px`,
+                            '--fan-ruffle': `${ruffle}deg`,
+                            '--fan-slide': `${side * Math.max(0, 10 - distance * 2)}px`,
+                            '--fan-tilt': distance === 0 ? '-8deg' : '0deg',
+                            '--fan-scale': distance === 0 ? 1.045 : 1,
+                            '--fan-depth': distance === 0 ? '48px' : '0px',
+                            '--fan-z': distance === 0 ? 80 : index + 1,
+                            '--ruffle-delay': `${ruffleDelay}ms`,
                           } as React.CSSProperties
                         }
                       />

@@ -1309,7 +1309,7 @@ button {
   position: absolute;
   left: 50%;
   bottom: 21%;
-  z-index: calc(var(--fan-index) + 1);
+  z-index: var(--fan-z, calc(var(--fan-index) + 1));
   width: min(142px, 15vw);
   aspect-ratio: 2 / 3.15;
   border: 1px solid color-mix(in srgb, var(--paper) 34%, transparent);
@@ -1331,10 +1331,30 @@ button {
     -3px 3px 0 color-mix(in srgb, var(--paper) 16%, transparent),
     0 22px 45px color-mix(in srgb, #000 27%, transparent);
   transform-origin: 50% 154%;
-  transform: translateX(-50%) rotate(var(--angle)) translateY(var(--lift))
-    translateZ(calc(var(--fan-index) * 1px));
-  animation: fan-open 1.08s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transform: translateX(calc(-50% + var(--fan-slide, 0px)))
+    rotate(calc(var(--angle) + var(--fan-ruffle, 0deg)))
+    translateY(calc(var(--lift) - var(--fan-pull, 0px)))
+    rotateX(var(--fan-tilt, 0deg))
+    translateZ(calc(var(--fan-index) * 1px + var(--fan-depth, 0px)))
+    scale(var(--fan-scale, 1));
+  transition:
+    transform 0.52s cubic-bezier(0.16, 1.46, 0.3, 1),
+    box-shadow 0.38s ease,
+    filter 0.32s ease;
+  transition-delay: var(--ruffle-delay, 0ms);
+  animation: fan-open 1.08s cubic-bezier(0.16, 1, 0.3, 1) backwards;
   animation-delay: calc(var(--fan-index) * 24ms);
+}
+.card-fan > span.is-hovered {
+  filter: brightness(1.08);
+  box-shadow:
+    -4px 5px 0 color-mix(in srgb, var(--paper) 20%, transparent),
+    0 42px 70px color-mix(in srgb, #000 36%, transparent);
+}
+.card-fan > span.is-ruffling {
+  box-shadow:
+    -3px 4px 0 color-mix(in srgb, var(--paper) 18%, transparent),
+    0 29px 52px color-mix(in srgb, #000 30%, transparent);
 }
 .card-fan > span::before {
   content: '';
@@ -1358,17 +1378,6 @@ button {
 .card-fan.phase-dealing > span {
   animation: fan-deal 0.7s cubic-bezier(0.55, 0.02, 0.7, 0.25) both;
   animation-delay: calc(var(--fan-index) * 7ms);
-}
-.fan-orbit {
-  position: absolute;
-  left: 50%;
-  bottom: 15%;
-  width: min(820px, 84vw);
-  height: 160px;
-  border: 1px solid color-mix(in srgb, var(--ink) 17%, transparent);
-  border-radius: 50%;
-  transform: translateX(-50%) translateZ(-20px);
-  opacity: 0.75;
 }
 .ritual-actions {
   position: relative;
@@ -3146,8 +3155,12 @@ button {
   }
   to {
     opacity: 1;
-    transform: translateX(-50%) rotate(var(--angle)) translateY(var(--lift))
-      scale(1);
+    transform: translateX(calc(-50% + var(--fan-slide, 0px)))
+      rotate(calc(var(--angle) + var(--fan-ruffle, 0deg)))
+      translateY(calc(var(--lift) - var(--fan-pull, 0px)))
+      rotateX(var(--fan-tilt, 0deg))
+      translateZ(calc(var(--fan-index) * 1px + var(--fan-depth, 0px)))
+      scale(var(--fan-scale, 1));
   }
 }
 @keyframes fan-deal {
@@ -3347,11 +3360,6 @@ button {
     height: auto;
     bottom: 24%;
     transform-origin: 50% 158%;
-  }
-  .fan-orbit {
-    width: 92vw;
-    height: 100px;
-    bottom: 19%;
   }
   .eight-ball {
     width: min(74vw, 390px, 62svh);
