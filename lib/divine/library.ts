@@ -59,7 +59,7 @@ export const METHOD_HISTORIES: Record<SystemSlug, MethodHistory> = {
     origin: 'Contemporary DIVINE system',
     title: 'The symbol asks for an act.',
     history: [
-      'Ritual traditions across cultures have long used ordinary matter—salt, thread, flame, water, iron—as carriers of intention. There is no single historical spellcraft card canon.',
+      'Ritual traditions across cultures have long used ordinary matter—salt, thread, flame, water, iron—as carriers of intention. There is no single historical ritual-card canon.',
       'This thirty-six-card system is an original contemporary deck. It does not reconstruct or claim ownership of a closed tradition; it turns familiar materials into prompts for deliberate action.',
     ],
   },

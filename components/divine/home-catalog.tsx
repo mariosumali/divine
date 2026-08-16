@@ -7,12 +7,12 @@ import { useExperience } from '@/app/providers';
 import { SYSTEMS } from '@/lib/divine/systems';
 
 const INDEX_ART: Record<string, string> = {
-  tarot: '/index-art-v2/tarot.webp',
-  oracle: '/index-art-v2/oracle.webp',
-  lenormand: '/index-art/lenormand.webp',
-  spellcraft: '/index-art-v2/spellcraft.webp',
-  'ancient-egypt': '/index-art-v2/ancient-egypt.webp',
-  zodiac: '/index-art-v2/zodiac.webp',
+  tarot: '/collage-v1/hand.webp',
+  oracle: '/collage-v1/eye.webp',
+  lenormand: '/collage-v1/key.webp',
+  spellcraft: '/collage-v1/matches.webp',
+  'ancient-egypt': '/collage-v1/bust.webp',
+  zodiac: '/collage-v1/star.webp',
   'magic-8-ball': '/index-art-v2/magic-8-ball.webp',
   'fortune-cookie': '/index-art/fortune-cookie.webp',
 };
@@ -20,10 +20,12 @@ const INDEX_ART: Record<string, string> = {
 const RESTING_ANGLES = [-2, 1.4, -1, 1.7, 1.2, -1.4, -1.2, 1.4];
 const HERO_LETTERS = 'DIVINE'.split('');
 const HERO_SIGILS = [
-  { src: '/index-art-v2/tarot.webp', position: 'tarot' },
-  { src: '/index-art-v2/zodiac.webp', position: 'zodiac' },
-  { src: '/index-art/lenormand.webp', position: 'lenormand' },
-  { src: '/index-art-v2/ancient-egypt.webp', position: 'egypt' },
+  { src: '/collage-v1/prism.webp', position: 'prism' },
+  { src: '/collage-v1/hand.webp', position: 'hand' },
+  { src: '/collage-v1/peony.webp', position: 'peony' },
+  { src: '/collage-v1/key.webp', position: 'key' },
+  { src: '/collage-v1/star.webp', position: 'star' },
+  { src: '/collage-v1/eye.webp', position: 'eye' },
 ] as const;
 
 export function HomeCatalog() {
@@ -174,6 +176,7 @@ export function HomeCatalog() {
         {SYSTEMS.map((system, index) => (
           <Link
             className="reading-index-item"
+            data-system={system.slug}
             href={`/read/${system.slug}`}
             key={system.slug}
             onClick={() => cue('tick')}

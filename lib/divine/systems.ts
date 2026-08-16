@@ -876,8 +876,8 @@ export const SYSTEMS: SystemDefinition[] = [
   {
     slug: 'spellcraft',
     index: '04',
-    name: 'Spellcraft',
-    shortName: 'Spellcraft',
+    name: 'Ritual',
+    shortName: 'Ritual',
     kind: 'cards',
     countLabel: '36 cards',
     eyebrow: 'Ritual / Intention',
@@ -898,8 +898,8 @@ export const SYSTEMS: SystemDefinition[] = [
   {
     slug: 'ancient-egypt',
     index: '05',
-    name: 'Ancient Egypt',
-    shortName: 'Egyptian Oracle',
+    name: 'Temple',
+    shortName: 'Temple',
     kind: 'cards',
     countLabel: '36 cards',
     eyebrow: 'Image / Continuity',

@@ -1,6 +1,6 @@
 # DIVINE
 
-DIVINE is a private, account-free divination application with complete Tarot, Oracle, Lenormand, Spellcraft, Ancient Egypt, Zodiac, Magic 8 Ball, and Fortune Cookie reading flows.
+DIVINE is a private, account-free divination application with complete Tarot, Oracle, Lenormand, Ritual, Temple, Zodiac, Magic 8 Ball, and Fortune Cookie reading flows.
 
 The interface uses an editorial black-and-white visual system, procedural Web Audio, tactile motion, browser-only randomness, and an IndexedDB journal. Questions, notes, and saved readings never leave the browser.
 

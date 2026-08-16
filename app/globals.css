@@ -668,31 +668,45 @@ button {
   filter: grayscale(1) sepia(0.08) contrast(0.88) opacity(0.78);
   mix-blend-mode: multiply;
 }
-.hero-sigil-tarot {
+.hero-sigil-prism {
   left: 6%;
-  top: 18%;
-  rotate: -13deg;
+  top: 16%;
+  width: clamp(68px, 7.5vw, 110px);
+  rotate: -9deg;
 }
-.hero-sigil-zodiac {
+.hero-sigil-hand {
   right: 7%;
-  top: 14%;
-  width: clamp(66px, 8vw, 116px);
-  rotate: 10deg;
-}
-.hero-sigil-lenormand {
-  left: 2%;
-  bottom: 13%;
-  width: clamp(94px, 12vw, 176px);
-  rotate: -8deg;
-}
-.hero-sigil-egypt {
-  right: 5%;
-  bottom: 12%;
-  width: clamp(74px, 9vw, 132px);
+  top: 12%;
+  width: clamp(72px, 8vw, 120px);
   rotate: 8deg;
 }
-.hero-sigil-zodiac > span,
-.hero-sigil-lenormand > span {
+.hero-sigil-peony {
+  left: 2%;
+  bottom: 10%;
+  width: clamp(96px, 11vw, 164px);
+  rotate: -7deg;
+}
+.hero-sigil-key {
+  right: 5%;
+  bottom: 10%;
+  width: clamp(64px, 7vw, 104px);
+  rotate: 9deg;
+}
+.hero-sigil-star {
+  left: 19%;
+  bottom: 17%;
+  width: clamp(42px, 4.5vw, 68px);
+  rotate: 12deg;
+}
+.hero-sigil-eye {
+  right: 20%;
+  top: 20%;
+  width: clamp(46px, 5vw, 76px);
+  rotate: -8deg;
+}
+.hero-sigil-hand > span,
+.hero-sigil-peony > span,
+.hero-sigil-eye > span {
   animation-delay: -3.8s;
   animation-direction: reverse;
 }
@@ -867,9 +881,29 @@ button {
   object-fit: contain;
   filter: grayscale(1) sepia(0.08) contrast(0.9) brightness(1.02);
   opacity: 0.94;
+  transform: scale(0.82);
   transition:
     filter 0.45s ease,
-    opacity 0.45s ease;
+    opacity 0.45s ease,
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reading-index-item[data-system='magic-8-ball'] .reading-index-art img,
+.reading-index-item[data-system='fortune-cookie'] .reading-index-art img {
+  transform: scale(0.74);
+}
+.reading-index-item:hover .reading-index-art img,
+.reading-index-item:focus-visible .reading-index-art img {
+  transform: scale(0.87);
+}
+.reading-index-item[data-system='magic-8-ball']:hover .reading-index-art img,
+.reading-index-item[data-system='magic-8-ball']:focus-visible
+  .reading-index-art
+  img,
+.reading-index-item[data-system='fortune-cookie']:hover .reading-index-art img,
+.reading-index-item[data-system='fortune-cookie']:focus-visible
+  .reading-index-art
+  img {
+  transform: scale(0.79);
 }
 .reading-index-name {
   position: relative;
@@ -2946,15 +2980,19 @@ button {
 }
 .method-history {
   display: grid;
-  grid-template-columns: minmax(260px, 0.78fr) minmax(0, 1.45fr);
+  grid-template-columns: clamp(200px, 20vw, 300px) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(28px, 4vw, 72px);
+  padding: clamp(28px, 4vw, 56px) 0;
   border-bottom: 1px solid var(--line);
 }
 .method-history > header {
-  min-height: 610px;
+  min-height: clamp(240px, 26vw, 340px);
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: clamp(30px, 4vw, 64px);
+  margin-left: clamp(20px, 3vw, 48px);
+  padding: clamp(24px, 2.4vw, 36px);
   background: var(--ink);
   color: var(--paper);
 }
@@ -2971,7 +3009,8 @@ button {
   color: color-mix(in srgb, var(--paper) 60%, transparent);
 }
 .method-history-copy {
-  padding: clamp(40px, 7vw, 100px);
+  padding: clamp(28px, 4vw, 64px) clamp(24px, 7vw, 100px) clamp(28px, 4vw, 64px)
+    0;
 }
 .method-history-copy .eyebrow {
   margin-top: 0;
@@ -3792,10 +3831,13 @@ button {
   }
   .method-history {
     grid-template-columns: 1fr;
+    gap: 0;
+    padding: 24px 0 0;
   }
   .method-history > header {
-    min-height: 300px;
-    padding: 30px 20px;
+    min-height: 140px;
+    margin: 0 20px;
+    padding: 22px;
   }
   .method-history > header span {
     font-size: clamp(11rem, 55vw, 16rem);
@@ -3897,19 +3939,27 @@ button {
   .hero-sigil {
     width: 72px;
   }
-  .hero-sigil-tarot,
-  .hero-sigil-egypt {
+  .hero-sigil-prism,
+  .hero-sigil-hand,
+  .hero-sigil-eye {
     display: none;
   }
-  .hero-sigil-zodiac {
+  .hero-sigil-key {
     right: -12px;
     top: 17%;
-    width: 62px;
+    bottom: auto;
+    width: 58px;
   }
-  .hero-sigil-lenormand {
+  .hero-sigil-peony {
     left: -18px;
     bottom: 13%;
     width: 94px;
+  }
+  .hero-sigil-star {
+    left: auto;
+    right: 8%;
+    bottom: 12%;
+    width: 44px;
   }
   .hero-enter {
     bottom: 10px;
