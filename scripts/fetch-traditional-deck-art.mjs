@@ -810,10 +810,9 @@ async function renderRunes() {
     });
   }
   await writeManifest(slug, {
-    sourceCollection: [
+    sourceCollection:
       'https://commons.wikimedia.org/wiki/Category:Elder_Futhark',
-      kylverInfo.descriptionurl,
-    ],
+    backgroundSourceCollection: kylverInfo.descriptionurl,
     rightsNote:
       'The 24 standardized Elder Futhark letterforms are public domain. The Kylver Stone photograph is CC BY 2.5, credited to Bengt A Lundberg / Riksantikvarieämbetet. Runic cards themselves remain a modern reflective format.',
     cards,
@@ -991,10 +990,9 @@ async function renderIChing() {
     });
   }
   await writeManifest(slug, {
-    sourceCollection: [
+    sourceCollection:
       'https://commons.wikimedia.org/wiki/Category:I_Ching_hexagrams',
-      chartInfo.descriptionurl,
-    ],
+    backgroundSourceCollection: chartInfo.descriptionurl,
     rightsNote:
       'The hexagram forms and the 1701 Bouvet–Leibniz chart are public domain. The card presentation is modern and does not replace a changing-line consultation.',
     cards,

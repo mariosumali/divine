@@ -6,6 +6,8 @@ import type {
 } from './types';
 import { TRADITIONAL_CARD_SYSTEMS } from './traditional-systems';
 
+export { BALL_ANSWERS, FORTUNES, FORTUNE_PROMPTS } from './objects';
+
 const spread = (
   id: string,
   name: string,
@@ -1093,81 +1095,6 @@ export const SYSTEMS: SystemDefinition[] = [DIVINE_SYSTEM, ...STANDARD_SYSTEMS];
 export const SYSTEM_MAP = Object.fromEntries(
   SYSTEMS.map((system) => [system.slug, system]),
 ) as Record<SystemSlug, SystemDefinition>;
-
-export const BALL_ANSWERS = [
-  'The answer is already moving toward yes.',
-  'Yes—before doubt edits the invitation.',
-  'The current favors it.',
-  'Proceed; the opening is real.',
-  'Yes, but keep the promise small.',
-  'The signs align in your favor.',
-  'What you ask is within reach.',
-  'Trust the first yes.',
-  'The answer is veiled for now.',
-  'Ask again after one honest action.',
-  'Not until the missing fact appears.',
-  'The outcome is still choosing its form.',
-  'Silence is the answer today.',
-  'Wait for the second signal.',
-  'The question contains another question.',
-  'Uncertain—change your vantage point.',
-  'No; the closed path is protection.',
-  'Do not force this door.',
-  'The answer turns away.',
-  'Not in the form you imagine.',
-  'Release it before it decides for you.',
-  'The cost outweighs the promise.',
-  'No—the timing has passed.',
-  'Choose another direction.',
-];
-
-const fortuneOpenings = [
-  'A delayed answer',
-  'The next invitation',
-  'A quiet alliance',
-  'An overlooked detail',
-  'The courage you save',
-  'A necessary ending',
-  'The smallest honest action',
-  'A familiar road',
-  'An unexpected witness',
-  'The boundary you name',
-  'A message after dusk',
-  'The work done in private',
-];
-const fortuneClosings = [
-  'will change the scale of the decision.',
-  'arrives before the month turns.',
-  'reveals what patience was protecting.',
-  'becomes the key once you stop searching.',
-  'returns as confidence at the threshold.',
-  'makes space for a more exact desire.',
-  'travels farther than the grand gesture.',
-  'shows you how much you have changed.',
-  'confirms the risk was worth naming.',
-  'restores the energy lost to uncertainty.',
-  'asks for an answer by morning.',
-  'becomes visible when the room grows quiet.',
-];
-
-export const FORTUNES = fortuneOpenings.flatMap((opening) =>
-  fortuneClosings.map((closing) => `${opening} ${closing}`),
-);
-
-export const FORTUNE_PROMPTS = [
-  'What answer have you mistaken for a delay?',
-  'Which invitation deserves a clean yes or no?',
-  'Who becomes an ally when you stop performing certainty?',
-  'What small fact changes the whole pattern?',
-  'Where would courage be quieter—and more useful?',
-  'What ending have you already survived in private?',
-  'What can be completed before the day closes?',
-  'How has the familiar road become unfamiliar?',
-  'Whose recognition would make the risk feel real?',
-  'Which boundary would return your energy immediately?',
-  'What message are you finally ready to answer?',
-  'What private practice is already becoming visible?',
-];
 
 export function isSystemSlug(value: string): value is SystemSlug {
   return value in SYSTEM_MAP;

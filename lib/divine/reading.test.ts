@@ -10,11 +10,23 @@ import {
   nextObjectRitualStep,
   secureShuffle,
 } from './reading';
+import {
+  CARD_TRADITION_COUNT,
+  CATALOG_SYSTEMS,
+  INDIVIDUAL_READING_COUNT,
+  TOTAL_READING_EXPERIENCE_COUNT,
+} from './catalog';
 import { FORTUNES, SYSTEM_MAP, SYSTEMS } from './systems';
 
 describe('DIVINE content libraries', () => {
   it('contains every complete launch deck', () => {
     expect(SYSTEMS).toHaveLength(19);
+    expect(TOTAL_READING_EXPERIENCE_COUNT).toBe(19);
+    expect(INDIVIDUAL_READING_COUNT).toBe(18);
+    expect(CARD_TRADITION_COUNT).toBe(16);
+    expect(CATALOG_SYSTEMS.map(({ slug, name }) => ({ slug, name }))).toEqual(
+      SYSTEMS.map(({ slug, name }) => ({ slug, name })),
+    );
     expect(SYSTEM_MAP.divine.cards).toHaveLength(681);
     expect(SYSTEM_MAP.tarot.cards).toHaveLength(78);
     expect(SYSTEM_MAP.oracle.cards).toHaveLength(44);
@@ -365,6 +377,41 @@ describe('reading engine', () => {
     for (const draw of draws)
       expect(result.synthesis).toContain(draw.card.name);
     expect(result.synthesis).toContain('no card stands alone');
+  });
+
+  it('uses a distinct interpretive grammar for every card tradition', () => {
+    const signatures = {
+      tarot: 'archetype, suit, number, element',
+      oracle: 'image and association',
+      lenormand: 'concrete syntax',
+      spellcraft: 'material instruction',
+      'ancient-egypt': 'balance, continuity, and renewal',
+      zodiac: 'three-part grammar',
+      kipper: 'social field',
+      belline: 'planetary families',
+      'playing-card-cartomancy': 'suit, rank, color, court',
+      sibilla: 'social conversation',
+      'runic-cards': 'Elder Futhark character',
+      'i-ching-cards': 'stable King Wen hexagrams',
+      'fal-e-hafez': 'echo of bibliomancy',
+      hanafuda: 'month, flower, motif',
+      zigeunerkarten: 'one practical sentence',
+      'ilm-al-raml': 'sixteen canonical figures',
+    } as const;
+
+    for (const [slug, signature] of Object.entries(signatures)) {
+      const system = SYSTEM_MAP[slug as keyof typeof signatures];
+      const spread =
+        system.spreads.find(
+          (item) => item.positions.length > 1 && item.positions.length <= 7,
+        ) ?? system.spreads[0];
+      const draws = drawCards(system, spread, false);
+      const result = interpretReading(system, spread, draws, 'general');
+      expect(result.overview).toContain(signature);
+      expect(result.positions).toHaveLength(draws.length);
+      for (const draw of draws)
+        expect(result.synthesis).toContain(draw.card.name);
+    }
   });
 
   it('produces unique lucky numbers within the expected range', () => {

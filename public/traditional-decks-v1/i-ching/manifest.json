@@ -1,647 +1,776 @@
 {
   "generatedAt": "2026-09-02",
   "sourceCollection": "https://commons.wikimedia.org/wiki/Category:I_Ching_hexagrams",
-  "rightsNote": "The hexagram forms are public-domain symbols. Card presentation is modern and does not replace a changing-line consultation.",
+  "backgroundSourceCollection": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
+  "rightsNote": "The hexagram forms and the 1701 Bouvet–Leibniz chart are public domain. The card presentation is modern and does not replace a changing-line consultation.",
   "cards": [
     {
       "cardIndex": 1,
       "file": "i-ching-01.webp",
-      "bytes": 2642,
+      "bytes": 50966,
       "sourceTitle": "Iching-hexagram-01.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-01.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 2,
       "file": "i-ching-02.webp",
-      "bytes": 2968,
+      "bytes": 49884,
       "sourceTitle": "Iching-hexagram-02.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-02.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 3,
       "file": "i-ching-03.webp",
-      "bytes": 2852,
+      "bytes": 44630,
       "sourceTitle": "Iching-hexagram-03.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-03.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 4,
       "file": "i-ching-04.webp",
-      "bytes": 2846,
+      "bytes": 46736,
       "sourceTitle": "Iching-hexagram-04.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-04.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 5,
       "file": "i-ching-05.webp",
-      "bytes": 2726,
+      "bytes": 44476,
       "sourceTitle": "Iching-hexagram-05.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-05.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 6,
       "file": "i-ching-06.webp",
-      "bytes": 2726,
+      "bytes": 49086,
       "sourceTitle": "Iching-hexagram-06.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-06.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 7,
       "file": "i-ching-07.webp",
-      "bytes": 2936,
+      "bytes": 55132,
       "sourceTitle": "Iching-hexagram-07.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-07.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 8,
       "file": "i-ching-08.webp",
-      "bytes": 2878,
+      "bytes": 48824,
       "sourceTitle": "Iching-hexagram-08.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-08.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 9,
       "file": "i-ching-09.webp",
-      "bytes": 2706,
+      "bytes": 43302,
       "sourceTitle": "Iching-hexagram-09.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-09.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 10,
       "file": "i-ching-10.webp",
-      "bytes": 2692,
+      "bytes": 45842,
       "sourceTitle": "Iching-hexagram-10.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-10.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 11,
       "file": "i-ching-11.webp",
-      "bytes": 2804,
+      "bytes": 44760,
       "sourceTitle": "Iching-hexagram-11.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-11.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 12,
       "file": "i-ching-12.webp",
-      "bytes": 2766,
+      "bytes": 50652,
       "sourceTitle": "Iching-hexagram-12.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-12.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 13,
       "file": "i-ching-13.webp",
-      "bytes": 2658,
+      "bytes": 53780,
       "sourceTitle": "Iching-hexagram-13.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-13.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 14,
       "file": "i-ching-14.webp",
-      "bytes": 2682,
+      "bytes": 45852,
       "sourceTitle": "Iching-hexagram-14.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-14.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 15,
       "file": "i-ching-15.webp",
-      "bytes": 2918,
+      "bytes": 45570,
       "sourceTitle": "Iching-hexagram-15.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-15.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 16,
       "file": "i-ching-16.webp",
-      "bytes": 2906,
+      "bytes": 45850,
       "sourceTitle": "Iching-hexagram-16.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-16.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 17,
       "file": "i-ching-17.webp",
-      "bytes": 2772,
+      "bytes": 45162,
       "sourceTitle": "Iching-hexagram-17.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-17.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 18,
       "file": "i-ching-18.webp",
-      "bytes": 2792,
+      "bytes": 51358,
       "sourceTitle": "Iching-hexagram-18.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-18.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 19,
       "file": "i-ching-19.webp",
-      "bytes": 2896,
+      "bytes": 54362,
       "sourceTitle": "Iching-hexagram-19.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-19.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 20,
       "file": "i-ching-20.webp",
-      "bytes": 2848,
+      "bytes": 46082,
       "sourceTitle": "Iching-hexagram-20.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-20.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 21,
       "file": "i-ching-21.webp",
-      "bytes": 2804,
+      "bytes": 45570,
       "sourceTitle": "Iching-hexagram-21.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-21.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 22,
       "file": "i-ching-22.webp",
-      "bytes": 2816,
+      "bytes": 45632,
       "sourceTitle": "Iching-hexagram-22.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-22.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 23,
       "file": "i-ching-23.webp",
-      "bytes": 2906,
+      "bytes": 45212,
       "sourceTitle": "Iching-hexagram-23.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-23.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 24,
       "file": "i-ching-24.webp",
-      "bytes": 2940,
+      "bytes": 52870,
       "sourceTitle": "Iching-hexagram-24.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-24.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 25,
       "file": "i-ching-25.webp",
-      "bytes": 2732,
+      "bytes": 53664,
       "sourceTitle": "Iching-hexagram-25.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-25.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 26,
       "file": "i-ching-26.webp",
-      "bytes": 2758,
+      "bytes": 44874,
       "sourceTitle": "Iching-hexagram-26.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-26.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 27,
       "file": "i-ching-27.webp",
-      "bytes": 2870,
+      "bytes": 46100,
       "sourceTitle": "Iching-hexagram-27.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-27.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 28,
       "file": "i-ching-28.webp",
-      "bytes": 2684,
+      "bytes": 44924,
       "sourceTitle": "Iching-hexagram-28.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-28.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 29,
       "file": "i-ching-29.webp",
-      "bytes": 2858,
+      "bytes": 45594,
       "sourceTitle": "Iching-hexagram-29.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-29.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 30,
       "file": "i-ching-30.webp",
-      "bytes": 2748,
+      "bytes": 52124,
       "sourceTitle": "Iching-hexagram-30.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-30.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 31,
       "file": "i-ching-31.webp",
-      "bytes": 2746,
+      "bytes": 53136,
       "sourceTitle": "Iching-hexagram-31.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-31.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 32,
       "file": "i-ching-32.webp",
-      "bytes": 2772,
+      "bytes": 45458,
       "sourceTitle": "Iching-hexagram-32.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-32.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 33,
       "file": "i-ching-33.webp",
-      "bytes": 2694,
+      "bytes": 44894,
       "sourceTitle": "Iching-hexagram-33.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-33.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 34,
       "file": "i-ching-34.webp",
-      "bytes": 2728,
+      "bytes": 44798,
       "sourceTitle": "Iching-hexagram-34.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-34.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 35,
       "file": "i-ching-35.webp",
-      "bytes": 2838,
+      "bytes": 45994,
       "sourceTitle": "Iching-hexagram-35.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-35.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 36,
       "file": "i-ching-36.webp",
-      "bytes": 2878,
+      "bytes": 52576,
       "sourceTitle": "Iching-hexagram-36.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-36.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 37,
       "file": "i-ching-37.webp",
-      "bytes": 2748,
+      "bytes": 51826,
       "sourceTitle": "Iching-hexagram-37.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-37.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 38,
       "file": "i-ching-38.webp",
-      "bytes": 2740,
+      "bytes": 44762,
       "sourceTitle": "Iching-hexagram-38.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-38.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 39,
       "file": "i-ching-39.webp",
-      "bytes": 2826,
+      "bytes": 46368,
       "sourceTitle": "Iching-hexagram-39.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-39.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 40,
       "file": "i-ching-40.webp",
-      "bytes": 2868,
+      "bytes": 44116,
       "sourceTitle": "Iching-hexagram-40.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-40.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 41,
       "file": "i-ching-41.webp",
-      "bytes": 2812,
+      "bytes": 47648,
       "sourceTitle": "Iching-hexagram-41.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-41.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 42,
       "file": "i-ching-42.webp",
-      "bytes": 2794,
+      "bytes": 52416,
       "sourceTitle": "Iching-hexagram-42.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-42.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 43,
       "file": "i-ching-43.webp",
-      "bytes": 2642,
+      "bytes": 50602,
       "sourceTitle": "Iching-hexagram-43.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-43.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 44,
       "file": "i-ching-44.webp",
-      "bytes": 2630,
+      "bytes": 44204,
       "sourceTitle": "Iching-hexagram-44.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-44.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 45,
       "file": "i-ching-45.webp",
-      "bytes": 2804,
+      "bytes": 47112,
       "sourceTitle": "Iching-hexagram-45.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-45.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 46,
       "file": "i-ching-46.webp",
-      "bytes": 2838,
+      "bytes": 44358,
       "sourceTitle": "Iching-hexagram-46.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-46.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 47,
       "file": "i-ching-47.webp",
-      "bytes": 2784,
+      "bytes": 47904,
       "sourceTitle": "Iching-hexagram-47.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-47.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 48,
       "file": "i-ching-48.webp",
-      "bytes": 2764,
+      "bytes": 50560,
       "sourceTitle": "Iching-hexagram-48.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-48.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 49,
       "file": "i-ching-49.webp",
-      "bytes": 2714,
+      "bytes": 49138,
       "sourceTitle": "Iching-hexagram-49.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-49.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 50,
       "file": "i-ching-50.webp",
-      "bytes": 2718,
+      "bytes": 43684,
       "sourceTitle": "Iching-hexagram-50.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-50.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 51,
       "file": "i-ching-51.webp",
-      "bytes": 2862,
+      "bytes": 46812,
       "sourceTitle": "Iching-hexagram-51.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-51.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 52,
       "file": "i-ching-52.webp",
-      "bytes": 2850,
+      "bytes": 44786,
       "sourceTitle": "Iching-hexagram-52.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-52.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 53,
       "file": "i-ching-53.webp",
-      "bytes": 2778,
+      "bytes": 48966,
       "sourceTitle": "Iching-hexagram-53.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-53.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 54,
       "file": "i-ching-54.webp",
-      "bytes": 2824,
+      "bytes": 54338,
       "sourceTitle": "Iching-hexagram-54.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-54.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 55,
       "file": "i-ching-55.webp",
-      "bytes": 2792,
+      "bytes": 49074,
       "sourceTitle": "Iching-hexagram-55.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-55.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 56,
       "file": "i-ching-56.webp",
-      "bytes": 2784,
+      "bytes": 43688,
       "sourceTitle": "Iching-hexagram-56.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-56.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 57,
       "file": "i-ching-57.webp",
-      "bytes": 2742,
+      "bytes": 46412,
       "sourceTitle": "Iching-hexagram-57.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-57.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 58,
       "file": "i-ching-58.webp",
-      "bytes": 2744,
+      "bytes": 44056,
       "sourceTitle": "Iching-hexagram-58.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-58.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 59,
       "file": "i-ching-59.webp",
-      "bytes": 2798,
+      "bytes": 50524,
       "sourceTitle": "Iching-hexagram-59.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-59.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 60,
       "file": "i-ching-60.webp",
-      "bytes": 2814,
+      "bytes": 54728,
       "sourceTitle": "Iching-hexagram-60.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-60.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 61,
       "file": "i-ching-61.webp",
-      "bytes": 2762,
+      "bytes": 46966,
       "sourceTitle": "Iching-hexagram-61.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-61.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 62,
       "file": "i-ching-62.webp",
-      "bytes": 2834,
+      "bytes": 44748,
       "sourceTitle": "Iching-hexagram-62.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-62.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 63,
       "file": "i-ching-63.webp",
-      "bytes": 2790,
+      "bytes": 45788,
       "sourceTitle": "Iching-hexagram-63.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-63.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     },
     {
       "cardIndex": 64,
       "file": "i-ching-64.webp",
-      "bytes": 2776,
+      "bytes": 44974,
       "sourceTitle": "Iching-hexagram-64.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-64.svg",
+      "backgroundSourceTitle": "Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz%2C_1701.jpg",
       "license": "Public domain",
-      "artist": "Ben Finney and Wikimedia contributors",
-      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+      "artist": "Ben Finney and Wikimedia contributors; unknown author, Leibniz Archive",
+      "treatment": "The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition."
     }
   ]
 }

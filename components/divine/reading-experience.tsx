@@ -111,6 +111,24 @@ const readingStages: Stage[] = [
   'reveal',
   'result',
 ];
+const stageLabels: Record<Stage, string> = {
+  intro: 'The threshold',
+  frame: 'Name the question',
+  method: 'Choose the method',
+  ritual: 'Enter the ritual',
+  reveal: 'The reveal',
+  result: 'The reading',
+};
+const stageMotion = {
+  initial: { opacity: 0, y: 30, scale: 0.992, filter: 'blur(8px)' },
+  animate: { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' },
+  exit: { opacity: 0, y: -22, scale: 0.995, filter: 'blur(6px)' },
+  transition: {
+    duration: 0.58,
+    delay: 0.16,
+    ease: [0.22, 1, 0.36, 1],
+  },
+} as const;
 const cookieCrumbs = [
   { x: -114, y: -42, r: -18 },
   { x: -76, y: 62, r: 22 },
@@ -119,6 +137,38 @@ const cookieCrumbs = [
   { x: 88, y: 48, r: -24 },
   { x: 126, y: -26, r: 18 },
 ];
+
+function StageTransition({
+  stage,
+  systemName,
+}: {
+  stage: Stage;
+  systemName: string;
+}) {
+  const chapter = readingStages.indexOf(stage) + 1;
+
+  return (
+    <motion.div
+      className={`stage-transition stage-transition-${stage}`}
+      aria-hidden="true"
+      initial={{ y: '102%' }}
+      animate={{ y: ['102%', '0%', '0%', '-102%'] }}
+      transition={{
+        duration: 1.16,
+        times: [0, 0.28, 0.58, 1],
+        ease: [0.76, 0, 0.24, 1],
+      }}
+    >
+      <span className="stage-transition-orbit">
+        <i />
+      </span>
+      <span className="stage-transition-copy">
+        <small>{`${chapter}`.padStart(2, '0')} / 06</small>
+        <strong>{stage === 'intro' ? systemName : stageLabels[stage]}</strong>
+      </span>
+    </motion.div>
+  );
+}
 
 function KineticText({ text }: { text: string }) {
   return (
@@ -139,6 +189,73 @@ function KineticText({ text }: { text: string }) {
         </span>
       ))}
     </span>
+  );
+}
+
+type PerformanceNavigator = Navigator & {
+  connection?: { saveData?: boolean };
+  deviceMemory?: number;
+};
+
+function supportsEnhancedObjects() {
+  const performanceNavigator = navigator as PerformanceNavigator;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+    return false;
+  if (performanceNavigator.connection?.saveData) return false;
+  if (
+    performanceNavigator.deviceMemory !== undefined &&
+    performanceNavigator.deviceMemory <= 4
+  )
+    return false;
+  return (
+    navigator.hardwareConcurrency === undefined ||
+    navigator.hardwareConcurrency > 4
+  );
+}
+
+function LightweightObject({
+  kind,
+  step,
+  answer,
+  disabled,
+  ariaLabel,
+  onAdvance,
+}: {
+  kind: 'ball' | 'cookie';
+  step: number;
+  answer: string;
+  disabled: boolean;
+  ariaLabel: string;
+  onAdvance: () => void;
+}) {
+  const isBall = kind === 'ball';
+  return (
+    <button
+      type="button"
+      className={`lightweight-object lightweight-${kind} object-step-${step}`}
+      disabled={disabled}
+      aria-label={ariaLabel}
+      onClick={onAdvance}
+    >
+      <Image
+        src={
+          isBall
+            ? '/index-art-v2/magic-8-ball.webp'
+            : '/art/fortune-cookie-object-v2.webp'
+        }
+        alt=""
+        width={isBall ? 760 : 1100}
+        height={isBall ? 760 : 733}
+        sizes={
+          isBall
+            ? '(max-width: 720px) 82vw, 620px'
+            : '(max-width: 720px) 94vw, 900px'
+        }
+      />
+      {isBall && step >= OBJECT_RITUAL_STEPS && (
+        <span aria-hidden="true">{answer}</span>
+      )}
+    </button>
   );
 }
 
@@ -746,6 +863,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
   const [ramlLines, setRamlLines] = useState<number[]>([]);
   const [shareStatus, setShareStatus] = useState<ShareStatus>('idle');
   const [sessionReady, setSessionReady] = useState(false);
+  const [enhancedObjects, setEnhancedObjects] = useState(false);
   const motionHandler = useRef<((event: DeviceMotionEvent) => void) | null>(
     null,
   );
@@ -765,7 +883,10 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
   }, [readingAmbienceActive]);
 
   useEffect(() => {
-    queueMicrotask(() => setMotionSupported('DeviceMotionEvent' in window));
+    queueMicrotask(() => {
+      setEnhancedObjects(supportsEnhancedObjects());
+      setMotionSupported('DeviceMotionEvent' in window);
+    });
     return () => {
       if (motionHandler.current)
         window.removeEventListener('devicemotion', motionHandler.current);
@@ -1407,6 +1528,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
 
   return (
     <main className={`reading-shell stage-${stage}`}>
+      <StageTransition key={stage} stage={stage} systemName={system.name} />
       {stage !== 'ritual' && stage !== 'reveal' && (
         <>
           <header className="reading-titlebar">
@@ -1434,9 +1556,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
           <motion.section
             className="reading-stage intro-stage"
             key="intro"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0, y: -20 }}
+            {...stageMotion}
           >
             <div className="stage-copy">
               <h1>
@@ -1457,9 +1577,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
           <motion.section
             className="reading-stage centered-stage ask-stage"
             key="frame"
-            initial={{ opacity: 0, scale: 0.985 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0 }}
+            {...stageMotion}
           >
             <label className="sr-only" htmlFor="question">
               Optional private question
@@ -1490,9 +1608,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
           <motion.section
             className="reading-stage method-stage"
             key="method"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            {...stageMotion}
           >
             <div className="spread-list">
               {system.spreads.map((item) => (
@@ -1547,9 +1663,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
             <motion.section
               className="reading-stage ritual-stage"
               key="ritual-cards"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
+              {...stageMotion}
             >
               <SystemRitual
                 profile={cardRitual}
@@ -1570,25 +1684,40 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
           <motion.section
             className="reading-stage ritual-stage"
             key="ritual-ball"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            {...stageMotion}
           >
-            <Suspense fallback={<span className="object-webgl-fallback" />}>
-              <MagicEightBall3D
+            {enhancedObjects ? (
+              <Suspense fallback={<span className="object-webgl-fallback" />}>
+                <MagicEightBall3D
+                  answer={objectMessage}
+                  step={objectStep}
+                  disabled={objectAnimating}
+                  onAdvance={advanceObjectRitual}
+                  ariaLabel={
+                    objectStep === 0
+                      ? 'Rotate the ball or press for the first shake'
+                      : objectStep === 1
+                        ? 'Rotate the ball or press for the second shake'
+                        : 'Rotate the ball or press for the final shake'
+                  }
+                />
+              </Suspense>
+            ) : (
+              <LightweightObject
+                kind="ball"
                 answer={objectMessage}
                 step={objectStep}
                 disabled={objectAnimating}
                 onAdvance={advanceObjectRitual}
                 ariaLabel={
                   objectStep === 0
-                    ? 'Rotate the ball or press for the first shake'
+                    ? 'Press for the first shake'
                     : objectStep === 1
-                      ? 'Rotate the ball or press for the second shake'
-                      : 'Rotate the ball or press for the final shake'
+                      ? 'Press for the second shake'
+                      : 'Press for the final shake'
                 }
               />
-            </Suspense>
+            )}
             <div className="system-ritual-caption object-ritual-caption">
               <span>A liquid answer chamber</span>
               <strong>
@@ -1631,9 +1760,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
           <motion.section
             className="reading-stage ritual-stage"
             key="ritual-cookie"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            {...stageMotion}
           >
             <>
               <div
@@ -1645,24 +1772,45 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
                   } as React.CSSProperties
                 }
               >
-                <Suspense fallback={<span className="cookie-webgl-fallback" />}>
-                  <FortuneCookie3D
+                {enhancedObjects ? (
+                  <Suspense
+                    fallback={<span className="cookie-webgl-fallback" />}
+                  >
+                    <FortuneCookie3D
+                      step={objectStep}
+                      disabled={objectAnimating}
+                      onAdvance={advanceObjectRitual}
+                      onGestureProgress={setCookieGestureProgress}
+                      gestureProgress={cookieGestureProgress}
+                      ariaLabel={
+                        objectStep === 0
+                          ? 'Bend the cookie apart or press to begin cracking it'
+                          : objectStep === 1
+                            ? 'Bend the cookie again to widen the crack'
+                            : objectStep === 2
+                              ? 'Pull the cookie apart to break it open'
+                              : 'Draw the fortune paper to the right'
+                      }
+                    />
+                  </Suspense>
+                ) : (
+                  <LightweightObject
+                    kind="cookie"
+                    answer={objectMessage}
                     step={objectStep}
                     disabled={objectAnimating}
                     onAdvance={advanceObjectRitual}
-                    onGestureProgress={setCookieGestureProgress}
-                    gestureProgress={cookieGestureProgress}
                     ariaLabel={
                       objectStep === 0
-                        ? 'Bend the cookie apart or press to begin cracking it'
+                        ? 'Press to begin cracking the cookie'
                         : objectStep === 1
-                          ? 'Bend the cookie again to widen the crack'
+                          ? 'Press to widen the crack'
                           : objectStep === 2
-                            ? 'Pull the cookie apart to break it open'
-                            : 'Draw the fortune paper to the right'
+                            ? 'Press to break the cookie open'
+                            : 'Press to draw the fortune paper'
                     }
                   />
-                </Suspense>
+                )}
                 <span className="cookie-paper" aria-hidden="true">
                   <em>{objectMessage}</em>
                 </span>
@@ -1723,9 +1871,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
           <motion.section
             className="reading-stage reveal-stage"
             key="reveal"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            {...stageMotion}
           >
             {revealed.size < draws.length && (
               <button
@@ -1764,8 +1910,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
           <motion.section
             className="reading-stage result-stage"
             key="result"
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
+            {...stageMotion}
           >
             <header
               className={`result-hero ${openingDraw ? 'has-opening-card' : 'object-only'}`}

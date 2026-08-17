@@ -1,247 +1,296 @@
 {
   "generatedAt": "2026-09-02",
   "sourceCollection": "https://commons.wikimedia.org/wiki/Category:Elder_Futhark",
-  "rightsNote": "The 24 standardized Elder Futhark letterforms were released to the public domain. Runic cards themselves are a modern reflective format.",
+  "backgroundSourceCollection": "https://commons.wikimedia.org/wiki/File:G88_Kylver_-_KMB_-_16000300013409.jpg",
+  "rightsNote": "The 24 standardized Elder Futhark letterforms are public domain. The Kylver Stone photograph is CC BY 2.5, credited to Bengt A Lundberg / Riksantikvarieämbetet. Runic cards themselves remain a modern reflective format.",
   "cards": [
     {
       "cardIndex": 1,
       "file": "runes-01.webp",
-      "bytes": 5466,
+      "bytes": 151566,
       "sourceTitle": "Runic letter fehu.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Runic_letter_fehu.svg",
-      "license": "Public domain",
-      "artist": "ClaesWallin",
-      "treatment": "The standardized historical letterform is centered on a neutral field; no invented rune imagery is added."
+      "backgroundSourceTitle": "The Kylver Stone, G 88",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:G88_Kylver_-_KMB_-_16000300013409.jpg",
+      "license": "Public domain rune form; CC BY 2.5 background photograph",
+      "artist": "ClaesWallin; Bengt A Lundberg / Riksantikvarieämbetet",
+      "treatment": "The exact public-domain rune form is layered in mineral ochre over a monochrome crop of the Kylver Stone, the fifth-century inscription that preserves the Elder Futhark sequence."
     },
     {
       "cardIndex": 2,
       "file": "runes-02.webp",
-      "bytes": 4868,
+      "bytes": 146556,
       "sourceTitle": "Runic letter uruz.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Runic_letter_uruz.svg",
-      "license": "Public domain",
-      "artist": "ClaesWallin",
-      "treatment": "The standardized historical letterform is centered on a neutral field; no invented rune imagery is added."
+      "backgroundSourceTitle": "The Kylver Stone, G 88",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:G88_Kylver_-_KMB_-_16000300013409.jpg",
+      "license": "Public domain rune form; CC BY 2.5 background photograph",
+      "artist": "ClaesWallin; Bengt A Lundberg / Riksantikvarieämbetet",
+      "treatment": "The exact public-domain rune form is layered in mineral ochre over a monochrome crop of the Kylver Stone, the fifth-century inscription that preserves the Elder Futhark sequence."
     },
     {
       "cardIndex": 3,
       "file": "runes-03.webp",
-      "bytes": 4566,
+      "bytes": 147240,
       "sourceTitle": "Runic letter thurisaz.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Runic_letter_thurisaz.svg",
-      "license": "Public domain",
-      "artist": "ClaesWallin",
-      "treatment": "The standardized historical letterform is centered on a neutral field; no invented rune imagery is added."
+      "backgroundSourceTitle": "The Kylver Stone, G 88",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:G88_Kylver_-_KMB_-_16000300013409.jpg",
+      "license": "Public domain rune form; CC BY 2.5 background photograph",
+      "artist": "ClaesWallin; Bengt A Lundberg / Riksantikvarieämbetet",
+      "treatment": "The exact public-domain rune form is layered in mineral ochre over a monochrome crop of the Kylver Stone, the fifth-century inscription that preserves the Elder Futhark sequence."
     },
     {
       "cardIndex": 4,
       "file": "runes-04.webp",
-      "bytes": 3852,
+      "bytes": 157056,
       "sourceTitle": "Runic letter ansuz.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Runic_letter_ansuz.svg",
-      "license": "Public domain",
-      "artist": "ClaesWallin",
-      "treatment": "The standardized historical letterform is centered on a neutral field; no invented rune imagery is added."
+      "backgroundSourceTitle": "The Kylver Stone, G 88",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:G88_Kylver_-_KMB_-_16000300013409.jpg",
+      "license": "Public domain rune form; CC BY 2.5 background photograph",
+      "artist": "ClaesWallin; Bengt A Lundberg / Riksantikvarieämbetet",
+      "treatment": "The exact public-domain rune form is layered in mineral ochre over a monochrome crop of the Kylver Stone, the fifth-century inscription that preserves the Elder Futhark sequence."
     },
     {
       "cardIndex": 5,
       "file": "runes-05.webp",
-      "bytes": 5720,
+      "bytes": 154198,
       "sourceTitle": "Runic letter raido.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Runic_letter_raido.svg",
-      "license": "Public domain",
-      "artist": "ClaesWallin",
-      "treatment": "The standardized historical letterform is centered on a neutral field; no invented rune imagery is added."
+      "backgroundSourceTitle": "The Kylver Stone, G 88",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:G88_Kylver_-_KMB_-_16000300013409.jpg",
+      "license": "Public domain rune form; CC BY 2.5 background photograph",
+      "artist": "ClaesWallin; Bengt A Lundberg / Riksantikvarieämbetet",
+      "treatment": "The exact public-domain rune form is layered in mineral ochre over a monochrome crop of the Kylver Stone, the fifth-century inscription that preserves the Elder Futhark sequence."
     },
     {
       "cardIndex": 6,
       "file": "runes-06.webp",
-      "bytes": 5248,
+      "bytes": 150958,
       "sourceTitle": "Runic letter kauna.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Runic_letter_kauna.svg",
-      "license": "Public domain",
-      "artist": "ClaesWallin",
-      "treatment": "The standardized historical letterform is centered on a neutral field; no invented rune imagery is added."
+      "backgroundSourceTitle": "The Kylver Stone, G 88",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:G88_Kylver_-_KMB_-_16000300013409.jpg",
+      "license": "Public domain rune form; CC BY 2.5 background photograph",
+      "artist": "ClaesWallin; Bengt A Lundberg / Riksantikvarieämbetet",
+      "treatment": "The exact public-domain rune form is layered in mineral ochre over a monochrome crop of the Kylver Stone, the fifth-century inscription that preserves the Elder Futhark sequence."
     },
     {
       "cardIndex": 7,
       "file": "runes-07.webp",
-      "bytes": 8522,
+      "bytes": 147218,
       "sourceTitle": "Runic letter gebo.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Runic_letter_gebo.svg",
-      "license": "Public domain",
-      "artist": "ClaesWallin",
-      "treatment": "The standardized historical letterform is centered on a neutral field; no invented rune imagery is added."
+      "backgroundSourceTitle": "The Kylver Stone, G 88",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:G88_Kylver_-_KMB_-_16000300013409.jpg",
+      "license": "Public domain rune form; CC BY 2.5 background photograph",
+      "artist": "ClaesWallin; Bengt A Lundberg / Riksantikvarieämbetet",
+      "treatment": "The exact public-domain rune form is layered in mineral ochre over a monochrome crop of the Kylver Stone, the fifth-century inscription that preserves the Elder Futhark sequence."
     },
     {
       "cardIndex": 8,
       "file": "runes-08.webp",
-      "bytes": 4100,
+      "bytes": 161632,
       "sourceTitle": "Runic letter wunjo.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Runic_letter_wunjo.svg",
-      "license": "Public domain",
-      "artist": "ClaesWallin",
-      "treatment": "The standardized historical letterform is centered on a neutral field; no invented rune imagery is added."
+      "backgroundSourceTitle": "The Kylver Stone, G 88",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:G88_Kylver_-_KMB_-_16000300013409.jpg",
+      "license": "Public domain rune form; CC BY 2.5 background photograph",
+      "artist": "ClaesWallin; Bengt A Lundberg / Riksantikvarieämbetet",
+      "treatment": "The exact public-domain rune form is layered in mineral ochre over a monochrome crop of the Kylver Stone, the fifth-century inscription that preserves the Elder Futhark sequence."
     },
     {
       "cardIndex": 9,
       "file": "runes-09.webp",
-      "bytes": 3742,
+      "bytes": 157296,
       "sourceTitle": "Runic letter haglaz.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Runic_letter_haglaz.svg",
-      "license": "Public domain",
-      "artist": "ClaesWallin",
-      "treatment": "The standardized historical letterform is centered on a neutral field; no invented rune imagery is added."
+      "backgroundSourceTitle": "The Kylver Stone, G 88",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:G88_Kylver_-_KMB_-_16000300013409.jpg",
+      "license": "Public domain rune form; CC BY 2.5 background photograph",
+      "artist": "ClaesWallin; Bengt A Lundberg / Riksantikvarieämbetet",
+      "treatment": "The exact public-domain rune form is layered in mineral ochre over a monochrome crop of the Kylver Stone, the fifth-century inscription that preserves the Elder Futhark sequence."
     },
     {
       "cardIndex": 10,
       "file": "runes-10.webp",
-      "bytes": 3154,
+      "bytes": 149478,
       "sourceTitle": "Runic letter naudiz.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Runic_letter_naudiz.svg",
-      "license": "Public domain",
-      "artist": "ClaesWallin",
-      "treatment": "The standardized historical letterform is centered on a neutral field; no invented rune imagery is added."
+      "backgroundSourceTitle": "The Kylver Stone, G 88",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:G88_Kylver_-_KMB_-_16000300013409.jpg",
+      "license": "Public domain rune form; CC BY 2.5 background photograph",
+      "artist": "ClaesWallin; Bengt A Lundberg / Riksantikvarieämbetet",
+      "treatment": "The exact public-domain rune form is layered in mineral ochre over a monochrome crop of the Kylver Stone, the fifth-century inscription that preserves the Elder Futhark sequence."
     },
     {
       "cardIndex": 11,
       "file": "runes-11.webp",
-      "bytes": 1740,
+      "bytes": 160680,
       "sourceTitle": "Runic letter isaz.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Runic_letter_isaz.svg",
-      "license": "Public domain",
-      "artist": "ClaesWallin",
-      "treatment": "The standardized historical letterform is centered on a neutral field; no invented rune imagery is added."
+      "backgroundSourceTitle": "The Kylver Stone, G 88",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:G88_Kylver_-_KMB_-_16000300013409.jpg",
+      "license": "Public domain rune form; CC BY 2.5 background photograph",
+      "artist": "ClaesWallin; Bengt A Lundberg / Riksantikvarieämbetet",
+      "treatment": "The exact public-domain rune form is layered in mineral ochre over a monochrome crop of the Kylver Stone, the fifth-century inscription that preserves the Elder Futhark sequence."
     },
     {
       "cardIndex": 12,
       "file": "runes-12.webp",
-      "bytes": 6774,
+      "bytes": 152280,
       "sourceTitle": "Runic letter jeran.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Runic_letter_jeran.svg",
-      "license": "Public domain",
-      "artist": "ClaesWallin",
-      "treatment": "The standardized historical letterform is centered on a neutral field; no invented rune imagery is added."
+      "backgroundSourceTitle": "The Kylver Stone, G 88",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:G88_Kylver_-_KMB_-_16000300013409.jpg",
+      "license": "Public domain rune form; CC BY 2.5 background photograph",
+      "artist": "ClaesWallin; Bengt A Lundberg / Riksantikvarieämbetet",
+      "treatment": "The exact public-domain rune form is layered in mineral ochre over a monochrome crop of the Kylver Stone, the fifth-century inscription that preserves the Elder Futhark sequence."
     },
     {
       "cardIndex": 13,
       "file": "runes-13.webp",
-      "bytes": 3402,
+      "bytes": 149918,
       "sourceTitle": "Runic letter iwaz.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Runic_letter_iwaz.svg",
-      "license": "Public domain",
-      "artist": "ClaesWallin",
-      "treatment": "The standardized historical letterform is centered on a neutral field; no invented rune imagery is added."
+      "backgroundSourceTitle": "The Kylver Stone, G 88",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:G88_Kylver_-_KMB_-_16000300013409.jpg",
+      "license": "Public domain rune form; CC BY 2.5 background photograph",
+      "artist": "ClaesWallin; Bengt A Lundberg / Riksantikvarieämbetet",
+      "treatment": "The exact public-domain rune form is layered in mineral ochre over a monochrome crop of the Kylver Stone, the fifth-century inscription that preserves the Elder Futhark sequence."
     },
     {
       "cardIndex": 14,
       "file": "runes-14.webp",
-      "bytes": 5110,
+      "bytes": 157482,
       "sourceTitle": "Runic letter pertho.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Runic_letter_pertho.svg",
-      "license": "Public domain",
-      "artist": "ClaesWallin",
-      "treatment": "The standardized historical letterform is centered on a neutral field; no invented rune imagery is added."
+      "backgroundSourceTitle": "The Kylver Stone, G 88",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:G88_Kylver_-_KMB_-_16000300013409.jpg",
+      "license": "Public domain rune form; CC BY 2.5 background photograph",
+      "artist": "ClaesWallin; Bengt A Lundberg / Riksantikvarieämbetet",
+      "treatment": "The exact public-domain rune form is layered in mineral ochre over a monochrome crop of the Kylver Stone, the fifth-century inscription that preserves the Elder Futhark sequence."
     },
     {
       "cardIndex": 15,
       "file": "runes-15.webp",
-      "bytes": 4000,
+      "bytes": 149258,
       "sourceTitle": "Runic letter algiz.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Runic_letter_algiz.svg",
-      "license": "Public domain",
-      "artist": "ClaesWallin",
-      "treatment": "The standardized historical letterform is centered on a neutral field; no invented rune imagery is added."
+      "backgroundSourceTitle": "The Kylver Stone, G 88",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:G88_Kylver_-_KMB_-_16000300013409.jpg",
+      "license": "Public domain rune form; CC BY 2.5 background photograph",
+      "artist": "ClaesWallin; Bengt A Lundberg / Riksantikvarieämbetet",
+      "treatment": "The exact public-domain rune form is layered in mineral ochre over a monochrome crop of the Kylver Stone, the fifth-century inscription that preserves the Elder Futhark sequence."
     },
     {
       "cardIndex": 16,
       "file": "runes-16.webp",
-      "bytes": 7872,
+      "bytes": 150602,
       "sourceTitle": "Runic letter sowilo.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Runic_letter_sowilo.svg",
-      "license": "Public domain",
-      "artist": "ClaesWallin",
-      "treatment": "The standardized historical letterform is centered on a neutral field; no invented rune imagery is added."
+      "backgroundSourceTitle": "The Kylver Stone, G 88",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:G88_Kylver_-_KMB_-_16000300013409.jpg",
+      "license": "Public domain rune form; CC BY 2.5 background photograph",
+      "artist": "ClaesWallin; Bengt A Lundberg / Riksantikvarieämbetet",
+      "treatment": "The exact public-domain rune form is layered in mineral ochre over a monochrome crop of the Kylver Stone, the fifth-century inscription that preserves the Elder Futhark sequence."
     },
     {
       "cardIndex": 17,
       "file": "runes-17.webp",
-      "bytes": 4056,
+      "bytes": 147618,
       "sourceTitle": "Runic letter tiwaz.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Runic_letter_tiwaz.svg",
-      "license": "Public domain",
-      "artist": "ClaesWallin",
-      "treatment": "The standardized historical letterform is centered on a neutral field; no invented rune imagery is added."
+      "backgroundSourceTitle": "The Kylver Stone, G 88",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:G88_Kylver_-_KMB_-_16000300013409.jpg",
+      "license": "Public domain rune form; CC BY 2.5 background photograph",
+      "artist": "ClaesWallin; Bengt A Lundberg / Riksantikvarieämbetet",
+      "treatment": "The exact public-domain rune form is layered in mineral ochre over a monochrome crop of the Kylver Stone, the fifth-century inscription that preserves the Elder Futhark sequence."
     },
     {
       "cardIndex": 18,
       "file": "runes-18.webp",
-      "bytes": 7340,
+      "bytes": 152140,
       "sourceTitle": "Runic letter berkanan.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Runic_letter_berkanan.svg",
-      "license": "Public domain",
-      "artist": "ClaesWallin",
-      "treatment": "The standardized historical letterform is centered on a neutral field; no invented rune imagery is added."
+      "backgroundSourceTitle": "The Kylver Stone, G 88",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:G88_Kylver_-_KMB_-_16000300013409.jpg",
+      "license": "Public domain rune form; CC BY 2.5 background photograph",
+      "artist": "ClaesWallin; Bengt A Lundberg / Riksantikvarieämbetet",
+      "treatment": "The exact public-domain rune form is layered in mineral ochre over a monochrome crop of the Kylver Stone, the fifth-century inscription that preserves the Elder Futhark sequence."
     },
     {
       "cardIndex": 19,
       "file": "runes-19.webp",
-      "bytes": 3696,
+      "bytes": 143472,
       "sourceTitle": "Runic letter ehwaz.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Runic_letter_ehwaz.svg",
-      "license": "Public domain",
-      "artist": "ClaesWallin",
-      "treatment": "The standardized historical letterform is centered on a neutral field; no invented rune imagery is added."
+      "backgroundSourceTitle": "The Kylver Stone, G 88",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:G88_Kylver_-_KMB_-_16000300013409.jpg",
+      "license": "Public domain rune form; CC BY 2.5 background photograph",
+      "artist": "ClaesWallin; Bengt A Lundberg / Riksantikvarieämbetet",
+      "treatment": "The exact public-domain rune form is layered in mineral ochre over a monochrome crop of the Kylver Stone, the fifth-century inscription that preserves the Elder Futhark sequence."
     },
     {
       "cardIndex": 20,
       "file": "runes-20.webp",
-      "bytes": 5384,
+      "bytes": 154110,
       "sourceTitle": "Runic letter mannaz.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Runic_letter_mannaz.svg",
-      "license": "Public domain",
-      "artist": "ClaesWallin",
-      "treatment": "The standardized historical letterform is centered on a neutral field; no invented rune imagery is added."
+      "backgroundSourceTitle": "The Kylver Stone, G 88",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:G88_Kylver_-_KMB_-_16000300013409.jpg",
+      "license": "Public domain rune form; CC BY 2.5 background photograph",
+      "artist": "ClaesWallin; Bengt A Lundberg / Riksantikvarieämbetet",
+      "treatment": "The exact public-domain rune form is layered in mineral ochre over a monochrome crop of the Kylver Stone, the fifth-century inscription that preserves the Elder Futhark sequence."
     },
     {
       "cardIndex": 21,
       "file": "runes-21.webp",
-      "bytes": 3128,
+      "bytes": 151476,
       "sourceTitle": "Runic letter laukaz.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Runic_letter_laukaz.svg",
-      "license": "Public domain",
-      "artist": "ClaesWallin",
-      "treatment": "The standardized historical letterform is centered on a neutral field; no invented rune imagery is added."
+      "backgroundSourceTitle": "The Kylver Stone, G 88",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:G88_Kylver_-_KMB_-_16000300013409.jpg",
+      "license": "Public domain rune form; CC BY 2.5 background photograph",
+      "artist": "ClaesWallin; Bengt A Lundberg / Riksantikvarieämbetet",
+      "treatment": "The exact public-domain rune form is layered in mineral ochre over a monochrome crop of the Kylver Stone, the fifth-century inscription that preserves the Elder Futhark sequence."
     },
     {
       "cardIndex": 22,
       "file": "runes-22.webp",
-      "bytes": 6314,
+      "bytes": 147700,
       "sourceTitle": "Runic letter ingwaz.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Runic_letter_ingwaz.svg",
-      "license": "Public domain",
-      "artist": "ClaesWallin",
-      "treatment": "The standardized historical letterform is centered on a neutral field; no invented rune imagery is added."
+      "backgroundSourceTitle": "The Kylver Stone, G 88",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:G88_Kylver_-_KMB_-_16000300013409.jpg",
+      "license": "Public domain rune form; CC BY 2.5 background photograph",
+      "artist": "ClaesWallin; Bengt A Lundberg / Riksantikvarieämbetet",
+      "treatment": "The exact public-domain rune form is layered in mineral ochre over a monochrome crop of the Kylver Stone, the fifth-century inscription that preserves the Elder Futhark sequence."
     },
     {
       "cardIndex": 23,
       "file": "runes-23.webp",
-      "bytes": 7058,
+      "bytes": 146952,
       "sourceTitle": "Runic letter dagaz.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Runic_letter_dagaz.svg",
-      "license": "Public domain",
-      "artist": "ClaesWallin",
-      "treatment": "The standardized historical letterform is centered on a neutral field; no invented rune imagery is added."
+      "backgroundSourceTitle": "The Kylver Stone, G 88",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:G88_Kylver_-_KMB_-_16000300013409.jpg",
+      "license": "Public domain rune form; CC BY 2.5 background photograph",
+      "artist": "ClaesWallin; Bengt A Lundberg / Riksantikvarieämbetet",
+      "treatment": "The exact public-domain rune form is layered in mineral ochre over a monochrome crop of the Kylver Stone, the fifth-century inscription that preserves the Elder Futhark sequence."
     },
     {
       "cardIndex": 24,
       "file": "runes-24.webp",
-      "bytes": 7788,
+      "bytes": 147610,
       "sourceTitle": "Runic letter othalan.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Runic_letter_othalan.svg",
-      "license": "Public domain",
-      "artist": "ClaesWallin",
-      "treatment": "The standardized historical letterform is centered on a neutral field; no invented rune imagery is added."
+      "backgroundSourceTitle": "The Kylver Stone, G 88",
+      "backgroundSourceUrl": "https://commons.wikimedia.org/wiki/File:G88_Kylver_-_KMB_-_16000300013409.jpg",
+      "license": "Public domain rune form; CC BY 2.5 background photograph",
+      "artist": "ClaesWallin; Bengt A Lundberg / Riksantikvarieämbetet",
+      "treatment": "The exact public-domain rune form is layered in mineral ochre over a monochrome crop of the Kylver Stone, the fifth-century inscription that preserves the Elder Futhark sequence."
     }
   ]
 }

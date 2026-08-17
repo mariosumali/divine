@@ -125,79 +125,104 @@ function startReadingAmbience(ctx: AudioContext) {
       readingAmbience.stopTimer = null;
     }
     readingAmbience.fade.gain.cancelAndHoldAtTime(now);
-    readingAmbience.fade.gain.exponentialRampToValueAtTime(0.18, now + 2.4);
+    readingAmbience.fade.gain.exponentialRampToValueAtTime(0.2, now + 2.4);
     return;
   }
 
   const fade = ctx.createGain();
-  const droneFilter = ctx.createBiquadFilter();
+  const padFilter = ctx.createBiquadFilter();
+  const padSwell = ctx.createGain();
+  const dryGain = ctx.createGain();
+  const reverb = ctx.createConvolver();
+  const reverbGain = ctx.createGain();
   const sources: AudioScheduledSourceNode[] = [];
   fade.gain.setValueAtTime(0.0001, now);
-  fade.gain.exponentialRampToValueAtTime(0.18, now + 3.2);
-  droneFilter.type = 'lowpass';
-  droneFilter.frequency.value = 145;
-  droneFilter.Q.value = 0.7;
-  droneFilter.connect(fade);
+  fade.gain.exponentialRampToValueAtTime(0.2, now + 4);
+  padFilter.type = 'lowpass';
+  padFilter.frequency.value = 1500;
+  padFilter.Q.value = 0.45;
+  padSwell.gain.value = 0.82;
+  dryGain.gain.value = 0.72;
+  reverbGain.gain.value = 0.48;
+  padFilter.connect(padSwell);
+  padSwell.connect(dryGain).connect(fade);
+  padSwell.connect(reverb).connect(reverbGain).connect(fade);
   fade.connect(output(ctx));
 
+  const reverbLength = Math.max(1, Math.floor(ctx.sampleRate * 4.5));
+  const reverbBuffer = ctx.createBuffer(2, reverbLength, ctx.sampleRate);
+  for (let channelIndex = 0; channelIndex < 2; channelIndex += 1) {
+    const impulse = reverbBuffer.getChannelData(channelIndex);
+    for (let index = 0; index < reverbLength; index += 1) {
+      const decay = Math.pow(1 - index / reverbLength, 3.1);
+      impulse[index] = (Math.random() * 2 - 1) * decay;
+    }
+  }
+  reverb.buffer = reverbBuffer;
+
   [
-    { frequency: 42.4, gain: 0.055, type: 'sine' as OscillatorType },
-    { frequency: 42.58, gain: 0.045, type: 'sine' as OscillatorType },
-    { frequency: 63.6, gain: 0.024, type: 'triangle' as OscillatorType },
-  ].forEach(({ frequency, gain: gainValue, type }) => {
+    { frequency: 65.41, gain: 0.028, detune: -3 },
+    { frequency: 98, gain: 0.022, detune: 2 },
+    { frequency: 130.81, gain: 0.018, detune: -2 },
+    { frequency: 164.81, gain: 0.012, detune: 3 },
+    { frequency: 196, gain: 0.009, detune: -3 },
+    { frequency: 246.94, gain: 0.006, detune: 2 },
+    { frequency: 293.66, gain: 0.004, detune: -2 },
+    { frequency: 392, gain: 0.0025, detune: 3 },
+  ].forEach(({ frequency, gain: gainValue, detune }) => {
     const oscillator = ctx.createOscillator();
     const gain = ctx.createGain();
-    oscillator.type = type;
+    oscillator.type = 'sine';
     oscillator.frequency.value = frequency;
+    oscillator.detune.value = detune;
     gain.gain.value = gainValue;
-    oscillator.connect(gain).connect(droneFilter);
+    oscillator.connect(gain).connect(padFilter);
     oscillator.start();
     sources.push(oscillator);
   });
 
-  const noiseLength = Math.max(1, Math.floor(ctx.sampleRate * 3));
+  const noiseLength = Math.max(1, Math.floor(ctx.sampleRate * 4));
   const noiseBuffer = ctx.createBuffer(1, noiseLength, ctx.sampleRate);
   const noiseData = noiseBuffer.getChannelData(0);
-  let previous = 0;
   for (let index = 0; index < noiseLength; index += 1) {
-    previous = (previous + (Math.random() * 2 - 1) * 0.035) / 1.035;
-    noiseData[index] = previous * 3.2;
+    noiseData[index] = Math.random() * 2 - 1;
   }
   const noiseSource = ctx.createBufferSource();
-  const noiseHighpass = ctx.createBiquadFilter();
-  const noiseLowpass = ctx.createBiquadFilter();
+  const noiseFilter = ctx.createBiquadFilter();
   const noiseGain = ctx.createGain();
   noiseSource.buffer = noiseBuffer;
   noiseSource.loop = true;
-  noiseHighpass.type = 'highpass';
-  noiseHighpass.frequency.value = 28;
-  noiseLowpass.type = 'lowpass';
-  noiseLowpass.frequency.value = 210;
-  noiseLowpass.Q.value = 0.45;
-  noiseGain.gain.value = 0.065;
-  noiseSource
-    .connect(noiseHighpass)
-    .connect(noiseLowpass)
-    .connect(noiseGain)
-    .connect(fade);
+  noiseFilter.type = 'bandpass';
+  noiseFilter.frequency.value = 1850;
+  noiseFilter.Q.value = 0.4;
+  noiseGain.gain.value = 0.009;
+  noiseSource.connect(noiseFilter).connect(noiseGain).connect(padSwell);
   noiseSource.start();
   sources.push(noiseSource);
 
   const breath = ctx.createOscillator();
   const breathDepth = ctx.createGain();
-  breath.frequency.value = 0.055;
-  breathDepth.gain.value = 0.025;
+  breath.frequency.value = 0.04;
+  breathDepth.gain.value = 0.006;
   breath.connect(breathDepth).connect(noiseGain.gain);
   breath.start();
   sources.push(breath);
 
   const drift = ctx.createOscillator();
   const driftDepth = ctx.createGain();
-  drift.frequency.value = 0.018;
-  driftDepth.gain.value = 22;
-  drift.connect(driftDepth).connect(droneFilter.frequency);
+  drift.frequency.value = 0.025;
+  driftDepth.gain.value = 340;
+  drift.connect(driftDepth).connect(padFilter.frequency);
   drift.start();
   sources.push(drift);
+
+  const swell = ctx.createOscillator();
+  const swellDepth = ctx.createGain();
+  swell.frequency.value = 0.032;
+  swellDepth.gain.value = 0.13;
+  swell.connect(swellDepth).connect(padSwell.gain);
+  swell.start();
+  sources.push(swell);
 
   readingAmbience = { fade, sources, stopTimer: null };
 }
@@ -209,13 +234,13 @@ function stopReadingAmbience() {
   const now = ctx.currentTime;
   if (ambience.stopTimer) clearTimeout(ambience.stopTimer);
   ambience.fade.gain.cancelAndHoldAtTime(now);
-  ambience.fade.gain.exponentialRampToValueAtTime(0.0001, now + 1.4);
+  ambience.fade.gain.exponentialRampToValueAtTime(0.0001, now + 2.2);
   ambience.stopTimer = setTimeout(() => {
     if (readingAmbience !== ambience) return;
     ambience.sources.forEach((source) => source.stop());
     ambience.fade.disconnect();
     readingAmbience = null;
-  }, 1550);
+  }, 2350);
 }
 
 function loadSample(ctx: AudioContext, name: SampleName) {
