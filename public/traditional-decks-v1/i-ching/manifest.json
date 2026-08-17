@@ -1,0 +1,647 @@
+{
+  "generatedAt": "2026-09-02",
+  "sourceCollection": "https://commons.wikimedia.org/wiki/Category:I_Ching_hexagrams",
+  "rightsNote": "The hexagram forms are public-domain symbols. Card presentation is modern and does not replace a changing-line consultation.",
+  "cards": [
+    {
+      "cardIndex": 1,
+      "file": "i-ching-01.webp",
+      "bytes": 2642,
+      "sourceTitle": "Iching-hexagram-01.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-01.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 2,
+      "file": "i-ching-02.webp",
+      "bytes": 2968,
+      "sourceTitle": "Iching-hexagram-02.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-02.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 3,
+      "file": "i-ching-03.webp",
+      "bytes": 2852,
+      "sourceTitle": "Iching-hexagram-03.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-03.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 4,
+      "file": "i-ching-04.webp",
+      "bytes": 2846,
+      "sourceTitle": "Iching-hexagram-04.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-04.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 5,
+      "file": "i-ching-05.webp",
+      "bytes": 2726,
+      "sourceTitle": "Iching-hexagram-05.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-05.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 6,
+      "file": "i-ching-06.webp",
+      "bytes": 2726,
+      "sourceTitle": "Iching-hexagram-06.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-06.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 7,
+      "file": "i-ching-07.webp",
+      "bytes": 2936,
+      "sourceTitle": "Iching-hexagram-07.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-07.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 8,
+      "file": "i-ching-08.webp",
+      "bytes": 2878,
+      "sourceTitle": "Iching-hexagram-08.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-08.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 9,
+      "file": "i-ching-09.webp",
+      "bytes": 2706,
+      "sourceTitle": "Iching-hexagram-09.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-09.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 10,
+      "file": "i-ching-10.webp",
+      "bytes": 2692,
+      "sourceTitle": "Iching-hexagram-10.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-10.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 11,
+      "file": "i-ching-11.webp",
+      "bytes": 2804,
+      "sourceTitle": "Iching-hexagram-11.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-11.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 12,
+      "file": "i-ching-12.webp",
+      "bytes": 2766,
+      "sourceTitle": "Iching-hexagram-12.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-12.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 13,
+      "file": "i-ching-13.webp",
+      "bytes": 2658,
+      "sourceTitle": "Iching-hexagram-13.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-13.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 14,
+      "file": "i-ching-14.webp",
+      "bytes": 2682,
+      "sourceTitle": "Iching-hexagram-14.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-14.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 15,
+      "file": "i-ching-15.webp",
+      "bytes": 2918,
+      "sourceTitle": "Iching-hexagram-15.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-15.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 16,
+      "file": "i-ching-16.webp",
+      "bytes": 2906,
+      "sourceTitle": "Iching-hexagram-16.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-16.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 17,
+      "file": "i-ching-17.webp",
+      "bytes": 2772,
+      "sourceTitle": "Iching-hexagram-17.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-17.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 18,
+      "file": "i-ching-18.webp",
+      "bytes": 2792,
+      "sourceTitle": "Iching-hexagram-18.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-18.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 19,
+      "file": "i-ching-19.webp",
+      "bytes": 2896,
+      "sourceTitle": "Iching-hexagram-19.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-19.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 20,
+      "file": "i-ching-20.webp",
+      "bytes": 2848,
+      "sourceTitle": "Iching-hexagram-20.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-20.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 21,
+      "file": "i-ching-21.webp",
+      "bytes": 2804,
+      "sourceTitle": "Iching-hexagram-21.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-21.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 22,
+      "file": "i-ching-22.webp",
+      "bytes": 2816,
+      "sourceTitle": "Iching-hexagram-22.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-22.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 23,
+      "file": "i-ching-23.webp",
+      "bytes": 2906,
+      "sourceTitle": "Iching-hexagram-23.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-23.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 24,
+      "file": "i-ching-24.webp",
+      "bytes": 2940,
+      "sourceTitle": "Iching-hexagram-24.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-24.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 25,
+      "file": "i-ching-25.webp",
+      "bytes": 2732,
+      "sourceTitle": "Iching-hexagram-25.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-25.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 26,
+      "file": "i-ching-26.webp",
+      "bytes": 2758,
+      "sourceTitle": "Iching-hexagram-26.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-26.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 27,
+      "file": "i-ching-27.webp",
+      "bytes": 2870,
+      "sourceTitle": "Iching-hexagram-27.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-27.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 28,
+      "file": "i-ching-28.webp",
+      "bytes": 2684,
+      "sourceTitle": "Iching-hexagram-28.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-28.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 29,
+      "file": "i-ching-29.webp",
+      "bytes": 2858,
+      "sourceTitle": "Iching-hexagram-29.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-29.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 30,
+      "file": "i-ching-30.webp",
+      "bytes": 2748,
+      "sourceTitle": "Iching-hexagram-30.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-30.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 31,
+      "file": "i-ching-31.webp",
+      "bytes": 2746,
+      "sourceTitle": "Iching-hexagram-31.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-31.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 32,
+      "file": "i-ching-32.webp",
+      "bytes": 2772,
+      "sourceTitle": "Iching-hexagram-32.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-32.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 33,
+      "file": "i-ching-33.webp",
+      "bytes": 2694,
+      "sourceTitle": "Iching-hexagram-33.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-33.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 34,
+      "file": "i-ching-34.webp",
+      "bytes": 2728,
+      "sourceTitle": "Iching-hexagram-34.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-34.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 35,
+      "file": "i-ching-35.webp",
+      "bytes": 2838,
+      "sourceTitle": "Iching-hexagram-35.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-35.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 36,
+      "file": "i-ching-36.webp",
+      "bytes": 2878,
+      "sourceTitle": "Iching-hexagram-36.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-36.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 37,
+      "file": "i-ching-37.webp",
+      "bytes": 2748,
+      "sourceTitle": "Iching-hexagram-37.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-37.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 38,
+      "file": "i-ching-38.webp",
+      "bytes": 2740,
+      "sourceTitle": "Iching-hexagram-38.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-38.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 39,
+      "file": "i-ching-39.webp",
+      "bytes": 2826,
+      "sourceTitle": "Iching-hexagram-39.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-39.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 40,
+      "file": "i-ching-40.webp",
+      "bytes": 2868,
+      "sourceTitle": "Iching-hexagram-40.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-40.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 41,
+      "file": "i-ching-41.webp",
+      "bytes": 2812,
+      "sourceTitle": "Iching-hexagram-41.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-41.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 42,
+      "file": "i-ching-42.webp",
+      "bytes": 2794,
+      "sourceTitle": "Iching-hexagram-42.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-42.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 43,
+      "file": "i-ching-43.webp",
+      "bytes": 2642,
+      "sourceTitle": "Iching-hexagram-43.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-43.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 44,
+      "file": "i-ching-44.webp",
+      "bytes": 2630,
+      "sourceTitle": "Iching-hexagram-44.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-44.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 45,
+      "file": "i-ching-45.webp",
+      "bytes": 2804,
+      "sourceTitle": "Iching-hexagram-45.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-45.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 46,
+      "file": "i-ching-46.webp",
+      "bytes": 2838,
+      "sourceTitle": "Iching-hexagram-46.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-46.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 47,
+      "file": "i-ching-47.webp",
+      "bytes": 2784,
+      "sourceTitle": "Iching-hexagram-47.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-47.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 48,
+      "file": "i-ching-48.webp",
+      "bytes": 2764,
+      "sourceTitle": "Iching-hexagram-48.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-48.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 49,
+      "file": "i-ching-49.webp",
+      "bytes": 2714,
+      "sourceTitle": "Iching-hexagram-49.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-49.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 50,
+      "file": "i-ching-50.webp",
+      "bytes": 2718,
+      "sourceTitle": "Iching-hexagram-50.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-50.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 51,
+      "file": "i-ching-51.webp",
+      "bytes": 2862,
+      "sourceTitle": "Iching-hexagram-51.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-51.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 52,
+      "file": "i-ching-52.webp",
+      "bytes": 2850,
+      "sourceTitle": "Iching-hexagram-52.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-52.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 53,
+      "file": "i-ching-53.webp",
+      "bytes": 2778,
+      "sourceTitle": "Iching-hexagram-53.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-53.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 54,
+      "file": "i-ching-54.webp",
+      "bytes": 2824,
+      "sourceTitle": "Iching-hexagram-54.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-54.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 55,
+      "file": "i-ching-55.webp",
+      "bytes": 2792,
+      "sourceTitle": "Iching-hexagram-55.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-55.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 56,
+      "file": "i-ching-56.webp",
+      "bytes": 2784,
+      "sourceTitle": "Iching-hexagram-56.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-56.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 57,
+      "file": "i-ching-57.webp",
+      "bytes": 2742,
+      "sourceTitle": "Iching-hexagram-57.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-57.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 58,
+      "file": "i-ching-58.webp",
+      "bytes": 2744,
+      "sourceTitle": "Iching-hexagram-58.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-58.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 59,
+      "file": "i-ching-59.webp",
+      "bytes": 2798,
+      "sourceTitle": "Iching-hexagram-59.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-59.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 60,
+      "file": "i-ching-60.webp",
+      "bytes": 2814,
+      "sourceTitle": "Iching-hexagram-60.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-60.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 61,
+      "file": "i-ching-61.webp",
+      "bytes": 2762,
+      "sourceTitle": "Iching-hexagram-61.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-61.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 62,
+      "file": "i-ching-62.webp",
+      "bytes": 2834,
+      "sourceTitle": "Iching-hexagram-62.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-62.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 63,
+      "file": "i-ching-63.webp",
+      "bytes": 2790,
+      "sourceTitle": "Iching-hexagram-63.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-63.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    },
+    {
+      "cardIndex": 64,
+      "file": "i-ching-64.webp",
+      "bytes": 2776,
+      "sourceTitle": "Iching-hexagram-64.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iching-hexagram-64.svg",
+      "license": "Public domain",
+      "artist": "Ben Finney and Wikimedia contributors",
+      "treatment": "The exact six-line hexagram is centered on a neutral field in King Wen sequence."
+    }
+  ]
+}

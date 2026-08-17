@@ -1,0 +1,367 @@
+{
+  "generatedAt": "2026-09-02",
+  "sourceCollection": "https://commons.wikimedia.org/wiki/Category:Divan_of_Hafez",
+  "rightsNote": "All images are public-domain/CC0 pages from historical Divān of Hafez manuscripts in the Walters Art Museum. Fāl-e Hāfez is bibliomancy, so the app’s 36 motif cards remain explicitly labeled as a contemporary adaptation.",
+  "cards": [
+    {
+      "cardIndex": 1,
+      "file": "hafez-01.webp",
+      "bytes": 107110,
+      "sourceTitle": "'Ali Quli ibn Qadr ibn Nur-- Barrak (?) - Colophon - Walters W630187A - Full Page.jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:%27Ali_Quli_ibn_Qadr_ibn_Nur--_Barrak_(%3F)_-_Colophon_-_Walters_W630187A_-_Full_Page.jpg",
+      "license": "Public domain",
+      "artist": "Hafez",
+      "treatment": "Aspect ratio preserved; resized only; no cropping of the manuscript page."
+    },
+    {
+      "cardIndex": 2,
+      "file": "hafez-02.webp",
+      "bytes": 137422,
+      "sourceTitle": "'Ali Quli ibn Qadr ibn Nur-- Barrak (?) - Incipit Page with Titlepiece - Walters W6301B - Full Page.jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:%27Ali_Quli_ibn_Qadr_ibn_Nur--_Barrak_(%3F)_-_Incipit_Page_with_Titlepiece_-_Walters_W6301B_-_Full_Page.jpg",
+      "license": "Public domain",
+      "artist": "Hafez",
+      "treatment": "Aspect ratio preserved; resized only; no cropping of the manuscript page."
+    },
+    {
+      "cardIndex": 3,
+      "file": "hafez-03.webp",
+      "bytes": 124774,
+      "sourceTitle": "'Ali Quli ibn Qadr ibn Nur-- Barrak (?) - Text Page with Chapter Heading - Walters W6302A - Full Page.jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:%27Ali_Quli_ibn_Qadr_ibn_Nur--_Barrak_(%3F)_-_Text_Page_with_Chapter_Heading_-_Walters_W6302A_-_Full_Page.jpg",
+      "license": "Public domain",
+      "artist": "Hafez",
+      "treatment": "Aspect ratio preserved; resized only; no cropping of the manuscript page."
+    },
+    {
+      "cardIndex": 4,
+      "file": "hafez-04.webp",
+      "bytes": 142806,
+      "sourceTitle": "Hafiz - A Drinking and Merry-making Party - Walters W63894B - Full Page.jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hafiz_-_A_Drinking_and_Merry-making_Party_-_Walters_W63894B_-_Full_Page.jpg",
+      "license": "Public domain",
+      "artist": "Hafez",
+      "treatment": "Aspect ratio preserved; resized only; no cropping of the manuscript page."
+    },
+    {
+      "cardIndex": 5,
+      "file": "hafez-05.webp",
+      "bytes": 135130,
+      "sourceTitle": "Hafiz - A Festive Party in a Garden with Dance, Music, and Wine - Walters W63827B - Full Page.jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hafiz_-_A_Festive_Party_in_a_Garden_with_Dance,_Music,_and_Wine_-_Walters_W63827B_-_Full_Page.jpg",
+      "license": "Public domain",
+      "artist": "Hafez",
+      "treatment": "Aspect ratio preserved; resized only; no cropping of the manuscript page."
+    },
+    {
+      "cardIndex": 6,
+      "file": "hafez-06.webp",
+      "bytes": 141440,
+      "sourceTitle": "Hafiz - A Garden Reception (majlis) - Walters W631114A - Full Page.jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hafiz_-_A_Garden_Reception_(majlis)_-_Walters_W631114A_-_Full_Page.jpg",
+      "license": "Public domain",
+      "artist": "Hafez",
+      "treatment": "Aspect ratio preserved; resized only; no cropping of the manuscript page."
+    },
+    {
+      "cardIndex": 7,
+      "file": "hafez-07.webp",
+      "bytes": 153762,
+      "sourceTitle": "Hafiz - A Garden Reception (majlis) - Walters W631150B - Full Page.jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hafiz_-_A_Garden_Reception_(majlis)_-_Walters_W631150B_-_Full_Page.jpg",
+      "license": "Public domain",
+      "artist": "Hafez",
+      "treatment": "Aspect ratio preserved; resized only; no cropping of the manuscript page."
+    },
+    {
+      "cardIndex": 8,
+      "file": "hafez-08.webp",
+      "bytes": 153596,
+      "sourceTitle": "Hafiz - A Polo-playing Scene - Walters W638131B - Full Page.jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hafiz_-_A_Polo-playing_Scene_-_Walters_W638131B_-_Full_Page.jpg",
+      "license": "Public domain",
+      "artist": "Hafez",
+      "treatment": "Aspect ratio preserved; resized only; no cropping of the manuscript page."
+    },
+    {
+      "cardIndex": 9,
+      "file": "hafez-09.webp",
+      "bytes": 117020,
+      "sourceTitle": "Hafiz - Battle Scene - Walters W632124B - Full Page.jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hafiz_-_Battle_Scene_-_Walters_W632124B_-_Full_Page.jpg",
+      "license": "Public domain",
+      "artist": "Hafez",
+      "treatment": "Aspect ratio preserved; resized only; no cropping of the manuscript page."
+    },
+    {
+      "cardIndex": 10,
+      "file": "hafez-10.webp",
+      "bytes": 60336,
+      "sourceTitle": "Hafiz - Collection of Poems (divan) - Walters W629 - Full Page.jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hafiz_-_Collection_of_Poems_(divan)_-_Walters_W629_-_Full_Page.jpg",
+      "license": "Public domain",
+      "artist": "Hafez",
+      "treatment": "Aspect ratio preserved; resized only; no cropping of the manuscript page."
+    },
+    {
+      "cardIndex": 11,
+      "file": "hafez-11.webp",
+      "bytes": 131928,
+      "sourceTitle": "Hafiz - Colophon - Walters W629200A - Full Page.jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hafiz_-_Colophon_-_Walters_W629200A_-_Full_Page.jpg",
+      "license": "Public domain",
+      "artist": "Hafez",
+      "treatment": "Aspect ratio preserved; resized only; no cropping of the manuscript page."
+    },
+    {
+      "cardIndex": 12,
+      "file": "hafez-12.webp",
+      "bytes": 90202,
+      "sourceTitle": "Hafiz - Colophon - Walters W631172A - Full Page.jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hafiz_-_Colophon_-_Walters_W631172A_-_Full_Page.jpg",
+      "license": "Public domain",
+      "artist": "Hafez",
+      "treatment": "Aspect ratio preserved; resized only; no cropping of the manuscript page."
+    },
+    {
+      "cardIndex": 13,
+      "file": "hafez-13.webp",
+      "bytes": 101740,
+      "sourceTitle": "Hafiz - Colophon - Walters W633217A - Full Page.jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hafiz_-_Colophon_-_Walters_W633217A_-_Full_Page.jpg",
+      "license": "Public domain",
+      "artist": "Hafez",
+      "treatment": "Aspect ratio preserved; resized only; no cropping of the manuscript page."
+    },
+    {
+      "cardIndex": 14,
+      "file": "hafez-14.webp",
+      "bytes": 213930,
+      "sourceTitle": "Hafiz - Double-page Illuminated Frontispiece - Walters W6341B - Full Page.jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hafiz_-_Double-page_Illuminated_Frontispiece_-_Walters_W6341B_-_Full_Page.jpg",
+      "license": "Public domain",
+      "artist": "Hafez",
+      "treatment": "Aspect ratio preserved; resized only; no cropping of the manuscript page."
+    },
+    {
+      "cardIndex": 15,
+      "file": "hafez-15.webp",
+      "bytes": 140750,
+      "sourceTitle": "Hafiz - Double-page Illuminated Frontispiece - Walters W6342A - Full Page.jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hafiz_-_Double-page_Illuminated_Frontispiece_-_Walters_W6342A_-_Full_Page.jpg",
+      "license": "Public domain",
+      "artist": "Hafez",
+      "treatment": "Aspect ratio preserved; resized only; no cropping of the manuscript page."
+    },
+    {
+      "cardIndex": 16,
+      "file": "hafez-16.webp",
+      "bytes": 181816,
+      "sourceTitle": "Hafiz - Double-page Illuminated Frontispiece with Titlepiece - Walters W6331B - Full Page.jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hafiz_-_Double-page_Illuminated_Frontispiece_with_Titlepiece_-_Walters_W6331B_-_Full_Page.jpg",
+      "license": "Public domain",
+      "artist": "Hafez",
+      "treatment": "Aspect ratio preserved; resized only; no cropping of the manuscript page."
+    },
+    {
+      "cardIndex": 17,
+      "file": "hafez-17.webp",
+      "bytes": 187346,
+      "sourceTitle": "Hafiz - Double-page Illuminated Frontispiece with Titlepiece - Walters W6332A - Full Page.jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hafiz_-_Double-page_Illuminated_Frontispiece_with_Titlepiece_-_Walters_W6332A_-_Full_Page.jpg",
+      "license": "Public domain",
+      "artist": "Hafez",
+      "treatment": "Aspect ratio preserved; resized only; no cropping of the manuscript page."
+    },
+    {
+      "cardIndex": 18,
+      "file": "hafez-18.webp",
+      "bytes": 181936,
+      "sourceTitle": "Hafiz - Double-page Illuminated Incipit with Headpiece - Walters W63817B - Full Page.jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hafiz_-_Double-page_Illuminated_Incipit_with_Headpiece_-_Walters_W63817B_-_Full_Page.jpg",
+      "license": "Public domain",
+      "artist": "Hafez",
+      "treatment": "Aspect ratio preserved; resized only; no cropping of the manuscript page."
+    },
+    {
+      "cardIndex": 19,
+      "file": "hafez-19.webp",
+      "bytes": 189768,
+      "sourceTitle": "Hafiz - Double-page Illuminated Incipit with Headpiece - Walters W6386B - Full Page.jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hafiz_-_Double-page_Illuminated_Incipit_with_Headpiece_-_Walters_W6386B_-_Full_Page.jpg",
+      "license": "Public domain",
+      "artist": "Hafez",
+      "treatment": "Aspect ratio preserved; resized only; no cropping of the manuscript page."
+    },
+    {
+      "cardIndex": 20,
+      "file": "hafez-20.webp",
+      "bytes": 164712,
+      "sourceTitle": "Hafiz - Double-page Illustrated Frontispiece - Left Side - Depicting Queen Sheba (Bilqis) Enthroned - Walters W6313A (cropped).jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hafiz_-_Double-page_Illustrated_Frontispiece_-_Left_Side_-_Depicting_Queen_Sheba_(Bilqis)_Enthroned_-_Walters_W6313A_(cropped).jpg",
+      "license": "Public domain",
+      "artist": "Hafez",
+      "treatment": "Aspect ratio preserved; resized only; no cropping of the manuscript page."
+    },
+    {
+      "cardIndex": 21,
+      "file": "hafez-21.webp",
+      "bytes": 167498,
+      "sourceTitle": "Hafiz - Double-page Illustrated Frontispiece - Right Side - Depicting King Solomon (Sulayman) Enthroned - Walters W6312B (cropped).jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hafiz_-_Double-page_Illustrated_Frontispiece_-_Right_Side_-_Depicting_King_Solomon_(Sulayman)_Enthroned_-_Walters_W6312B_(cropped).jpg",
+      "license": "Public domain",
+      "artist": "Hafez",
+      "treatment": "Aspect ratio preserved; resized only; no cropping of the manuscript page."
+    },
+    {
+      "cardIndex": 22,
+      "file": "hafez-22.webp",
+      "bytes": 147008,
+      "sourceTitle": "Hafiz - Double-page Illustrated Frontispiece Depicting a Hunting Scene - Walters W6321B - Full Page.jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hafiz_-_Double-page_Illustrated_Frontispiece_Depicting_a_Hunting_Scene_-_Walters_W6321B_-_Full_Page.jpg",
+      "license": "Public domain",
+      "artist": "Hafez",
+      "treatment": "Aspect ratio preserved; resized only; no cropping of the manuscript page."
+    },
+    {
+      "cardIndex": 23,
+      "file": "hafez-23.webp",
+      "bytes": 150432,
+      "sourceTitle": "Hafiz - Double-page Illustrated Frontispiece Depicting a Hunting Scene - Walters W6322A - Full Page.jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hafiz_-_Double-page_Illustrated_Frontispiece_Depicting_a_Hunting_Scene_-_Walters_W6322A_-_Full_Page.jpg",
+      "license": "Public domain",
+      "artist": "Hafez",
+      "treatment": "Aspect ratio preserved; resized only; no cropping of the manuscript page."
+    },
+    {
+      "cardIndex": 24,
+      "file": "hafez-24.webp",
+      "bytes": 136574,
+      "sourceTitle": "Hafiz - Double-page Illustration - Walters W633171B - Full Page.jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hafiz_-_Double-page_Illustration_-_Walters_W633171B_-_Full_Page.jpg",
+      "license": "Public domain",
+      "artist": "Hafez",
+      "treatment": "Aspect ratio preserved; resized only; no cropping of the manuscript page."
+    },
+    {
+      "cardIndex": 25,
+      "file": "hafez-25.webp",
+      "bytes": 119876,
+      "sourceTitle": "Hafiz - Double-page Illustration - Walters W63339B - Full Page.jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hafiz_-_Double-page_Illustration_-_Walters_W63339B_-_Full_Page.jpg",
+      "license": "Public domain",
+      "artist": "Hafez",
+      "treatment": "Aspect ratio preserved; resized only; no cropping of the manuscript page."
+    },
+    {
+      "cardIndex": 26,
+      "file": "hafez-26.webp",
+      "bytes": 137422,
+      "sourceTitle": "Hafiz - Double-page Illustration - Walters W63388B - Full Page.jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hafiz_-_Double-page_Illustration_-_Walters_W63388B_-_Full_Page.jpg",
+      "license": "Public domain",
+      "artist": "Hafez",
+      "treatment": "Aspect ratio preserved; resized only; no cropping of the manuscript page."
+    },
+    {
+      "cardIndex": 27,
+      "file": "hafez-27.webp",
+      "bytes": 117804,
+      "sourceTitle": "Hafiz - Gathering with the Recitation of Poetry, Music, and Wine - Walters W63276B - Full Page.jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hafiz_-_Gathering_with_the_Recitation_of_Poetry,_Music,_and_Wine_-_Walters_W63276B_-_Full_Page.jpg",
+      "license": "Public domain",
+      "artist": "Hafez",
+      "treatment": "Aspect ratio preserved; resized only; no cropping of the manuscript page."
+    },
+    {
+      "cardIndex": 28,
+      "file": "hafez-28.webp",
+      "bytes": 107636,
+      "sourceTitle": "Hafiz - Hunting Scene - Walters W632147B - Full Page.jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hafiz_-_Hunting_Scene_-_Walters_W632147B_-_Full_Page.jpg",
+      "license": "Public domain",
+      "artist": "Hafez",
+      "treatment": "Aspect ratio preserved; resized only; no cropping of the manuscript page."
+    },
+    {
+      "cardIndex": 29,
+      "file": "hafez-29.webp",
+      "bytes": 146654,
+      "sourceTitle": "Hafiz - Illuminated Incipit Page with Headpiece - Walters W6291B - Full Page.jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hafiz_-_Illuminated_Incipit_Page_with_Headpiece_-_Walters_W6291B_-_Full_Page.jpg",
+      "license": "Public domain",
+      "artist": "Hafez",
+      "treatment": "Aspect ratio preserved; resized only; no cropping of the manuscript page."
+    },
+    {
+      "cardIndex": 30,
+      "file": "hafez-30.webp",
+      "bytes": 162720,
+      "sourceTitle": "Hafiz - Illuminated Incipit Page with Titlepiece - Walters W6313B - Full Page.jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hafiz_-_Illuminated_Incipit_Page_with_Titlepiece_-_Walters_W6313B_-_Full_Page.jpg",
+      "license": "Public domain",
+      "artist": "Hafez",
+      "treatment": "Aspect ratio preserved; resized only; no cropping of the manuscript page."
+    },
+    {
+      "cardIndex": 31,
+      "file": "hafez-31.webp",
+      "bytes": 102236,
+      "sourceTitle": "Hafiz - Illuminated Tailpiece and Colophon - Walters W634199A - Full Page.jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hafiz_-_Illuminated_Tailpiece_and_Colophon_-_Walters_W634199A_-_Full_Page.jpg",
+      "license": "Public domain",
+      "artist": "Hafez",
+      "treatment": "Aspect ratio preserved; resized only; no cropping of the manuscript page."
+    },
+    {
+      "cardIndex": 32,
+      "file": "hafez-32.webp",
+      "bytes": 182118,
+      "sourceTitle": "Hafiz - Incipit Page with Illuminated Headpiece - Walters W6322B - Full Page.jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hafiz_-_Incipit_Page_with_Illuminated_Headpiece_-_Walters_W6322B_-_Full_Page.jpg",
+      "license": "Public domain",
+      "artist": "Hafez",
+      "treatment": "Aspect ratio preserved; resized only; no cropping of the manuscript page."
+    },
+    {
+      "cardIndex": 33,
+      "file": "hafez-33.webp",
+      "bytes": 151772,
+      "sourceTitle": "Hafiz - Incipit Page with Illuminated Headpiece - Walters W6347B - Full Page.jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hafiz_-_Incipit_Page_with_Illuminated_Headpiece_-_Walters_W6347B_-_Full_Page.jpg",
+      "license": "Public domain",
+      "artist": "Hafez",
+      "treatment": "Aspect ratio preserved; resized only; no cropping of the manuscript page."
+    },
+    {
+      "cardIndex": 34,
+      "file": "hafez-34.webp",
+      "bytes": 160728,
+      "sourceTitle": "Hafiz - Left Side of a Double-page Illustrated Frontispiece Depicting Queen Sheba (Bilqis) Enthroned - Walters W6313A - Full Page.jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hafiz_-_Left_Side_of_a_Double-page_Illustrated_Frontispiece_Depicting_Queen_Sheba_(Bilqis)_Enthroned_-_Walters_W6313A_-_Full_Page.jpg",
+      "license": "Public domain",
+      "artist": "Hafez",
+      "treatment": "Aspect ratio preserved; resized only; no cropping of the manuscript page."
+    },
+    {
+      "cardIndex": 35,
+      "file": "hafez-35.webp",
+      "bytes": 144902,
+      "sourceTitle": "Hafiz - Majnun Seated in the Wilderness with Laylá on a Camel - Walters W63863B - Full Page.jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hafiz_-_Majnun_Seated_in_the_Wilderness_with_Layl%C3%A1_on_a_Camel_-_Walters_W63863B_-_Full_Page.jpg",
+      "license": "Public domain",
+      "artist": "Hafez",
+      "treatment": "Aspect ratio preserved; resized only; no cropping of the manuscript page."
+    },
+    {
+      "cardIndex": 36,
+      "file": "hafez-36.webp",
+      "bytes": 111476,
+      "sourceTitle": "Hafiz - Polo Game - Walters W629147A - Full Page.jpg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hafiz_-_Polo_Game_-_Walters_W629147A_-_Full_Page.jpg",
+      "license": "Public domain",
+      "artist": "Hafez",
+      "treatment": "Aspect ratio preserved; resized only; no cropping of the manuscript page."
+    }
+  ]
+}

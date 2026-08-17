@@ -102,6 +102,96 @@ describe('DIVINE content libraries', () => {
     }
   });
 
+  it('ships local, distinct artwork for every card in every system', () => {
+    const cards = SYSTEMS.filter((system) => system.kind === 'cards').flatMap(
+      (system) => system.cards,
+    );
+    const images = cards.map((card) => card.image);
+
+    expect(cards).toHaveLength(629);
+    expect(images.every(Boolean)).toBe(true);
+    expect(new Set(images).size).toBe(cards.length);
+
+    for (const image of images) {
+      expect(image).toMatch(/^\/.+\.webp$/);
+      const path = join(process.cwd(), 'public', image!.slice(1));
+      expect(existsSync(path)).toBe(true);
+      expect(statSync(path).size).toBeGreaterThan(150);
+    }
+  });
+
+  it('records a reusable online source for every traditional deck image', () => {
+    const collections = [
+      ['kipper', 'kipper', 36],
+      ['belline', 'belline', 53],
+      ['playing-card-cartomancy', 'playing-cards', 52],
+      ['sibilla', 'sibilla', 52],
+      ['runic-cards', 'runes', 24],
+      ['i-ching-cards', 'i-ching', 64],
+      ['fal-e-hafez', 'hafez', 36],
+      ['hanafuda', 'hanafuda', 48],
+    ] as const;
+
+    for (const [systemSlug, collection, count] of collections) {
+      const manifest = JSON.parse(
+        readFileSync(
+          join(
+            process.cwd(),
+            'public',
+            'traditional-decks-v1',
+            collection,
+            'manifest.json',
+          ),
+          'utf8',
+        ),
+      );
+      expect(manifest.cards).toHaveLength(count);
+      expect(manifest.sourceCollection).toMatch(/^https:\/\//);
+      expect(
+        manifest.cards.every(
+          (card: { license: string; sourceUrl: string }) =>
+            card.sourceUrl.startsWith('https://') &&
+            /CC0|CC BY|public domain|PDM/i.test(card.license),
+        ),
+      ).toBe(true);
+
+      expect(SYSTEM_MAP[systemSlug].cards.map((card) => card.image)).toEqual(
+        Array.from(
+          { length: count },
+          (_, index) =>
+            `/traditional-decks-v1/${collection}/${collection}-${String(index + 1).padStart(2, '0')}.webp`,
+        ),
+      );
+    }
+
+    const hafez = JSON.parse(
+      readFileSync(
+        join(
+          process.cwd(),
+          'public',
+          'traditional-decks-v1',
+          'hafez',
+          'manifest.json',
+        ),
+        'utf8',
+      ),
+    );
+    const kipper = JSON.parse(
+      readFileSync(
+        join(
+          process.cwd(),
+          'public',
+          'traditional-decks-v1',
+          'kipper',
+          'manifest.json',
+        ),
+        'utf8',
+      ),
+    );
+    expect(hafez.rightsNote).toContain('bibliomancy');
+    expect(kipper.rightsNote).toContain('Cards 35–36');
+  });
+
   it('ships both complete Tarot finishes at full-card dimensions', () => {
     for (const card of SYSTEM_MAP.tarot.cards) {
       for (const folder of ['tarot', 'tarot-color']) {

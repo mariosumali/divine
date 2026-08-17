@@ -50,14 +50,17 @@ export const DECK_LABELS: Record<
   spellcraft: { color: 'Iconologia', ink: 'Archive ink' },
   'ancient-egypt': { color: 'Champollion color', ink: 'Archive ink' },
   zodiac: { color: 'Urania color', ink: 'Archive ink' },
-  kipper: { color: 'Bavarian color', ink: 'Ink' },
-  belline: { color: 'Planetary color', ink: 'Ink' },
-  'playing-card-cartomancy': { color: 'Red & black', ink: 'Ink' },
-  sibilla: { color: 'Italian color', ink: 'Ink' },
-  'runic-cards': { color: 'Stone & ember', ink: 'Ink' },
-  'i-ching-cards': { color: 'Jade & cinnabar', ink: 'Ink' },
-  'fal-e-hafez': { color: 'Rose & night', ink: 'Ink' },
-  hanafuda: { color: 'Seasonal color', ink: 'Ink' },
+  kipper: { color: 'Museum archive', ink: 'Archive ink' },
+  belline: { color: 'Edmond archive', ink: 'Archive ink' },
+  'playing-card-cartomancy': {
+    color: 'Classic French suits',
+    ink: 'Archive ink',
+  },
+  sibilla: { color: 'British Museum', ink: 'Archive ink' },
+  'runic-cards': { color: 'Elder Futhark', ink: 'Archive ink' },
+  'i-ching-cards': { color: 'King Wen forms', ink: 'Archive ink' },
+  'fal-e-hafez': { color: 'Divān manuscripts', ink: 'Archive ink' },
+  hanafuda: { color: 'Early Shōwa', ink: 'Archive ink' },
 };
 
 const palettes: Record<CardSystemSlug, Array<[string, string]>> = {

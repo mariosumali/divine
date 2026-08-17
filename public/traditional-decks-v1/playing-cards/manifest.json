@@ -1,0 +1,527 @@
+{
+  "generatedAt": "2026-09-02",
+  "sourceCollection": "https://commons.wikimedia.org/wiki/Category:Public_domain_playing_cards",
+  "rightsNote": "Austin Gabriel’s complete French-suited deck is CC0.",
+  "cards": [
+    {
+      "cardIndex": 1,
+      "file": "playing-cards-01.webp",
+      "bytes": 8694,
+      "sourceTitle": "Ace of Hearts.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Ace_of_Hearts.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 2,
+      "file": "playing-cards-02.webp",
+      "bytes": 11460,
+      "sourceTitle": "2 of Hearts.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:2_of_Hearts.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 3,
+      "file": "playing-cards-03.webp",
+      "bytes": 14050,
+      "sourceTitle": "3 of Hearts.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:3_of_Hearts.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 4,
+      "file": "playing-cards-04.webp",
+      "bytes": 15210,
+      "sourceTitle": "4 of Hearts.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:4_of_Hearts.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 5,
+      "file": "playing-cards-05.webp",
+      "bytes": 17866,
+      "sourceTitle": "5 of Hearts.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:5_of_Hearts.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 6,
+      "file": "playing-cards-06.webp",
+      "bytes": 20486,
+      "sourceTitle": "6 of Hearts.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:6_of_Hearts.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 7,
+      "file": "playing-cards-07.webp",
+      "bytes": 21500,
+      "sourceTitle": "7 of Hearts.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:7_of_Hearts.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 8,
+      "file": "playing-cards-08.webp",
+      "bytes": 25430,
+      "sourceTitle": "8 of Hearts.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:8_of_Hearts.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 9,
+      "file": "playing-cards-09.webp",
+      "bytes": 27272,
+      "sourceTitle": "9 of Hearts.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:9_of_Hearts.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 10,
+      "file": "playing-cards-10.webp",
+      "bytes": 28368,
+      "sourceTitle": "10 of Hearts.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:10_of_Hearts.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 11,
+      "file": "playing-cards-11.webp",
+      "bytes": 127372,
+      "sourceTitle": "Jack of Hearts.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Jack_of_Hearts.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 12,
+      "file": "playing-cards-12.webp",
+      "bytes": 119156,
+      "sourceTitle": "Queen of Hearts.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Queen_of_Hearts.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 13,
+      "file": "playing-cards-13.webp",
+      "bytes": 123568,
+      "sourceTitle": "King of Hearts.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:King_of_Hearts.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 14,
+      "file": "playing-cards-14.webp",
+      "bytes": 8140,
+      "sourceTitle": "Ace of Diamonds.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Ace_of_Diamonds.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 15,
+      "file": "playing-cards-15.webp",
+      "bytes": 10412,
+      "sourceTitle": "2 of Diamonds.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:2_of_Diamonds.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 16,
+      "file": "playing-cards-16.webp",
+      "bytes": 12564,
+      "sourceTitle": "3 of Diamonds.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:3_of_Diamonds.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 17,
+      "file": "playing-cards-17.webp",
+      "bytes": 13396,
+      "sourceTitle": "4 of Diamonds.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:4_of_Diamonds.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 18,
+      "file": "playing-cards-18.webp",
+      "bytes": 15724,
+      "sourceTitle": "5 of Diamonds.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:5_of_Diamonds.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 19,
+      "file": "playing-cards-19.webp",
+      "bytes": 18032,
+      "sourceTitle": "6 of Diamonds.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:6_of_Diamonds.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 20,
+      "file": "playing-cards-20.webp",
+      "bytes": 18660,
+      "sourceTitle": "7 of Diamonds.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:7_of_Diamonds.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 21,
+      "file": "playing-cards-21.webp",
+      "bytes": 22218,
+      "sourceTitle": "8 of Diamonds.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:8_of_Diamonds.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 22,
+      "file": "playing-cards-22.webp",
+      "bytes": 23766,
+      "sourceTitle": "9 of Diamonds.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:9_of_Diamonds.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 23,
+      "file": "playing-cards-23.webp",
+      "bytes": 24786,
+      "sourceTitle": "10 of Diamonds.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:10_of_Diamonds.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 24,
+      "file": "playing-cards-24.webp",
+      "bytes": 111060,
+      "sourceTitle": "Jack of Diamonds.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Jack_of_Diamonds.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 25,
+      "file": "playing-cards-25.webp",
+      "bytes": 107318,
+      "sourceTitle": "Queen of Diamonds.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Queen_of_Diamonds.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 26,
+      "file": "playing-cards-26.webp",
+      "bytes": 115638,
+      "sourceTitle": "King of Diamonds.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:King_of_Diamonds.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 27,
+      "file": "playing-cards-27.webp",
+      "bytes": 6450,
+      "sourceTitle": "Ace of Clubs.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Ace_of_Clubs.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 28,
+      "file": "playing-cards-28.webp",
+      "bytes": 8366,
+      "sourceTitle": "2 of Clubs.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:2_of_Clubs.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 29,
+      "file": "playing-cards-29.webp",
+      "bytes": 10154,
+      "sourceTitle": "3 of Clubs.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:3_of_Clubs.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 30,
+      "file": "playing-cards-30.webp",
+      "bytes": 11446,
+      "sourceTitle": "4 of Clubs.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:4_of_Clubs.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 31,
+      "file": "playing-cards-31.webp",
+      "bytes": 13540,
+      "sourceTitle": "5 of Clubs.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:5_of_Clubs.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 32,
+      "file": "playing-cards-32.webp",
+      "bytes": 15716,
+      "sourceTitle": "6 of Clubs.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:6_of_Clubs.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 33,
+      "file": "playing-cards-33.webp",
+      "bytes": 16666,
+      "sourceTitle": "7 of Clubs.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:7_of_Clubs.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 34,
+      "file": "playing-cards-34.webp",
+      "bytes": 19524,
+      "sourceTitle": "8 of Clubs.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:8_of_Clubs.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 35,
+      "file": "playing-cards-35.webp",
+      "bytes": 20988,
+      "sourceTitle": "9 of Clubs.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:9_of_Clubs.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 36,
+      "file": "playing-cards-36.webp",
+      "bytes": 21820,
+      "sourceTitle": "10 of Clubs.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:10_of_Clubs.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 37,
+      "file": "playing-cards-37.webp",
+      "bytes": 119044,
+      "sourceTitle": "Jack of Clubs.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Jack_of_Clubs.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 38,
+      "file": "playing-cards-38.webp",
+      "bytes": 117750,
+      "sourceTitle": "Queen of Clubs.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Queen_of_Clubs.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 39,
+      "file": "playing-cards-39.webp",
+      "bytes": 105324,
+      "sourceTitle": "King of Clubs.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:King_of_Clubs.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 40,
+      "file": "playing-cards-40.webp",
+      "bytes": 5992,
+      "sourceTitle": "Ace of Spades.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Ace_of_Spades.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 41,
+      "file": "playing-cards-41.webp",
+      "bytes": 7730,
+      "sourceTitle": "2 of Spades.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:2_of_Spades.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 42,
+      "file": "playing-cards-42.webp",
+      "bytes": 9250,
+      "sourceTitle": "3 of Spades.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:3_of_Spades.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 43,
+      "file": "playing-cards-43.webp",
+      "bytes": 10370,
+      "sourceTitle": "4 of Spades.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:4_of_Spades.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 44,
+      "file": "playing-cards-44.webp",
+      "bytes": 12224,
+      "sourceTitle": "5 of Spades.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:5_of_Spades.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 45,
+      "file": "playing-cards-45.webp",
+      "bytes": 14194,
+      "sourceTitle": "6 of Spades.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:6_of_Spades.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 46,
+      "file": "playing-cards-46.webp",
+      "bytes": 14852,
+      "sourceTitle": "7 of Spades.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:7_of_Spades.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 47,
+      "file": "playing-cards-47.webp",
+      "bytes": 17502,
+      "sourceTitle": "8 of Spades.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:8_of_Spades.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 48,
+      "file": "playing-cards-48.webp",
+      "bytes": 18674,
+      "sourceTitle": "9 of Spades.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:9_of_Spades.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 49,
+      "file": "playing-cards-49.webp",
+      "bytes": 19360,
+      "sourceTitle": "10 of Spades.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:10_of_Spades.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 50,
+      "file": "playing-cards-50.webp",
+      "bytes": 107414,
+      "sourceTitle": "Jack of Spades.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Jack_of_Spades.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 51,
+      "file": "playing-cards-51.webp",
+      "bytes": 115712,
+      "sourceTitle": "Queen of Spades.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Queen_of_Spades.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    },
+    {
+      "cardIndex": 52,
+      "file": "playing-cards-52.webp",
+      "bytes": 108256,
+      "sourceTitle": "King of Spades.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:King_of_Spades.svg",
+      "license": "CC0",
+      "artist": "Austin Gabriel",
+      "treatment": "Rasterized to WebP without changing the card design."
+    }
+  ]
+}

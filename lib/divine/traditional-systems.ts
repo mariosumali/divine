@@ -20,6 +20,9 @@ const spread = (
   layout: SpreadDefinition['layout'],
 ): SpreadDefinition => ({ id, name, description, positions, layout });
 
+const traditionalImage = (collection: string, index: number) =>
+  `/traditional-decks-v1/${collection}/${collection}-${String(index + 1).padStart(2, '0')}.webp`;
+
 const makeSituationalDeck = (
   slug: string,
   entries: readonly Entry[],
@@ -262,7 +265,15 @@ const kipperCards = makeSituationalDeck(
   kipperEntries,
   ['⌂', '✉', '♙', '◇'],
   'Traditional 36-card Bavarian Kipper title; original DIVINE interpretation.',
-);
+).map((card, index) => ({
+  ...card,
+  image: traditionalImage('kipper', index),
+  aspectRatio: 266 / 378,
+  provenance:
+    index < 34
+      ? 'Traditional Kipper title paired with its card in a 1900–1920 Bavarian pack held by the Museumsstiftung Post und Telekommunikation; original DIVINE interpretation.'
+      : 'Traditional Kipper title paired with a clearly identified public-domain period artwork because the museum photograph does not show this card face-up; original DIVINE interpretation.',
+}));
 
 const bellineEntries = [
   [
@@ -622,8 +633,10 @@ const bellineCards: CardDefinition[] = bellineEntries.map(
       domain: planet,
       numerology: index,
       polarity,
+      image: traditionalImage('belline', index),
+      aspectRatio: 34 / 55,
       provenance:
-        'Traditional 53-card Oracle Belline title and planetary family; original DIVINE interpretation.',
+        'Traditional 53-card Oracle Belline title and planetary family paired with Edmond’s historical design from an openly licensed complete-deck sheet; original DIVINE interpretation.',
     };
   },
 );
@@ -729,25 +742,31 @@ const playingCardRanks = [
   ],
 ] as const;
 
-const playingCards: CardDefinition[] = playingCardSuits.flatMap((suit) =>
-  playingCardRanks.map(([id, name, keyword, movement], index) => ({
-    id: `playing-card-${suit.id}-${id}`,
-    name: `${name} of ${suit.name}`,
-    glyph: suit.glyph,
-    keywords: [keyword, suit.name.toLowerCase()],
-    meaning: `${movement} In ${suit.name}, attend to ${suit.domain}: ${suit.tone}.`,
-    domain: suit.id,
-    element: suit.element,
-    numerology: index + 1,
-    polarity:
-      suit.id === 'spades'
-        ? ('challenging' as const)
-        : suit.id === 'hearts'
-          ? ('positive' as const)
-          : ('neutral' as const),
-    provenance:
-      'Standard French-suited 52-card structure; original DIVINE cartomancy interpretation.',
-  })),
+const playingCards: CardDefinition[] = playingCardSuits.flatMap(
+  (suit, suitIndex) =>
+    playingCardRanks.map(([id, name, keyword, movement], index) => ({
+      id: `playing-card-${suit.id}-${id}`,
+      name: `${name} of ${suit.name}`,
+      glyph: suit.glyph,
+      keywords: [keyword, suit.name.toLowerCase()],
+      meaning: `${movement} In ${suit.name}, attend to ${suit.domain}: ${suit.tone}.`,
+      domain: suit.id,
+      element: suit.element,
+      numerology: index + 1,
+      polarity:
+        suit.id === 'spades'
+          ? ('challenging' as const)
+          : suit.id === 'hearts'
+            ? ('positive' as const)
+            : ('neutral' as const),
+      image: traditionalImage(
+        'playing-cards',
+        suitIndex * playingCardRanks.length + index,
+      ),
+      aspectRatio: 5 / 7,
+      provenance:
+        'Standard French-suited 52-card structure paired with Austin Gabriel’s CC0 deck; original DIVINE cartomancy interpretation.',
+    })),
 );
 
 type SibillaEntry = readonly [
@@ -1110,7 +1129,7 @@ const sibillaSuits = [
   entries: readonly SibillaEntry[];
 }[];
 
-const sibillaCards: CardDefinition[] = sibillaSuits.flatMap((suit) =>
+const sibillaCards: CardDefinition[] = sibillaSuits.flatMap((suit, suitIndex) =>
   suit.entries.map(([italian, english, keyword, shadow], index) => ({
     id: `sibilla-${suit.id}-${index + 1}`,
     name: italian,
@@ -1126,8 +1145,10 @@ const sibillaCards: CardDefinition[] = sibillaSuits.flatMap((suit) =>
         : suit.id === 'cuori'
           ? ('positive' as const)
           : ('neutral' as const),
+    image: traditionalImage('sibilla', suitIndex * suit.entries.length + index),
+    aspectRatio: 112 / 179,
     provenance:
-      'Traditional 52-card Vera Sibilla Italiana title and suit correspondence; original DIVINE interpretation.',
+      'Traditional Vera Sibilla Italiana title paired by suit and rank with a nineteenth-century Sibilla-family pack in the British Museum; the historical French caption is a documented variant. Original DIVINE interpretation.',
   })),
 );
 
@@ -1311,8 +1332,10 @@ const runeCards: CardDefinition[] = runeEntries.map(
     meaning: `${name} names ${literal}. In a contemporary reflective reading, ${counsel.charAt(0).toLowerCase()}${counsel.slice(1)}`,
     domain: `ætt ${Math.floor(index / 8) + 1}`,
     numerology: index + 1,
+    image: traditionalImage('runes', index),
+    aspectRatio: 2 / 3,
     provenance:
-      'Historical Elder Futhark character and reconstructed name; modern DIVINE reflection. No ancient divinatory meaning is claimed.',
+      'Historical Elder Futhark character and reconstructed name paired with its public-domain standardized letterform; modern DIVINE reflection. No ancient divinatory card tradition is claimed.',
   }),
 );
 
@@ -1776,8 +1799,10 @@ const iChingCards: CardDefinition[] = iChingEntries.map(
     meaning: `${title} describes ${keyword}. ${counsel}`,
     domain: 'King Wen sequence',
     numerology: index + 1,
+    image: traditionalImage('i-ching', index),
+    aspectRatio: 2 / 3,
     provenance:
-      'Traditional King Wen number, Chinese title, and hexagram form; original DIVINE reflection, not a translation of the received text.',
+      'Traditional King Wen number, Chinese title, and public-domain hexagram form; original DIVINE reflection in a modern card presentation, not a translation of the received text.',
   }),
 );
 
@@ -1973,8 +1998,10 @@ const hafezCards: CardDefinition[] = hafezEntries.map(
     meaning: message,
     domain: 'contemporary motif card',
     numerology: index + 1,
+    image: traditionalImage('hafez', index),
+    aspectRatio: 71 / 120,
     provenance:
-      'Contemporary DIVINE card inspired by recurring imagery associated with Hafez; original English reflection, not a translated verse or historical deck card.',
+      'Contemporary DIVINE motif paired with a public-domain page from a historical Divān of Hafez manuscript in the Walters Art Museum; original English reflection, not a translated verse or historical deck card.',
   }),
 );
 
@@ -2141,8 +2168,10 @@ const hanafudaCards: CardDefinition[] = hanafudaMonths.flatMap(
       domain: `${month} · ${flower}`,
       element: category,
       numerology: monthIndex + 1,
+      image: traditionalImage('hanafuda', monthIndex * 4 + cardIndex),
+      aspectRatio: 263 / 431,
       provenance:
-        'Traditional 48-card hanafuda month, motif, and card category; original contemporary DIVINE reflection. Hanafuda is historically a playing-card family, not a fixed divination canon.',
+        'Traditional 48-card hanafuda month, motif, and category paired with the corresponding card from a public-domain early-Shōwa Hachihachi deck; original contemporary DIVINE reflection. Hanafuda is historically a playing-card family, not a fixed divination canon.',
     })),
 );
 

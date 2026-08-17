@@ -1,0 +1,247 @@
+{
+  "generatedAt": "2026-09-02",
+  "sourceCollection": "https://commons.wikimedia.org/wiki/Category:Elder_Futhark",
+  "rightsNote": "The 24 standardized Elder Futhark letterforms were released to the public domain. Runic cards themselves are a modern reflective format.",
+  "cards": [
+    {
+      "cardIndex": 1,
+      "file": "runes-01.webp",
+      "bytes": 5466,
+      "sourceTitle": "Runic letter fehu.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Runic_letter_fehu.svg",
+      "license": "Public domain",
+      "artist": "ClaesWallin",
+      "treatment": "The standardized historical letterform is centered on a neutral field; no invented rune imagery is added."
+    },
+    {
+      "cardIndex": 2,
+      "file": "runes-02.webp",
+      "bytes": 4868,
+      "sourceTitle": "Runic letter uruz.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Runic_letter_uruz.svg",
+      "license": "Public domain",
+      "artist": "ClaesWallin",
+      "treatment": "The standardized historical letterform is centered on a neutral field; no invented rune imagery is added."
+    },
+    {
+      "cardIndex": 3,
+      "file": "runes-03.webp",
+      "bytes": 4566,
+      "sourceTitle": "Runic letter thurisaz.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Runic_letter_thurisaz.svg",
+      "license": "Public domain",
+      "artist": "ClaesWallin",
+      "treatment": "The standardized historical letterform is centered on a neutral field; no invented rune imagery is added."
+    },
+    {
+      "cardIndex": 4,
+      "file": "runes-04.webp",
+      "bytes": 3852,
+      "sourceTitle": "Runic letter ansuz.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Runic_letter_ansuz.svg",
+      "license": "Public domain",
+      "artist": "ClaesWallin",
+      "treatment": "The standardized historical letterform is centered on a neutral field; no invented rune imagery is added."
+    },
+    {
+      "cardIndex": 5,
+      "file": "runes-05.webp",
+      "bytes": 5720,
+      "sourceTitle": "Runic letter raido.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Runic_letter_raido.svg",
+      "license": "Public domain",
+      "artist": "ClaesWallin",
+      "treatment": "The standardized historical letterform is centered on a neutral field; no invented rune imagery is added."
+    },
+    {
+      "cardIndex": 6,
+      "file": "runes-06.webp",
+      "bytes": 5248,
+      "sourceTitle": "Runic letter kauna.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Runic_letter_kauna.svg",
+      "license": "Public domain",
+      "artist": "ClaesWallin",
+      "treatment": "The standardized historical letterform is centered on a neutral field; no invented rune imagery is added."
+    },
+    {
+      "cardIndex": 7,
+      "file": "runes-07.webp",
+      "bytes": 8522,
+      "sourceTitle": "Runic letter gebo.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Runic_letter_gebo.svg",
+      "license": "Public domain",
+      "artist": "ClaesWallin",
+      "treatment": "The standardized historical letterform is centered on a neutral field; no invented rune imagery is added."
+    },
+    {
+      "cardIndex": 8,
+      "file": "runes-08.webp",
+      "bytes": 4100,
+      "sourceTitle": "Runic letter wunjo.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Runic_letter_wunjo.svg",
+      "license": "Public domain",
+      "artist": "ClaesWallin",
+      "treatment": "The standardized historical letterform is centered on a neutral field; no invented rune imagery is added."
+    },
+    {
+      "cardIndex": 9,
+      "file": "runes-09.webp",
+      "bytes": 3742,
+      "sourceTitle": "Runic letter haglaz.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Runic_letter_haglaz.svg",
+      "license": "Public domain",
+      "artist": "ClaesWallin",
+      "treatment": "The standardized historical letterform is centered on a neutral field; no invented rune imagery is added."
+    },
+    {
+      "cardIndex": 10,
+      "file": "runes-10.webp",
+      "bytes": 3154,
+      "sourceTitle": "Runic letter naudiz.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Runic_letter_naudiz.svg",
+      "license": "Public domain",
+      "artist": "ClaesWallin",
+      "treatment": "The standardized historical letterform is centered on a neutral field; no invented rune imagery is added."
+    },
+    {
+      "cardIndex": 11,
+      "file": "runes-11.webp",
+      "bytes": 1740,
+      "sourceTitle": "Runic letter isaz.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Runic_letter_isaz.svg",
+      "license": "Public domain",
+      "artist": "ClaesWallin",
+      "treatment": "The standardized historical letterform is centered on a neutral field; no invented rune imagery is added."
+    },
+    {
+      "cardIndex": 12,
+      "file": "runes-12.webp",
+      "bytes": 6774,
+      "sourceTitle": "Runic letter jeran.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Runic_letter_jeran.svg",
+      "license": "Public domain",
+      "artist": "ClaesWallin",
+      "treatment": "The standardized historical letterform is centered on a neutral field; no invented rune imagery is added."
+    },
+    {
+      "cardIndex": 13,
+      "file": "runes-13.webp",
+      "bytes": 3402,
+      "sourceTitle": "Runic letter iwaz.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Runic_letter_iwaz.svg",
+      "license": "Public domain",
+      "artist": "ClaesWallin",
+      "treatment": "The standardized historical letterform is centered on a neutral field; no invented rune imagery is added."
+    },
+    {
+      "cardIndex": 14,
+      "file": "runes-14.webp",
+      "bytes": 5110,
+      "sourceTitle": "Runic letter pertho.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Runic_letter_pertho.svg",
+      "license": "Public domain",
+      "artist": "ClaesWallin",
+      "treatment": "The standardized historical letterform is centered on a neutral field; no invented rune imagery is added."
+    },
+    {
+      "cardIndex": 15,
+      "file": "runes-15.webp",
+      "bytes": 4000,
+      "sourceTitle": "Runic letter algiz.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Runic_letter_algiz.svg",
+      "license": "Public domain",
+      "artist": "ClaesWallin",
+      "treatment": "The standardized historical letterform is centered on a neutral field; no invented rune imagery is added."
+    },
+    {
+      "cardIndex": 16,
+      "file": "runes-16.webp",
+      "bytes": 7872,
+      "sourceTitle": "Runic letter sowilo.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Runic_letter_sowilo.svg",
+      "license": "Public domain",
+      "artist": "ClaesWallin",
+      "treatment": "The standardized historical letterform is centered on a neutral field; no invented rune imagery is added."
+    },
+    {
+      "cardIndex": 17,
+      "file": "runes-17.webp",
+      "bytes": 4056,
+      "sourceTitle": "Runic letter tiwaz.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Runic_letter_tiwaz.svg",
+      "license": "Public domain",
+      "artist": "ClaesWallin",
+      "treatment": "The standardized historical letterform is centered on a neutral field; no invented rune imagery is added."
+    },
+    {
+      "cardIndex": 18,
+      "file": "runes-18.webp",
+      "bytes": 7340,
+      "sourceTitle": "Runic letter berkanan.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Runic_letter_berkanan.svg",
+      "license": "Public domain",
+      "artist": "ClaesWallin",
+      "treatment": "The standardized historical letterform is centered on a neutral field; no invented rune imagery is added."
+    },
+    {
+      "cardIndex": 19,
+      "file": "runes-19.webp",
+      "bytes": 3696,
+      "sourceTitle": "Runic letter ehwaz.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Runic_letter_ehwaz.svg",
+      "license": "Public domain",
+      "artist": "ClaesWallin",
+      "treatment": "The standardized historical letterform is centered on a neutral field; no invented rune imagery is added."
+    },
+    {
+      "cardIndex": 20,
+      "file": "runes-20.webp",
+      "bytes": 5384,
+      "sourceTitle": "Runic letter mannaz.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Runic_letter_mannaz.svg",
+      "license": "Public domain",
+      "artist": "ClaesWallin",
+      "treatment": "The standardized historical letterform is centered on a neutral field; no invented rune imagery is added."
+    },
+    {
+      "cardIndex": 21,
+      "file": "runes-21.webp",
+      "bytes": 3128,
+      "sourceTitle": "Runic letter laukaz.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Runic_letter_laukaz.svg",
+      "license": "Public domain",
+      "artist": "ClaesWallin",
+      "treatment": "The standardized historical letterform is centered on a neutral field; no invented rune imagery is added."
+    },
+    {
+      "cardIndex": 22,
+      "file": "runes-22.webp",
+      "bytes": 6314,
+      "sourceTitle": "Runic letter ingwaz.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Runic_letter_ingwaz.svg",
+      "license": "Public domain",
+      "artist": "ClaesWallin",
+      "treatment": "The standardized historical letterform is centered on a neutral field; no invented rune imagery is added."
+    },
+    {
+      "cardIndex": 23,
+      "file": "runes-23.webp",
+      "bytes": 7058,
+      "sourceTitle": "Runic letter dagaz.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Runic_letter_dagaz.svg",
+      "license": "Public domain",
+      "artist": "ClaesWallin",
+      "treatment": "The standardized historical letterform is centered on a neutral field; no invented rune imagery is added."
+    },
+    {
+      "cardIndex": 24,
+      "file": "runes-24.webp",
+      "bytes": 7788,
+      "sourceTitle": "Runic letter othalan.svg",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Runic_letter_othalan.svg",
+      "license": "Public domain",
+      "artist": "ClaesWallin",
+      "treatment": "The standardized historical letterform is centered on a neutral field; no invented rune imagery is added."
+    }
+  ]
+}
