@@ -52,48 +52,6 @@ const ART_MOTIONS = [
   { angle: -1.2, x: -5, y: -6, duration: 8.1 },
 ] as const;
 const HERO_LETTERS = 'DIVINE'.split('');
-const DESKTOP_ARCHIVE_CLUSTERS = [
-  [-4, -3],
-  [17, 7],
-  [42, -5],
-  [68, 9],
-  [91, -2],
-  [4, 34],
-  [29, 28],
-  [58, 34],
-  [87, 31],
-  [-2, 67],
-  [22, 74],
-  [49, 64],
-  [74, 73],
-  [94, 66],
-  [8, 94],
-  [41, 91],
-  [72, 94],
-] as const;
-const MOBILE_ARCHIVE_CLUSTERS = [
-  [-7, -2],
-  [25, 2],
-  [58, -3],
-  [88, 5],
-  [5, 19],
-  [42, 17],
-  [78, 23],
-  [-5, 39],
-  [29, 38],
-  [63, 43],
-  [91, 39],
-  [7, 59],
-  [42, 61],
-  [79, 58],
-  [-6, 80],
-  [26, 78],
-  [58, 84],
-  [88, 77],
-  [11, 98],
-  [48, 94],
-  [83, 97],
-] as const;
 type HeroPlacement = {
   x: string;
   y: string;
@@ -108,47 +66,48 @@ function seededUnit(seed: number) {
 }
 
 const ARCHIVE_HERO_OBJECTS = archiveManifest.map((asset, index) => {
+  const desktopColumn = index % 11;
+  const desktopRow = Math.floor(index / 11);
+  const mobileColumn = index % 5;
+  const mobileRow = Math.floor(index / 5);
   const seed = asset.objectID + index * 97;
   const jitterX = seededUnit(seed) - 0.5;
   const jitterY = seededUnit(seed + 1) - 0.5;
   const scale = seededUnit(seed + 2);
-  const rotation = -54 + seededUnit(seed + 3) * 108;
-  const desktopCluster = DESKTOP_ARCHIVE_CLUSTERS[index % DESKTOP_ARCHIVE_CLUSTERS.length];
-  const mobileCluster = MOBILE_ARCHIVE_CLUSTERS[index % MOBILE_ARCHIVE_CLUSTERS.length];
-  const sizeTier = index % 12;
-  const isGiant = sizeTier === 0;
-  const isLarge = sizeTier === 3 || sizeTier === 8;
-  const isSmall = sizeTier === 2 || sizeTier === 5 || sizeTier === 7 || sizeTier === 10;
+  const rotation = -44 + seededUnit(seed + 3) * 88;
+  const isGiant = index % 20 === 0;
+  const isLarge = !isGiant && (index % 9 === 0 || index % 13 === 0);
+  const isSmall = !isGiant && !isLarge && index % 3 === 0;
   const desktopSize = isGiant
-    ? `clamp(${154 + Math.round(scale * 46)}px, ${18 + scale * 7}vw, ${300 + Math.round(scale * 80)}px)`
+    ? `clamp(${118 + Math.round(scale * 32)}px, ${13 + scale * 3}vw, ${210 + Math.round(scale * 50)}px)`
     : isLarge
-      ? `clamp(${88 + Math.round(scale * 30)}px, ${10 + scale * 5}vw, ${178 + Math.round(scale * 74)}px)`
+      ? `clamp(${72 + Math.round(scale * 22)}px, ${7.4 + scale * 2.4}vw, ${136 + Math.round(scale * 46)}px)`
       : isSmall
-        ? `clamp(${22 + Math.round(scale * 18)}px, ${2.2 + scale * 2.8}vw, ${52 + Math.round(scale * 54)}px)`
-        : `clamp(${48 + Math.round(scale * 24)}px, ${5 + scale * 4.5}vw, ${104 + Math.round(scale * 68)}px)`;
+        ? `clamp(${22 + Math.round(scale * 12)}px, ${2 + scale * 1.8}vw, ${44 + Math.round(scale * 30)}px)`
+        : `clamp(${42 + Math.round(scale * 18)}px, ${4.2 + scale * 2.4}vw, ${82 + Math.round(scale * 38)}px)`;
   const mobileSize = isGiant
-    ? `${138 + Math.round(scale * 52)}px`
+    ? `${104 + Math.round(scale * 28)}px`
     : isLarge
-      ? `${88 + Math.round(scale * 38)}px`
+      ? `${72 + Math.round(scale * 24)}px`
       : isSmall
-        ? `${26 + Math.round(scale * 24)}px`
-        : `${50 + Math.round(scale * 34)}px`;
+        ? `${26 + Math.round(scale * 16)}px`
+        : `${44 + Math.round(scale * 24)}px`;
 
   return {
     ...asset,
     placement: {
-      x: `${desktopCluster[0] + jitterX * 18}%`,
-      y: `${desktopCluster[1] + jitterY * 18}%`,
+      x: `${desktopColumn * 9.6 - 3 + jitterX * 4}%`,
+      y: `${desktopRow * 13.8 - 2 + jitterY * 5}%`,
       size: desktopSize,
       rotate: rotation,
     },
     mobilePlacement: {
-      x: `${mobileCluster[0] + jitterX * 16}%`,
-      y: `${mobileCluster[1] + jitterY * 12}%`,
+      x: `${mobileColumn * 21 - 3 + jitterX * 5}%`,
+      y: `${mobileRow * 6.25 - 1 + jitterY * 4}%`,
       size: mobileSize,
-      rotate: rotation * 1.08,
+      rotate: rotation,
     },
-    opacity: 0.2 + seededUnit(seed + 4) * 0.34,
+    opacity: 0.42 + seededUnit(seed + 4) * 0.24,
   };
 });
 
