@@ -183,8 +183,8 @@ export const METHOD_HISTORIES: Record<SystemSlug, MethodHistory> = {
       'DIVINE presents every hexagram in King Wen order with its Chinese title, common English name, and an original reflection. Drawing a card selects a stable figure; it does not imitate the changing-line mathematics of yarrow-stalk or three-coin casting.',
     ],
     source: {
-      label: 'The British Museum · Eight Trigrams',
-      url: 'https://www.britishmuseum.org/collection/object/A_PDF-C-619',
+      label: 'Leibniz Archive · 1701 hexagram diagram',
+      url: 'https://commons.wikimedia.org/wiki/File:Diagram_of_I_Ching_hexagrams_owned_by_Gottfried_Wilhelm_Leibniz,_1701.jpg',
     },
   },
   'fal-e-hafez': {

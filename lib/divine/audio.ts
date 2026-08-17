@@ -30,6 +30,12 @@ const samplePaths: Record<SampleName, string> = {
 let context: AudioContext | null = null;
 let enabled = false;
 let master: GainNode | null = null;
+let readingAmbienceRequested = false;
+let readingAmbience: {
+  fade: GainNode;
+  sources: AudioScheduledSourceNode[];
+  stopTimer: ReturnType<typeof setTimeout> | null;
+} | null = null;
 const buffers = new Map<SampleName, AudioBuffer>();
 const pendingBuffers = new Map<SampleName, Promise<AudioBuffer | null>>();
 
@@ -109,6 +115,107 @@ function noise(
   source.buffer = buffer;
   source.connect(filter).connect(gain).connect(output(ctx));
   source.start(ctx.currentTime + delay);
+}
+
+function startReadingAmbience(ctx: AudioContext) {
+  const now = ctx.currentTime;
+  if (readingAmbience) {
+    if (readingAmbience.stopTimer) {
+      clearTimeout(readingAmbience.stopTimer);
+      readingAmbience.stopTimer = null;
+    }
+    readingAmbience.fade.gain.cancelAndHoldAtTime(now);
+    readingAmbience.fade.gain.exponentialRampToValueAtTime(0.18, now + 2.4);
+    return;
+  }
+
+  const fade = ctx.createGain();
+  const droneFilter = ctx.createBiquadFilter();
+  const sources: AudioScheduledSourceNode[] = [];
+  fade.gain.setValueAtTime(0.0001, now);
+  fade.gain.exponentialRampToValueAtTime(0.18, now + 3.2);
+  droneFilter.type = 'lowpass';
+  droneFilter.frequency.value = 145;
+  droneFilter.Q.value = 0.7;
+  droneFilter.connect(fade);
+  fade.connect(output(ctx));
+
+  [
+    { frequency: 42.4, gain: 0.055, type: 'sine' as OscillatorType },
+    { frequency: 42.58, gain: 0.045, type: 'sine' as OscillatorType },
+    { frequency: 63.6, gain: 0.024, type: 'triangle' as OscillatorType },
+  ].forEach(({ frequency, gain: gainValue, type }) => {
+    const oscillator = ctx.createOscillator();
+    const gain = ctx.createGain();
+    oscillator.type = type;
+    oscillator.frequency.value = frequency;
+    gain.gain.value = gainValue;
+    oscillator.connect(gain).connect(droneFilter);
+    oscillator.start();
+    sources.push(oscillator);
+  });
+
+  const noiseLength = Math.max(1, Math.floor(ctx.sampleRate * 3));
+  const noiseBuffer = ctx.createBuffer(1, noiseLength, ctx.sampleRate);
+  const noiseData = noiseBuffer.getChannelData(0);
+  let previous = 0;
+  for (let index = 0; index < noiseLength; index += 1) {
+    previous = (previous + (Math.random() * 2 - 1) * 0.035) / 1.035;
+    noiseData[index] = previous * 3.2;
+  }
+  const noiseSource = ctx.createBufferSource();
+  const noiseHighpass = ctx.createBiquadFilter();
+  const noiseLowpass = ctx.createBiquadFilter();
+  const noiseGain = ctx.createGain();
+  noiseSource.buffer = noiseBuffer;
+  noiseSource.loop = true;
+  noiseHighpass.type = 'highpass';
+  noiseHighpass.frequency.value = 28;
+  noiseLowpass.type = 'lowpass';
+  noiseLowpass.frequency.value = 210;
+  noiseLowpass.Q.value = 0.45;
+  noiseGain.gain.value = 0.065;
+  noiseSource
+    .connect(noiseHighpass)
+    .connect(noiseLowpass)
+    .connect(noiseGain)
+    .connect(fade);
+  noiseSource.start();
+  sources.push(noiseSource);
+
+  const breath = ctx.createOscillator();
+  const breathDepth = ctx.createGain();
+  breath.frequency.value = 0.055;
+  breathDepth.gain.value = 0.025;
+  breath.connect(breathDepth).connect(noiseGain.gain);
+  breath.start();
+  sources.push(breath);
+
+  const drift = ctx.createOscillator();
+  const driftDepth = ctx.createGain();
+  drift.frequency.value = 0.018;
+  driftDepth.gain.value = 22;
+  drift.connect(driftDepth).connect(droneFilter.frequency);
+  drift.start();
+  sources.push(drift);
+
+  readingAmbience = { fade, sources, stopTimer: null };
+}
+
+function stopReadingAmbience() {
+  if (!readingAmbience) return;
+  const ambience = readingAmbience;
+  const ctx = ambience.fade.context;
+  const now = ctx.currentTime;
+  if (ambience.stopTimer) clearTimeout(ambience.stopTimer);
+  ambience.fade.gain.cancelAndHoldAtTime(now);
+  ambience.fade.gain.exponentialRampToValueAtTime(0.0001, now + 1.4);
+  ambience.stopTimer = setTimeout(() => {
+    if (readingAmbience !== ambience) return;
+    ambience.sources.forEach((source) => source.stop());
+    ambience.fade.disconnect();
+    readingAmbience = null;
+  }, 1550);
 }
 
 function loadSample(ctx: AudioContext, name: SampleName) {
@@ -197,12 +304,23 @@ export async function setSoundEnabled(value: boolean) {
       }
     }
     preload(ctx);
+    if (readingAmbienceRequested) startReadingAmbience(ctx);
   } else if (ctx.state === 'running') {
     try {
       await ctx.suspend();
     } catch {
       /* Audio may already be closing. */
     }
+  }
+}
+
+export function setReadingAmbience(active: boolean) {
+  readingAmbienceRequested = active;
+  if (active && enabled) {
+    const ctx = audio();
+    if (ctx) startReadingAmbience(ctx);
+  } else if (!active) {
+    stopReadingAmbience();
   }
 }
 

@@ -399,33 +399,79 @@ async function renderPlayingCards() {
   );
   const infoByTitle = knownCommonsInfo(titles, 'CC0', 'Austin Gabriel');
   const cards = [];
+  const paper = join(scratch, 'playing-card-paper.png');
+  await execFileAsync('magick', [
+    '-size',
+    '720x1008',
+    'xc:#e8ddc5',
+    '-attenuate',
+    '0.025',
+    '+noise',
+    'Gaussian',
+    '-colorspace',
+    'sRGB',
+    paper,
+  ]);
   for (const [index, title] of titles.entries()) {
     const info = infoByTitle.get(title);
     if (!info) throw new Error(`Missing metadata for ${title}`);
     const license = assertReusable(info, title);
     const filename = `playing-cards-${String(index + 1).padStart(2, '0')}.webp`;
     const output = join(directory, filename);
-    try {
-      await access(output);
-    } catch {
-      const input = join(scratch, `playing-${index + 1}.svg`);
-      await download(info.url, input);
-      await magick(input, output, [
-        '-background',
-        '#f5f2e8',
-        '-alpha',
-        'remove',
-        '-alpha',
-        'off',
-        '-colorspace',
-        'sRGB',
-        '-resize',
-        '720x1008',
-        '-strip',
-        '-quality',
-        '88',
-      ]);
-    }
+    const input = join(scratch, `playing-${index + 1}.svg`);
+    const core = join(scratch, `playing-${index + 1}-core.png`);
+    await download(info.url, input);
+    await magick(input, core, [
+      '-background',
+      '#eadfc9',
+      '-alpha',
+      'remove',
+      '-alpha',
+      'off',
+      '-colorspace',
+      'sRGB',
+      '-fuzz',
+      '18%',
+      '-fill',
+      '#eadfc9',
+      '-opaque',
+      '#ffffff',
+      '-fill',
+      '#9a2f2a',
+      '-opaque',
+      '#d40000',
+      '-modulate',
+      '100,72,100',
+      '-resize',
+      '650x910',
+    ]);
+    await execFileAsync('magick', [
+      paper,
+      core,
+      '-gravity',
+      'center',
+      '-compose',
+      'over',
+      '-composite',
+      '-fill',
+      'none',
+      '-stroke',
+      '#2a211b',
+      '-strokewidth',
+      '3',
+      '-draw',
+      'rectangle 20,20 699,987 rectangle 30,30 689,977',
+      '-stroke',
+      '#a77735',
+      '-strokewidth',
+      '2',
+      '-draw',
+      'rectangle 25,25 694,982',
+      '-strip',
+      '-quality',
+      '88',
+      output,
+    ]);
     cards.push({
       cardIndex: index + 1,
       file: filename,
@@ -434,13 +480,15 @@ async function renderPlayingCards() {
       sourceUrl: info.descriptionurl,
       license,
       artist: metadataValue(info, 'Artist'),
-      treatment: 'Rasterized to WebP without changing the card design.',
+      treatment:
+        'The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule.',
     });
   }
   await writeManifest(slug, {
     sourceCollection:
       'https://commons.wikimedia.org/wiki/Category:Public_domain_playing_cards',
-    rightsNote: 'Austin Gabriel’s complete French-suited deck is CC0.',
+    rightsNote:
+      'Austin Gabriel’s complete French-suited deck is CC0. DIVINE applies an original archival print treatment without changing rank, suit, or court identity.',
     cards,
   });
   process.stdout.write(`${slug}: ${cards.length} sourced images\n`);
@@ -623,6 +671,15 @@ async function renderRunes() {
   ];
   const titles = names.map((name) => `File:Runic letter ${name}.svg`);
   const infoByTitle = knownCommonsInfo(titles, 'Public domain', 'ClaesWallin');
+  const kylverTitle = 'File:G88 Kylver - KMB - 16000300013409.jpg';
+  const kylverInfo = knownCommonsInfo(
+    [kylverTitle],
+    'CC BY 2.5',
+    'Bengt A Lundberg / Riksantikvarieämbetet',
+  ).get(kylverTitle);
+  if (!kylverInfo) throw new Error('Missing Kylver Stone metadata');
+  const kylverSource = join(scratch, 'kylver-stone.jpg');
+  await download(kylverInfo.url, kylverSource);
   const cards = [];
   for (const [index, title] of titles.entries()) {
     const info = infoByTitle.get(title);
@@ -630,46 +687,135 @@ async function renderRunes() {
     const license = assertReusable(info, title);
     const filename = `runes-${String(index + 1).padStart(2, '0')}.webp`;
     const output = join(directory, filename);
-    try {
-      await access(output);
-    } catch {
-      const input = join(scratch, `rune-${index + 1}.svg`);
-      await download(info.url, input);
-      await magick(input, output, [
-        '-background',
-        '#ded5c1',
+    const input = join(scratch, `rune-${index + 1}.svg`);
+    const background = join(scratch, `rune-${index + 1}-background.png`);
+    const mask = join(scratch, `rune-${index + 1}-mask.png`);
+    const highlight = join(scratch, `rune-${index + 1}-highlight.png`);
+    const shadow = join(scratch, `rune-${index + 1}-shadow.png`);
+    const ochre = join(scratch, `rune-${index + 1}-ochre.png`);
+    const cropOffset = (index * 137) % 876;
+    await download(info.url, input);
+    await magick(kylverSource, background, [
+      '-resize',
+      '1575x1050^',
+      '-gravity',
+      'northwest',
+      '-crop',
+      `700x1050+${cropOffset}+0`,
+      '+repage',
+      '-colorspace',
+      'gray',
+      '-sepia-tone',
+      '72%',
+      '-modulate',
+      '80,82,100',
+      '-fill',
+      '#2b1b14',
+      '-colorize',
+      '18%',
+      '-background',
+      'white',
+      '-vignette',
+      '0x26',
+    ]);
+    await magick(input, mask, [
+      '-background',
+      'white',
+      '-alpha',
+      'remove',
+      '-colorspace',
+      'gray',
+      '-threshold',
+      '28%',
+      '-negate',
+      '-trim',
+      '+repage',
+      '-resize',
+      '370x590',
+    ]);
+    for (const [target, color] of [
+      [highlight, '#dac49a'],
+      [shadow, '#241711'],
+      [ochre, '#8e3526'],
+    ]) {
+      await execFileAsync('magick', [
+        mask,
         '-alpha',
-        'remove',
-        '-resize',
-        '380x700',
-        '-gravity',
-        'center',
-        '-extent',
-        '700x1050',
-        '-colorspace',
-        'sRGB',
-        '-strip',
-        '-quality',
-        '88',
+        'copy',
+        '-channel',
+        'RGB',
+        '-fill',
+        color,
+        '-colorize',
+        '100',
+        '+channel',
+        target,
       ]);
     }
+    await execFileAsync('magick', [
+      background,
+      highlight,
+      '-gravity',
+      'center',
+      '-geometry',
+      '-3-3',
+      '-compose',
+      'over',
+      '-composite',
+      shadow,
+      '-gravity',
+      'center',
+      '-geometry',
+      '+4+5',
+      '-compose',
+      'over',
+      '-composite',
+      ochre,
+      '-gravity',
+      'center',
+      '-compose',
+      'over',
+      '-composite',
+      '-fill',
+      'none',
+      '-stroke',
+      '#c5a76d',
+      '-strokewidth',
+      '3',
+      '-draw',
+      'rectangle 22,22 677,1027',
+      '-stroke',
+      '#3b261b',
+      '-strokewidth',
+      '2',
+      '-draw',
+      'rectangle 30,30 669,1019',
+      '-strip',
+      '-quality',
+      '88',
+      output,
+    ]);
     cards.push({
       cardIndex: index + 1,
       file: filename,
       bytes: await bytes(output),
       sourceTitle: title.replace(/^File:/, ''),
       sourceUrl: info.descriptionurl,
-      license,
-      artist: metadataValue(info, 'Artist'),
+      backgroundSourceTitle: 'The Kylver Stone, G 88',
+      backgroundSourceUrl: kylverInfo.descriptionurl,
+      license: `${license} rune form; CC BY 2.5 background photograph`,
+      artist: `${metadataValue(info, 'Artist')}; Bengt A Lundberg / Riksantikvarieämbetet`,
       treatment:
-        'The standardized historical letterform is centered on a neutral field; no invented rune imagery is added.',
+        'The exact public-domain rune form is layered in mineral ochre over a monochrome crop of the Kylver Stone, the fifth-century inscription that preserves the Elder Futhark sequence.',
     });
   }
   await writeManifest(slug, {
-    sourceCollection:
+    sourceCollection: [
       'https://commons.wikimedia.org/wiki/Category:Elder_Futhark',
+      kylverInfo.descriptionurl,
+    ],
     rightsNote:
-      'The 24 standardized Elder Futhark letterforms were released to the public domain. Runic cards themselves are a modern reflective format.',
+      'The 24 standardized Elder Futhark letterforms are public domain. The Kylver Stone photograph is CC BY 2.5, credited to Bengt A Lundberg / Riksantikvarieämbetet. Runic cards themselves remain a modern reflective format.',
     cards,
   });
   process.stdout.write(`${slug}: ${cards.length} sourced images\n`);
@@ -690,6 +836,16 @@ async function renderIChing() {
     'Public domain',
     'Ben Finney and Wikimedia contributors',
   );
+  const chartTitle =
+    'File:Diagram of I Ching hexagrams owned by Gottfried Wilhelm Leibniz, 1701.jpg';
+  const chartInfo = knownCommonsInfo(
+    [chartTitle],
+    'Public domain',
+    'Unknown author; Leibniz Archive',
+  ).get(chartTitle);
+  if (!chartInfo) throw new Error('Missing 1701 I Ching chart metadata');
+  const chartSource = join(scratch, 'i-ching-chart-1701.jpg');
+  await download(chartInfo.url, chartSource);
   const cards = [];
   for (const [index, title] of titles.entries()) {
     const info = infoByTitle.get(title);
@@ -697,46 +853,150 @@ async function renderIChing() {
     const license = assertReusable(info, title);
     const filename = `i-ching-${String(index + 1).padStart(2, '0')}.webp`;
     const output = join(directory, filename);
-    try {
-      await access(output);
-    } catch {
-      const input = join(scratch, `i-ching-${index + 1}.svg`);
-      await download(info.url, input);
-      await magick(input, output, [
-        '-background',
-        '#e9e2cf',
-        '-alpha',
-        'remove',
-        '-resize',
-        '520x520',
-        '-gravity',
-        'center',
-        '-extent',
-        '700x1050',
-        '-colorspace',
-        'sRGB',
-        '-strip',
-        '-quality',
-        '88',
-      ]);
-    }
+    const input = join(scratch, `i-ching-${index + 1}.svg`);
+    const background = join(scratch, `i-ching-${index + 1}-background.png`);
+    const panel = join(scratch, `i-ching-${index + 1}-panel.png`);
+    const mask = join(scratch, `i-ching-${index + 1}-mask.png`);
+    const ink = join(scratch, `i-ching-${index + 1}-ink.png`);
+    const cropOffset = (index * 67) % 394;
+    await download(info.url, input);
+    await magick(chartSource, background, [
+      '-resize',
+      '1093x1050^',
+      '-gravity',
+      'northwest',
+      '-crop',
+      `700x1050+${cropOffset}+0`,
+      '+repage',
+      '-colorspace',
+      'gray',
+      '-auto-level',
+      '-sepia-tone',
+      '42%',
+      '-modulate',
+      '104,72,100',
+      '-fill',
+      '#c9ad79',
+      '-colorize',
+      '9%',
+      '-background',
+      'white',
+      '-vignette',
+      '0x18',
+    ]);
+    await execFileAsync('magick', [
+      background,
+      '-fill',
+      '#eee3c9dd',
+      '-stroke',
+      '#7b2d24',
+      '-strokewidth',
+      '4',
+      '-draw',
+      'roundrectangle 104,204 596,846 18,18',
+      '-fill',
+      'none',
+      '-stroke',
+      '#3d3528',
+      '-strokewidth',
+      '2',
+      '-draw',
+      'rectangle 122,222 578,828',
+      panel,
+    ]);
+    await magick(input, mask, [
+      '-background',
+      'white',
+      '-alpha',
+      'remove',
+      '-colorspace',
+      'gray',
+      '-threshold',
+      '28%',
+      '-negate',
+      '-trim',
+      '+repage',
+      '-resize',
+      '400x390',
+    ]);
+    await execFileAsync('magick', [
+      mask,
+      '-alpha',
+      'copy',
+      '-channel',
+      'RGB',
+      '-fill',
+      '#29251f',
+      '-colorize',
+      '100',
+      '+channel',
+      ink,
+    ]);
+    await execFileAsync('magick', [
+      panel,
+      ink,
+      '-gravity',
+      'center',
+      '-geometry',
+      '+0-5',
+      '-compose',
+      'multiply',
+      '-composite',
+      '-fill',
+      '#8d2e24',
+      '-stroke',
+      'none',
+      '-draw',
+      'rectangle 318,742 382,806',
+      '-fill',
+      '#ead8b5',
+      '-draw',
+      'rectangle 329,753 371,795',
+      '-fill',
+      '#8d2e24',
+      '-draw',
+      'circle 350,774 359,774',
+      '-fill',
+      'none',
+      '-stroke',
+      '#c4a86c',
+      '-strokewidth',
+      '3',
+      '-draw',
+      'rectangle 22,22 677,1027',
+      '-stroke',
+      '#3d3528',
+      '-strokewidth',
+      '2',
+      '-draw',
+      'rectangle 30,30 669,1019',
+      '-strip',
+      '-quality',
+      '88',
+      output,
+    ]);
     cards.push({
       cardIndex: index + 1,
       file: filename,
       bytes: await bytes(output),
       sourceTitle: title.replace(/^File:/, ''),
       sourceUrl: info.descriptionurl,
+      backgroundSourceTitle:
+        'Diagram of hexagrams sent by Joachim Bouvet to Leibniz, 1701',
+      backgroundSourceUrl: chartInfo.descriptionurl,
       license,
-      artist: metadataValue(info, 'Artist'),
+      artist: `${metadataValue(info, 'Artist')}; unknown author, Leibniz Archive`,
       treatment:
-        'The exact six-line hexagram is centered on a neutral field in King Wen sequence.',
+        'The exact six-line hexagram is printed in a warm archival panel over a cropped public-domain 1701 diagram of the sixty-four figures; a non-textual vermilion seal balances the composition.',
     });
   }
   await writeManifest(slug, {
-    sourceCollection:
+    sourceCollection: [
       'https://commons.wikimedia.org/wiki/Category:I_Ching_hexagrams',
+      chartInfo.descriptionurl,
+    ],
     rightsNote:
-      'The hexagram forms are public-domain symbols. Card presentation is modern and does not replace a changing-line consultation.',
+      'The hexagram forms and the 1701 Bouvet–Leibniz chart are public domain. The card presentation is modern and does not replace a changing-line consultation.',
     cards,
   });
   process.stdout.write(`${slug}: ${cards.length} sourced images\n`);
