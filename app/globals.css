@@ -910,8 +910,8 @@ button {
   overflow: hidden;
   isolation: isolate;
   animation: reading-cell-arrive 0.82s
-    calc(0.04s + var(--reading-order, 0) * 0.025s)
-    cubic-bezier(0.22, 1, 0.36, 1) both;
+    calc(0.04s + var(--reading-order, 0) * 0.025s) cubic-bezier(0.22, 1, 0.36, 1)
+    both;
 }
 .reading-index-item[data-system='divine'] {
   grid-column: span 2;
@@ -6504,6 +6504,10 @@ button {
     transition-duration: 0.01ms !important;
   }
   .hero-shutters {
+    display: none;
+  }
+  .stage-transition,
+  .reading-route-transition {
     display: none;
   }
   .hero-meta,

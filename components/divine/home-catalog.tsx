@@ -113,15 +113,12 @@ const ARCHIVE_HERO_OBJECTS = archiveManifest.map((asset, index) => {
   const jitterY = seededUnit(seed + 1) - 0.5;
   const scale = seededUnit(seed + 2);
   const rotation = -54 + seededUnit(seed + 3) * 108;
-  const desktopCluster =
-    DESKTOP_ARCHIVE_CLUSTERS[index % DESKTOP_ARCHIVE_CLUSTERS.length];
-  const mobileCluster =
-    MOBILE_ARCHIVE_CLUSTERS[index % MOBILE_ARCHIVE_CLUSTERS.length];
+  const desktopCluster = DESKTOP_ARCHIVE_CLUSTERS[index % DESKTOP_ARCHIVE_CLUSTERS.length];
+  const mobileCluster = MOBILE_ARCHIVE_CLUSTERS[index % MOBILE_ARCHIVE_CLUSTERS.length];
   const sizeTier = index % 12;
   const isGiant = sizeTier === 0;
   const isLarge = sizeTier === 3 || sizeTier === 8;
-  const isSmall =
-    sizeTier === 2 || sizeTier === 5 || sizeTier === 7 || sizeTier === 10;
+  const isSmall = sizeTier === 2 || sizeTier === 5 || sizeTier === 7 || sizeTier === 10;
   const desktopSize = isGiant
     ? `clamp(${154 + Math.round(scale * 46)}px, ${18 + scale * 7}vw, ${300 + Math.round(scale * 80)}px)`
     : isLarge
