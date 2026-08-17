@@ -1960,6 +1960,42 @@ button {
   transform-style: preserve-3d;
   will-change: transform;
 }
+.reading-card[data-system='tarot'],
+.result-card-object[data-system='tarot'],
+.result-card-strip button[data-system='tarot'],
+.library-card-portrait[data-system='tarot'] {
+  aspect-ratio: 52 / 90;
+}
+.reading-card[data-system='oracle'],
+.result-card-object[data-system='oracle'],
+.result-card-strip button[data-system='oracle'],
+.library-card-portrait[data-system='oracle'] {
+  aspect-ratio: 8 / 11;
+}
+.reading-card[data-system='lenormand'],
+.result-card-object[data-system='lenormand'],
+.result-card-strip button[data-system='lenormand'],
+.library-card-portrait[data-system='lenormand'] {
+  aspect-ratio: 57 / 74;
+}
+.reading-card[data-system='spellcraft'],
+.result-card-object[data-system='spellcraft'],
+.result-card-strip button[data-system='spellcraft'],
+.library-card-portrait[data-system='spellcraft'] {
+  aspect-ratio: 1 / 1;
+}
+.reading-card[data-system='ancient-egypt'],
+.result-card-object[data-system='ancient-egypt'],
+.result-card-strip button[data-system='ancient-egypt'],
+.library-card-portrait[data-system='ancient-egypt'] {
+  aspect-ratio: 4 / 5;
+}
+.reading-card[data-system='zodiac'],
+.result-card-object[data-system='zodiac'],
+.result-card-strip button[data-system='zodiac'],
+.library-card-portrait[data-system='zodiac'] {
+  aspect-ratio: 4 / 3;
+}
 .reading-card.is-revealed {
   cursor: grab;
 }
@@ -2010,8 +2046,9 @@ button {
 }
 .card-front {
   z-index: 1;
-  padding: 14px;
-  background: var(--paper);
+  padding: 0;
+  overflow: hidden;
+  background: #f0ede5;
   color: var(--ink);
   text-align: center;
 }
@@ -2019,6 +2056,11 @@ button {
   background: var(--deck-paper);
   color: var(--deck-ink);
   border-color: color-mix(in srgb, var(--deck-ink) 34%, transparent);
+}
+.card-front:has(.card-art),
+.result-card-sticker:has(.result-card-art),
+.library-card-portrait:has(img) {
+  background: #f4f2ec;
 }
 .card-front.deck-color::before,
 .result-card-sticker.deck-color::before,
@@ -2168,9 +2210,18 @@ button {
   transform: rotate(180deg);
 }
 .card-front small {
-  align-self: stretch;
-  padding-bottom: 7px;
-  border-bottom: 1px solid var(--line);
+  position: absolute;
+  z-index: 3;
+  top: 7px;
+  left: 7px;
+  max-width: calc(100% - 14px);
+  padding: 5px 7px;
+  border: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
+  background: color-mix(in srgb, var(--paper) 86%, transparent);
+  backdrop-filter: blur(6px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   text-transform: uppercase;
   font-size: 7px;
   letter-spacing: 0.12em;
@@ -2182,17 +2233,18 @@ button {
 }
 .card-art {
   position: relative;
-  width: calc(100% + 4px);
+  width: 100%;
+  height: 100%;
   flex: 1;
   min-height: 0;
-  margin: 7px 0;
+  margin: 0;
   overflow: hidden;
   background: #d8d5cf;
 }
 .card-art img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
 .deck-ink .card-art img {
   filter: grayscale(1) contrast(1.04);
@@ -2200,7 +2252,18 @@ button {
 .deck-color .card-art img {
   filter: saturate(0.94) contrast(1.035);
 }
-.card-front > span {
+.card-front > span:not(.card-art) {
+  position: absolute;
+  z-index: 3;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 28px 8px 8px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    color-mix(in srgb, var(--paper) 92%, transparent) 62%
+  );
   font-family: var(--font-bodoni), Georgia, serif;
   font-size: clamp(15px, 2vw, 24px);
   line-height: 1;
@@ -2211,6 +2274,12 @@ button {
   line-height: normal;
 }
 .card-front em {
+  position: absolute;
+  z-index: 4;
+  top: 9px;
+  right: 8px;
+  padding: 4px 5px;
+  background: color-mix(in srgb, var(--paper) 88%, transparent);
   font-size: 7px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -2220,13 +2289,13 @@ button {
   min-height: 135px;
 }
 .many-cards .card-front {
-  padding: 6px;
+  padding: 0;
 }
 .many-cards .card-front strong {
   font-size: 28px;
 }
 .many-cards .card-art {
-  margin: 3px 0;
+  margin: 0;
 }
 .many-cards .card-front > span {
   font-size: 12px;
@@ -2352,6 +2421,13 @@ button {
   filter: drop-shadow(15px 20px 18px rgba(0, 0, 0, 0.17));
   transform-style: preserve-3d;
 }
+.result-card-object[data-system='zodiac'] {
+  width: min(330px, 100%);
+}
+.result-card-object[data-system='spellcraft'],
+.result-card-object[data-system='ancient-egypt'] {
+  width: min(270px, 100%);
+}
 .result-card-sticker {
   position: relative;
   width: 100%;
@@ -2360,43 +2436,20 @@ button {
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  padding: 15px;
+  padding: 0;
   overflow: hidden;
   background: #f0ede5;
   color: #050505;
-  -webkit-mask:
-    linear-gradient(#000 0 0) center / calc(100% - 14px) 100% no-repeat,
-    linear-gradient(#000 0 0) center / 100% calc(100% - 14px) no-repeat,
-    radial-gradient(circle 5px at 7px 7px, #000 98%, transparent) 0 -7px / 14px
-      14px repeat-x,
-    radial-gradient(circle 5px at 7px 7px, #000 98%, transparent) 0
-      calc(100% + 7px) / 14px 14px repeat-x,
-    radial-gradient(circle 5px at 7px 7px, #000 98%, transparent) -7px 0 / 14px
-      14px repeat-y,
-    radial-gradient(circle 5px at 7px 7px, #000 98%, transparent)
-      calc(100% + 7px) 0 / 14px 14px repeat-y;
-  mask:
-    linear-gradient(#000 0 0) center / calc(100% - 14px) 100% no-repeat,
-    linear-gradient(#000 0 0) center / 100% calc(100% - 14px) no-repeat,
-    radial-gradient(circle 5px at 7px 7px, #000 98%, transparent) 0 -7px / 14px
-      14px repeat-x,
-    radial-gradient(circle 5px at 7px 7px, #000 98%, transparent) 0
-      calc(100% + 7px) / 14px 14px repeat-x,
-    radial-gradient(circle 5px at 7px 7px, #000 98%, transparent) -7px 0 / 14px
-      14px repeat-y,
-    radial-gradient(circle 5px at 7px 7px, #000 98%, transparent)
-      calc(100% + 7px) 0 / 14px 14px repeat-y;
+  border: 1px solid color-mix(in srgb, #050505 28%, transparent);
+  border-radius: 2px;
 }
 .result-card-sticker.deck-color {
   background: var(--deck-paper);
   color: var(--deck-ink);
 }
-.result-card-sticker::before {
-  content: '';
-  position: absolute;
-  inset: 10px;
-  border: 1px solid rgba(5, 5, 5, 0.22);
-  pointer-events: none;
+.result-card-sticker::before,
+.result-card-sticker.deck-color::before {
+  display: none;
 }
 .result-card-sticker::after {
   content: '';
@@ -2420,9 +2473,18 @@ button {
   text-align: center;
 }
 .result-card-sticker > small {
-  align-self: stretch;
-  padding: 0 3px 7px;
-  border-bottom: 1px solid rgba(5, 5, 5, 0.2);
+  position: absolute;
+  z-index: 3;
+  top: 7px;
+  left: 7px;
+  max-width: calc(100% - 14px);
+  padding: 5px 7px;
+  border: 1px solid rgba(5, 5, 5, 0.15);
+  background: rgba(244, 242, 236, 0.86);
+  backdrop-filter: blur(6px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font-size: 7px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -2438,13 +2500,28 @@ button {
   font-weight: 400;
 }
 .result-card-sticker > span:not(.result-card-art) {
-  padding: 8px 5px 2px;
+  position: absolute;
+  z-index: 3;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 34px 9px 9px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(244, 242, 236, 0.94) 64%
+  );
   font-family: var(--font-bodoni), Georgia, serif;
   font-size: 18px;
   line-height: 0.95;
 }
 .result-card-sticker > em {
-  padding-top: 3px;
+  position: absolute;
+  z-index: 4;
+  top: 9px;
+  right: 8px;
+  padding: 4px 5px;
+  background: rgba(244, 242, 236, 0.88);
   font-size: 7px;
   font-style: normal;
   letter-spacing: 0.14em;
@@ -2453,17 +2530,18 @@ button {
 .result-card-art {
   position: relative;
   z-index: 1;
-  width: calc(100% - 6px);
+  width: 100%;
+  height: 100%;
   flex: 1;
   min-height: 0;
-  margin: 8px 0 0;
+  margin: 0;
   overflow: hidden;
   background: #d8d5cf;
 }
 .result-card-art img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
 .result-card-sticker.deck-ink .result-card-art img {
   filter: grayscale(1) contrast(1.04);
@@ -2597,7 +2675,7 @@ button {
 .result-card-strip button img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
 .result-card-strip button strong {
   font-family: var(--font-bodoni), Georgia, serif;
@@ -3202,17 +3280,17 @@ button {
   background: var(--deck-paper);
   color: var(--deck-ink);
 }
+.library-card-portrait.deck-color:has(img),
+.result-card-sticker.deck-color:has(.result-card-art) {
+  background: #f4f2ec;
+}
 .library-card-portrait::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border: 1px solid var(--line);
-  pointer-events: none;
+  display: none;
 }
 .library-card-portrait img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
 .library-card-portrait.deck-ink img {
   filter: grayscale(1) contrast(1.05);

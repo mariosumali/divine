@@ -24,6 +24,7 @@ export interface CardDefinition {
   name: string;
   glyph: string;
   image?: string;
+  aspectRatio?: number;
   keywords: string[];
   meaning: string;
   reversedMeaning?: string;

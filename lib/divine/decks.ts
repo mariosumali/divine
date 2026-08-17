@@ -45,11 +45,11 @@ export const DECK_LABELS: Record<
   { color: string; ink: string }
 > = {
   tarot: { color: '1909 color', ink: 'Monochrome' },
-  oracle: { color: 'Chromatic', ink: 'Ink' },
+  oracle: { color: 'Mantegna archive', ink: 'Archive ink' },
   lenormand: { color: 'Heritage color', ink: 'Ink' },
-  spellcraft: { color: 'Chromatic', ink: 'Ink' },
-  'ancient-egypt': { color: 'Pigment', ink: 'Ink' },
-  zodiac: { color: 'Celestial color', ink: 'Ink' },
+  spellcraft: { color: 'Iconologia', ink: 'Archive ink' },
+  'ancient-egypt': { color: 'Champollion color', ink: 'Archive ink' },
+  zodiac: { color: 'Urania color', ink: 'Archive ink' },
   kipper: { color: 'Bavarian color', ink: 'Ink' },
   belline: { color: 'Planetary color', ink: 'Ink' },
   'playing-card-cartomancy': { color: 'Red & black', ink: 'Ink' },

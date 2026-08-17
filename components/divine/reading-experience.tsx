@@ -424,6 +424,7 @@ function CardFace({
     <motion.button
       type="button"
       className={`reading-card ${revealed ? 'is-revealed' : ''} ${compact ? 'is-compact' : ''}`}
+      data-system={systemSlug}
       onClick={() => {
         if (suppressClick.current) return;
         completePeel();
@@ -443,7 +444,11 @@ function CardFace({
       }}
       dragElastic={0.12}
       dragMomentum={false}
-      style={{ rotateX: tiltX, rotateY: tiltY }}
+      style={{
+        rotateX: tiltX,
+        rotateY: tiltY,
+        aspectRatio: draw.card.aspectRatio,
+      }}
       onPointerMove={(event) => {
         if (event.pointerType === 'touch') return;
         const bounds = event.currentTarget.getBoundingClientRect();
@@ -1733,6 +1738,10 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
                     >
                       <motion.div
                         className="result-card-object"
+                        data-system={system.slug}
+                        style={{
+                          aspectRatio: selectedResultDraw.card.aspectRatio,
+                        }}
                         initial={{
                           y: 28,
                           rotateX: -8,
@@ -1840,6 +1849,8 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
                     {draws.map((draw, index) => (
                       <button
                         type="button"
+                        data-system={system.slug}
+                        style={{ aspectRatio: draw.card.aspectRatio }}
                         role="tab"
                         aria-selected={safeResultCardIndex === index}
                         aria-label={`${index + 1}. ${draw.position}: ${draw.card.name}${draw.reversed ? ', reversed' : ''}`}

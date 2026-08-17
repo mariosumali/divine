@@ -30,10 +30,14 @@ function CardPortrait({
   return (
     <div
       className={`library-card-portrait deck-${finish}`}
+      data-system={systemSlug}
       style={
-        isCardSystemSlug(systemSlug)
-          ? deckColors(systemSlug, card.id, finish)
-          : undefined
+        {
+          ...(isCardSystemSlug(systemSlug)
+            ? deckColors(systemSlug, card.id, finish)
+            : undefined),
+          aspectRatio: card.aspectRatio,
+        }
       }
       aria-hidden="true"
     >

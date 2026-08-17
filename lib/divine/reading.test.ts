@@ -1,4 +1,4 @@
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {
@@ -47,6 +47,68 @@ describe('DIVINE content libraries', () => {
       expect(existsSync(join(process.cwd(), 'public', image!.slice(1)))).toBe(
         true,
       );
+    }
+  });
+
+  it('ships a complete, uncropped archival image library for every illustrated deck', () => {
+    const collections = [
+      ['oracle', 'oracle', 44],
+      ['spellcraft', 'ritual', 36],
+      ['ancient-egypt', 'temple', 36],
+      ['zodiac', 'zodiac', 34],
+    ] as const;
+
+    for (const [systemSlug, collection, count] of collections) {
+      const cards = SYSTEM_MAP[systemSlug].cards;
+      const images = cards.map((card) => card.image);
+      expect(cards).toHaveLength(count);
+      expect(new Set(images).size).toBe(count);
+      expect(
+        cards.every(
+          (card) =>
+            card.aspectRatio === 3 / 4 ||
+            card.aspectRatio === 1 ||
+            card.aspectRatio === 4 / 3,
+        ),
+      ).toBe(true);
+      for (const [index, image] of images.entries()) {
+        expect(image).toBe(
+          `/open-decks-v1/${collection}/${collection}-${String(index + 1).padStart(2, '0')}.webp`,
+        );
+        const path = join(process.cwd(), 'public', image!.slice(1));
+        expect(existsSync(path)).toBe(true);
+        expect(statSync(path).size).toBeGreaterThan(5_000);
+      }
+
+      const manifest = JSON.parse(
+        readFileSync(
+          join(
+            process.cwd(),
+            'public',
+            'open-decks-v1',
+            collection,
+            'manifest.json',
+          ),
+          'utf8',
+        ),
+      );
+      expect(manifest.treatment).toContain('no cropping');
+      expect(manifest.cards).toHaveLength(count);
+      expect(
+        manifest.cards.every((card: { license: string }) =>
+          /CC0|public domain|no restrictions|PDM/i.test(card.license),
+        ),
+      ).toBe(true);
+    }
+  });
+
+  it('ships both complete Tarot finishes at full-card dimensions', () => {
+    for (const card of SYSTEM_MAP.tarot.cards) {
+      for (const folder of ['tarot', 'tarot-color']) {
+        const path = join(process.cwd(), 'public', folder, `${card.id}.webp`);
+        expect(existsSync(path)).toBe(true);
+        expect(statSync(path).size).toBeGreaterThan(5_000);
+      }
     }
   });
 });

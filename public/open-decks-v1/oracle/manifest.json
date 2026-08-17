@@ -1,0 +1,447 @@
+{
+  "generatedAt": "2026-09-02",
+  "sourceCollection": "https://commons.wikimedia.org/wiki/Category:Mantegna_Tarocchi_(set_of_whole_pages;_TIFs)",
+  "treatment": "Aspect ratio preserved; resized only; no cropping.",
+  "cards": [
+    {
+      "cardIndex": 1,
+      "file": "oracle-01.webp",
+      "bytes": 107816,
+      "sourceTitle": "Master of the E-Series Tarocchi - Apollo (from the Tarocchi, series D- Apollo and the Muses, 20) - 1924.432.20 - Cleveland Museum of Art.tif",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Master_of_the_E-Series_Tarocchi_-_Apollo_(from_the_Tarocchi,_series_D-_Apollo_and_the_Muses,_20)_-_1924.432.20_-_Cleveland_Museum_of_Art.tif",
+      "license": "CC0",
+      "artist": "\nMaster of the E-Series Tarocchi",
+      "collection": "Mantegna Tarocchi (set of whole pages; TIFs)"
+    },
+    {
+      "cardIndex": 2,
+      "file": "oracle-02.webp",
+      "bytes": 103080,
+      "sourceTitle": "Master of the E-Series Tarocchi - Arithmetic (from the Tarocchi, series C- Liberal Arts, 25) - 1924.432.25 - Cleveland Museum of Art.tif",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Master_of_the_E-Series_Tarocchi_-_Arithmetic_(from_the_Tarocchi,_series_C-_Liberal_Arts,_25)_-_1924.432.25_-_Cleveland_Museum_of_Art.tif",
+      "license": "CC0",
+      "artist": "\nMaster of the E-Series Tarocchi",
+      "collection": "Mantegna Tarocchi (set of whole pages; TIFs)"
+    },
+    {
+      "cardIndex": 3,
+      "file": "oracle-03.webp",
+      "bytes": 120548,
+      "sourceTitle": "Master of the E-Series Tarocchi - Astrology (from the Tarocchi, series C- Liberal Arts, 29) - 1924.432.29 - Cleveland Museum of Art.tif",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Master_of_the_E-Series_Tarocchi_-_Astrology_(from_the_Tarocchi,_series_C-_Liberal_Arts,_29)_-_1924.432.29_-_Cleveland_Museum_of_Art.tif",
+      "license": "CC0",
+      "artist": "\nMaster of the E-Series Tarocchi",
+      "collection": "Mantegna Tarocchi (set of whole pages; TIFs)"
+    },
+    {
+      "cardIndex": 4,
+      "file": "oracle-04.webp",
+      "bytes": 120452,
+      "sourceTitle": "Master of the E-Series Tarocchi - Charity (from the Tarocchi, series B- Cosmic Principles & Virtues, 38) - 1924.432.38 - Cleveland Museum of Art.tif",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Master_of_the_E-Series_Tarocchi_-_Charity_(from_the_Tarocchi,_series_B-_Cosmic_Principles_%26_Virtues,_38)_-_1924.432.38_-_Cleveland_Museum_of_Art.tif",
+      "license": "CC0",
+      "artist": "\nMaster of the E-Series Tarocchi",
+      "collection": "Mantegna Tarocchi (set of whole pages; TIFs)"
+    },
+    {
+      "cardIndex": 5,
+      "file": "oracle-05.webp",
+      "bytes": 114670,
+      "sourceTitle": "Master of the E-Series Tarocchi - Clio (history) (from the Tarocchi series D- Apollo and the Muses, 19) - 1924.432.19 - Cleveland Museum of Art.tif",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Master_of_the_E-Series_Tarocchi_-_Clio_(history)_(from_the_Tarocchi_series_D-_Apollo_and_the_Muses,_19)_-_1924.432.19_-_Cleveland_Museum_of_Art.tif",
+      "license": "CC0",
+      "artist": "\nMaster of the E-Series Tarocchi",
+      "collection": "Mantegna Tarocchi (set of whole pages; TIFs)"
+    },
+    {
+      "cardIndex": 6,
+      "file": "oracle-06.webp",
+      "bytes": 112332,
+      "sourceTitle": "Master of the E-Series Tarocchi - Erato (lyric and love poetry) (from the Tarocchi series D- Apollo and the - 1924.432.14 - Cleveland Museum of Art.tif",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Master_of_the_E-Series_Tarocchi_-_Erato_(lyric_and_love_poetry)_(from_the_Tarocchi_series_D-_Apollo_and_the_-_1924.432.14_-_Cleveland_Museum_of_Art.tif",
+      "license": "CC0",
+      "artist": "\nMaster of the E-Series Tarocchi",
+      "collection": "Mantegna Tarocchi (set of whole pages; TIFs)"
+    },
+    {
+      "cardIndex": 7,
+      "file": "oracle-07.webp",
+      "bytes": 112412,
+      "sourceTitle": "Master of the E-Series Tarocchi - Euterpe (music, lyric poetry) (from the Tarocchi series D- Apollo and the - 1924.432.18 - Cleveland Museum of Art.tif",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Master_of_the_E-Series_Tarocchi_-_Euterpe_(music,_lyric_poetry)_(from_the_Tarocchi_series_D-_Apollo_and_the_-_1924.432.18_-_Cleveland_Museum_of_Art.tif",
+      "license": "CC0",
+      "artist": "\nMaster of the E-Series Tarocchi",
+      "collection": "Mantegna Tarocchi (set of whole pages; TIFs)"
+    },
+    {
+      "cardIndex": 8,
+      "file": "oracle-08.webp",
+      "bytes": 106656,
+      "sourceTitle": "Master of the E-Series Tarocchi - Faith (from the Tarocchi, series B- Cosmic Principles & Virtues, 40) - 1924.432.40 - Cleveland Museum of Art.tif",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Master_of_the_E-Series_Tarocchi_-_Faith_(from_the_Tarocchi,_series_B-_Cosmic_Principles_%26_Virtues,_40)_-_1924.432.40_-_Cleveland_Museum_of_Art.tif",
+      "license": "CC0",
+      "artist": "\nMaster of the E-Series Tarocchi",
+      "collection": "Mantegna Tarocchi (set of whole pages; TIFs)"
+    },
+    {
+      "cardIndex": 9,
+      "file": "oracle-09.webp",
+      "bytes": 117214,
+      "sourceTitle": "Master of the E-Series Tarocchi - Forteza (from the Tarocchi, series B- Cosmic Principles & Virtues, 36) - 1924.432.36 - Cleveland Museum of Art.tif",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Master_of_the_E-Series_Tarocchi_-_Forteza_(from_the_Tarocchi,_series_B-_Cosmic_Principles_%26_Virtues,_36)_-_1924.432.36_-_Cleveland_Museum_of_Art.tif",
+      "license": "CC0",
+      "artist": "\nMaster of the E-Series Tarocchi",
+      "collection": "Mantegna Tarocchi (set of whole pages; TIFs)"
+    },
+    {
+      "cardIndex": 10,
+      "file": "oracle-10.webp",
+      "bytes": 122050,
+      "sourceTitle": "Master of the E-Series Tarocchi - Genius of the Sun (from the Tarocchi, series B- Cosmic Principles & Virtues - 1924.432.31 - Cleveland Museum of Art.tif",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Master_of_the_E-Series_Tarocchi_-_Genius_of_the_Sun_(from_the_Tarocchi,_series_B-_Cosmic_Principles_%26_Virtues_-_1924.432.31_-_Cleveland_Museum_of_Art.tif",
+      "license": "CC0",
+      "artist": "\nMaster of the E-Series Tarocchi",
+      "collection": "Mantegna Tarocchi (set of whole pages; TIFs)"
+    },
+    {
+      "cardIndex": 11,
+      "file": "oracle-11.webp",
+      "bytes": 110846,
+      "sourceTitle": "Master of the E-Series Tarocchi - Genius of the World (from the Tarocchi, series B- Cosmic Principles & Virtu - 1924.432.33 - Cleveland Museum of Art.tif",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Master_of_the_E-Series_Tarocchi_-_Genius_of_the_World_(from_the_Tarocchi,_series_B-_Cosmic_Principles_%26_Virtu_-_1924.432.33_-_Cleveland_Museum_of_Art.tif",
+      "license": "CC0",
+      "artist": "\nMaster of the E-Series Tarocchi",
+      "collection": "Mantegna Tarocchi (set of whole pages; TIFs)"
+    },
+    {
+      "cardIndex": 12,
+      "file": "oracle-12.webp",
+      "bytes": 116298,
+      "sourceTitle": "Master of the E-Series Tarocchi - Genius of Time (from the Tarocchi, series B- Cosmic Principles & Virtues, - 1924.432.32 - Cleveland Museum of Art.tif",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Master_of_the_E-Series_Tarocchi_-_Genius_of_Time_(from_the_Tarocchi,_series_B-_Cosmic_Principles_%26_Virtues,_-_1924.432.32_-_Cleveland_Museum_of_Art.tif",
+      "license": "CC0",
+      "artist": "\nMaster of the E-Series Tarocchi",
+      "collection": "Mantegna Tarocchi (set of whole pages; TIFs)"
+    },
+    {
+      "cardIndex": 13,
+      "file": "oracle-13.webp",
+      "bytes": 106014,
+      "sourceTitle": "Master of the E-Series Tarocchi - Geometry (from the Tarocchi, series C- Liberal Arts, 24) - 1924.432.24 - Cleveland Museum of Art.tif",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Master_of_the_E-Series_Tarocchi_-_Geometry_(from_the_Tarocchi,_series_C-_Liberal_Arts,_24)_-_1924.432.24_-_Cleveland_Museum_of_Art.tif",
+      "license": "CC0",
+      "artist": "\nMaster of the E-Series Tarocchi",
+      "collection": "Mantegna Tarocchi (set of whole pages; TIFs)"
+    },
+    {
+      "cardIndex": 14,
+      "file": "oracle-14.webp",
+      "bytes": 99628,
+      "sourceTitle": "Master of the E-Series Tarocchi - Grammar (from the Tarocchi, series C- Liberal Arts, 21) - 1924.432.21 - Cleveland Museum of Art.tif",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Master_of_the_E-Series_Tarocchi_-_Grammar_(from_the_Tarocchi,_series_C-_Liberal_Arts,_21)_-_1924.432.21_-_Cleveland_Museum_of_Art.tif",
+      "license": "CC0",
+      "artist": "\nMaster of the E-Series Tarocchi",
+      "collection": "Mantegna Tarocchi (set of whole pages; TIFs)"
+    },
+    {
+      "cardIndex": 15,
+      "file": "oracle-15.webp",
+      "bytes": 107810,
+      "sourceTitle": "Master of the E-Series Tarocchi - Jupiter (from the Tarocchi, series A- Firmaments of the Universe, 46) - 1924.432.46 - Cleveland Museum of Art.tif",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Master_of_the_E-Series_Tarocchi_-_Jupiter_(from_the_Tarocchi,_series_A-_Firmaments_of_the_Universe,_46)_-_1924.432.46_-_Cleveland_Museum_of_Art.tif",
+      "license": "CC0",
+      "artist": "\nMaster of the E-Series Tarocchi",
+      "collection": "Mantegna Tarocchi (set of whole pages; TIFs)"
+    },
+    {
+      "cardIndex": 16,
+      "file": "oracle-16.webp",
+      "bytes": 111780,
+      "sourceTitle": "Master of the E-Series Tarocchi - Justice (from the Tarocchi, series B- Cosmic Principles & Virtues, 37) - 1924.432.37 - Cleveland Museum of Art.tif",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Master_of_the_E-Series_Tarocchi_-_Justice_(from_the_Tarocchi,_series_B-_Cosmic_Principles_%26_Virtues,_37)_-_1924.432.37_-_Cleveland_Museum_of_Art.tif",
+      "license": "CC0",
+      "artist": "\nMaster of the E-Series Tarocchi",
+      "collection": "Mantegna Tarocchi (set of whole pages; TIFs)"
+    },
+    {
+      "cardIndex": 17,
+      "file": "oracle-17.webp",
+      "bytes": 107116,
+      "sourceTitle": "Master of the E-Series Tarocchi - Logic (from the Tarocchi, series C- Liberal Arts, 22) - 1924.432.22 - Cleveland Museum of Art.tif",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Master_of_the_E-Series_Tarocchi_-_Logic_(from_the_Tarocchi,_series_C-_Liberal_Arts,_22)_-_1924.432.22_-_Cleveland_Museum_of_Art.tif",
+      "license": "CC0",
+      "artist": "\nMaster of the E-Series Tarocchi",
+      "collection": "Mantegna Tarocchi (set of whole pages; TIFs)"
+    },
+    {
+      "cardIndex": 18,
+      "file": "oracle-18.webp",
+      "bytes": 95614,
+      "sourceTitle": "Master of the E-Series Tarocchi - Luna (from the Tarocchi, series A- Firmaments of the Universe, 41) - 1924.432.41 - Cleveland Museum of Art.tif",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Master_of_the_E-Series_Tarocchi_-_Luna_(from_the_Tarocchi,_series_A-_Firmaments_of_the_Universe,_41)_-_1924.432.41_-_Cleveland_Museum_of_Art.tif",
+      "license": "CC0",
+      "artist": "\nMaster of the E-Series Tarocchi",
+      "collection": "Mantegna Tarocchi (set of whole pages; TIFs)"
+    },
+    {
+      "cardIndex": 19,
+      "file": "oracle-19.webp",
+      "bytes": 107084,
+      "sourceTitle": "Master of the E-Series Tarocchi - Melpomene (tragedy) (from the Tarocchi series D- Apollo and the Muses, 17 - 1924.432.17 - Cleveland Museum of Art.tif",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Master_of_the_E-Series_Tarocchi_-_Melpomene_(tragedy)_(from_the_Tarocchi_series_D-_Apollo_and_the_Muses,_17_-_1924.432.17_-_Cleveland_Museum_of_Art.tif",
+      "license": "CC0",
+      "artist": "\nMaster of the E-Series Tarocchi",
+      "collection": "Mantegna Tarocchi (set of whole pages; TIFs)"
+    },
+    {
+      "cardIndex": 20,
+      "file": "oracle-20.webp",
+      "bytes": 93074,
+      "sourceTitle": "Master of the E-Series Tarocchi - Mercury (from the Tarocchi, series A- Firmaments of the Universe, 42) - 1924.432.42 - Cleveland Museum of Art.tif",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Master_of_the_E-Series_Tarocchi_-_Mercury_(from_the_Tarocchi,_series_A-_Firmaments_of_the_Universe,_42)_-_1924.432.42_-_Cleveland_Museum_of_Art.tif",
+      "license": "CC0",
+      "artist": "\nMaster of the E-Series Tarocchi",
+      "collection": "Mantegna Tarocchi (set of whole pages; TIFs)"
+    },
+    {
+      "cardIndex": 21,
+      "file": "oracle-21.webp",
+      "bytes": 71414,
+      "sourceTitle": "Master of the E-Series Tarocchi - Music (from the Tarocchi, series C- Liberal Arts, 26) - 1924.432.26 - Cleveland Museum of Art.tif",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Master_of_the_E-Series_Tarocchi_-_Music_(from_the_Tarocchi,_series_C-_Liberal_Arts,_26)_-_1924.432.26_-_Cleveland_Museum_of_Art.tif",
+      "license": "CC0",
+      "artist": "\nMaster of the E-Series Tarocchi",
+      "collection": "Mantegna Tarocchi (set of whole pages; TIFs)"
+    },
+    {
+      "cardIndex": 22,
+      "file": "oracle-22.webp",
+      "bytes": 128658,
+      "sourceTitle": "Master of the E-Series Tarocchi - Philosophy (from the Tarocchi, series C- Liberal Arts, 28) - 1924.432.28 - Cleveland Museum of Art.tif",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Master_of_the_E-Series_Tarocchi_-_Philosophy_(from_the_Tarocchi,_series_C-_Liberal_Arts,_28)_-_1924.432.28_-_Cleveland_Museum_of_Art.tif",
+      "license": "CC0",
+      "artist": "\nMaster of the E-Series Tarocchi",
+      "collection": "Mantegna Tarocchi (set of whole pages; TIFs)"
+    },
+    {
+      "cardIndex": 23,
+      "file": "oracle-23.webp",
+      "bytes": 118640,
+      "sourceTitle": "Master of the E-Series Tarocchi - Poetry (from the Tarocchi, series C- Liberal Arts, 27) - 1924.432.27 - Cleveland Museum of Art.tif",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Master_of_the_E-Series_Tarocchi_-_Poetry_(from_the_Tarocchi,_series_C-_Liberal_Arts,_27)_-_1924.432.27_-_Cleveland_Museum_of_Art.tif",
+      "license": "CC0",
+      "artist": "\nMaster of the E-Series Tarocchi",
+      "collection": "Mantegna Tarocchi (set of whole pages; TIFs)"
+    },
+    {
+      "cardIndex": 24,
+      "file": "oracle-24.webp",
+      "bytes": 120928,
+      "sourceTitle": "Master of the E-Series Tarocchi - Prudence (from the Tarocchi, series B- Cosmic Principles & Virtues, 35) - 1924.432.35 - Cleveland Museum of Art.tif",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Master_of_the_E-Series_Tarocchi_-_Prudence_(from_the_Tarocchi,_series_B-_Cosmic_Principles_%26_Virtues,_35)_-_1924.432.35_-_Cleveland_Museum_of_Art.tif",
+      "license": "CC0",
+      "artist": "\nMaster of the E-Series Tarocchi",
+      "collection": "Mantegna Tarocchi (set of whole pages; TIFs)"
+    },
+    {
+      "cardIndex": 25,
+      "file": "oracle-25.webp",
+      "bytes": 114378,
+      "sourceTitle": "Master of the E-Series Tarocchi - Rhetoric (from the Tarocchi, series C- Liberal Arts, 23) - 1924.432.23 - Cleveland Museum of Art.tif",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Master_of_the_E-Series_Tarocchi_-_Rhetoric_(from_the_Tarocchi,_series_C-_Liberal_Arts,_23)_-_1924.432.23_-_Cleveland_Museum_of_Art.tif",
+      "license": "CC0",
+      "artist": "\nMaster of the E-Series Tarocchi",
+      "collection": "Mantegna Tarocchi (set of whole pages; TIFs)"
+    },
+    {
+      "cardIndex": 26,
+      "file": "oracle-26.webp",
+      "bytes": 104526,
+      "sourceTitle": "Master of the E-Series Tarocchi - Saturn (from the Tarocchi, series A- Firmaments of the Universe, 47) - 1924.432.47 - Cleveland Museum of Art.tif",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Master_of_the_E-Series_Tarocchi_-_Saturn_(from_the_Tarocchi,_series_A-_Firmaments_of_the_Universe,_47)_-_1924.432.47_-_Cleveland_Museum_of_Art.tif",
+      "license": "CC0",
+      "artist": "\nMaster of the E-Series Tarocchi",
+      "collection": "Mantegna Tarocchi (set of whole pages; TIFs)"
+    },
+    {
+      "cardIndex": 27,
+      "file": "oracle-27.webp",
+      "bytes": 93586,
+      "sourceTitle": "Master of the E-Series Tarocchi - Sun (from the Tarocchi, series A- Firmaments of the Universe, 44) - 1924.432.44 - Cleveland Museum of Art.tif",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Master_of_the_E-Series_Tarocchi_-_Sun_(from_the_Tarocchi,_series_A-_Firmaments_of_the_Universe,_44)_-_1924.432.44_-_Cleveland_Museum_of_Art.tif",
+      "license": "CC0",
+      "artist": "\nMaster of the E-Series Tarocchi",
+      "collection": "Mantegna Tarocchi (set of whole pages; TIFs)"
+    },
+    {
+      "cardIndex": 28,
+      "file": "oracle-28.webp",
+      "bytes": 109100,
+      "sourceTitle": "Master of the E-Series Tarocchi - Temperance (from the Tarocchi, series B- Cosmic Principles & Virtues, 34) - 1924.432.34 - Cleveland Museum of Art.tif",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Master_of_the_E-Series_Tarocchi_-_Temperance_(from_the_Tarocchi,_series_B-_Cosmic_Principles_%26_Virtues,_34)_-_1924.432.34_-_Cleveland_Museum_of_Art.tif",
+      "license": "CC0",
+      "artist": "\nMaster of the E-Series Tarocchi",
+      "collection": "Mantegna Tarocchi (set of whole pages; TIFs)"
+    },
+    {
+      "cardIndex": 29,
+      "file": "oracle-29.webp",
+      "bytes": 114860,
+      "sourceTitle": "Master of the E-Series Tarocchi - Terpsichore (dancing and song) (from the Tarocchi series D- Apollo and th - 1924.432.13 - Cleveland Museum of Art.tif",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Master_of_the_E-Series_Tarocchi_-_Terpsichore_(dancing_and_song)_(from_the_Tarocchi_series_D-_Apollo_and_th_-_1924.432.13_-_Cleveland_Museum_of_Art.tif",
+      "license": "CC0",
+      "artist": "\nMaster of the E-Series Tarocchi",
+      "collection": "Mantegna Tarocchi (set of whole pages; TIFs)"
+    },
+    {
+      "cardIndex": 30,
+      "file": "oracle-30.webp",
+      "bytes": 108908,
+      "sourceTitle": "Master of the E-Series Tarocchi - Thalia (comedy, pastoral poetry) (from the Tarocchi series D- Apollo and t - 1924.432.16 - Cleveland Museum of Art.tif",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Master_of_the_E-Series_Tarocchi_-_Thalia_(comedy,_pastoral_poetry)_(from_the_Tarocchi_series_D-_Apollo_and_t_-_1924.432.16_-_Cleveland_Museum_of_Art.tif",
+      "license": "CC0",
+      "artist": "\nMaster of the E-Series Tarocchi",
+      "collection": "Mantegna Tarocchi (set of whole pages; TIFs)"
+    },
+    {
+      "cardIndex": 31,
+      "file": "oracle-31.webp",
+      "bytes": 107440,
+      "sourceTitle": "Master of the E-Series Tarocchi - The Angel of the Eighth Sphere (from the Tarocchi, series A- Firmaments of - 1924.432.48 - Cleveland Museum of Art.tif",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Master_of_the_E-Series_Tarocchi_-_The_Angel_of_the_Eighth_Sphere_(from_the_Tarocchi,_series_A-_Firmaments_of_-_1924.432.48_-_Cleveland_Museum_of_Art.tif",
+      "license": "CC0",
+      "artist": "\nMaster of the E-Series Tarocchi",
+      "collection": "Mantegna Tarocchi (set of whole pages; TIFs)"
+    },
+    {
+      "cardIndex": 32,
+      "file": "oracle-32.webp",
+      "bytes": 99438,
+      "sourceTitle": "Master of the E-Series Tarocchi - The Angel of the Ninth Sphere (from the Tarocchi, series A- Firmaments of - 1924.432.49 - Cleveland Museum of Art.tif",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Master_of_the_E-Series_Tarocchi_-_The_Angel_of_the_Ninth_Sphere_(from_the_Tarocchi,_series_A-_Firmaments_of_-_1924.432.49_-_Cleveland_Museum_of_Art.tif",
+      "license": "CC0",
+      "artist": "\nMaster of the E-Series Tarocchi",
+      "collection": "Mantegna Tarocchi (set of whole pages; TIFs)"
+    },
+    {
+      "cardIndex": 33,
+      "file": "oracle-33.webp",
+      "bytes": 127648,
+      "sourceTitle": "Master of the E-Series Tarocchi - The Artisan (from the Tarocchi, series E- Conditions of Man, 3) - 1924.432.3 - Cleveland Museum of Art.tif",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Master_of_the_E-Series_Tarocchi_-_The_Artisan_(from_the_Tarocchi,_series_E-_Conditions_of_Man,_3)_-_1924.432.3_-_Cleveland_Museum_of_Art.tif",
+      "license": "CC0",
+      "artist": "\nMaster of the E-Series Tarocchi",
+      "collection": "Mantegna Tarocchi (set of whole pages; TIFs)"
+    },
+    {
+      "cardIndex": 34,
+      "file": "oracle-34.webp",
+      "bytes": 120416,
+      "sourceTitle": "Master of the E-Series Tarocchi - The Beggar (from the Tarocchi, series E- Conditions of Man, 1) - 1924.432.1 - Cleveland Museum of Art.tif",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Master_of_the_E-Series_Tarocchi_-_The_Beggar_(from_the_Tarocchi,_series_E-_Conditions_of_Man,_1)_-_1924.432.1_-_Cleveland_Museum_of_Art.tif",
+      "license": "CC0",
+      "artist": "\nMaster of the E-Series Tarocchi",
+      "collection": "Mantegna Tarocchi (set of whole pages; TIFs)"
+    },
+    {
+      "cardIndex": 35,
+      "file": "oracle-35.webp",
+      "bytes": 103190,
+      "sourceTitle": "Master of the E-Series Tarocchi - The Doge (from the Tarocchi, series E- Conditions of Man, 7) - 1924.432.7 - Cleveland Museum of Art.tif",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Master_of_the_E-Series_Tarocchi_-_The_Doge_(from_the_Tarocchi,_series_E-_Conditions_of_Man,_7)_-_1924.432.7_-_Cleveland_Museum_of_Art.tif",
+      "license": "CC0",
+      "artist": "\nMaster of the E-Series Tarocchi",
+      "collection": "Mantegna Tarocchi (set of whole pages; TIFs)"
+    },
+    {
+      "cardIndex": 36,
+      "file": "oracle-36.webp",
+      "bytes": 115988,
+      "sourceTitle": "Master of the E-Series Tarocchi - The Emperor (from the Tarocchi, series E- Conditions of Man, 9) - 1924.432.9 - Cleveland Museum of Art.tif",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Master_of_the_E-Series_Tarocchi_-_The_Emperor_(from_the_Tarocchi,_series_E-_Conditions_of_Man,_9)_-_1924.432.9_-_Cleveland_Museum_of_Art.tif",
+      "license": "CC0",
+      "artist": "\nMaster of the E-Series Tarocchi",
+      "collection": "Mantegna Tarocchi (set of whole pages; TIFs)"
+    },
+    {
+      "cardIndex": 37,
+      "file": "oracle-37.webp",
+      "bytes": 100662,
+      "sourceTitle": "Master of the E-Series Tarocchi - The Empyrean Sphere (from the Tarocchi, series A- Firmaments of the Univer - 1924.432.50 - Cleveland Museum of Art.tif",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Master_of_the_E-Series_Tarocchi_-_The_Empyrean_Sphere_(from_the_Tarocchi,_series_A-_Firmaments_of_the_Univer_-_1924.432.50_-_Cleveland_Museum_of_Art.tif",
+      "license": "CC0",
+      "artist": "\nMaster of the E-Series Tarocchi",
+      "collection": "Mantegna Tarocchi (set of whole pages; TIFs)"
+    },
+    {
+      "cardIndex": 38,
+      "file": "oracle-38.webp",
+      "bytes": 108478,
+      "sourceTitle": "Master of the E-Series Tarocchi - The King (from the Tarocchi, series E- Conditions of Man, 8) - 1924.432.8 - Cleveland Museum of Art.tif",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Master_of_the_E-Series_Tarocchi_-_The_King_(from_the_Tarocchi,_series_E-_Conditions_of_Man,_8)_-_1924.432.8_-_Cleveland_Museum_of_Art.tif",
+      "license": "CC0",
+      "artist": "\nMaster of the E-Series Tarocchi",
+      "collection": "Mantegna Tarocchi (set of whole pages; TIFs)"
+    },
+    {
+      "cardIndex": 39,
+      "file": "oracle-39.webp",
+      "bytes": 101636,
+      "sourceTitle": "Master of the E-Series Tarocchi - The Knight (from the Tarocchi, series E- Conditions of Man, 6) - 1924.432.6 - Cleveland Museum of Art.tif",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Master_of_the_E-Series_Tarocchi_-_The_Knight_(from_the_Tarocchi,_series_E-_Conditions_of_Man,_6)_-_1924.432.6_-_Cleveland_Museum_of_Art.tif",
+      "license": "CC0",
+      "artist": "\nMaster of the E-Series Tarocchi",
+      "collection": "Mantegna Tarocchi (set of whole pages; TIFs)"
+    },
+    {
+      "cardIndex": 40,
+      "file": "oracle-40.webp",
+      "bytes": 108558,
+      "sourceTitle": "Master of the E-Series Tarocchi - The Merchant (from the Tarocchi, series E- Conditions of Man, 4) - 1924.432.4 - Cleveland Museum of Art.tif",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Master_of_the_E-Series_Tarocchi_-_The_Merchant_(from_the_Tarocchi,_series_E-_Conditions_of_Man,_4)_-_1924.432.4_-_Cleveland_Museum_of_Art.tif",
+      "license": "CC0",
+      "artist": "\nMaster of the E-Series Tarocchi",
+      "collection": "Mantegna Tarocchi (set of whole pages; TIFs)"
+    },
+    {
+      "cardIndex": 41,
+      "file": "oracle-41.webp",
+      "bytes": 110754,
+      "sourceTitle": "Master of the E-Series Tarocchi - The Pope (from the Tarocchi, series E- Conditions of Man, 10) - 1924.432.10 - Cleveland Museum of Art.tif",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Master_of_the_E-Series_Tarocchi_-_The_Pope_(from_the_Tarocchi,_series_E-_Conditions_of_Man,_10)_-_1924.432.10_-_Cleveland_Museum_of_Art.tif",
+      "license": "CC0",
+      "artist": "\nMaster of the E-Series Tarocchi",
+      "collection": "Mantegna Tarocchi (set of whole pages; TIFs)"
+    },
+    {
+      "cardIndex": 42,
+      "file": "oracle-42.webp",
+      "bytes": 101198,
+      "sourceTitle": "Master of the E-Series Tarocchi - The Servant (from the Tarocchi, series E- Conditions of Man, 2) - 1924.432.2 - Cleveland Museum of Art.tif",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Master_of_the_E-Series_Tarocchi_-_The_Servant_(from_the_Tarocchi,_series_E-_Conditions_of_Man,_2)_-_1924.432.2_-_Cleveland_Museum_of_Art.tif",
+      "license": "CC0",
+      "artist": "\nMaster of the E-Series Tarocchi",
+      "collection": "Mantegna Tarocchi (set of whole pages; TIFs)"
+    },
+    {
+      "cardIndex": 43,
+      "file": "oracle-43.webp",
+      "bytes": 108712,
+      "sourceTitle": "Master of the E-Series Tarocchi - Urania (astronomy) (from the Tarocchi series D- Apollo and the Muses, 12) - 1924.432.12 - Cleveland Museum of Art.tif",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Master_of_the_E-Series_Tarocchi_-_Urania_(astronomy)_(from_the_Tarocchi_series_D-_Apollo_and_the_Muses,_12)_-_1924.432.12_-_Cleveland_Museum_of_Art.tif",
+      "license": "CC0",
+      "artist": "\nMaster of the E-Series Tarocchi",
+      "collection": "Mantegna Tarocchi (set of whole pages; TIFs)"
+    },
+    {
+      "cardIndex": 44,
+      "file": "oracle-44.webp",
+      "bytes": 89386,
+      "sourceTitle": "Master of the E-Series Tarocchi - Venus (from the Tarocchi, series A- Firmaments of the Universe, 43) - 1924.432.43 - Cleveland Museum of Art.tif",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Master_of_the_E-Series_Tarocchi_-_Venus_(from_the_Tarocchi,_series_A-_Firmaments_of_the_Universe,_43)_-_1924.432.43_-_Cleveland_Museum_of_Art.tif",
+      "license": "CC0",
+      "artist": "\nMaster of the E-Series Tarocchi",
+      "collection": "Mantegna Tarocchi (set of whole pages; TIFs)"
+    }
+  ]
+}

@@ -374,6 +374,24 @@ const makeNamedDeck = (
     provenance: 'Original DIVINE card and interpretation.',
   }));
 
+const archivalImage = (collection: string, index: number) =>
+  `/open-decks-v1/${collection}/${collection}-${String(index + 1).padStart(2, '0')}.webp`;
+
+const archivalOrientations = {
+  oracle: 'pppppppppppppppppppppppppppppppppppppppppppp',
+  ritual: 'ssssslsssssssssslsplssssssssssssslss',
+  temple: 'ppllplpppppplppllppppplpllpppppppplp',
+  zodiac: 'lllppllpllllplllppppplllllplllllpp',
+} as const;
+
+const archivalAspectRatio = (
+  collection: keyof typeof archivalOrientations,
+  index: number,
+) => {
+  const orientation = archivalOrientations[collection][index];
+  return orientation === 'l' ? 4 / 3 : orientation === 's' ? 1 : 3 / 4;
+};
+
 const oracleEntries: Array<[string, string]> = [
   ['The Open Door', 'permission'],
   ['Black Water', 'depth'],
@@ -682,7 +700,13 @@ const oracle = makeNamedDeck(
   ['◌', '◇', '☾', '∴'],
   'Let its image change how you approach the next true choice.',
   'the invitation is present, but your attention is split.',
-);
+).map((card, index) => ({
+  ...card,
+  image: archivalImage('oracle', index),
+  aspectRatio: archivalAspectRatio('oracle', index),
+  provenance:
+    'Master of the E-Series Mantegna Tarocchi (c. 1465), open-access scan via Wikimedia Commons; original DIVINE interpretation.',
+}));
 const positiveLenormand = new Set([
   'Rider',
   'Clover',
@@ -779,14 +803,26 @@ const spellcraft = makeNamedDeck(
   ['✦', '△', '○', '╳'],
   'Give the intention one material action before the day closes.',
   'the ritual has form but not yet honest intention.',
-);
+).map((card, index) => ({
+  ...card,
+  image: archivalImage('ritual', index),
+  aspectRatio: archivalAspectRatio('ritual', index),
+  provenance:
+    'Cesare Ripa’s Iconologia (1613), open-access scan via Wikimedia Commons; original DIVINE interpretation.',
+}));
 const egypt = makeNamedDeck(
   'egypt',
   egyptEntries,
   ['☉', '☥', '◇', 'Ⅱ'],
   'Its enduring image names the force now moving through the threshold.',
   'the symbol asks for respect, context, and a slower reading.',
-);
+).map((card, index) => ({
+  ...card,
+  image: archivalImage('temple', index),
+  aspectRatio: archivalAspectRatio('temple', index),
+  provenance:
+    'Jean-François Champollion’s Panthéon égyptien (1823–1825), public-domain plates via Wikimedia Commons; original DIVINE interpretation.',
+}));
 const zodiac = makeNamedDeck(
   'zodiac',
   [...signs, ...planets, ...houses],
@@ -795,7 +831,11 @@ const zodiac = makeNamedDeck(
   'the archetype is being performed rather than embodied.',
 ).map((card, index) => ({
   ...card,
+  image: archivalImage('zodiac', index),
+  aspectRatio: archivalAspectRatio('zodiac', index),
   domain: index < 12 ? 'sign' : index < 22 ? 'planet' : 'house',
+  provenance:
+    'Sidney Hall’s Urania’s Mirror (1825), public-domain constellation cards via Wikimedia Commons; original DIVINE interpretation.',
 }));
 
 export const SYSTEMS: SystemDefinition[] = [
