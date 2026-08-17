@@ -10,6 +10,7 @@ import {
   nextObjectRitualStep,
   secureShuffle,
 } from './reading';
+import { openingHeroHeadline, openingHeroHeadlines } from './headlines';
 import {
   CARD_TRADITION_COUNT,
   CATALOG_SYSTEMS,
@@ -284,7 +285,9 @@ describe('reading engine', () => {
 
     const result = interpretReading(system, spread, draws, 'general');
     expect(result.connections).toHaveLength(15);
-    expect(result.headline).toContain('Sixteen voices');
+    expect(openingHeroHeadlines(system.slug, draws[0], 'general')).toContain(
+      result.headline,
+    );
     for (const draw of draws) {
       expect(result.synthesis).toContain(draw.card.name);
       expect(
@@ -295,6 +298,61 @@ describe('reading engine', () => {
         ),
       ).toBe(true);
     }
+  });
+
+  it('gives every possible opening card a deep bank of advice-led hero lines', () => {
+    const focuses = ['general', 'love', 'work', 'growth'] as const;
+
+    for (const system of SYSTEMS.filter((item) => item.kind === 'cards')) {
+      for (const card of system.cards) {
+        for (const focus of focuses) {
+          const upright = openingHeroHeadlines(
+            system.slug,
+            { card, position: 'Opening', reversed: false },
+            focus,
+          );
+          expect(upright.length).toBeGreaterThanOrEqual(27);
+          expect(new Set(upright).size).toBe(upright.length);
+          expect(
+            upright.every(
+              (headline) => headline.length >= 28 && headline.length <= 180,
+            ),
+          ).toBe(true);
+
+          if (card.reversedMeaning) {
+            const reversed = openingHeroHeadlines(
+              system.slug,
+              { card, position: 'Opening', reversed: true },
+              focus,
+            );
+            expect(reversed.length).toBeGreaterThanOrEqual(27);
+            expect(reversed).not.toEqual(upright);
+          }
+        }
+      }
+    }
+  });
+
+  it('varies an opening headline while keeping each reading reproducible', () => {
+    const system = SYSTEM_MAP.zodiac;
+    const spread = system.spreads[0];
+    const cancer = system.cards.find((card) => card.name === 'Cancer')!;
+    const draws = [
+      { card: cancer, position: spread.positions[0], reversed: false },
+    ];
+    const variants = Array.from({ length: 160 }, (_, index) =>
+      openingHeroHeadline(system, spread, draws, 'general', `reading-${index}`),
+    );
+
+    expect(new Set(variants).size).toBeGreaterThan(20);
+    expect(variants).toContain(
+      'Care is strongest when it includes your own limits.',
+    );
+    expect(
+      openingHeroHeadline(system, spread, draws, 'general', 'same-reading'),
+    ).toBe(
+      openingHeroHeadline(system, spread, draws, 'general', 'same-reading'),
+    );
   });
 
   it('preserves all fixed traditional structures', () => {

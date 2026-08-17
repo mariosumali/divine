@@ -14,14 +14,15 @@ import {
   ArrowRight,
   BookMarked,
   Check,
+  ChevronDown,
   ChevronLeft,
   Heart,
   RotateCcw,
-  Share2,
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { SystemRitual } from '@/components/divine/system-ritual';
+import { ReadingShare } from '@/components/divine/reading-share';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -44,7 +45,7 @@ import {
 } from '@/lib/divine/reading';
 import { DIVINE_RITUAL, ritualForSystem } from '@/lib/divine/rituals';
 import { setReadingAmbience } from '@/lib/divine/audio';
-import { composeShare } from '@/lib/divine/share';
+import { composeShare, decodeReadingShareToken } from '@/lib/divine/share';
 import { saveReading } from '@/lib/divine/storage';
 import type {
   DrawnCard,
@@ -68,6 +69,9 @@ const MagicEightBall3D = lazy(() =>
 );
 
 type Stage = 'intro' | 'frame' | 'method' | 'ritual' | 'reveal' | 'result';
+// Temporarily skip the card-unwrapping ritual between choosing a spread and
+// revealing the face-down cards. Keep the implementation below for re-enabling.
+const CARD_UNWRAPPING_ENABLED = false;
 type ShareStatus =
   | 'idle'
   | 'working'
@@ -111,14 +115,10 @@ const readingStages: Stage[] = [
   'reveal',
   'result',
 ];
-const stageLabels: Record<Stage, string> = {
-  intro: 'The threshold',
-  frame: 'Name the question',
-  method: 'Choose the method',
-  ritual: 'Enter the ritual',
-  reveal: 'The reveal',
-  result: 'The reading',
-};
+const visibleReadingStages = (systemKind: SystemDefinition['kind']) =>
+  systemKind === 'cards' && !CARD_UNWRAPPING_ENABLED
+    ? readingStages.filter((stage) => stage !== 'ritual')
+    : readingStages;
 const stageMotion = {
   initial: { opacity: 0, y: 30, scale: 0.992, filter: 'blur(8px)' },
   animate: { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' },
@@ -137,35 +137,6 @@ const cookieCrumbs = [
   { x: 88, y: 48, r: -24 },
   { x: 126, y: -26, r: 18 },
 ];
-
-function StageTransition({
-  stage,
-  systemName,
-}: {
-  stage: Stage;
-  systemName: string;
-}) {
-  const chapter = readingStages.indexOf(stage) + 1;
-
-  return (
-    <motion.div
-      className={`stage-transition stage-transition-${stage}`}
-      aria-hidden="true"
-      initial={{ y: '102%' }}
-      animate={{ y: ['102%', '0%', '0%', '-102%'] }}
-      transition={{
-        duration: 1.16,
-        times: [0, 0.28, 0.58, 1],
-        ease: [0.76, 0, 0.24, 1],
-      }}
-    >
-      <span className="stage-transition-copy">
-        <small>{`${chapter}`.padStart(2, '0')} / 06</small>
-        <strong>{stage === 'intro' ? systemName : stageLabels[stage]}</strong>
-      </span>
-    </motion.div>
-  );
-}
 
 function KineticText({ text }: { text: string }) {
   return (
@@ -424,21 +395,28 @@ async function exportReading(
   return 'downloaded';
 }
 
-function Progress({ stage }: { stage: Stage }) {
-  const current = readingStages.indexOf(stage);
+function Progress({
+  stage,
+  systemKind,
+}: {
+  stage: Stage;
+  systemKind: SystemDefinition['kind'];
+}) {
+  const stages = visibleReadingStages(systemKind);
+  const current = stages.indexOf(stage);
   return (
     <>
       <div className="reading-progress" aria-hidden="true">
-        {readingStages.map((item, index) => (
+        {stages.map((item, index) => (
           <span key={item} className={index <= current ? 'active' : ''} />
         ))}
       </div>
       <progress
         className="sr-only"
         aria-label="Reading progress"
-        max={readingStages.length}
+        max={stages.length}
         value={current + 1}
-        aria-valuetext={`Step ${current + 1} of ${readingStages.length}: ${stage}`}
+        aria-valuetext={`Step ${current + 1} of ${stages.length}: ${stage}`}
       />
     </>
   );
@@ -851,6 +829,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
   const [cardGestureProgress, setCardGestureProgress] = useState(0);
   const [ramlLines, setRamlLines] = useState<number[]>([]);
   const [shareStatus, setShareStatus] = useState<ShareStatus>('idle');
+  const [isSharedView, setIsSharedView] = useState(false);
   const [sessionReady, setSessionReady] = useState(false);
   const [enhancedObjects, setEnhancedObjects] = useState(false);
   const motionHandler = useRef<((event: DeviceMotionEvent) => void) | null>(
@@ -889,7 +868,12 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
   useEffect(() => {
     let cancelled = false;
     let restored: StoredReadingSession | null = null;
+    let sharedReading: ReturnType<typeof decodeReadingShareToken> = null;
     try {
+      const token = new URLSearchParams(window.location.hash.slice(1)).get(
+        'reading',
+      );
+      sharedReading = token ? decodeReadingShareToken(token, system) : null;
       const raw = sessionStorage.getItem(sessionKey);
       restored = raw ? (JSON.parse(raw) as StoredReadingSession) : null;
     } catch {
@@ -897,6 +881,36 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
     }
     queueMicrotask(() => {
       if (cancelled) return;
+      if (sharedReading) {
+        const shared = sharedReading.record;
+        const sharedSpread =
+          system.spreads.find((item) => item.id === shared.spreadId) ??
+          system.spreads[0] ??
+          null;
+        setStage('result');
+        setQuestion(shared.question ?? '');
+        setFocus(shared.focus);
+        setSpread(sharedSpread);
+        setReversals(shared.draws.some((draw) => draw.reversed));
+        setShuffled(true);
+        setDraws(shared.draws);
+        setRevealed(new Set(shared.draws.map((_, index) => index)));
+        setInterpretation(shared.interpretation);
+        setObjectMessage(
+          system.kind === 'cards' ? '' : shared.interpretation.headline,
+        );
+        setLuckyNumbers(sharedReading.luckyNumbers);
+        setNote('');
+        setFavorite(false);
+        setRecordId(shared.id);
+        setCreatedAt(shared.createdAt);
+        setObjectStep(system.kind === 'cards' ? 0 : objectRitualSteps);
+        setIsSharedView(true);
+        ritualLock.current = true;
+        setAnnouncement('A shared reading has opened.');
+        setSessionReady(true);
+        return;
+      }
       if (
         (restored?.version === 1 ||
           restored?.version === 2 ||
@@ -924,15 +938,22 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
         const resolvedObject =
           candidateStage === 'ritual' &&
           system.kind !== 'cards' &&
-          restored.objectStep === objectRitualSteps &&
+          typeof restored.objectStep === 'number' &&
+          restored.objectStep >= objectRitualSteps &&
           restored.interpretation;
         const nextStage = resolvedObject
           ? 'result'
-          : candidateStage === 'result' && !restored.interpretation
-            ? 'frame'
-            : canRestoreStage
-              ? candidateStage
-              : 'method';
+          : !CARD_UNWRAPPING_ENABLED &&
+              candidateStage === 'ritual' &&
+              system.kind === 'cards'
+            ? restoredDraws.length
+              ? 'reveal'
+              : 'method'
+            : candidateStage === 'result' && !restored.interpretation
+              ? 'frame'
+              : canRestoreStage
+                ? candidateStage
+                : 'method';
         setStage(nextStage);
         setQuestion(
           typeof restored.question === 'string' ? restored.question : '',
@@ -991,6 +1012,9 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
                 focuses.some((item) => item.value === restored.focus)
                   ? restored.focus
                   : 'general',
+                typeof restored.createdAt === 'string'
+                  ? restored.createdAt
+                  : '',
               )
             : (restored.interpretation ?? null),
         );
@@ -1103,6 +1127,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
             question: question.trim() || undefined,
             draws,
             interpretation,
+            luckyNumbers: luckyNumbers.length ? luckyNumbers : undefined,
             note,
             favorite,
           }
@@ -1114,6 +1139,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
       focus,
       question,
       draws,
+      luckyNumbers,
       note,
       favorite,
       recordId,
@@ -1148,8 +1174,13 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
   };
 
   const beginRecord = () => {
-    setRecordId(createId());
-    setCreatedAt(new Date().toISOString());
+    const nextRecord = {
+      id: createId(),
+      createdAt: new Date().toISOString(),
+    };
+    setRecordId(nextRecord.id);
+    setCreatedAt(nextRecord.createdAt);
+    return nextRecord;
   };
 
   const clearRevealTimers = () => {
@@ -1243,7 +1274,21 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
       window.scrollTo({ top: 0, behavior: 'auto' });
       deckTimer.current = null;
     };
+    if (delay <= 0) {
+      reveal();
+      return;
+    }
     deckTimer.current = window.setTimeout(reveal, delay);
+  };
+
+  const continueFromMethod = () => {
+    if (CARD_UNWRAPPING_ENABLED) {
+      move('ritual');
+      return;
+    }
+    cue('tick');
+    setShuffled(true);
+    deal(0);
   };
 
   const advanceCardRitual = (gestureValue?: number) => {
@@ -1278,8 +1323,14 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
   const finishCards = () => {
     if (!spread || ritualLock.current) return;
     ritualLock.current = true;
-    beginRecord();
-    const result = interpretReading(system, spread, draws, focus);
+    const nextRecord = beginRecord();
+    const result = interpretReading(
+      system,
+      spread,
+      draws,
+      focus,
+      nextRecord.createdAt,
+    );
     setInterpretation(result);
     cue('resolve');
     move('result');
@@ -1380,11 +1431,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
         ? next === 1
           ? 'The answer is moving. Shake again.'
           : 'The window is clouding. One final shake.'
-        : next === 1
-          ? 'A hairline crack appears. Bend the shell again.'
-          : next === 2
-            ? 'The fracture widens. Pull the cookie apart.'
-            : 'The shell breaks. Draw out the paper.',
+        : 'A hairline crack appears. Break the shell open.',
     );
     objectTimer.current = window.setTimeout(() => {
       setObjectAnimating(false);
@@ -1439,7 +1486,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
     }
   };
 
-  const share = async () => {
+  const shareImage = async () => {
     if (!record || shareStatus === 'working') return;
     setShareStatus('working');
     try {
@@ -1489,6 +1536,14 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
     setObjectAnimating(false);
     setCookieGestureProgress(0);
     setShareStatus('idle');
+    if (isSharedView) {
+      window.history.replaceState(
+        null,
+        '',
+        `${window.location.pathname}${window.location.search}`,
+      );
+      setIsSharedView(false);
+    }
     cue('tick');
   };
 
@@ -1503,7 +1558,6 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
 
   return (
     <main className={`reading-shell stage-${stage}`}>
-      <StageTransition key={stage} stage={stage} systemName={system.name} />
       {stage !== 'ritual' && stage !== 'reveal' && (
         <>
           <header className="reading-titlebar">
@@ -1512,7 +1566,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
             </Link>
             <span>{system.shortName}</span>
           </header>
-          <Progress stage={stage} />
+          <Progress stage={stage} systemKind={system.kind} />
           {stage !== 'intro' && stage !== 'result' && (
             <button type="button" className="stage-back" onClick={goBack}>
               <ChevronLeft /> Back
@@ -1621,7 +1675,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
               )}
               <Button
                 className="primary-action"
-                onClick={() => move('ritual')}
+                onClick={continueFromMethod}
                 aria-label="Continue to the deck"
               >
                 <ArrowRight />
@@ -1739,7 +1793,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
           >
             <>
               <div
-                className={`cookie-object object-step-${objectStep} ${objectStep >= 3 ? 'is-cracking' : ''} ${objectStep >= COOKIE_RITUAL_STEPS ? 'is-drawing' : ''} ${objectAnimating ? 'is-moving' : ''}`}
+                className={`cookie-object object-step-${objectStep} ${objectStep >= COOKIE_RITUAL_STEPS ? 'is-cracking is-unfurling' : ''} ${objectAnimating ? 'is-moving' : ''}`}
                 style={
                   {
                     '--cookie-gesture': cookieGestureProgress,
@@ -1760,11 +1814,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
                       ariaLabel={
                         objectStep === 0
                           ? 'Bend the cookie apart or press to begin cracking it'
-                          : objectStep === 1
-                            ? 'Bend the cookie again to widen the crack'
-                            : objectStep === 2
-                              ? 'Pull the cookie apart to break it open'
-                              : 'Draw the fortune paper to the right'
+                          : 'Break the cookie open and unfurl the fortune'
                       }
                     />
                   </Suspense>
@@ -1778,11 +1828,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
                     ariaLabel={
                       objectStep === 0
                         ? 'Press to begin cracking the cookie'
-                        : objectStep === 1
-                          ? 'Press to widen the crack'
-                          : objectStep === 2
-                            ? 'Press to break the cookie open'
-                            : 'Press to draw the fortune paper'
+                        : 'Press to break the cookie open and unfurl the fortune'
                     }
                   />
                 )}
@@ -1811,20 +1857,18 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
                   {objectStep === 0
                     ? 'Bend'
                     : objectStep === 1
-                      ? 'Widen'
-                      : objectStep === 2
-                        ? 'Break'
-                        : 'Draw'}
+                      ? 'Break'
+                      : 'Unfurling'}
                 </strong>
                 <p>
-                  {objectStep < 2
+                  {objectStep === 0
                     ? 'Move the two sides apart and let the fracture deepen.'
-                    : objectStep === 2
+                    : objectStep === 1
                       ? 'Pull firmly enough for the shell to give way.'
-                      : 'Draw the narrow paper out to the right.'}
+                      : 'The fortune opens itself.'}
                 </p>
                 <div className="system-ritual-progress" aria-hidden="true">
-                  {[0, 1, 2, 3].map((index) => (
+                  {[0, 1].map((index) => (
                     <i
                       key={index}
                       className={
@@ -1887,6 +1931,31 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
             key="result"
             {...stageMotion}
           >
+            {isSharedView && (
+              <motion.aside
+                className="shared-reading-arrival"
+                initial={{ opacity: 0, y: -16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.65, duration: 0.6 }}
+              >
+                <div>
+                  <span>Shared with you</span>
+                  <time dateTime={record.createdAt}>
+                    {new Date(record.createdAt).toLocaleDateString(undefined, {
+                      month: 'long',
+                      day: 'numeric',
+                      year: 'numeric',
+                    })}
+                  </time>
+                </div>
+                <p>
+                  {record.systemName} · {record.spreadName}
+                </p>
+                {record.question && (
+                  <blockquote>“{record.question}”</blockquote>
+                )}
+              </motion.aside>
+            )}
             <header
               className={`result-hero ${openingDraw ? 'has-opening-card' : 'object-only'}`}
             >
@@ -1896,9 +1965,9 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
                 </h1>
                 {openingDraw ? (
                   <motion.a
-                    href="#result-cards"
+                    href="#full-reading"
                     className="result-scroll-cue"
-                    aria-label="Read every card"
+                    aria-label="Go to the full reading"
                     initial={{ opacity: 0, y: -12 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.9 }}
@@ -1946,101 +2015,6 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
                 <small>Lucky numbers · {luckyNumbers.join(' · ')}</small>
               </div>
             )}
-            {draws.length > 0 && (
-              <section
-                id="result-cards"
-                className="result-reading"
-                aria-label="Cards in this reading"
-              >
-                <header className="result-reading-intro">
-                  <p className="eyebrow">The reading in full</p>
-                  <p>{resultOverview}</p>
-                </header>
-                <div className="result-card-list">
-                  {draws.map((draw, index) => {
-                    const position = interpretation.positions[index];
-                    const orientationMeaning =
-                      draw.reversed && draw.card.reversedMeaning
-                        ? draw.card.reversedMeaning
-                        : draw.card.meaning;
-                    const focusMeaning = draw.card.focusModifiers?.[focus];
-                    const facts = cardFacts(draw.card);
-
-                    return (
-                      <motion.article
-                        className="result-card-detail"
-                        key={`${draw.card.id}-${index}`}
-                        initial={{ opacity: 0, y: 72 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, amount: 0.18 }}
-                        transition={{
-                          duration: 0.68,
-                          ease: [0.22, 1, 0.36, 1],
-                        }}
-                      >
-                        <InteractiveResultCard
-                          draw={draw}
-                          systemSlug={visualSystemFor(draw)}
-                          finish={finishFor(draw)}
-                          onTurn={() => cue('turn')}
-                        />
-                        <div className="result-card-copy">
-                          <p className="eyebrow">
-                            {`${index + 1}`.padStart(2, '0')} /{' '}
-                            {draw.card.sourceSystemName
-                              ? `${draw.card.sourceSystemName} · ${draw.position}`
-                              : draw.position}
-                          </p>
-                          <h2>
-                            <KineticText text={draw.card.name} />
-                          </h2>
-                          <p className="result-position-meaning">
-                            {position?.text ?? orientationMeaning}
-                          </p>
-                          <div className="result-meaning-grid">
-                            <div>
-                              <small>
-                                {draw.reversed ? 'Reversed' : 'Upright'}
-                              </small>
-                              <p>{orientationMeaning}</p>
-                            </div>
-                            {focusMeaning && (
-                              <div>
-                                <small>{focus}</small>
-                                <p>{focusMeaning}</p>
-                              </div>
-                            )}
-                          </div>
-                          <div
-                            className="result-keywords"
-                            aria-label="Keywords"
-                          >
-                            {draw.card.keywords.map((keyword) => (
-                              <span key={keyword}>{keyword}</span>
-                            ))}
-                          </div>
-                          {facts.length > 0 && (
-                            <dl className="result-card-facts">
-                              {facts.map(([label, value]) => (
-                                <div key={label}>
-                                  <dt>{label}</dt>
-                                  <dd>{value}</dd>
-                                </div>
-                              ))}
-                            </dl>
-                          )}
-                          {draw.card.provenance && (
-                            <p className="result-card-provenance">
-                              {draw.card.provenance}
-                            </p>
-                          )}
-                        </div>
-                      </motion.article>
-                    );
-                  })}
-                </div>
-              </section>
-            )}
             {interpretation.connections &&
               interpretation.connections.length > 0 && (
                 <section
@@ -2070,24 +2044,131 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
                   </ol>
                 </section>
               )}
-            <section
-              className="result-synthesis"
-              aria-labelledby="synthesis-title"
-            >
-              <p className="eyebrow">
-                {draws.length > 1
-                  ? 'How the cards connect'
-                  : draws.length === 1
-                    ? 'The message in full'
-                    : 'What follows'}
-              </p>
-              <h2 id="synthesis-title">The pattern</h2>
-              <p>{interpretation.synthesis}</p>
-              <p className="result-closing">{interpretation.closing}</p>
-            </section>
+            {draws.length > 0 && (
+              <details id="full-reading" className="result-reading">
+                <summary className="result-reading-summary">
+                  <span>The reading in full</span>
+                  <span>
+                    Read every card
+                    <ChevronDown aria-hidden="true" />
+                  </span>
+                </summary>
+                <div className="result-reading-content">
+                  <header className="result-reading-intro">
+                    <p>{resultOverview}</p>
+                  </header>
+                  <div
+                    id="result-cards"
+                    className="result-card-list"
+                    aria-label="Cards in this reading"
+                  >
+                    {draws.map((draw, index) => {
+                      const position = interpretation.positions[index];
+                      const orientationMeaning =
+                        draw.reversed && draw.card.reversedMeaning
+                          ? draw.card.reversedMeaning
+                          : draw.card.meaning;
+                      const focusMeaning = draw.card.focusModifiers?.[focus];
+                      const facts = cardFacts(draw.card);
+
+                      return (
+                        <motion.article
+                          className="result-card-detail"
+                          key={`${draw.card.id}-${index}`}
+                          initial={{ opacity: 0, y: 72 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          viewport={{ once: true, amount: 0.18 }}
+                          transition={{
+                            duration: 0.68,
+                            ease: [0.22, 1, 0.36, 1],
+                          }}
+                        >
+                          <InteractiveResultCard
+                            draw={draw}
+                            systemSlug={visualSystemFor(draw)}
+                            finish={finishFor(draw)}
+                            onTurn={() => cue('turn')}
+                          />
+                          <div className="result-card-copy">
+                            <p className="eyebrow">
+                              {`${index + 1}`.padStart(2, '0')} /{' '}
+                              {draw.card.sourceSystemName
+                                ? `${draw.card.sourceSystemName} · ${draw.position}`
+                                : draw.position}
+                            </p>
+                            <h2>
+                              <KineticText text={draw.card.name} />
+                            </h2>
+                            <p className="result-position-meaning">
+                              {position?.text ?? orientationMeaning}
+                            </p>
+                            <div className="result-meaning-grid">
+                              <div>
+                                <small>
+                                  {draw.reversed ? 'Reversed' : 'Upright'}
+                                </small>
+                                <p>{orientationMeaning}</p>
+                              </div>
+                              {focusMeaning && (
+                                <div>
+                                  <small>{focus}</small>
+                                  <p>{focusMeaning}</p>
+                                </div>
+                              )}
+                            </div>
+                            <div
+                              className="result-keywords"
+                              aria-label="Keywords"
+                            >
+                              {draw.card.keywords.map((keyword) => (
+                                <span key={keyword}>{keyword}</span>
+                              ))}
+                            </div>
+                            {facts.length > 0 && (
+                              <dl className="result-card-facts">
+                                {facts.map(([label, value]) => (
+                                  <div key={label}>
+                                    <dt>{label}</dt>
+                                    <dd>{value}</dd>
+                                  </div>
+                                ))}
+                              </dl>
+                            )}
+                            {draw.card.provenance && (
+                              <p className="result-card-provenance">
+                                {draw.card.provenance}
+                              </p>
+                            )}
+                          </div>
+                        </motion.article>
+                      );
+                    })}
+                  </div>
+                </div>
+              </details>
+            )}
+            {draws.length > 1 && (
+              <section
+                className="result-synthesis"
+                aria-labelledby="synthesis-title"
+              >
+                <p className="eyebrow">How the cards connect</p>
+                <h2 id="synthesis-title">The pattern</h2>
+                <p>{interpretation.synthesis}</p>
+                <p className="result-closing">{interpretation.closing}</p>
+              </section>
+            )}
             {interpretation.reflectionPrompt && (
               <p className="result-prompt">{interpretation.reflectionPrompt}</p>
             )}
+            <ReadingShare
+              record={{ ...record, note, favorite }}
+              includeQuestion={includeQuestion}
+              onIncludeQuestionChange={setIncludeQuestion}
+              onImageExport={() => void shareImage()}
+              imageStatus={shareStatus}
+              onAnnounce={setAnnouncement}
+            />
             <details className="reflection-drawer">
               <summary>
                 Keep this reading <ArrowRight />
@@ -2103,26 +2184,10 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
                   }}
                   placeholder="What stayed with you?"
                 />
-                <label className="privacy-check">
-                  <input
-                    type="checkbox"
-                    checked={includeQuestion}
-                    onChange={(event) =>
-                      setIncludeQuestion(event.target.checked)
-                    }
-                  />
-                  <span>Include my question in shared images</span>
-                </label>
                 {storageError && (
                   <output className="error-note">
                     The private journal is unavailable. You can still download
                     this reading.
-                  </output>
-                )}
-                {shareStatus === 'error' && (
-                  <output className="error-note">
-                    The share image could not be created. Your reading is
-                    unchanged.
                   </output>
                 )}
                 <div className="result-actions">
@@ -2134,20 +2199,6 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
                     }}
                   >
                     <Heart fill={favorite ? 'currentColor' : 'none'} /> Favorite
-                  </Button>
-                  <Button
-                    className="quiet-action"
-                    onClick={() => void share()}
-                    disabled={shareStatus === 'working'}
-                  >
-                    <Share2 />{' '}
-                    {shareStatus === 'working'
-                      ? 'Preparing image…'
-                      : shareStatus === 'downloaded'
-                        ? 'Image downloaded'
-                        : shareStatus === 'shared'
-                          ? 'Shared'
-                          : 'Share / download'}
                   </Button>
                   <Button
                     className="primary-action"

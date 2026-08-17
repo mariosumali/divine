@@ -5,6 +5,7 @@ import { motion } from 'motion/react';
 import { BookOpen, Heart, Search, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { CopyReadingLinkButton } from '@/components/divine/reading-share';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import {
@@ -214,15 +215,13 @@ export function JournalClient() {
                       ))}
                     </div>
                   )}
-                  <div className="journal-synthesis">
-                    <span>
-                      {record.draws.length > 1
-                        ? 'How the cards connect'
-                        : 'The pattern'}
-                    </span>
-                    <p>{record.interpretation.synthesis}</p>
-                    <p>{record.interpretation.closing}</p>
-                  </div>
+                  {record.draws.length > 1 && (
+                    <div className="journal-synthesis">
+                      <span>How the cards connect</span>
+                      <p>{record.interpretation.synthesis}</p>
+                      <p>{record.interpretation.closing}</p>
+                    </div>
+                  )}
                   <label htmlFor={`note-${record.id}`}>
                     Reflection
                     <Textarea
@@ -249,6 +248,7 @@ export function JournalClient() {
                       <Heart fill={record.favorite ? 'currentColor' : 'none'} />{' '}
                       {record.favorite ? 'Favorited' : 'Favorite'}
                     </Button>
+                    <CopyReadingLinkButton record={record} />
                     <AlertDialog>
                       <AlertDialogTrigger
                         render={<Button className="quiet-action" />}

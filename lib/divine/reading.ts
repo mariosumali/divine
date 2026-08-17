@@ -1,4 +1,5 @@
 import { BALL_ANSWERS, FORTUNES, FORTUNE_PROMPTS } from './objects';
+import { openingHeroHeadline } from './headlines';
 import type {
   CardDefinition,
   DrawnCard,
@@ -10,7 +11,7 @@ import type {
 } from './types';
 
 export const OBJECT_RITUAL_STEPS = 3;
-export const COOKIE_RITUAL_STEPS = 4;
+export const COOKIE_RITUAL_STEPS = 2;
 
 export function nextObjectRitualStep(
   current: number,
@@ -137,7 +138,6 @@ type CardReadingSlug = Exclude<
 >;
 
 interface MethodVoice {
-  headline: string;
   overview: string;
   sequence: string;
   single: string;
@@ -146,7 +146,6 @@ interface MethodVoice {
 
 const METHOD_VOICES: Record<CardReadingSlug, MethodVoice> = {
   tarot: {
-    headline: 'turns the arc',
     overview:
       'Tarot reads the meeting of archetype, suit, number, element, and orientation.',
     sequence:
@@ -157,7 +156,6 @@ const METHOD_VOICES: Record<CardReadingSlug, MethodVoice> = {
       'Turn the final archetype into an embodied choice rather than a fixed prediction.',
   },
   oracle: {
-    headline: 'leaves the first image',
     overview:
       'Oracle begins with recognition: image and association carry more weight than a fixed inherited doctrine.',
     sequence:
@@ -168,7 +166,6 @@ const METHOD_VOICES: Record<CardReadingSlug, MethodVoice> = {
       'Keep the image that remains vivid; it is the part of the reading still working.',
   },
   lenormand: {
-    headline: 'begins the sentence',
     overview:
       'Lenormand is read as concrete syntax: subject, modifier, proximity, house, and timing make the message.',
     sequence:
@@ -178,7 +175,6 @@ const METHOD_VOICES: Record<CardReadingSlug, MethodVoice> = {
       'Carry the clearest concrete event or action forward; Lenormand favors the observable.',
   },
   spellcraft: {
-    headline: 'names the working',
     overview:
       'Ritual reads every symbol as material instruction: intention must meet an object, boundary, gesture, or repeated act.',
     sequence:
@@ -188,7 +184,6 @@ const METHOD_VOICES: Record<CardReadingSlug, MethodVoice> = {
       'Complete the smallest honest action, then let the ritual end cleanly.',
   },
   'ancient-egypt': {
-    headline: 'opens the threshold',
     overview:
       'Temple reads image, passage, balance, continuity, and renewal while keeping the modern oracle distinct from ancient practice.',
     sequence:
@@ -199,7 +194,6 @@ const METHOD_VOICES: Record<CardReadingSlug, MethodVoice> = {
       'Preserve what restores balance and leave the threshold without claiming certainty from history.',
   },
   zodiac: {
-    headline: 'sets the celestial tone',
     overview:
       'Zodiac uses a three-part grammar: signs describe quality, planets supply impulse, and houses locate the arena of life.',
     sequence:
@@ -210,7 +204,6 @@ const METHOD_VOICES: Record<CardReadingSlug, MethodVoice> = {
       'Work with the timing and pressure that are present while keeping choice in your hands.',
   },
   kipper: {
-    headline: 'places the central scene',
     overview:
       'Kipper reads people, institutions, rooms, journeys, work, and resources as a social field shaped by proximity.',
     sequence:
@@ -221,7 +214,6 @@ const METHOD_VOICES: Record<CardReadingSlug, MethodVoice> = {
       'Respond to the concrete social condition, especially where responsibility and influence are visible.',
   },
   belline: {
-    headline: 'brings its planet forward',
     overview:
       'Belline combines named events with seven classical planetary families, so subject and planetary tone must be read together.',
     sequence:
@@ -232,7 +224,6 @@ const METHOD_VOICES: Record<CardReadingSlug, MethodVoice> = {
       'Act where the final planet concentrates its influence, without mistaking influence for inevitability.',
   },
   'playing-card-cartomancy': {
-    headline: 'deals the practical signal',
     overview:
       'Playing-card cartomancy combines suit, rank, color, court, and sequence into a compact practical language.',
     sequence:
@@ -243,7 +234,6 @@ const METHOD_VOICES: Record<CardReadingSlug, MethodVoice> = {
       'Make the next move proportionate to the rank and grounded in the suit’s real-world domain.',
   },
   sibilla: {
-    headline: 'opens the conversation',
     overview:
       'Sibilla reads named scenes as direct social conversation, with orientation changing how each scene speaks.',
     sequence:
@@ -253,7 +243,6 @@ const METHOD_VOICES: Record<CardReadingSlug, MethodVoice> = {
       'Answer the final scene as though it were the last clear line in a conversation.',
   },
   'runic-cards': {
-    headline: 'raises the rune',
     overview:
       'Runic Cards begin with the Elder Futhark character, its reconstructed name, and literal image before moving into contemporary reflection.',
     sequence:
@@ -264,7 +253,6 @@ const METHOD_VOICES: Record<CardReadingSlug, MethodVoice> = {
       'Practice the rune’s lesson as a contemporary reflection, not recovered doctrine.',
   },
   'i-ching-cards': {
-    headline: 'shows the shape of change',
     overview:
       'I Ching Cards present stable King Wen hexagrams as situations in motion; they do not simulate changing-line casting.',
     sequence:
@@ -275,7 +263,6 @@ const METHOD_VOICES: Record<CardReadingSlug, MethodVoice> = {
       'Meet change with the conduct the final figure asks for, while remembering that no changing lines were cast.',
   },
   'fal-e-hafez': {
-    headline: 'offers the omen',
     overview:
       'Fal-e Hafez Cards use original motif cards as a transparent contemporary echo of bibliomancy, never as invented quotation.',
     sequence:
@@ -286,7 +273,6 @@ const METHOD_VOICES: Record<CardReadingSlug, MethodVoice> = {
       'Keep the image that enlarges the question and release any claim that the card speaks for the poet.',
   },
   hanafuda: {
-    headline: 'opens the season',
     overview:
       'Hanafuda reads month, flower, motif, and card class as a contemporary seasonal reflection, distinct from the pack’s game traditions.',
     sequence:
@@ -296,7 +282,6 @@ const METHOD_VOICES: Record<CardReadingSlug, MethodVoice> = {
       'Move with the final season’s pace rather than demanding growth outside its proper time.',
   },
   zigeunerkarten: {
-    headline: 'sets the event in motion',
     overview:
       'Zigeunerkarten read concrete people, events, resources, hopes, and setbacks as adjoining parts of one practical sentence.',
     sequence:
@@ -306,7 +291,6 @@ const METHOD_VOICES: Record<CardReadingSlug, MethodVoice> = {
       'Follow the practical development indicated by the final subject, not the romance of prediction.',
   },
   'ilm-al-raml': {
-    headline: 'inscribes the active figure',
     overview:
       'ʿIlm al-Raml Cards study the sixteen canonical figures through their line pattern, movement, and quality without claiming to calculate a full shield chart.',
     sequence:
@@ -565,6 +549,7 @@ export function interpretReading(
   spread: SpreadDefinition,
   draws: DrawnCard[],
   focus: Focus,
+  headlineVariant = '',
 ): InterpretationBlock {
   const first = draws[0];
   const last = draws[draws.length - 1];
@@ -719,10 +704,13 @@ export function interpretReading(
   }
 
   return {
-    headline:
-      system.slug === 'divine'
-        ? 'Sixteen voices become one pattern.'
-        : `${first.card.name} ${voice?.headline ?? 'opens the way'}.`,
+    headline: openingHeroHeadline(
+      system,
+      spread,
+      draws,
+      focus,
+      headlineVariant,
+    ),
     overview:
       system.slug === 'divine'
         ? `One card from every deck has entered the field around ${keywords.join(', ')}. The Whole Constellation moves from ${cardReference(first)} to ${cardReference(last)}, with each tradition translating what the previous one began. Read the individual voices, then follow the cross-deck thread that holds them together.`
