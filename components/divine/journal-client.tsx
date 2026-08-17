@@ -91,12 +91,7 @@ export function JournalClient() {
   return (
     <main className="journal-page">
       <header className="page-hero">
-        <p className="eyebrow">Private / On this device</p>
         <h1>The Journal</h1>
-        <p>
-          What you kept from the unknown. Notes and readings live only in this
-          browser.
-        </p>
       </header>
 
       {error && (

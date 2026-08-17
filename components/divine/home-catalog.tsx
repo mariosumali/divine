@@ -246,16 +246,6 @@ export function HomeCatalog() {
           ))}
         </div>
 
-        <motion.div
-          className="hero-meta"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.9, duration: 0.7 }}
-        >
-          <span>Private divination</span>
-          <span>Read the unknown</span>
-        </motion.div>
-
         <div className="hero-orbits" aria-hidden="true">
           <span className="hero-orbit hero-orbit-wide">
             <i />

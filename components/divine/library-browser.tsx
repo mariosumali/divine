@@ -98,7 +98,6 @@ export function LibraryBrowser() {
       <header className="library-masthead">
         <p className="eyebrow">Reference</p>
         <h1>Library</h1>
-        <p>History above. Meaning below.</p>
       </header>
 
       <nav className="library-system-nav" aria-label="Reading methods">
