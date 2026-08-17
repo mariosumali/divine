@@ -6329,46 +6329,6 @@ button {
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-  .hero-shutters {
-    display: none;
-  }
-  .stage-transition,
-  .reading-route-transition {
-    display: none;
-  }
-  .hero-meta,
-  .hero-sigil,
-  .hero-letter-mask > span,
-  .hero-crystal,
-  .hero-crystal-entry,
-  .reading-index-art {
-    opacity: 1 !important;
-    filter: none !important;
-    transform: none !important;
-  }
-  .hero-sigil > span {
-    animation: none !important;
-  }
-  .reading-index-art-float {
-    animation: none !important;
-  }
-  .hero-enter {
-    opacity: 1 !important;
-    transform: translateX(-50%) !important;
-  }
-}
-
 /* Astrology studio */
 .astrology-home-entry {
   min-height: min(720px, 78svh);

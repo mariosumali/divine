@@ -102,13 +102,11 @@ function makeAnswerTexture(answer: string) {
 
 function BallModel({
   answer,
-  reducedMotion,
   rotation,
   shaking,
   step,
 }: {
   answer: string;
-  reducedMotion: boolean;
   rotation: [number, number];
   shaking: boolean;
   step: number;
@@ -124,9 +122,9 @@ function BallModel({
     if (!root.current) return;
     const time = state.clock.elapsedTime;
     const revealTurn = step === 0 ? 0 : step === 1 ? 1.28 : Math.PI;
-    const shakeX = shaking && !reducedMotion ? Math.sin(time * 54) * 0.12 : 0;
-    const shakeY = shaking && !reducedMotion ? Math.sin(time * 69) * 0.16 : 0;
-    const float = reducedMotion ? 0 : Math.sin(time * 0.72) * 0.035;
+    const shakeX = shaking ? Math.sin(time * 54) * 0.12 : 0;
+    const shakeY = shaking ? Math.sin(time * 69) * 0.16 : 0;
+    const float = Math.sin(time * 0.72) * 0.035;
 
     root.current.rotation.x = THREE.MathUtils.damp(
       root.current.rotation.x,
@@ -142,7 +140,7 @@ function BallModel({
     );
     root.current.rotation.z = THREE.MathUtils.damp(
       root.current.rotation.z,
-      shaking && !reducedMotion ? Math.sin(time * 61) * 0.08 : 0.035,
+      shaking ? Math.sin(time * 61) * 0.08 : 0.035,
       shaking ? 20 : 7,
       delta,
     );
@@ -215,7 +213,6 @@ export function MagicEightBall3D({
   step,
 }: MagicEightBall3DProps) {
   const [rotation, setRotation] = useState<[number, number]>([-0.08, 0]);
-  const [reducedMotion, setReducedMotion] = useState(false);
   const gesture = useRef<{
     pointerId: number;
     startX: number;
@@ -225,14 +222,6 @@ export function MagicEightBall3D({
     moved: boolean;
   } | null>(null);
   const suppressClick = useRef(false);
-
-  useEffect(() => {
-    const query = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const sync = () => setReducedMotion(query.matches);
-    sync();
-    query.addEventListener('change', sync);
-    return () => query.removeEventListener('change', sync);
-  }, []);
 
   return (
     <div className={`magic-eight-ball-3d object-step-${step}`}>
@@ -261,7 +250,6 @@ export function MagicEightBall3D({
         <pointLight position={[-3, -2, 2]} color="#d7a66c" intensity={7} />
         <BallModel
           answer={step >= 3 ? answer : ''}
-          reducedMotion={reducedMotion}
           rotation={rotation}
           shaking={disabled}
           step={step}

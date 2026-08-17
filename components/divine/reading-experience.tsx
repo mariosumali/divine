@@ -196,8 +196,6 @@ type PerformanceNavigator = Navigator & {
 
 function supportsEnhancedObjects() {
   const performanceNavigator = navigator as PerformanceNavigator;
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches)
-    return false;
   if (performanceNavigator.connection?.saveData) return false;
   if (
     performanceNavigator.deviceMemory !== undefined &&
@@ -506,10 +504,6 @@ function CardFace({
     : undefined;
 
   useEffect(() => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      peel.set(revealed ? 1 : 0);
-      return;
-    }
     motionAnimate(peel, revealed ? 1 : 0, {
       duration: revealed ? 0.48 : 0.3,
       ease: [0.22, 1, 0.36, 1],
@@ -518,9 +512,7 @@ function CardFace({
 
   const completePeel = () => {
     if (revealed || disabled) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches)
-      peel.set(1);
-    else motionAnimate(peel, 1, { duration: 0.52, ease: [0.22, 1, 0.36, 1] });
+    motionAnimate(peel, 1, { duration: 0.52, ease: [0.22, 1, 0.36, 1] });
     onReveal();
   };
   const peelProgress = (x: number, y: number) =>
@@ -1179,10 +1171,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
   const move = (next: Stage) => {
     cue('tick');
     setStage(next);
-    const reduced = window.matchMedia(
-      '(prefers-reduced-motion: reduce)',
-    ).matches;
-    window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   const continueFromFrame = () =>
     move(system.kind === 'cards' ? 'method' : 'ritual');
@@ -1254,8 +1243,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
       window.scrollTo({ top: 0, behavior: 'auto' });
       deckTimer.current = null;
     };
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) reveal();
-    else deckTimer.current = window.setTimeout(reveal, delay);
+    deckTimer.current = window.setTimeout(reveal, delay);
   };
 
   const advanceCardRitual = (gestureValue?: number) => {
@@ -1281,10 +1269,6 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
     }
     setCardRitualAnimating(true);
     setCardRitualStep(next);
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      setCardRitualAnimating(false);
-      return;
-    }
     deckTimer.current = window.setTimeout(() => {
       setCardRitualAnimating(false);
       deckTimer.current = null;
@@ -1327,12 +1311,6 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
   const revealAll = () => {
     if (isRevealingAll) return;
     cue('reveal');
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      setRevealed(new Set(draws.map((_, index) => index)));
-      setAnnouncement(`All ${draws.length} cards revealed.`);
-      queueCardFinish(80);
-      return;
-    }
     setIsRevealingAll(true);
     const interval = draws.length > 16 ? 56 : draws.length > 6 ? 125 : 235;
     draws.forEach((draw, index) => {

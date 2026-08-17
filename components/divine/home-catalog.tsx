@@ -714,8 +714,7 @@ export function HomeCatalog() {
       event.metaKey ||
       event.ctrlKey ||
       event.shiftKey ||
-      event.altKey ||
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      event.altKey
     ) {
       return;
     }

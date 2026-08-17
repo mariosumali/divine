@@ -75,12 +75,10 @@ function cloneWorldGeometry(mesh: THREE.Mesh) {
 function CookieModel({
   step,
   rotation,
-  reducedMotion,
   gestureProgress,
 }: {
   step: number;
   rotation: [number, number];
-  reducedMotion: boolean;
   gestureProgress: number;
 }) {
   const gltf = useLoader(GLTFLoader, '/models/fortune-cookie.glb');
@@ -164,19 +162,17 @@ function CookieModel({
     if (root.current) {
       root.current.rotation.x = THREE.MathUtils.damp(
         root.current.rotation.x,
-        rotation[0] + (reducedMotion ? 0 : Math.sin(time * 0.68) * 0.018),
-        reducedMotion ? 18 : 8,
+        rotation[0] + Math.sin(time * 0.68) * 0.018,
+        8,
         delta,
       );
       root.current.rotation.y = THREE.MathUtils.damp(
         root.current.rotation.y,
-        rotation[1] + (reducedMotion ? 0 : Math.sin(time * 0.46) * 0.035),
-        reducedMotion ? 18 : 8,
+        rotation[1] + Math.sin(time * 0.46) * 0.035,
+        8,
         delta,
       );
-      root.current.position.y = reducedMotion
-        ? 0
-        : Math.sin(time * 0.7) * 0.035;
+      root.current.position.y = Math.sin(time * 0.7) * 0.035;
     }
     if (left.current) {
       left.current.position.x = THREE.MathUtils.damp(
@@ -289,7 +285,6 @@ export function FortuneCookie3D({
   gestureProgress,
 }: FortuneCookie3DProps) {
   const [rotation, setRotation] = useState<[number, number]>([0.24, -0.58]);
-  const [reducedMotion, setReducedMotion] = useState(false);
   const gesture = useRef<{
     pointerId: number;
     x: number;
@@ -303,14 +298,6 @@ export function FortuneCookie3D({
   const updateGestureProgress = (progress: number) => {
     onGestureProgress(progress);
   };
-
-  useEffect(() => {
-    const query = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const sync = () => setReducedMotion(query.matches);
-    sync();
-    query.addEventListener('change', sync);
-    return () => query.removeEventListener('change', sync);
-  }, []);
 
   return (
     <div className="fortune-cookie-3d">
@@ -341,7 +328,6 @@ export function FortuneCookie3D({
           <CookieModel
             step={step}
             rotation={rotation}
-            reducedMotion={reducedMotion}
             gestureProgress={gestureProgress}
           />
         </Suspense>
