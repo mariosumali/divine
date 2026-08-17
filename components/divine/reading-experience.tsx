@@ -9,12 +9,12 @@ import {
   useTransform,
 } from 'motion/react';
 import {
+  ArrowDown,
   ArrowLeft,
   ArrowRight,
   BookMarked,
   Check,
   ChevronLeft,
-  ChevronRight,
   Heart,
   RotateCcw,
   Share2,
@@ -112,14 +112,6 @@ const cookieCrumbs = [
   { x: 88, y: 48, r: -24 },
   { x: 126, y: -26, r: 18 },
 ];
-
-function sentenceExcerpt(text: string, limit: number) {
-  return text
-    .split(/(?<=[.!?])\s+/)
-    .filter(Boolean)
-    .slice(0, limit)
-    .join(' ');
-}
 
 function KineticText({ text }: { text: string }) {
   return (
@@ -521,11 +513,7 @@ function CardFace({
           }}
           aria-hidden="true"
         >
-          <span className="card-back">
-            <i />
-            <b>DIVINE</b>
-            <i />
-          </span>
+          <span className="card-back" data-system={systemSlug} />
         </motion.span>
         <motion.span
           className="peel-fold"
@@ -575,6 +563,139 @@ function CardFace({
   );
 }
 
+function cardFacts(card: DrawnCard['card']) {
+  return [
+    ['Domain', card.domain],
+    ['Element', card.element],
+    [
+      'Number',
+      card.numerology === undefined ? undefined : `${card.numerology}`,
+    ],
+    ['Subject', card.subject],
+    ['Modifier', card.modifier],
+    ['Polarity', card.polarity],
+    ['Timing', card.timing],
+  ].filter((fact): fact is [string, string] => Boolean(fact[1]));
+}
+
+function InteractiveResultCard({
+  draw,
+  systemSlug,
+  finish,
+  opening = false,
+  onTurn,
+}: {
+  draw: DrawnCard;
+  systemSlug: SystemDefinition['slug'];
+  finish: DeckFinish;
+  opening?: boolean;
+  onTurn: () => void;
+}) {
+  const [faceUp, setFaceUp] = useState(true);
+  const tiltX = useMotionValue(opening ? -2 : 0);
+  const tiltY = useMotionValue(opening ? 5 : 0);
+  const suppressFlip = useRef(false);
+  const image = imageForFinish(draw.card, finish);
+  const colors = isCardSystemSlug(systemSlug)
+    ? deckColors(systemSlug, draw.card.id, finish)
+    : undefined;
+
+  const settle = () => {
+    motionAnimate(tiltX, opening ? -2 : 0, {
+      type: 'spring',
+      stiffness: 180,
+      damping: 20,
+    });
+    motionAnimate(tiltY, opening ? 5 : 0, {
+      type: 'spring',
+      stiffness: 180,
+      damping: 20,
+    });
+  };
+
+  const turn = () => {
+    if (suppressFlip.current) return;
+    setFaceUp((current) => !current);
+    onTurn();
+  };
+
+  return (
+    <motion.button
+      type="button"
+      className={`result-card-object ${opening ? 'is-opening' : ''}`}
+      data-system={systemSlug}
+      style={{
+        aspectRatio: draw.card.aspectRatio,
+        rotateX: tiltX,
+        rotateY: tiltY,
+      }}
+      aria-label={`${faceUp ? 'View the back of' : 'Return to'} ${draw.card.name}`}
+      aria-pressed={!faceUp}
+      onClick={turn}
+      onPointerMove={(event) => {
+        if (event.pointerType === 'touch') return;
+        const bounds = event.currentTarget.getBoundingClientRect();
+        tiltY.set(((event.clientX - bounds.left) / bounds.width - 0.5) * 16);
+        tiltX.set(-((event.clientY - bounds.top) / bounds.height - 0.5) * 12);
+      }}
+      onPointerLeave={settle}
+      drag
+      dragConstraints={{ left: -22, right: 22, top: -18, bottom: 18 }}
+      dragElastic={0.12}
+      dragMomentum={false}
+      onDragStart={() => {
+        suppressFlip.current = true;
+      }}
+      onDrag={(_, info) => {
+        tiltY.set(Math.max(-16, Math.min(16, info.offset.x * 0.2)));
+        tiltX.set(Math.max(-12, Math.min(12, -info.offset.y * 0.16)));
+      }}
+      onDragEnd={() => {
+        settle();
+        window.setTimeout(() => {
+          suppressFlip.current = false;
+        }, 100);
+      }}
+      whileHover={{ y: -10, scale: 1.018 }}
+      whileTap={{ scale: 0.985 }}
+    >
+      <motion.span
+        className="result-card-turn"
+        animate={{ rotateY: faceUp ? 0 : 180 }}
+        transition={{ type: 'spring', stiffness: 170, damping: 21 }}
+      >
+        <span
+          className={`result-card-sticker deck-${finish} ${draw.reversed ? 'is-reversed' : ''}`}
+          style={colors}
+        >
+          {image ? (
+            <span className="result-card-art">
+              <Image
+                src={image}
+                alt={`${draw.card.name} card artwork`}
+                width={640}
+                height={960}
+                sizes={
+                  opening
+                    ? '(max-width: 720px) 64vw, 34vw'
+                    : '(max-width: 720px) 74vw, 34vw'
+                }
+              />
+            </span>
+          ) : (
+            <strong aria-hidden="true">{draw.card.glyph}</strong>
+          )}
+        </span>
+        <span
+          className="result-card-back card-back"
+          data-system={systemSlug}
+          aria-hidden="true"
+        />
+      </motion.span>
+    </motion.button>
+  );
+}
+
 export function ReadingExperience({ system }: { system: SystemDefinition }) {
   const { cue, deckFinishes } = useExperience();
   const [stage, setStage] = useState<Stage>('intro');
@@ -610,7 +731,6 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
   const [deckPhase, setDeckPhase] = useState<DeckPhase>('stacked');
   const [hoveredFanCard, setHoveredFanCard] = useState<number | null>(null);
   const [shareStatus, setShareStatus] = useState<ShareStatus>('idle');
-  const [resultCardIndex, setResultCardIndex] = useState(0);
   const [sessionReady, setSessionReady] = useState(false);
   const motionHandler = useRef<((event: DeviceMotionEvent) => void) | null>(
     null,
@@ -839,29 +959,13 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
   );
 
   const resultOverview = useMemo(
-    () =>
-      interpretation
-        ? `${sentenceExcerpt(interpretation.overview, 2)} ${sentenceExcerpt(interpretation.synthesis, 1)}`.trim()
-        : '',
+    () => (interpretation ? interpretation.overview : ''),
     [interpretation],
   );
-  const safeResultCardIndex = Math.min(
-    resultCardIndex,
-    Math.max(0, draws.length - 1),
-  );
-  const selectedResultDraw = draws[safeResultCardIndex] ?? null;
-  const selectedResultPosition =
-    interpretation?.positions[safeResultCardIndex] ?? null;
   const deckFinish = isCardSystemSlug(system.slug)
     ? deckFinishes[system.slug]
     : 'ink';
-  const selectedResultImage = selectedResultDraw
-    ? imageForFinish(selectedResultDraw.card, deckFinish)
-    : undefined;
-  const selectedResultColors =
-    selectedResultDraw && isCardSystemSlug(system.slug)
-      ? deckColors(system.slug, selectedResultDraw.card.id, deckFinish)
-      : undefined;
+  const openingDraw = draws[0] ?? null;
 
   const beginRecord = () => {
     setRecordId(createId());
@@ -992,7 +1096,6 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
     ritualLock.current = false;
     setDraws(next);
     setRevealed(new Set());
-    setResultCardIndex(0);
     cue('deal');
     setDeckPhase('dealing');
     setAnnouncement(
@@ -1222,7 +1325,6 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
     setObjectStep(0);
     setObjectAnimating(false);
     setShareStatus('idle');
-    setResultCardIndex(0);
     cue('tick');
   };
 
@@ -1382,6 +1484,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
                 <motion.button
                   type="button"
                   className={`card-fan phase-${deckPhase}`}
+                  data-system={system.slug}
                   onClick={advanceDeckRitual}
                   onKeyDown={(event) => {
                     if (event.key === 'Enter' || event.key === ' ') {
@@ -1479,6 +1582,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
                 <motion.button
                   type="button"
                   className={`deck-object phase-${deckPhase}`}
+                  data-system={system.slug}
                   onClick={advanceDeckRitual}
                   onKeyDown={(event) => {
                     if (event.key === 'Enter' || event.key === ' ') {
@@ -1523,10 +1627,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
                       }
                     />
                   ))}
-                  <span className="deck-face">
-                    <b>DIVINE</b>
-                    <i>{system.shortName}</i>
-                  </span>
+                  <span className="deck-face" aria-hidden="true" />
                   <span className="deck-band" aria-hidden="true">
                     <i>Break the seal</i>
                   </span>
@@ -1699,184 +1800,172 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            <header className="result-hero">
-              <h1>
-                <KineticText text={interpretation.headline} />
-              </h1>
-              <motion.p
-                className="result-overview"
-                initial={{ opacity: 0, clipPath: 'inset(0 0 100%)' }}
-                animate={{ opacity: 1, clipPath: 'inset(0)' }}
-                transition={{
-                  duration: 0.8,
-                  delay: 0.35,
-                  ease: [0.22, 1, 0.36, 1],
-                }}
-              >
-                {resultOverview}
-              </motion.p>
+            <header
+              className={`result-hero ${openingDraw ? 'has-opening-card' : 'object-only'}`}
+            >
+              <div className="result-hero-copy">
+                <h1>
+                  <KineticText text={interpretation.headline} />
+                </h1>
+                {openingDraw ? (
+                  <motion.a
+                    href="#result-cards"
+                    className="result-scroll-cue"
+                    aria-label="Read every card"
+                    initial={{ opacity: 0, y: -12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.9 }}
+                  >
+                    <ArrowDown />
+                  </motion.a>
+                ) : (
+                  <motion.p
+                    className="result-overview"
+                    initial={{ opacity: 0, clipPath: 'inset(0 0 100%)' }}
+                    animate={{ opacity: 1, clipPath: 'inset(0)' }}
+                    transition={{
+                      duration: 0.8,
+                      delay: 0.35,
+                      ease: [0.22, 1, 0.36, 1],
+                    }}
+                  >
+                    {resultOverview}
+                  </motion.p>
+                )}
+              </div>
+              {openingDraw && (
+                <motion.div
+                  className="result-opening-card"
+                  initial={{ opacity: 0, y: 120, rotateZ: 7, scale: 0.78 }}
+                  animate={{ opacity: 1, y: 0, rotateZ: -1.4, scale: 1 }}
+                  transition={{
+                    duration: 0.92,
+                    delay: 0.22,
+                    ease: [0.16, 1, 0.3, 1],
+                  }}
+                >
+                  <InteractiveResultCard
+                    draw={openingDraw}
+                    systemSlug={system.slug}
+                    finish={deckFinish}
+                    opening
+                    onTurn={() => cue('turn')}
+                  />
+                </motion.div>
+              )}
             </header>
             {system.kind !== 'cards' && luckyNumbers.length > 0 && (
               <div className={`object-result ${system.kind}`}>
                 <small>Lucky numbers · {luckyNumbers.join(' · ')}</small>
               </div>
             )}
-            {selectedResultDraw && selectedResultPosition && (
+            {draws.length > 0 && (
               <section
+                id="result-cards"
                 className="result-reading"
                 aria-label="Cards in this reading"
               >
-                <div className="result-reading-focus">
-                  <AnimatePresence mode="wait" initial={false}>
-                    <motion.article
-                      className="result-card-detail"
-                      key={`${selectedResultDraw.card.id}-${safeResultCardIndex}`}
-                      initial={{ opacity: 0, x: 74, rotateZ: 4 }}
-                      animate={{ opacity: 1, x: 0, rotateZ: 0 }}
-                      exit={{ opacity: 0, x: -58, rotateZ: -3 }}
-                      transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
-                    >
-                      <motion.div
-                        className="result-card-object"
-                        data-system={system.slug}
-                        style={{
-                          aspectRatio: selectedResultDraw.card.aspectRatio,
-                        }}
-                        initial={{
-                          y: 28,
-                          rotateX: -8,
-                          rotateY: 12,
-                          rotateZ: safeResultCardIndex % 2 ? 1.4 : -1.4,
-                          scale: 0.92,
-                        }}
-                        animate={{
-                          y: 0,
-                          rotateX: 0,
-                          rotateY: 0,
-                          rotateZ: safeResultCardIndex % 2 ? 0.7 : -0.7,
-                          scale: 1,
-                        }}
+                <header className="result-reading-intro">
+                  <p className="eyebrow">The reading in full</p>
+                  <p>{resultOverview}</p>
+                </header>
+                <div className="result-card-list">
+                  {draws.map((draw, index) => {
+                    const position = interpretation.positions[index];
+                    const orientationMeaning =
+                      draw.reversed && draw.card.reversedMeaning
+                        ? draw.card.reversedMeaning
+                        : draw.card.meaning;
+                    const focusMeaning = draw.card.focusModifiers?.[focus];
+                    const facts = cardFacts(draw.card);
+
+                    return (
+                      <motion.article
+                        className="result-card-detail"
+                        key={`${draw.card.id}-${index}`}
+                        initial={{ opacity: 0, y: 72 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, amount: 0.18 }}
                         transition={{
-                          duration: 0.58,
+                          duration: 0.68,
                           ease: [0.22, 1, 0.36, 1],
                         }}
-                        whileHover={{
-                          y: -9,
-                          rotateX: -2,
-                          rotateY: safeResultCardIndex % 2 ? -4 : 4,
-                          scale: 1.015,
-                        }}
                       >
-                        <div
-                          className={`result-card-sticker deck-${deckFinish} ${selectedResultDraw.reversed ? 'is-reversed' : ''}`}
-                          style={selectedResultColors}
-                        >
-                          <small>{selectedResultDraw.position}</small>
-                          {selectedResultImage ? (
-                            <span className="result-card-art">
-                              <Image
-                                src={selectedResultImage}
-                                alt={`${selectedResultDraw.card.name} card artwork`}
-                                width={520}
-                                height={820}
-                                sizes="(max-width: 720px) 54vw, 260px"
-                              />
-                            </span>
-                          ) : (
-                            <strong aria-hidden="true">
-                              {selectedResultDraw.card.glyph}
-                            </strong>
-                          )}
-                          <span>{selectedResultDraw.card.name}</span>
-                          {selectedResultDraw.reversed && <em>Reversed</em>}
-                        </div>
-                      </motion.div>
-                      <div className="result-card-copy" aria-live="polite">
-                        <p className="eyebrow">{selectedResultDraw.position}</p>
-                        <h2>
-                          <KineticText text={selectedResultDraw.card.name} />
-                        </h2>
-                        <motion.p
-                          initial={{ opacity: 0, y: 12 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: 0.24 }}
-                        >
-                          {sentenceExcerpt(selectedResultPosition.text, 2)}
-                        </motion.p>
-                        <div className="result-keywords" aria-label="Keywords">
-                          {selectedResultDraw.card.keywords
-                            .slice(0, 3)
-                            .map((keyword) => (
+                        <InteractiveResultCard
+                          draw={draw}
+                          systemSlug={system.slug}
+                          finish={deckFinish}
+                          onTurn={() => cue('turn')}
+                        />
+                        <div className="result-card-copy">
+                          <p className="eyebrow">
+                            {`${index + 1}`.padStart(2, '0')} / {draw.position}
+                          </p>
+                          <h2>
+                            <KineticText text={draw.card.name} />
+                          </h2>
+                          <p className="result-position-meaning">
+                            {position?.text ?? orientationMeaning}
+                          </p>
+                          <div className="result-meaning-grid">
+                            <div>
+                              <small>
+                                {draw.reversed ? 'Reversed' : 'Upright'}
+                              </small>
+                              <p>{orientationMeaning}</p>
+                            </div>
+                            {focusMeaning && (
+                              <div>
+                                <small>{focus}</small>
+                                <p>{focusMeaning}</p>
+                              </div>
+                            )}
+                          </div>
+                          <div
+                            className="result-keywords"
+                            aria-label="Keywords"
+                          >
+                            {draw.card.keywords.map((keyword) => (
                               <span key={keyword}>{keyword}</span>
                             ))}
+                          </div>
+                          {facts.length > 0 && (
+                            <dl className="result-card-facts">
+                              {facts.map(([label, value]) => (
+                                <div key={label}>
+                                  <dt>{label}</dt>
+                                  <dd>{value}</dd>
+                                </div>
+                              ))}
+                            </dl>
+                          )}
+                          {draw.card.provenance && (
+                            <p className="result-card-provenance">
+                              {draw.card.provenance}
+                            </p>
+                          )}
                         </div>
-                        <div className="result-card-nav">
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setResultCardIndex((current) =>
-                                Math.max(0, current - 1),
-                              );
-                              cue('deal');
-                            }}
-                            disabled={safeResultCardIndex === 0}
-                          >
-                            <ChevronLeft /> Previous
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setResultCardIndex((current) =>
-                                Math.min(draws.length - 1, current + 1),
-                              );
-                              cue('deal');
-                            }}
-                            disabled={safeResultCardIndex === draws.length - 1}
-                          >
-                            Next <ChevronRight />
-                          </button>
-                        </div>
-                      </div>
-                    </motion.article>
-                  </AnimatePresence>
+                      </motion.article>
+                    );
+                  })}
                 </div>
-                {draws.length > 1 && (
-                  <div
-                    className="result-card-strip"
-                    role="tablist"
-                    aria-label="Choose a card to interpret"
-                  >
-                    {draws.map((draw, index) => (
-                      <button
-                        type="button"
-                        data-system={system.slug}
-                        style={{ aspectRatio: draw.card.aspectRatio }}
-                        role="tab"
-                        aria-selected={safeResultCardIndex === index}
-                        aria-label={`${index + 1}. ${draw.position}: ${draw.card.name}${draw.reversed ? ', reversed' : ''}`}
-                        className={`${safeResultCardIndex === index ? 'active' : ''} deck-${deckFinish}`}
-                        key={`${draw.card.id}-${index}`}
-                        onClick={() => {
-                          setResultCardIndex(index);
-                          cue('deal');
-                        }}
-                      >
-                        {imageForFinish(draw.card, deckFinish) ? (
-                          <Image
-                            src={imageForFinish(draw.card, deckFinish)!}
-                            alt=""
-                            width={72}
-                            height={112}
-                          />
-                        ) : (
-                          <strong aria-hidden="true">{draw.card.glyph}</strong>
-                        )}
-                      </button>
-                    ))}
-                  </div>
-                )}
               </section>
             )}
+            <section
+              className="result-synthesis"
+              aria-labelledby="synthesis-title"
+            >
+              <p className="eyebrow">
+                {draws.length > 1
+                  ? 'How the cards connect'
+                  : draws.length === 1
+                    ? 'The message in full'
+                    : 'What follows'}
+              </p>
+              <h2 id="synthesis-title">The pattern</h2>
+              <p>{interpretation.synthesis}</p>
+              <p className="result-closing">{interpretation.closing}</p>
+            </section>
             {interpretation.reflectionPrompt && (
               <p className="result-prompt">{interpretation.reflectionPrompt}</p>
             )}
