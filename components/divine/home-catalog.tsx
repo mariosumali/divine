@@ -763,18 +763,6 @@ export function HomeCatalog() {
           ))}
         </div>
 
-        <div className="hero-orbits" aria-hidden="true">
-          <span className="hero-orbit hero-orbit-wide">
-            <i />
-          </span>
-          <span className="hero-orbit hero-orbit-tall">
-            <i />
-          </span>
-          <span className="hero-orbit hero-orbit-small">
-            <i />
-          </span>
-        </div>
-
         {(['back', 'front'] as const).map((layer) => (
           <div
             className={`hero-sigils hero-sigils-${layer}`}

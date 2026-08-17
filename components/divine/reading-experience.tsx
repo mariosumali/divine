@@ -159,9 +159,6 @@ function StageTransition({
         ease: [0.76, 0, 0.24, 1],
       }}
     >
-      <span className="stage-transition-orbit">
-        <i />
-      </span>
       <span className="stage-transition-copy">
         <small>{`${chapter}`.padStart(2, '0')} / 06</small>
         <strong>{stage === 'intro' ? systemName : stageLabels[stage]}</strong>
