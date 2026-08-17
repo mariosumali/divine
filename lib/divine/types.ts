@@ -13,6 +13,8 @@ export type SystemSlug =
   | 'i-ching-cards'
   | 'fal-e-hafez'
   | 'hanafuda'
+  | 'zigeunerkarten'
+  | 'ilm-al-raml'
   | 'magic-8-ball'
   | 'fortune-cookie';
 

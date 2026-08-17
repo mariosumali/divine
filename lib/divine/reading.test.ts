@@ -14,7 +14,7 @@ import { FORTUNES, SYSTEM_MAP, SYSTEMS } from './systems';
 
 describe('DIVINE content libraries', () => {
   it('contains every complete launch deck', () => {
-    expect(SYSTEMS).toHaveLength(16);
+    expect(SYSTEMS).toHaveLength(18);
     expect(SYSTEM_MAP.tarot.cards).toHaveLength(78);
     expect(SYSTEM_MAP.oracle.cards).toHaveLength(44);
     expect(SYSTEM_MAP.lenormand.cards).toHaveLength(36);
@@ -29,6 +29,8 @@ describe('DIVINE content libraries', () => {
     expect(SYSTEM_MAP['i-ching-cards'].cards).toHaveLength(64);
     expect(SYSTEM_MAP['fal-e-hafez'].cards).toHaveLength(36);
     expect(SYSTEM_MAP.hanafuda.cards).toHaveLength(48);
+    expect(SYSTEM_MAP.zigeunerkarten.cards).toHaveLength(36);
+    expect(SYSTEM_MAP['ilm-al-raml'].cards).toHaveLength(16);
     expect(FORTUNES).toHaveLength(144);
   });
 
@@ -108,7 +110,7 @@ describe('DIVINE content libraries', () => {
     );
     const images = cards.map((card) => card.image);
 
-    expect(cards).toHaveLength(629);
+    expect(cards).toHaveLength(681);
     expect(images.every(Boolean)).toBe(true);
     expect(new Set(images).size).toBe(cards.length);
 
@@ -130,6 +132,8 @@ describe('DIVINE content libraries', () => {
       ['i-ching-cards', 'i-ching', 64],
       ['fal-e-hafez', 'hafez', 36],
       ['hanafuda', 'hanafuda', 48],
+      ['zigeunerkarten', 'zigeunerkarten', 36],
+      ['ilm-al-raml', 'ilm-al-raml', 16],
     ] as const;
 
     for (const [systemSlug, collection, count] of collections) {
@@ -270,6 +274,12 @@ describe('reading engine', () => {
         card.name.toLowerCase().includes('blank'),
       ),
     ).toBe(false);
+    expect(
+      new Set(SYSTEM_MAP['ilm-al-raml'].cards.map((card) => card.glyph)).size,
+    ).toBe(16);
+    expect(SYSTEM_MAP.zigeunerkarten.cards.map((card) => card.name)).toContain(
+      'Unverhoffte Freude · Unexpected Joy',
+    );
   });
 
   it('applies curated Lenormand relationships and house context', () => {

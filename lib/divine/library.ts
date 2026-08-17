@@ -203,6 +203,38 @@ export const METHOD_HISTORIES: Record<SystemSlug, MethodHistory> = {
       url: 'https://www.nintendo.com/eu/media/downloads/other_1/my_nintendo_store_3/MyNintendoStore_Manual_Hanafuda_MarioCards_UKV.pdf',
     },
   },
+  zigeunerkarten: {
+    slug: 'zigeunerkarten',
+    period: 'Late 19th century → present',
+    origin: 'Central Europe / Austro-Hungarian publishing',
+    title: 'Thirty-six everyday subjects, without fixed numbers.',
+    history: [
+      'Zigeunerkarten are a thirty-six-card Central European fortune-telling family with multilingual titles and concrete scenes such as Visit, Letter, Money, Hope, Journey, Fidelity, and Unexpected Joy. They are related in reading style to other European situation decks but remain a distinct system from Kipper.',
+      'The historical product name is an outdated exonym and does not establish Roma authorship or a recovered ethnic tradition. DIVINE retains the searchable deck name while preserving the traditional German subject list, pairing every subject with a different public-domain museum work, and labeling the result as a modern historical-art edition.',
+    ],
+    variant:
+      'Publishers have changed artwork, caption languages, and ordering; unlike many numbered oracle decks, the traditional subjects are commonly identified by title.',
+    source: {
+      label: 'German-language overview · Zigeunerkarten',
+      url: 'https://de.wikipedia.org/wiki/Zigeunerkarten',
+    },
+  },
+  'ilm-al-raml': {
+    slug: 'ilm-al-raml',
+    period: 'Medieval Arabic tradition → present',
+    origin: 'Arabic-speaking world / wider geomantic transmission',
+    title: 'The science of sand generates sixteen figures.',
+    history: [
+      'ʿIlm al-raml, literally the “science of sand,” works with sixteen possible figures. Each figure has four lines containing either one or two points; figures are generated and combined into a structured tableau whose positions include the Mothers, Daughters, Nieces, Witnesses, and Judge.',
+      'A fixed deck of sixteen cards is not the historical casting method. DIVINE presents the complete figure set as a study and reflection interface, places each figure over a different public-domain image from Wellcome Collection MS Arabic 664, and explicitly does not claim that a random card draw calculates a traditional shield chart.',
+    ],
+    variant:
+      'Names and correspondences vary across Arabic manuscripts and later European geomantic traditions. The interface uses the stable Latin figure names and notes one Arabic-name family without treating it as universal.',
+    source: {
+      label: 'Wellcome Collection · Treatise on ʿilm al-raml',
+      url: 'https://wellcomecollection.org/works/agpcdkbz',
+    },
+  },
   'magic-8-ball': {
     slug: 'magic-8-ball',
     period: '20th century → present',

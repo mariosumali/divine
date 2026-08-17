@@ -12,6 +12,8 @@ This directory contains locally cached WebP derivatives of reusable online archi
 - **I Ching cards (64):** public-domain hexagram forms in the King Wen sequence. The card format is a modern interface and does not replace a traditional changing-line consultation.
 - **Fal-e Hafez cards (36):** uncropped public-domain or CC0 pages from historical *Divān of Hafez* manuscripts in the Walters Art Museum. Traditional Fāl-e Hāfez is bibliomancy, so the app labels these as contemporary motif cards rather than a historical deck.
 - **Hanafuda (48):** cropped from a public-domain early-Shōwa Hachihachi deck scan (1926–1945), arranged by its traditional twelve months and four cards per month.
+- **Zigeunerkarten (36):** the traditional German-titled subjects are each paired with a distinct reusable historical work from Wikimedia Commons. This is a modern historical-art edition, not a facsimile of a commercial pack; every individual license and source page is recorded in the manifest.
+- **ʿIlm al-raml (16):** the complete sixteen geomantic figures are placed over distinct Public Domain Mark images from Wellcome Collection MS Arabic 664, an Arabic treatise on ʿilm al-raml. The fixed deck is explicitly identified as a modern interface adaptation rather than a replacement for a generated geomantic tableau.
 
 ## Source collections
 
@@ -23,5 +25,7 @@ This directory contains locally cached WebP derivatives of reusable online archi
 - I Ching: <https://commons.wikimedia.org/wiki/Category:I_Ching_hexagrams>
 - Hafez: <https://commons.wikimedia.org/wiki/Category:Divan_of_Hafez>
 - Hanafuda: <https://commons.wikimedia.org/wiki/File:%E7%99%BD%E7%BE%8E%E4%BA%BA%E5%8D%B0%E3%81%AE%E5%85%AB%E5%85%AB%E8%8A%B1%E6%9C%AD%EF%BC%88%E6%98%AD%E5%92%8C%E5%89%8D%E6%9C%9F%EF%BC%89.jpg>
+- Zigeunerkarten historical art: <https://commons.wikimedia.org/>
+- ʿIlm al-raml manuscript: <https://wellcomecollection.org/works/agpcdkbz>
 
-The deterministic import and conversion process lives in `scripts/fetch-traditional-deck-art.mjs`.
+The deterministic import and conversion processes live in `scripts/fetch-traditional-deck-art.mjs` and `scripts/fetch-zigeuner-raml-art.mjs`.

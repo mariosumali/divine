@@ -14,7 +14,7 @@ describe('DIVINE library', () => {
 
   it('indexes every authored card with a standalone meaning', () => {
     const cards = SYSTEMS.flatMap((system) => system.cards);
-    expect(cards).toHaveLength(629);
+    expect(cards).toHaveLength(681);
     expect(
       cards.every(
         (card) => card.name && card.meaning && card.keywords.length > 0,
@@ -38,6 +38,9 @@ describe('DIVINE library', () => {
     );
     expect(METHOD_HISTORIES['runic-cards'].history.join(' ')).toContain(
       'modern additions',
+    );
+    expect(METHOD_HISTORIES['ilm-al-raml'].history.join(' ')).toContain(
+      'not the historical casting method',
     );
   });
 });

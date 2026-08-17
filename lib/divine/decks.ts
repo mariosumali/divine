@@ -18,6 +18,8 @@ export const CARD_SYSTEM_SLUGS = [
   'i-ching-cards',
   'fal-e-hafez',
   'hanafuda',
+  'zigeunerkarten',
+  'ilm-al-raml',
 ] as const satisfies readonly SystemSlug[];
 
 export type CardSystemSlug = (typeof CARD_SYSTEM_SLUGS)[number];
@@ -38,6 +40,8 @@ export const DEFAULT_DECK_FINISHES: DeckFinishes = {
   'i-ching-cards': 'color',
   'fal-e-hafez': 'color',
   hanafuda: 'color',
+  zigeunerkarten: 'color',
+  'ilm-al-raml': 'color',
 };
 
 export const DECK_LABELS: Record<
@@ -61,6 +65,8 @@ export const DECK_LABELS: Record<
   'i-ching-cards': { color: 'King Wen forms', ink: 'Archive ink' },
   'fal-e-hafez': { color: 'Divān manuscripts', ink: 'Archive ink' },
   hanafuda: { color: 'Early Shōwa', ink: 'Archive ink' },
+  zigeunerkarten: { color: 'Museum archive', ink: 'Archive ink' },
+  'ilm-al-raml': { color: 'Arabic manuscript', ink: 'Archive ink' },
 };
 
 const palettes: Record<CardSystemSlug, Array<[string, string]>> = {
@@ -136,6 +142,16 @@ const palettes: Record<CardSystemSlug, Array<[string, string]>> = {
     ['#cbdac8', '#2d552d'],
     ['#e4d5a8', '#66500e'],
     ['#ccd7e4', '#2d4664'],
+  ],
+  zigeunerkarten: [
+    ['#dfcbb7', '#572c22'],
+    ['#ced8cf', '#284738'],
+    ['#d5cfdf', '#443252'],
+  ],
+  'ilm-al-raml': [
+    ['#e0c99f', '#4f311c'],
+    ['#d4c3a5', '#3f3327'],
+    ['#c9d2c7', '#29473b'],
   ],
 };
 

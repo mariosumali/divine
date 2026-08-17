@@ -21,6 +21,8 @@ const INDEX_ART: Record<string, string> = {
   'i-ching-cards': '/collage-v1/compass.webp',
   'fal-e-hafez': '/collage-v1/pen.webp',
   hanafuda: '/collage-v1/peony.webp',
+  zigeunerkarten: '/traditional-decks-v1/zigeunerkarten/zigeunerkarten-17.webp',
+  'ilm-al-raml': '/traditional-decks-v1/ilm-al-raml/ilm-al-raml-16.webp',
   'magic-8-ball': '/index-art-v2/magic-8-ball.webp',
   'fortune-cookie': '/index-art/fortune-cookie.webp',
 };
