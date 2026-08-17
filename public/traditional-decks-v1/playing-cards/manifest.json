@@ -1,527 +1,527 @@
 {
   "generatedAt": "2026-09-02",
   "sourceCollection": "https://commons.wikimedia.org/wiki/Category:Public_domain_playing_cards",
-  "rightsNote": "Austin Gabriel’s complete French-suited deck is CC0.",
+  "rightsNote": "Austin Gabriel’s complete French-suited deck is CC0. DIVINE applies an original archival print treatment without changing rank, suit, or court identity.",
   "cards": [
     {
       "cardIndex": 1,
       "file": "playing-cards-01.webp",
-      "bytes": 8694,
+      "bytes": 7672,
       "sourceTitle": "Ace of Hearts.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Ace_of_Hearts.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 2,
       "file": "playing-cards-02.webp",
-      "bytes": 11460,
+      "bytes": 9280,
       "sourceTitle": "2 of Hearts.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:2_of_Hearts.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 3,
       "file": "playing-cards-03.webp",
-      "bytes": 14050,
+      "bytes": 10868,
       "sourceTitle": "3 of Hearts.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:3_of_Hearts.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 4,
       "file": "playing-cards-04.webp",
-      "bytes": 15210,
+      "bytes": 11940,
       "sourceTitle": "4 of Hearts.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:4_of_Hearts.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 5,
       "file": "playing-cards-05.webp",
-      "bytes": 17866,
+      "bytes": 13676,
       "sourceTitle": "5 of Hearts.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:5_of_Hearts.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 6,
       "file": "playing-cards-06.webp",
-      "bytes": 20486,
+      "bytes": 15594,
       "sourceTitle": "6 of Hearts.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:6_of_Hearts.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 7,
       "file": "playing-cards-07.webp",
-      "bytes": 21500,
+      "bytes": 16212,
       "sourceTitle": "7 of Hearts.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:7_of_Hearts.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 8,
       "file": "playing-cards-08.webp",
-      "bytes": 25430,
+      "bytes": 18814,
       "sourceTitle": "8 of Hearts.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:8_of_Hearts.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 9,
       "file": "playing-cards-09.webp",
-      "bytes": 27272,
+      "bytes": 20056,
       "sourceTitle": "9 of Hearts.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:9_of_Hearts.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 10,
       "file": "playing-cards-10.webp",
-      "bytes": 28368,
+      "bytes": 20788,
       "sourceTitle": "10 of Hearts.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:10_of_Hearts.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 11,
       "file": "playing-cards-11.webp",
-      "bytes": 127372,
+      "bytes": 110688,
       "sourceTitle": "Jack of Hearts.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Jack_of_Hearts.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 12,
       "file": "playing-cards-12.webp",
-      "bytes": 119156,
+      "bytes": 101776,
       "sourceTitle": "Queen of Hearts.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Queen_of_Hearts.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 13,
       "file": "playing-cards-13.webp",
-      "bytes": 123568,
+      "bytes": 105862,
       "sourceTitle": "King of Hearts.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:King_of_Hearts.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 14,
       "file": "playing-cards-14.webp",
-      "bytes": 8140,
+      "bytes": 7210,
       "sourceTitle": "Ace of Diamonds.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Ace_of_Diamonds.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 15,
       "file": "playing-cards-15.webp",
-      "bytes": 10412,
+      "bytes": 8558,
       "sourceTitle": "2 of Diamonds.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:2_of_Diamonds.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 16,
       "file": "playing-cards-16.webp",
-      "bytes": 12564,
+      "bytes": 9792,
       "sourceTitle": "3 of Diamonds.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:3_of_Diamonds.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 17,
       "file": "playing-cards-17.webp",
-      "bytes": 13396,
+      "bytes": 10602,
       "sourceTitle": "4 of Diamonds.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:4_of_Diamonds.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 18,
       "file": "playing-cards-18.webp",
-      "bytes": 15724,
+      "bytes": 12236,
       "sourceTitle": "5 of Diamonds.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:5_of_Diamonds.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 19,
       "file": "playing-cards-19.webp",
-      "bytes": 18032,
+      "bytes": 13770,
       "sourceTitle": "6 of Diamonds.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:6_of_Diamonds.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 20,
       "file": "playing-cards-20.webp",
-      "bytes": 18660,
+      "bytes": 14098,
       "sourceTitle": "7 of Diamonds.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:7_of_Diamonds.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 21,
       "file": "playing-cards-21.webp",
-      "bytes": 22218,
+      "bytes": 16430,
       "sourceTitle": "8 of Diamonds.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:8_of_Diamonds.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 22,
       "file": "playing-cards-22.webp",
-      "bytes": 23766,
+      "bytes": 17372,
       "sourceTitle": "9 of Diamonds.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:9_of_Diamonds.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 23,
       "file": "playing-cards-23.webp",
-      "bytes": 24786,
+      "bytes": 17812,
       "sourceTitle": "10 of Diamonds.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:10_of_Diamonds.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 24,
       "file": "playing-cards-24.webp",
-      "bytes": 111060,
+      "bytes": 93776,
       "sourceTitle": "Jack of Diamonds.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Jack_of_Diamonds.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 25,
       "file": "playing-cards-25.webp",
-      "bytes": 107318,
+      "bytes": 92202,
       "sourceTitle": "Queen of Diamonds.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Queen_of_Diamonds.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 26,
       "file": "playing-cards-26.webp",
-      "bytes": 115638,
+      "bytes": 98928,
       "sourceTitle": "King of Diamonds.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:King_of_Diamonds.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 27,
       "file": "playing-cards-27.webp",
-      "bytes": 6450,
+      "bytes": 8204,
       "sourceTitle": "Ace of Clubs.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Ace_of_Clubs.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 28,
       "file": "playing-cards-28.webp",
-      "bytes": 8366,
+      "bytes": 10588,
       "sourceTitle": "2 of Clubs.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:2_of_Clubs.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 29,
       "file": "playing-cards-29.webp",
-      "bytes": 10154,
+      "bytes": 12130,
       "sourceTitle": "3 of Clubs.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:3_of_Clubs.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 30,
       "file": "playing-cards-30.webp",
-      "bytes": 11446,
+      "bytes": 13196,
       "sourceTitle": "4 of Clubs.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:4_of_Clubs.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 31,
       "file": "playing-cards-31.webp",
-      "bytes": 13540,
+      "bytes": 16052,
       "sourceTitle": "5 of Clubs.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:5_of_Clubs.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 32,
       "file": "playing-cards-32.webp",
-      "bytes": 15716,
+      "bytes": 18376,
       "sourceTitle": "6 of Clubs.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:6_of_Clubs.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 33,
       "file": "playing-cards-33.webp",
-      "bytes": 16666,
+      "bytes": 19420,
       "sourceTitle": "7 of Clubs.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:7_of_Clubs.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 34,
       "file": "playing-cards-34.webp",
-      "bytes": 19524,
+      "bytes": 22344,
       "sourceTitle": "8 of Clubs.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:8_of_Clubs.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 35,
       "file": "playing-cards-35.webp",
-      "bytes": 20988,
+      "bytes": 23990,
       "sourceTitle": "9 of Clubs.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:9_of_Clubs.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 36,
       "file": "playing-cards-36.webp",
-      "bytes": 21820,
+      "bytes": 24564,
       "sourceTitle": "10 of Clubs.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:10_of_Clubs.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 37,
       "file": "playing-cards-37.webp",
-      "bytes": 119044,
+      "bytes": 104850,
       "sourceTitle": "Jack of Clubs.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Jack_of_Clubs.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 38,
       "file": "playing-cards-38.webp",
-      "bytes": 117750,
+      "bytes": 103990,
       "sourceTitle": "Queen of Clubs.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Queen_of_Clubs.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 39,
       "file": "playing-cards-39.webp",
-      "bytes": 105324,
+      "bytes": 93964,
       "sourceTitle": "King of Clubs.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:King_of_Clubs.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 40,
       "file": "playing-cards-40.webp",
-      "bytes": 5992,
+      "bytes": 7660,
       "sourceTitle": "Ace of Spades.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Ace_of_Spades.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 41,
       "file": "playing-cards-41.webp",
-      "bytes": 7730,
+      "bytes": 10022,
       "sourceTitle": "2 of Spades.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:2_of_Spades.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 42,
       "file": "playing-cards-42.webp",
-      "bytes": 9250,
+      "bytes": 11204,
       "sourceTitle": "3 of Spades.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:3_of_Spades.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 43,
       "file": "playing-cards-43.webp",
-      "bytes": 10370,
+      "bytes": 12038,
       "sourceTitle": "4 of Spades.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:4_of_Spades.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 44,
       "file": "playing-cards-44.webp",
-      "bytes": 12224,
+      "bytes": 14592,
       "sourceTitle": "5 of Spades.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:5_of_Spades.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 45,
       "file": "playing-cards-45.webp",
-      "bytes": 14194,
+      "bytes": 16612,
       "sourceTitle": "6 of Spades.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:6_of_Spades.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 46,
       "file": "playing-cards-46.webp",
-      "bytes": 14852,
+      "bytes": 17408,
       "sourceTitle": "7 of Spades.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:7_of_Spades.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 47,
       "file": "playing-cards-47.webp",
-      "bytes": 17502,
+      "bytes": 20114,
       "sourceTitle": "8 of Spades.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:8_of_Spades.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 48,
       "file": "playing-cards-48.webp",
-      "bytes": 18674,
+      "bytes": 21340,
       "sourceTitle": "9 of Spades.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:9_of_Spades.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 49,
       "file": "playing-cards-49.webp",
-      "bytes": 19360,
+      "bytes": 22298,
       "sourceTitle": "10 of Spades.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:10_of_Spades.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 50,
       "file": "playing-cards-50.webp",
-      "bytes": 107414,
+      "bytes": 93942,
       "sourceTitle": "Jack of Spades.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Jack_of_Spades.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 51,
       "file": "playing-cards-51.webp",
-      "bytes": 115712,
+      "bytes": 100086,
       "sourceTitle": "Queen of Spades.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Queen_of_Spades.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     },
     {
       "cardIndex": 52,
       "file": "playing-cards-52.webp",
-      "bytes": 108256,
+      "bytes": 95328,
       "sourceTitle": "King of Spades.svg",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:King_of_Spades.svg",
       "license": "CC0",
       "artist": "Austin Gabriel",
-      "treatment": "Rasterized to WebP without changing the card design."
+      "treatment": "The exact CC0 card face is recolored in oxblood and charcoal, printed onto a lightly mottled warm paper field, and enclosed in a restrained nineteenth-century-style rule."
     }
   ]
 }

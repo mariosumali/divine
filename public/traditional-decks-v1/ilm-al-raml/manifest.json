@@ -2,7 +2,7 @@
   "generatedAt": "2026-09-02",
   "sourceCollection": "https://wellcomecollection.org/works/agpcdkbz",
   "iiifManifest": "https://iiif.wellcomecollection.org/presentation/v2/b20298286",
-  "rightsNote": "The backgrounds are distinct public-domain images from an Arabic treatise on ʿilm al-raml. The figures are the sixteen canonical one-or-two-point forms; the fixed card format is a transparent modern interface adaptation of a generated geomantic practice.",
+  "rightsNote": "The backgrounds are distinct public-domain images from an Arabic treatise on ʿilm al-raml. The figures are the sixteen canonical one-or-two-point forms, rendered as solid mineral-ink points in manuscript-style ruled panels; the fixed card format is a transparent modern interface adaptation of a generated geomantic practice.",
   "cards": [
     {
       "cardIndex": 1,
@@ -10,13 +10,13 @@
       "pattern": "2222",
       "manuscriptImage": 25,
       "file": "ilm-al-raml-01.webp",
-      "bytes": 76928,
+      "bytes": 71186,
       "sourceTitle": "Treatise on ʿilm al-raml, MS Arabic 664, image 25",
       "sourceUrl": "https://wellcomecollection.org/works/agpcdkbz",
       "imageUrl": "https://iiif.wellcomecollection.org/image/b20298286_WMS_Arabic_664_0025.jp2/full/1338,975/0/default.jpg",
       "license": "Public Domain Mark 1.0",
       "artist": "Anonymous; Wellcome Collection",
-      "treatment": "A canonical four-line geomantic figure is overlaid on a center crop of one distinct public-domain manuscript image. This is a modern card treatment, not an original historical deck."
+      "treatment": "A canonical four-line geomantic figure is rendered as solid mineral-ink points inside a manuscript-style ruled panel over one distinct public-domain manuscript image. This is a modern card treatment, not an original historical deck."
     },
     {
       "cardIndex": 2,
@@ -24,13 +24,13 @@
       "pattern": "2221",
       "manuscriptImage": 26,
       "file": "ilm-al-raml-02.webp",
-      "bytes": 79390,
+      "bytes": 72776,
       "sourceTitle": "Treatise on ʿilm al-raml, MS Arabic 664, image 26",
       "sourceUrl": "https://wellcomecollection.org/works/agpcdkbz",
       "imageUrl": "https://iiif.wellcomecollection.org/image/b20298286_WMS_Arabic_664_0026.jp2/full/1338,975/0/default.jpg",
       "license": "Public Domain Mark 1.0",
       "artist": "Anonymous; Wellcome Collection",
-      "treatment": "A canonical four-line geomantic figure is overlaid on a center crop of one distinct public-domain manuscript image. This is a modern card treatment, not an original historical deck."
+      "treatment": "A canonical four-line geomantic figure is rendered as solid mineral-ink points inside a manuscript-style ruled panel over one distinct public-domain manuscript image. This is a modern card treatment, not an original historical deck."
     },
     {
       "cardIndex": 3,
@@ -38,13 +38,13 @@
       "pattern": "2212",
       "manuscriptImage": 27,
       "file": "ilm-al-raml-03.webp",
-      "bytes": 77934,
+      "bytes": 73556,
       "sourceTitle": "Treatise on ʿilm al-raml, MS Arabic 664, image 27",
       "sourceUrl": "https://wellcomecollection.org/works/agpcdkbz",
       "imageUrl": "https://iiif.wellcomecollection.org/image/b20298286_WMS_Arabic_664_0027.jp2/full/1338,975/0/default.jpg",
       "license": "Public Domain Mark 1.0",
       "artist": "Anonymous; Wellcome Collection",
-      "treatment": "A canonical four-line geomantic figure is overlaid on a center crop of one distinct public-domain manuscript image. This is a modern card treatment, not an original historical deck."
+      "treatment": "A canonical four-line geomantic figure is rendered as solid mineral-ink points inside a manuscript-style ruled panel over one distinct public-domain manuscript image. This is a modern card treatment, not an original historical deck."
     },
     {
       "cardIndex": 4,
@@ -52,13 +52,13 @@
       "pattern": "2211",
       "manuscriptImage": 28,
       "file": "ilm-al-raml-04.webp",
-      "bytes": 77046,
+      "bytes": 70322,
       "sourceTitle": "Treatise on ʿilm al-raml, MS Arabic 664, image 28",
       "sourceUrl": "https://wellcomecollection.org/works/agpcdkbz",
       "imageUrl": "https://iiif.wellcomecollection.org/image/b20298286_WMS_Arabic_664_0028.jp2/full/1338,975/0/default.jpg",
       "license": "Public Domain Mark 1.0",
       "artist": "Anonymous; Wellcome Collection",
-      "treatment": "A canonical four-line geomantic figure is overlaid on a center crop of one distinct public-domain manuscript image. This is a modern card treatment, not an original historical deck."
+      "treatment": "A canonical four-line geomantic figure is rendered as solid mineral-ink points inside a manuscript-style ruled panel over one distinct public-domain manuscript image. This is a modern card treatment, not an original historical deck."
     },
     {
       "cardIndex": 5,
@@ -66,13 +66,13 @@
       "pattern": "2122",
       "manuscriptImage": 29,
       "file": "ilm-al-raml-05.webp",
-      "bytes": 73520,
+      "bytes": 68036,
       "sourceTitle": "Treatise on ʿilm al-raml, MS Arabic 664, image 29",
       "sourceUrl": "https://wellcomecollection.org/works/agpcdkbz",
       "imageUrl": "https://iiif.wellcomecollection.org/image/b20298286_WMS_Arabic_664_0029.jp2/full/1338,975/0/default.jpg",
       "license": "Public Domain Mark 1.0",
       "artist": "Anonymous; Wellcome Collection",
-      "treatment": "A canonical four-line geomantic figure is overlaid on a center crop of one distinct public-domain manuscript image. This is a modern card treatment, not an original historical deck."
+      "treatment": "A canonical four-line geomantic figure is rendered as solid mineral-ink points inside a manuscript-style ruled panel over one distinct public-domain manuscript image. This is a modern card treatment, not an original historical deck."
     },
     {
       "cardIndex": 6,
@@ -80,13 +80,13 @@
       "pattern": "2121",
       "manuscriptImage": 30,
       "file": "ilm-al-raml-06.webp",
-      "bytes": 24938,
+      "bytes": 22490,
       "sourceTitle": "Treatise on ʿilm al-raml, MS Arabic 664, image 30",
       "sourceUrl": "https://wellcomecollection.org/works/agpcdkbz",
       "imageUrl": "https://iiif.wellcomecollection.org/image/b20298286_WMS_Arabic_664_0030.jp2/full/1338,975/0/default.jpg",
       "license": "Public Domain Mark 1.0",
       "artist": "Anonymous; Wellcome Collection",
-      "treatment": "A canonical four-line geomantic figure is overlaid on a center crop of one distinct public-domain manuscript image. This is a modern card treatment, not an original historical deck."
+      "treatment": "A canonical four-line geomantic figure is rendered as solid mineral-ink points inside a manuscript-style ruled panel over one distinct public-domain manuscript image. This is a modern card treatment, not an original historical deck."
     },
     {
       "cardIndex": 7,
@@ -94,13 +94,13 @@
       "pattern": "2112",
       "manuscriptImage": 31,
       "file": "ilm-al-raml-07.webp",
-      "bytes": 18046,
+      "bytes": 17022,
       "sourceTitle": "Treatise on ʿilm al-raml, MS Arabic 664, image 31",
       "sourceUrl": "https://wellcomecollection.org/works/agpcdkbz",
       "imageUrl": "https://iiif.wellcomecollection.org/image/b20298286_WMS_Arabic_664_0031.jp2/full/1338,975/0/default.jpg",
       "license": "Public Domain Mark 1.0",
       "artist": "Anonymous; Wellcome Collection",
-      "treatment": "A canonical four-line geomantic figure is overlaid on a center crop of one distinct public-domain manuscript image. This is a modern card treatment, not an original historical deck."
+      "treatment": "A canonical four-line geomantic figure is rendered as solid mineral-ink points inside a manuscript-style ruled panel over one distinct public-domain manuscript image. This is a modern card treatment, not an original historical deck."
     },
     {
       "cardIndex": 8,
@@ -108,13 +108,13 @@
       "pattern": "2111",
       "manuscriptImage": 32,
       "file": "ilm-al-raml-08.webp",
-      "bytes": 62612,
+      "bytes": 56876,
       "sourceTitle": "Treatise on ʿilm al-raml, MS Arabic 664, image 32",
       "sourceUrl": "https://wellcomecollection.org/works/agpcdkbz",
       "imageUrl": "https://iiif.wellcomecollection.org/image/b20298286_WMS_Arabic_664_0032.jp2/full/1338,975/0/default.jpg",
       "license": "Public Domain Mark 1.0",
       "artist": "Anonymous; Wellcome Collection",
-      "treatment": "A canonical four-line geomantic figure is overlaid on a center crop of one distinct public-domain manuscript image. This is a modern card treatment, not an original historical deck."
+      "treatment": "A canonical four-line geomantic figure is rendered as solid mineral-ink points inside a manuscript-style ruled panel over one distinct public-domain manuscript image. This is a modern card treatment, not an original historical deck."
     },
     {
       "cardIndex": 9,
@@ -122,13 +122,13 @@
       "pattern": "1222",
       "manuscriptImage": 41,
       "file": "ilm-al-raml-09.webp",
-      "bytes": 81568,
+      "bytes": 74864,
       "sourceTitle": "Treatise on ʿilm al-raml, MS Arabic 664, image 41",
       "sourceUrl": "https://wellcomecollection.org/works/agpcdkbz",
       "imageUrl": "https://iiif.wellcomecollection.org/image/b20298286_WMS_Arabic_664_0041.jp2/full/1338,975/0/default.jpg",
       "license": "Public Domain Mark 1.0",
       "artist": "Anonymous; Wellcome Collection",
-      "treatment": "A canonical four-line geomantic figure is overlaid on a center crop of one distinct public-domain manuscript image. This is a modern card treatment, not an original historical deck."
+      "treatment": "A canonical four-line geomantic figure is rendered as solid mineral-ink points inside a manuscript-style ruled panel over one distinct public-domain manuscript image. This is a modern card treatment, not an original historical deck."
     },
     {
       "cardIndex": 10,
@@ -136,13 +136,13 @@
       "pattern": "1221",
       "manuscriptImage": 42,
       "file": "ilm-al-raml-10.webp",
-      "bytes": 71818,
+      "bytes": 67824,
       "sourceTitle": "Treatise on ʿilm al-raml, MS Arabic 664, image 42",
       "sourceUrl": "https://wellcomecollection.org/works/agpcdkbz",
       "imageUrl": "https://iiif.wellcomecollection.org/image/b20298286_WMS_Arabic_664_0042.jp2/full/1338,975/0/default.jpg",
       "license": "Public Domain Mark 1.0",
       "artist": "Anonymous; Wellcome Collection",
-      "treatment": "A canonical four-line geomantic figure is overlaid on a center crop of one distinct public-domain manuscript image. This is a modern card treatment, not an original historical deck."
+      "treatment": "A canonical four-line geomantic figure is rendered as solid mineral-ink points inside a manuscript-style ruled panel over one distinct public-domain manuscript image. This is a modern card treatment, not an original historical deck."
     },
     {
       "cardIndex": 11,
@@ -150,13 +150,13 @@
       "pattern": "1212",
       "manuscriptImage": 43,
       "file": "ilm-al-raml-11.webp",
-      "bytes": 116818,
+      "bytes": 110080,
       "sourceTitle": "Treatise on ʿilm al-raml, MS Arabic 664, image 43",
       "sourceUrl": "https://wellcomecollection.org/works/agpcdkbz",
       "imageUrl": "https://iiif.wellcomecollection.org/image/b20298286_WMS_Arabic_664_0043.jp2/full/1338,975/0/default.jpg",
       "license": "Public Domain Mark 1.0",
       "artist": "Anonymous; Wellcome Collection",
-      "treatment": "A canonical four-line geomantic figure is overlaid on a center crop of one distinct public-domain manuscript image. This is a modern card treatment, not an original historical deck."
+      "treatment": "A canonical four-line geomantic figure is rendered as solid mineral-ink points inside a manuscript-style ruled panel over one distinct public-domain manuscript image. This is a modern card treatment, not an original historical deck."
     },
     {
       "cardIndex": 12,
@@ -164,13 +164,13 @@
       "pattern": "1211",
       "manuscriptImage": 44,
       "file": "ilm-al-raml-12.webp",
-      "bytes": 81442,
+      "bytes": 75472,
       "sourceTitle": "Treatise on ʿilm al-raml, MS Arabic 664, image 44",
       "sourceUrl": "https://wellcomecollection.org/works/agpcdkbz",
       "imageUrl": "https://iiif.wellcomecollection.org/image/b20298286_WMS_Arabic_664_0044.jp2/full/1338,975/0/default.jpg",
       "license": "Public Domain Mark 1.0",
       "artist": "Anonymous; Wellcome Collection",
-      "treatment": "A canonical four-line geomantic figure is overlaid on a center crop of one distinct public-domain manuscript image. This is a modern card treatment, not an original historical deck."
+      "treatment": "A canonical four-line geomantic figure is rendered as solid mineral-ink points inside a manuscript-style ruled panel over one distinct public-domain manuscript image. This is a modern card treatment, not an original historical deck."
     },
     {
       "cardIndex": 13,
@@ -178,13 +178,13 @@
       "pattern": "1122",
       "manuscriptImage": 45,
       "file": "ilm-al-raml-13.webp",
-      "bytes": 91490,
+      "bytes": 86588,
       "sourceTitle": "Treatise on ʿilm al-raml, MS Arabic 664, image 45",
       "sourceUrl": "https://wellcomecollection.org/works/agpcdkbz",
       "imageUrl": "https://iiif.wellcomecollection.org/image/b20298286_WMS_Arabic_664_0045.jp2/full/1338,975/0/default.jpg",
       "license": "Public Domain Mark 1.0",
       "artist": "Anonymous; Wellcome Collection",
-      "treatment": "A canonical four-line geomantic figure is overlaid on a center crop of one distinct public-domain manuscript image. This is a modern card treatment, not an original historical deck."
+      "treatment": "A canonical four-line geomantic figure is rendered as solid mineral-ink points inside a manuscript-style ruled panel over one distinct public-domain manuscript image. This is a modern card treatment, not an original historical deck."
     },
     {
       "cardIndex": 14,
@@ -192,13 +192,13 @@
       "pattern": "1121",
       "manuscriptImage": 46,
       "file": "ilm-al-raml-14.webp",
-      "bytes": 80890,
+      "bytes": 74992,
       "sourceTitle": "Treatise on ʿilm al-raml, MS Arabic 664, image 46",
       "sourceUrl": "https://wellcomecollection.org/works/agpcdkbz",
       "imageUrl": "https://iiif.wellcomecollection.org/image/b20298286_WMS_Arabic_664_0046.jp2/full/1338,975/0/default.jpg",
       "license": "Public Domain Mark 1.0",
       "artist": "Anonymous; Wellcome Collection",
-      "treatment": "A canonical four-line geomantic figure is overlaid on a center crop of one distinct public-domain manuscript image. This is a modern card treatment, not an original historical deck."
+      "treatment": "A canonical four-line geomantic figure is rendered as solid mineral-ink points inside a manuscript-style ruled panel over one distinct public-domain manuscript image. This is a modern card treatment, not an original historical deck."
     },
     {
       "cardIndex": 15,
@@ -206,13 +206,13 @@
       "pattern": "1112",
       "manuscriptImage": 47,
       "file": "ilm-al-raml-15.webp",
-      "bytes": 85490,
+      "bytes": 80000,
       "sourceTitle": "Treatise on ʿilm al-raml, MS Arabic 664, image 47",
       "sourceUrl": "https://wellcomecollection.org/works/agpcdkbz",
       "imageUrl": "https://iiif.wellcomecollection.org/image/b20298286_WMS_Arabic_664_0047.jp2/full/1338,975/0/default.jpg",
       "license": "Public Domain Mark 1.0",
       "artist": "Anonymous; Wellcome Collection",
-      "treatment": "A canonical four-line geomantic figure is overlaid on a center crop of one distinct public-domain manuscript image. This is a modern card treatment, not an original historical deck."
+      "treatment": "A canonical four-line geomantic figure is rendered as solid mineral-ink points inside a manuscript-style ruled panel over one distinct public-domain manuscript image. This is a modern card treatment, not an original historical deck."
     },
     {
       "cardIndex": 16,
@@ -220,13 +220,13 @@
       "pattern": "1111",
       "manuscriptImage": 48,
       "file": "ilm-al-raml-16.webp",
-      "bytes": 89916,
+      "bytes": 83736,
       "sourceTitle": "Treatise on ʿilm al-raml, MS Arabic 664, image 48",
       "sourceUrl": "https://wellcomecollection.org/works/agpcdkbz",
       "imageUrl": "https://iiif.wellcomecollection.org/image/b20298286_WMS_Arabic_664_0048.jp2/full/1338,975/0/default.jpg",
       "license": "Public Domain Mark 1.0",
       "artist": "Anonymous; Wellcome Collection",
-      "treatment": "A canonical four-line geomantic figure is overlaid on a center crop of one distinct public-domain manuscript image. This is a modern card treatment, not an original historical deck."
+      "treatment": "A canonical four-line geomantic figure is rendered as solid mineral-ink points inside a manuscript-style ruled panel over one distinct public-domain manuscript image. This is a modern card treatment, not an original historical deck."
     }
   ]
 }
