@@ -4,9 +4,11 @@ import { motion, useMotionValue, useSpring, useTransform } from 'motion/react';
 import type { MotionStyle, MotionValue } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
-import type { CSSProperties } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import type { CSSProperties, MouseEvent as ReactMouseEvent } from 'react';
+import { useRouter } from 'next/navigation';
 import { useExperience } from '@/app/providers';
-import { SYSTEMS } from '@/lib/divine/systems';
+import { CATALOG_SYSTEMS } from '@/lib/divine/catalog';
 import archiveManifest from '@/public/collage-archive/manifest.json';
 
 const INDEX_ART: Record<string, string> = {
@@ -50,6 +52,48 @@ const ART_MOTIONS = [
   { angle: -1.2, x: -5, y: -6, duration: 8.1 },
 ] as const;
 const HERO_LETTERS = 'DIVINE'.split('');
+const DESKTOP_ARCHIVE_CLUSTERS = [
+  [-4, -3],
+  [17, 7],
+  [42, -5],
+  [68, 9],
+  [91, -2],
+  [4, 34],
+  [29, 28],
+  [58, 34],
+  [87, 31],
+  [-2, 67],
+  [22, 74],
+  [49, 64],
+  [74, 73],
+  [94, 66],
+  [8, 94],
+  [41, 91],
+  [72, 94],
+] as const;
+const MOBILE_ARCHIVE_CLUSTERS = [
+  [-7, -2],
+  [25, 2],
+  [58, -3],
+  [88, 5],
+  [5, 19],
+  [42, 17],
+  [78, 23],
+  [-5, 39],
+  [29, 38],
+  [63, 43],
+  [91, 39],
+  [7, 59],
+  [42, 61],
+  [79, 58],
+  [-6, 80],
+  [26, 78],
+  [58, 84],
+  [88, 77],
+  [11, 98],
+  [48, 94],
+  [83, 97],
+] as const;
 type HeroPlacement = {
   x: string;
   y: string;
@@ -64,30 +108,47 @@ function seededUnit(seed: number) {
 }
 
 const ARCHIVE_HERO_OBJECTS = archiveManifest.map((asset, index) => {
-  const desktopColumn = index % 10;
-  const desktopRow = Math.floor(index / 10);
-  const mobileColumn = index % 5;
-  const mobileRow = Math.floor(index / 5);
   const seed = asset.objectID + index * 97;
   const jitterX = seededUnit(seed) - 0.5;
   const jitterY = seededUnit(seed + 1) - 0.5;
   const scale = seededUnit(seed + 2);
-  const rotation = -20 + seededUnit(seed + 3) * 40;
+  const rotation = -54 + seededUnit(seed + 3) * 108;
+  const desktopCluster = DESKTOP_ARCHIVE_CLUSTERS[index % DESKTOP_ARCHIVE_CLUSTERS.length];
+  const mobileCluster = MOBILE_ARCHIVE_CLUSTERS[index % MOBILE_ARCHIVE_CLUSTERS.length];
+  const sizeTier = index % 12;
+  const isGiant = sizeTier === 0;
+  const isLarge = sizeTier === 3 || sizeTier === 8;
+  const isSmall = sizeTier === 2 || sizeTier === 5 || sizeTier === 7 || sizeTier === 10;
+  const desktopSize = isGiant
+    ? `clamp(${154 + Math.round(scale * 46)}px, ${18 + scale * 7}vw, ${300 + Math.round(scale * 80)}px)`
+    : isLarge
+      ? `clamp(${88 + Math.round(scale * 30)}px, ${10 + scale * 5}vw, ${178 + Math.round(scale * 74)}px)`
+      : isSmall
+        ? `clamp(${22 + Math.round(scale * 18)}px, ${2.2 + scale * 2.8}vw, ${52 + Math.round(scale * 54)}px)`
+        : `clamp(${48 + Math.round(scale * 24)}px, ${5 + scale * 4.5}vw, ${104 + Math.round(scale * 68)}px)`;
+  const mobileSize = isGiant
+    ? `${138 + Math.round(scale * 52)}px`
+    : isLarge
+      ? `${88 + Math.round(scale * 38)}px`
+      : isSmall
+        ? `${26 + Math.round(scale * 24)}px`
+        : `${50 + Math.round(scale * 34)}px`;
 
   return {
     ...asset,
     placement: {
-      x: `${desktopColumn * 10 - 3 + jitterX * 7}%`,
-      y: `${desktopRow * 13.3 - 2 + jitterY * 8}%`,
-      size: `clamp(${42 + Math.round(scale * 34)}px, ${4.2 + scale * 5.4}vw, ${92 + Math.round(scale * 82)}px)`,
+      x: `${desktopCluster[0] + jitterX * 18}%`,
+      y: `${desktopCluster[1] + jitterY * 18}%`,
+      size: desktopSize,
       rotate: rotation,
     },
     mobilePlacement: {
-      x: `${mobileColumn * 21 - 5 + jitterX * 8}%`,
-      y: `${mobileRow * 6.25 - 1 + jitterY * 4}%`,
-      size: `${38 + Math.round(scale * 48)}px`,
-      rotate: rotation,
+      x: `${mobileCluster[0] + jitterX * 16}%`,
+      y: `${mobileCluster[1] + jitterY * 12}%`,
+      size: mobileSize,
+      rotate: rotation * 1.08,
     },
+    opacity: 0.2 + seededUnit(seed + 4) * 0.34,
   };
 });
 
@@ -605,6 +666,7 @@ function ArchiveHeroObject({
           '--sigil-mobile-size': mobilePlacement.size,
           '--sigil-mobile-rotate': `${mobilePlacement.rotate}deg`,
           '--archive-delay': `${-((index % 12) * 0.7)}s`,
+          '--archive-opacity': object.opacity.toFixed(2),
         } as CSSProperties
       }
     >
@@ -623,12 +685,48 @@ function ArchiveHeroObject({
 
 export function HomeCatalog() {
   const { cue } = useExperience();
+  const router = useRouter();
+  const departureTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [departingSystem, setDepartingSystem] = useState<
+    (typeof CATALOG_SYSTEMS)[number] | null
+  >(null);
   const heroXSource = useMotionValue(0);
   const heroYSource = useMotionValue(0);
   const heroX = useSpring(heroXSource, { stiffness: 80, damping: 18 });
   const heroY = useSpring(heroYSource, { stiffness: 80, damping: 18 });
   const heroRotateY = useTransform(heroX, [-28, 28], [-5, 5]);
   const heroRotateX = useTransform(heroY, [-20, 20], [4, -4]);
+
+  useEffect(
+    () => () => {
+      if (departureTimer.current) clearTimeout(departureTimer.current);
+    },
+    [],
+  );
+
+  const enterReading = (
+    event: ReactMouseEvent<HTMLAnchorElement>,
+    system: (typeof CATALOG_SYSTEMS)[number],
+  ) => {
+    cue('tick');
+    if (
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey ||
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ) {
+      return;
+    }
+
+    event.preventDefault();
+    if (departingSystem) return;
+    setDepartingSystem(system);
+    departureTimer.current = setTimeout(() => {
+      router.push(`/read/${system.slug}`);
+    }, 980);
+  };
 
   return (
     <main className="home-index">
@@ -776,8 +874,35 @@ export function HomeCatalog() {
         </motion.a>
       </section>
 
+      <Link
+        className="astrology-home-entry"
+        href="/astrology"
+        onClick={() => cue('tick')}
+      >
+        <span className="astrology-home-art">
+          <Image
+            src="/astrology/zodiac-circle-medieval.webp"
+            alt=""
+            fill
+            sizes="(max-width: 720px) 100vw, 50vw"
+          />
+        </span>
+        <span className="astrology-home-copy">
+          <small>New / Astrology studio</small>
+          <strong>
+            Read the sky.
+            <br />
+            Keep your agency.
+          </strong>
+          <span>Horoscopes · signs · alignment · open chart atlas</span>
+          <i>
+            Enter <span aria-hidden="true">↗</span>
+          </i>
+        </span>
+      </Link>
+
       <section className="reading-index" id="readings" aria-label="Readings">
-        {SYSTEMS.map((system, index) => {
+        {CATALOG_SYSTEMS.map((system, index) => {
           const artMotion = ART_MOTIONS[index % ART_MOTIONS.length];
 
           return (
@@ -786,8 +911,27 @@ export function HomeCatalog() {
               data-system={system.slug}
               href={`/read/${system.slug}`}
               key={system.slug}
-              onClick={() => cue('tick')}
+              onClick={(event) => enterReading(event, system)}
+              onPointerMove={(event) => {
+                if (event.pointerType === 'touch') return;
+                const bounds = event.currentTarget.getBoundingClientRect();
+                event.currentTarget.style.setProperty(
+                  '--pointer-x',
+                  `${event.clientX - bounds.left}px`,
+                );
+                event.currentTarget.style.setProperty(
+                  '--pointer-y',
+                  `${event.clientY - bounds.top}px`,
+                );
+              }}
+              style={{ '--reading-order': index } as CSSProperties}
             >
+              <span className="reading-index-aura" aria-hidden="true" />
+              <span className="reading-index-chrome" aria-hidden="true">
+                <small>{`${index + 1}`.padStart(2, '0')}</small>
+                <i />
+                <em>Enter</em>
+              </span>
               <motion.span
                 className="reading-index-art"
                 initial={{
@@ -837,7 +981,7 @@ export function HomeCatalog() {
                 </span>
               </motion.span>
               <span className="reading-index-name">
-                {system.name}
+                <span>{system.name}</span>
                 {system.slug === 'divine' && (
                   <small>One card from every deck · one connected answer</small>
                 )}
@@ -846,6 +990,56 @@ export function HomeCatalog() {
           );
         })}
       </section>
+
+      {departingSystem && (
+        <motion.div
+          className="reading-route-transition"
+          aria-hidden="true"
+          initial="closed"
+          animate="open"
+        >
+          <div className="route-transition-panels">
+            {Array.from({ length: 6 }, (_, index) => (
+              <motion.i
+                key={index}
+                variants={{ closed: { y: '102%' }, open: { y: '0%' } }}
+                transition={{
+                  duration: 0.58,
+                  delay: index * 0.045,
+                  ease: [0.76, 0, 0.24, 1],
+                }}
+              />
+            ))}
+          </div>
+          <motion.div
+            className="route-transition-object"
+            initial={{ opacity: 0, scale: 0.7, rotate: -8 }}
+            animate={{ opacity: 1, scale: 1, rotate: 0 }}
+            transition={{
+              duration: 0.62,
+              delay: 0.32,
+              ease: [0.16, 1, 0.3, 1],
+            }}
+          >
+            <Image
+              src={INDEX_ART[departingSystem.slug]}
+              alt=""
+              fill
+              sizes="220px"
+              style={{ objectFit: 'contain' }}
+            />
+          </motion.div>
+          <motion.div
+            className="route-transition-copy"
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.42, delay: 0.43 }}
+          >
+            <small>Opening the reading</small>
+            <strong>{departingSystem.name}</strong>
+          </motion.div>
+        </motion.div>
+      )}
     </main>
   );
 }

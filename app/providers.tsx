@@ -14,7 +14,7 @@ import {
   type DeckFinish,
   type DeckFinishes,
 } from '@/lib/divine/decks';
-import { SYSTEM_MAP } from '@/lib/divine/systems';
+import { CATALOG_NAME_MAP } from '@/lib/divine/catalog';
 
 type Theme = 'light' | 'dark';
 interface ExperienceContextValue {
@@ -153,6 +153,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
           </Link>
           <nav aria-label="Primary navigation">
             <Link href="/#readings">Readings</Link>
+            <Link href="/astrology">Astrology</Link>
             <Link href="/journal">Journal</Link>
             <Link href="/library">Library</Link>
           </nav>
@@ -191,7 +192,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
                   <div className="deck-settings">
                     {CARD_SYSTEM_SLUGS.map((slug) => (
                       <section className="deck-setting" key={slug}>
-                        <span>{SYSTEM_MAP[slug].name}</span>
+                        <span>{CATALOG_NAME_MAP[slug]}</span>
                         <div>
                           {(['color', 'ink'] as const).map((finish) => (
                             <button
