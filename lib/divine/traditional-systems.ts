@@ -765,7 +765,7 @@ const playingCards: CardDefinition[] = playingCardSuits.flatMap(
       ),
       aspectRatio: 5 / 7,
       provenance:
-        'Standard French-suited 52-card structure paired with Austin Gabriel’s CC0 deck; original DIVINE cartomancy interpretation.',
+        'Standard French-suited 52-card structure paired with Austin Gabriel’s CC0 deck in an original DIVINE archival print treatment; original DIVINE cartomancy interpretation.',
     })),
 );
 
@@ -1335,7 +1335,7 @@ const runeCards: CardDefinition[] = runeEntries.map(
     image: traditionalImage('runes', index),
     aspectRatio: 2 / 3,
     provenance:
-      'Historical Elder Futhark character and reconstructed name paired with its public-domain standardized letterform; modern DIVINE reflection. No ancient divinatory card tradition is claimed.',
+      'Historical Elder Futhark character and reconstructed name paired with its public-domain standardized letterform over the Kylver Stone (Bengt A Lundberg / Riksantikvarieämbetet, CC BY 2.5); modern DIVINE reflection. No ancient divinatory card tradition is claimed.',
   }),
 );
 
@@ -1802,7 +1802,7 @@ const iChingCards: CardDefinition[] = iChingEntries.map(
     image: traditionalImage('i-ching', index),
     aspectRatio: 2 / 3,
     provenance:
-      'Traditional King Wen number, Chinese title, and public-domain hexagram form; original DIVINE reflection in a modern card presentation, not a translation of the received text.',
+      'Traditional King Wen number, Chinese title, and public-domain hexagram form presented over the public-domain 1701 Bouvet–Leibniz chart; original DIVINE reflection in a modern card presentation, not a translation of the received text.',
   }),
 );
 
@@ -2582,7 +2582,7 @@ const ramlCards: CardDefinition[] = ramlEntries.map(
     image: traditionalImage('ilm-al-raml', index),
     aspectRatio: 2 / 3,
     provenance:
-      'Canonical four-line geomantic figure over a distinct public-domain image from Wellcome Collection MS Arabic 664. The fixed deck and interpretation are a transparent modern interface adaptation; Arabic figure names vary by text and transmission.',
+      'Canonical four-line geomantic figure rendered as solid ink points over a distinct public-domain image from Wellcome Collection MS Arabic 664. The fixed deck and interpretation are a transparent modern interface adaptation; Arabic figure names vary by text and transmission.',
   }),
 );
 

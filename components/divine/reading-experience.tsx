@@ -43,6 +43,7 @@ import {
   objectInterpretation,
 } from '@/lib/divine/reading';
 import { DIVINE_RITUAL, ritualForSystem } from '@/lib/divine/rituals';
+import { setReadingAmbience } from '@/lib/divine/audio';
 import { composeShare } from '@/lib/divine/share';
 import { saveReading } from '@/lib/divine/storage';
 import type {
@@ -57,6 +58,12 @@ import type {
 const FortuneCookie3D = lazy(() =>
   import('@/components/divine/fortune-cookie-3d').then((module) => ({
     default: module.FortuneCookie3D,
+  })),
+);
+
+const MagicEightBall3D = lazy(() =>
+  import('@/components/divine/magic-eight-ball-3d').then((module) => ({
+    default: module.MagicEightBall3D,
   })),
 );
 
@@ -86,7 +93,6 @@ interface StoredReadingSession {
   favorite: boolean;
   recordId: string;
   createdAt: string;
-  cookieChoice: number | null;
   objectStep?: number;
   cardRitualStep?: number;
   ramlLines?: number[];
@@ -729,7 +735,6 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
   const [motionSupported, setMotionSupported] = useState(false);
   const [motionEnabled, setMotionEnabled] = useState(false);
   const [announcement, setAnnouncement] = useState('');
-  const [cookieChoice, setCookieChoice] = useState<number | null>(null);
   const [objectStep, setObjectStep] = useState(0);
   const [objectAnimating, setObjectAnimating] = useState(false);
   const [cookieGestureProgress, setCookieGestureProgress] = useState(0);
@@ -749,11 +754,15 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
   const revealTimers = useRef<number[]>([]);
   const objectTimer = useRef<number | null>(null);
   const deckTimer = useRef<number | null>(null);
-  const fieldTiltX = useMotionValue(-3);
-  const fieldTiltY = useMotionValue(5);
   const sessionKey = `divine-session:${system.slug}`;
   const objectRitualSteps =
     system.kind === 'cookie' ? COOKIE_RITUAL_STEPS : OBJECT_RITUAL_STEPS;
+  const readingAmbienceActive = sessionReady && stage !== 'intro';
+
+  useEffect(() => {
+    setReadingAmbience(readingAmbienceActive);
+    return () => setReadingAmbience(false);
+  }, [readingAmbienceActive]);
 
   useEffect(() => {
     queueMicrotask(() => setMotionSupported('DeviceMotionEvent' in window));
@@ -830,7 +839,17 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
         setShuffled(restored.shuffled);
         setCardRitualStep(
           typeof restored.cardRitualStep === 'number'
-            ? Math.max(0, Math.floor(restored.cardRitualStep))
+            ? Math.max(
+                0,
+                Math.min(
+                  isCardSystemSlug(system.slug)
+                    ? ritualForSystem(system.slug).actions.length - 1
+                    : system.slug === 'divine'
+                      ? DIVINE_RITUAL.actions.length - 1
+                      : 0,
+                  Math.floor(restored.cardRitualStep),
+                ),
+              )
             : restored.shuffled
               ? 1
               : 0,
@@ -885,13 +904,6 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
             ? restored.createdAt
             : new Date().toISOString(),
         );
-        setCookieChoice(
-          restored.cookieChoice === 0 ||
-            restored.cookieChoice === 1 ||
-            restored.cookieChoice === 2
-            ? restored.cookieChoice
-            : null,
-        );
         setObjectStep(
           typeof restored.objectStep === 'number'
             ? Math.max(0, Math.min(objectRitualSteps, restored.objectStep))
@@ -932,7 +944,6 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
       favorite,
       recordId,
       createdAt,
-      cookieChoice,
       objectStep,
       cardRitualStep,
       ramlLines,
@@ -961,7 +972,6 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
     favorite,
     recordId,
     createdAt,
-    cookieChoice,
     objectStep,
     cardRitualStep,
     ramlLines,
@@ -1032,34 +1042,6 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
     setCreatedAt(new Date().toISOString());
   };
 
-  const tiltField = (event: React.PointerEvent<HTMLElement>) => {
-    if (event.pointerType === 'touch') return;
-    const bounds = event.currentTarget.getBoundingClientRect();
-    fieldTiltY.set(((event.clientX - bounds.left) / bounds.width - 0.5) * 24);
-    fieldTiltX.set(-((event.clientY - bounds.top) / bounds.height - 0.5) * 18);
-  };
-
-  const settleField = () => {
-    motionAnimate(fieldTiltX, -3, {
-      type: 'spring',
-      stiffness: 165,
-      damping: 20,
-    });
-    motionAnimate(fieldTiltY, 5, {
-      type: 'spring',
-      stiffness: 165,
-      damping: 20,
-    });
-  };
-
-  const dragField = (
-    _: MouseEvent | TouchEvent | PointerEvent,
-    info: { offset: { x: number; y: number } },
-  ) => {
-    fieldTiltY.set(Math.max(-24, Math.min(24, info.offset.x * 0.14)));
-    fieldTiltX.set(Math.max(-18, Math.min(18, -info.offset.y * 0.14)));
-  };
-
   const clearRevealTimers = () => {
     revealTimers.current.forEach((timer) => window.clearTimeout(timer));
     revealTimers.current = [];
@@ -1109,7 +1091,6 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
         setCardGestureProgress(0);
         setRamlLines([]);
       }
-      setCookieChoice(null);
       setObjectStep(0);
       setObjectAnimating(false);
       setCookieGestureProgress(0);
@@ -1253,7 +1234,6 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
   };
 
   const resolveObjectRitual = () => {
-    if (system.kind === 'cookie' && cookieChoice === null) return;
     if (ritualLock.current) return;
     ritualLock.current = true;
     setObjectAnimating(true);
@@ -1289,7 +1269,6 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
   };
 
   const advanceObjectRitual = () => {
-    if (system.kind === 'cookie' && cookieChoice === null) return;
     if (objectAnimating || ritualLock.current) return;
     const next = nextObjectRitualStep(objectStep, objectRitualSteps);
     setCookieGestureProgress(0);
@@ -1410,7 +1389,6 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
     setFavorite(false);
     setSaved(false);
     setAnnouncement('');
-    setCookieChoice(null);
     setObjectStep(0);
     setObjectAnimating(false);
     setCookieGestureProgress(0);
@@ -1596,53 +1574,46 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            <motion.button
-              drag
-              dragConstraints={{ left: -110, right: 110, top: -70, bottom: 70 }}
-              dragElastic={0.16}
-              dragMomentum={false}
-              style={{ rotateX: fieldTiltX, rotateY: fieldTiltY }}
-              onPointerMove={tiltField}
-              onPointerLeave={settleField}
-              onDrag={dragField}
-              onDragEnd={settleField}
-              onClick={advanceObjectRitual}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter' || event.key === ' ') {
-                  event.preventDefault();
-                  advanceObjectRitual();
+            <Suspense fallback={<span className="object-webgl-fallback" />}>
+              <MagicEightBall3D
+                answer={objectMessage}
+                step={objectStep}
+                disabled={objectAnimating}
+                onAdvance={advanceObjectRitual}
+                ariaLabel={
+                  objectStep === 0
+                    ? 'Rotate the ball or press for the first shake'
+                    : objectStep === 1
+                      ? 'Rotate the ball or press for the second shake'
+                      : 'Rotate the ball or press for the final shake'
                 }
-              }}
-              disabled={objectAnimating}
-              className={`eight-ball object-step-${objectStep} ${objectAnimating ? 'is-moving' : ''}`}
-              aria-label={
-                objectStep === 0
-                  ? 'Rotate the ball or press for the first shake'
+              />
+            </Suspense>
+            <div className="system-ritual-caption object-ritual-caption">
+              <span>A liquid answer chamber</span>
+              <strong>
+                {objectStep === 0
+                  ? 'Shake'
                   : objectStep === 1
-                    ? 'Rotate the ball or press for the second shake'
-                    : 'Rotate the ball or press for the final shake'
-              }
-              animate={
-                objectAnimating
-                  ? {
-                      x: [0, -28, 25, -21, 17, -12, 8, -4, 0],
-                      y: [0, 5, -4, 3, -3, 2, -1, 0],
-                      rotateZ: [0, -9, 10, -8, 7, -5, 3, -1, 0],
-                      scale: [1, 1.035, 0.99, 1.025, 1],
+                    ? 'Shake again'
+                    : 'Final shake'}
+              </strong>
+              <p>Move the ball or press to perform the shake.</p>
+              <div className="system-ritual-progress" aria-hidden="true">
+                {[0, 1, 2].map((index) => (
+                  <i
+                    key={index}
+                    className={
+                      index < objectStep
+                        ? 'is-complete'
+                        : index === objectStep
+                          ? 'is-current'
+                          : ''
                     }
-                  : { x: 0, y: 0, rotateZ: 0, scale: 1 }
-              }
-              transition={{
-                duration: objectStep === OBJECT_RITUAL_STEPS ? 1.25 : 0.54,
-                ease: [0.22, 0.8, 0.2, 1],
-              }}
-              whileDrag={{ scale: 1.035 }}
-            >
-              <span className="ball-mark">8</span>
-              <i className="ball-window" aria-hidden="true">
-                {objectStep >= OBJECT_RITUAL_STEPS ? objectMessage : '···'}
-              </i>
-            </motion.button>
+                  />
+                ))}
+              </div>
+            </div>
             {motionSupported && (
               <button
                 type="button"
@@ -1664,44 +1635,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            {cookieChoice === null ? (
-              <div className="cookie-choice-field">
-                <div className="cookie-choice-row">
-                  {[0, 1, 2].map((choice) => (
-                    <motion.button
-                      type="button"
-                      className="cookie-choice"
-                      key={choice}
-                      onClick={() => {
-                        setCookieChoice(choice);
-                        setAnnouncement('The hand has chosen a shell.');
-                        cue('tick');
-                      }}
-                      aria-label={`Choose fortune cookie ${choice + 1}`}
-                      initial={{ opacity: 0, y: -70, rotate: (choice - 1) * 8 }}
-                      animate={{ opacity: 1, y: 0, rotate: (choice - 1) * 5 }}
-                      transition={{
-                        duration: 0.52,
-                        delay: choice * 0.09,
-                        ease: [0.22, 1, 0.36, 1],
-                      }}
-                      whileHover={{ y: -12, rotate: 0, scale: 1.04 }}
-                      whileTap={{ scale: 0.96 }}
-                    >
-                      <span aria-hidden="true">
-                        <i />
-                        <b />
-                      </span>
-                    </motion.button>
-                  ))}
-                </div>
-                <div className="cookie-choice-copy">
-                  <span>Three unopened shells</span>
-                  <strong>Choose</strong>
-                  <p>Do not study the options. Let the hand arrive first.</p>
-                </div>
-              </div>
-            ) : (
+            <>
               <div
                 className={`cookie-object object-step-${objectStep} ${objectStep >= 3 ? 'is-cracking' : ''} ${objectStep >= COOKIE_RITUAL_STEPS ? 'is-drawing' : ''} ${objectAnimating ? 'is-moving' : ''}`}
                 style={
@@ -1748,7 +1682,40 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
                   ))}
                 </span>
               </div>
-            )}
+              <div className="system-ritual-caption object-ritual-caption">
+                <span>The chosen shell</span>
+                <strong>
+                  {objectStep === 0
+                    ? 'Bend'
+                    : objectStep === 1
+                      ? 'Widen'
+                      : objectStep === 2
+                        ? 'Break'
+                        : 'Draw'}
+                </strong>
+                <p>
+                  {objectStep < 2
+                    ? 'Move the two sides apart and let the fracture deepen.'
+                    : objectStep === 2
+                      ? 'Pull firmly enough for the shell to give way.'
+                      : 'Draw the narrow paper out to the right.'}
+                </p>
+                <div className="system-ritual-progress" aria-hidden="true">
+                  {[0, 1, 2, 3].map((index) => (
+                    <i
+                      key={index}
+                      className={
+                        index < objectStep
+                          ? 'is-complete'
+                          : index === objectStep
+                            ? 'is-current'
+                            : ''
+                      }
+                    />
+                  ))}
+                </div>
+              </div>
+            </>
           </motion.section>
         )}
 

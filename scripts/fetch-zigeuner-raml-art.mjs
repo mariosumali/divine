@@ -284,9 +284,9 @@ const ramlPages = [
 function figureDrawing(pattern) {
   const parts = [];
   for (const [row, count] of [...pattern].entries()) {
-    const y = 420 + row * 145;
-    const centers = count === '1' ? [360] : [295, 425];
-    for (const x of centers) parts.push(`circle ${x},${y} ${x + 30},${y}`);
+    const y = 410 + row * 135;
+    const centers = count === '1' ? [360] : [315, 405];
+    for (const x of centers) parts.push(`circle ${x},${y} ${x + 20},${y}`);
   }
   return parts.join(' ');
 }
@@ -317,14 +317,58 @@ async function renderRaml() {
       'center',
       '-extent',
       '720x1080',
+      '-modulate',
+      '97,72,100',
+      '-contrast-stretch',
+      '0.4%x0.4%',
       '-fill',
-      '#f1ddb2cc',
+      '#2f1c12',
+      '-colorize',
+      '7%',
+      '-fill',
+      '#ecd9adcc',
       '-stroke',
-      '#2f1e18',
+      '#4b2b1c',
       '-strokewidth',
-      '9',
+      '4',
+      '-draw',
+      'roundrectangle 218,210 502,894 28,28',
+      '-fill',
+      'none',
+      '-stroke',
+      '#a77a35',
+      '-strokewidth',
+      '2',
+      '-draw',
+      'rectangle 232,224 488,880',
+      '-fill',
+      '#7f2f24',
+      '-stroke',
+      '#d8b66b',
+      '-strokewidth',
+      '4',
       '-draw',
       figureDrawing(pattern),
+      '-fill',
+      '#a77a35',
+      '-stroke',
+      'none',
+      '-draw',
+      'polygon 360,236 373,249 360,262 347,249 polygon 360,842 373,855 360,868 347,855',
+      '-fill',
+      'none',
+      '-stroke',
+      '#c4a86c',
+      '-strokewidth',
+      '3',
+      '-draw',
+      'rectangle 22,22 697,1057',
+      '-stroke',
+      '#3d271d',
+      '-strokewidth',
+      '2',
+      '-draw',
+      'rectangle 30,30 689,1049',
       '-strip',
       '-quality',
       '84',
@@ -343,7 +387,7 @@ async function renderRaml() {
       license: 'Public Domain Mark 1.0',
       artist: 'Anonymous; Wellcome Collection',
       treatment:
-        'A canonical four-line geomantic figure is overlaid on a center crop of one distinct public-domain manuscript image. This is a modern card treatment, not an original historical deck.',
+        'A canonical four-line geomantic figure is rendered as solid mineral-ink points inside a manuscript-style ruled panel over one distinct public-domain manuscript image. This is a modern card treatment, not an original historical deck.',
     });
     process.stdout.write(`${slug}: ${index + 1}/${ramlFigures.length}\n`);
   }
@@ -353,7 +397,7 @@ async function renderRaml() {
     iiifManifest:
       'https://iiif.wellcomecollection.org/presentation/v2/b20298286',
     rightsNote:
-      'The backgrounds are distinct public-domain images from an Arabic treatise on ʿilm al-raml. The figures are the sixteen canonical one-or-two-point forms; the fixed card format is a transparent modern interface adaptation of a generated geomantic practice.',
+      'The backgrounds are distinct public-domain images from an Arabic treatise on ʿilm al-raml. The figures are the sixteen canonical one-or-two-point forms, rendered as solid mineral-ink points in manuscript-style ruled panels; the fixed card format is a transparent modern interface adaptation of a generated geomantic practice.',
     cards,
   });
 }
