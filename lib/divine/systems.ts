@@ -4,6 +4,7 @@ import type {
   SystemDefinition,
   SystemSlug,
 } from './types';
+import { TRADITIONAL_CARD_SYSTEMS } from './traditional-systems';
 
 const spread = (
   id: string,
@@ -810,6 +811,7 @@ export const SYSTEMS: SystemDefinition[] = [
       'A complete map of archetype and consequence. Tarot shows the pattern beneath the event—and the choice still inside it.',
     instruction:
       'Hold the question lightly. Cut the deck when the movement feels complete.',
+    reversalStyle: 'optional',
     cards: tarot,
     spreads: tarotSpreads,
     cover: '/art/tarot.webp',
@@ -987,6 +989,7 @@ export const SYSTEMS: SystemDefinition[] = [
     spreads: [],
     cover: '/art/fortune-cookie.webp',
   },
+  ...TRADITIONAL_CARD_SYSTEMS,
 ];
 
 export const SYSTEM_MAP = Object.fromEntries(

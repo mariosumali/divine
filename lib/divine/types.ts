@@ -5,6 +5,14 @@ export type SystemSlug =
   | 'spellcraft'
   | 'ancient-egypt'
   | 'zodiac'
+  | 'kipper'
+  | 'belline'
+  | 'playing-card-cartomancy'
+  | 'sibilla'
+  | 'runic-cards'
+  | 'i-ching-cards'
+  | 'fal-e-hafez'
+  | 'hanafuda'
   | 'magic-8-ball'
   | 'fortune-cookie';
 
@@ -48,6 +56,7 @@ export interface SystemDefinition {
   eyebrow: string;
   introduction: string;
   instruction: string;
+  reversalStyle?: 'optional' | 'required';
   cards: CardDefinition[];
   spreads: SpreadDefinition[];
   cover: string;

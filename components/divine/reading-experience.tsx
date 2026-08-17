@@ -578,7 +578,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
   const [spread, setSpread] = useState<SpreadDefinition | null>(
     system.spreads[0] ?? null,
   );
-  const [reversals, setReversals] = useState(system.slug === 'tarot');
+  const [reversals, setReversals] = useState(Boolean(system.reversalStyle));
   const [shuffled, setShuffled] = useState(false);
   const [draws, setDraws] = useState<DrawnCard[]>([]);
   const [revealed, setRevealed] = useState<Set<number>>(new Set());
@@ -685,7 +685,9 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
             : 'general',
         );
         setSpread(restoredSpread);
-        setReversals(restored.reversals);
+        setReversals(
+          system.reversalStyle === 'required' ? true : restored.reversals,
+        );
         setShuffled(restored.shuffled);
         setDeckPhase(restored.shuffled ? 'cut' : 'stacked');
         setDraws(restoredDraws);
@@ -1337,14 +1339,18 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
               ))}
             </div>
             <div className="method-footer">
-              {system.slug === 'tarot' && (
+              {system.reversalStyle && (
                 <label className="reversal-toggle">
                   <input
                     type="checkbox"
                     checked={reversals}
+                    disabled={system.reversalStyle === 'required'}
                     onChange={(event) => setReversals(event.target.checked)}
                   />
-                  <span>Reversals</span>
+                  <span>
+                    Reversals
+                    {system.reversalStyle === 'required' ? ' · intrinsic' : ''}
+                  </span>
                 </label>
               )}
               <Button

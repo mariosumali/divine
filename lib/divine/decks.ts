@@ -10,6 +10,14 @@ export const CARD_SYSTEM_SLUGS = [
   'spellcraft',
   'ancient-egypt',
   'zodiac',
+  'kipper',
+  'belline',
+  'playing-card-cartomancy',
+  'sibilla',
+  'runic-cards',
+  'i-ching-cards',
+  'fal-e-hafez',
+  'hanafuda',
 ] as const satisfies readonly SystemSlug[];
 
 export type CardSystemSlug = (typeof CARD_SYSTEM_SLUGS)[number];
@@ -22,6 +30,14 @@ export const DEFAULT_DECK_FINISHES: DeckFinishes = {
   spellcraft: 'color',
   'ancient-egypt': 'color',
   zodiac: 'color',
+  kipper: 'color',
+  belline: 'color',
+  'playing-card-cartomancy': 'color',
+  sibilla: 'color',
+  'runic-cards': 'color',
+  'i-ching-cards': 'color',
+  'fal-e-hafez': 'color',
+  hanafuda: 'color',
 };
 
 export const DECK_LABELS: Record<
@@ -34,6 +50,14 @@ export const DECK_LABELS: Record<
   spellcraft: { color: 'Chromatic', ink: 'Ink' },
   'ancient-egypt': { color: 'Pigment', ink: 'Ink' },
   zodiac: { color: 'Celestial color', ink: 'Ink' },
+  kipper: { color: 'Bavarian color', ink: 'Ink' },
+  belline: { color: 'Planetary color', ink: 'Ink' },
+  'playing-card-cartomancy': { color: 'Red & black', ink: 'Ink' },
+  sibilla: { color: 'Italian color', ink: 'Ink' },
+  'runic-cards': { color: 'Stone & ember', ink: 'Ink' },
+  'i-ching-cards': { color: 'Jade & cinnabar', ink: 'Ink' },
+  'fal-e-hafez': { color: 'Rose & night', ink: 'Ink' },
+  hanafuda: { color: 'Seasonal color', ink: 'Ink' },
 };
 
 const palettes: Record<CardSystemSlug, Array<[string, string]>> = {
@@ -67,6 +91,48 @@ const palettes: Record<CardSystemSlug, Array<[string, string]>> = {
     ['#d9c8e8', '#4d2f67'],
     ['#e5c8b9', '#74351f'],
     ['#c2d9ce', '#244f42'],
+  ],
+  kipper: [
+    ['#e2d1bb', '#5b2d1f'],
+    ['#cdd9d2', '#24493b'],
+    ['#d8cddd', '#493251'],
+  ],
+  belline: [
+    ['#e6cf9b', '#604214'],
+    ['#c6d5e4', '#243e61'],
+    ['#ddc5ca', '#6a293a'],
+    ['#d3cee4', '#42345e'],
+  ],
+  'playing-card-cartomancy': [
+    ['#eee9dd', '#8b1f25'],
+    ['#eee9dd', '#151515'],
+  ],
+  sibilla: [
+    ['#ead7c1', '#6f3020'],
+    ['#d5dfcc', '#2d532c'],
+    ['#d4d7e1', '#293b5d'],
+    ['#ead8a9', '#66500c'],
+  ],
+  'runic-cards': [
+    ['#d9d2c2', '#423a2d'],
+    ['#d6c4b9', '#642e20'],
+    ['#c7d1d0', '#294748'],
+  ],
+  'i-ching-cards': [
+    ['#d6dfd4', '#244d3b'],
+    ['#e3d5c5', '#7b2e24'],
+    ['#d1d8df', '#263e56'],
+  ],
+  'fal-e-hafez': [
+    ['#e2ccd3', '#6b2742'],
+    ['#cbd1df', '#2d355a'],
+    ['#dfd0b7', '#654315'],
+  ],
+  hanafuda: [
+    ['#e5c9ca', '#792b34'],
+    ['#cbdac8', '#2d552d'],
+    ['#e4d5a8', '#66500e'],
+    ['#ccd7e4', '#2d4664'],
   ],
 };
 

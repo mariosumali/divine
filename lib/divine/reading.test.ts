@@ -14,13 +14,21 @@ import { FORTUNES, SYSTEM_MAP, SYSTEMS } from './systems';
 
 describe('DIVINE content libraries', () => {
   it('contains every complete launch deck', () => {
-    expect(SYSTEMS).toHaveLength(8);
+    expect(SYSTEMS).toHaveLength(16);
     expect(SYSTEM_MAP.tarot.cards).toHaveLength(78);
     expect(SYSTEM_MAP.oracle.cards).toHaveLength(44);
     expect(SYSTEM_MAP.lenormand.cards).toHaveLength(36);
     expect(SYSTEM_MAP.spellcraft.cards).toHaveLength(36);
     expect(SYSTEM_MAP['ancient-egypt'].cards).toHaveLength(36);
     expect(SYSTEM_MAP.zodiac.cards).toHaveLength(34);
+    expect(SYSTEM_MAP.kipper.cards).toHaveLength(36);
+    expect(SYSTEM_MAP.belline.cards).toHaveLength(53);
+    expect(SYSTEM_MAP['playing-card-cartomancy'].cards).toHaveLength(52);
+    expect(SYSTEM_MAP.sibilla.cards).toHaveLength(52);
+    expect(SYSTEM_MAP['runic-cards'].cards).toHaveLength(24);
+    expect(SYSTEM_MAP['i-ching-cards'].cards).toHaveLength(64);
+    expect(SYSTEM_MAP['fal-e-hafez'].cards).toHaveLength(36);
+    expect(SYSTEM_MAP.hanafuda.cards).toHaveLength(48);
     expect(FORTUNES).toHaveLength(144);
   });
 
@@ -85,6 +93,31 @@ describe('reading engine', () => {
         'house',
       ]);
     }
+  });
+
+  it('draws one card from each planetary Belline family', () => {
+    const system = SYSTEM_MAP.belline;
+    const spread = system.spreads.find((item) => item.id === 'seven-planets')!;
+    expect(
+      drawCards(system, spread, false).map((draw) => draw.card.domain),
+    ).toEqual(['sun', 'moon', 'mercury', 'venus', 'mars', 'jupiter', 'saturn']);
+  });
+
+  it('preserves all fixed traditional structures', () => {
+    expect(
+      new Set(SYSTEM_MAP['i-ching-cards'].cards.map((card) => card.glyph)).size,
+    ).toBe(64);
+    expect(SYSTEM_MAP.sibilla.cards.every((card) => card.reversedMeaning)).toBe(
+      true,
+    );
+    expect(
+      new Set(SYSTEM_MAP.hanafuda.cards.map((card) => card.numerology)).size,
+    ).toBe(12);
+    expect(
+      SYSTEM_MAP['runic-cards'].cards.some((card) =>
+        card.name.toLowerCase().includes('blank'),
+      ),
+    ).toBe(false);
   });
 
   it('applies curated Lenormand relationships and house context', () => {

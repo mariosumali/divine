@@ -62,7 +62,14 @@ export function LibraryBrowser() {
     const normalized = query.trim().toLowerCase();
     if (!normalized) return system.cards;
     return system.cards.filter((card) =>
-      [card.name, card.domain, card.element, ...card.keywords]
+      [
+        card.name,
+        card.domain,
+        card.element,
+        card.subject,
+        card.modifier,
+        ...card.keywords,
+      ]
         .filter(Boolean)
         .some((value) => value?.toLowerCase().includes(normalized)),
     );

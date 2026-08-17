@@ -62,6 +62,21 @@ function zodiacDraws(
   return [system.cards[secureIndex(system.cards.length)]];
 }
 
+function bellineDraws(
+  system: SystemDefinition,
+  spread: SpreadDefinition,
+): CardDefinition[] {
+  if (spread.id !== 'seven-planets')
+    return secureShuffle(system.cards).slice(0, spread.positions.length);
+
+  return ['sun', 'moon', 'mercury', 'venus', 'mars', 'jupiter', 'saturn'].map(
+    (planet) => {
+      const pool = system.cards.filter((card) => card.domain === planet);
+      return pool[secureIndex(pool.length)];
+    },
+  );
+}
+
 export function drawCards(
   system: SystemDefinition,
   spread: SpreadDefinition,
@@ -70,7 +85,9 @@ export function drawCards(
   const picked =
     system.slug === 'zodiac'
       ? zodiacDraws(system, spread)
-      : secureShuffle(system.cards).slice(0, spread.positions.length);
+      : system.slug === 'belline'
+        ? bellineDraws(system, spread)
+        : secureShuffle(system.cards).slice(0, spread.positions.length);
 
   return picked.map((card, index) => ({
     card,

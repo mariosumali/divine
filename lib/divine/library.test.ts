@@ -14,7 +14,7 @@ describe('DIVINE library', () => {
 
   it('indexes every authored card with a standalone meaning', () => {
     const cards = SYSTEMS.flatMap((system) => system.cards);
-    expect(cards).toHaveLength(264);
+    expect(cards).toHaveLength(629);
     expect(
       cards.every(
         (card) => card.name && card.meaning && card.keywords.length > 0,
@@ -26,6 +26,18 @@ describe('DIVINE library', () => {
     expect(METHOD_HISTORIES.tarot.variant).toContain('Tarot de Marseille');
     expect(METHOD_HISTORIES.lenormand.variant).toContain(
       'Grand Jeu de Mlle Lenormand',
+    );
+  });
+
+  it('labels modern adaptations without inventing historical canons', () => {
+    expect(METHOD_HISTORIES['fal-e-hafez'].history.join(' ')).toContain(
+      'There is no historical canonical Hafez card deck',
+    );
+    expect(METHOD_HISTORIES.hanafuda.history.join(' ')).toContain(
+      'not historically a single standardized divination system',
+    );
+    expect(METHOD_HISTORIES['runic-cards'].history.join(' ')).toContain(
+      'modern additions',
     );
   });
 });

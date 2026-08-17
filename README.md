@@ -1,6 +1,6 @@
 # DIVINE
 
-DIVINE is a private, account-free divination application with complete Tarot, Oracle, Lenormand, Ritual, Temple, Zodiac, Magic 8 Ball, and Fortune Cookie reading flows.
+DIVINE is a private, account-free divination application with sixteen complete reading flows: Tarot, Oracle, Lenormand, Ritual, Temple, Zodiac, Kipper, Belline, Playing Card Cartomancy, Sibilla Italiana, Runic Cards, I Ching Cards, Fal-e Hafez Cards, Hanafuda, Magic 8 Ball, and Fortune Cookie.
 
 The interface uses an editorial black-and-white visual system, procedural Web Audio, tactile motion, browser-only randomness, and an IndexedDB journal. Questions, notes, and saved readings never leave the browser.
 
@@ -33,6 +33,6 @@ pnpm audit --audit-level high
 - `lib/divine/storage.ts` owns the versioned, device-local IndexedDB journal.
 - `lib/divine/share.ts` creates privacy-safe share compositions; questions are opt-in and notes are never exported.
 
-Tarot uses locally hosted, individually verified public-domain Rider–Waite–Smith imagery. All other card symbols, cover art, object art, interpretations, and fortunes are original DIVINE work.
+Tarot uses locally hosted, individually verified public-domain Rider–Waite–Smith imagery, and Lenormand uses public-domain Game of Hope imagery. The other historical systems preserve their traditional card names and structures while using original DIVINE interpretations and procedural card treatments. Runic Cards, I Ching Cards, Fal-e Hafez Cards, and Hanafuda explicitly distinguish their historical source traditions from their contemporary card-reading adaptations.
 
 DIVINE is for entertainment and personal reflection, not professional advice. The “Magic 8 Ball” label requires trademark review before a public commercial release.
