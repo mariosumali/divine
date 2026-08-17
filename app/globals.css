@@ -1062,7 +1062,8 @@ button {
   background: var(--paper);
   box-shadow: 0 0 18px color-mix(in srgb, var(--paper) 70%, transparent);
   opacity: 0;
-  transform: translate(-50%, -50%) rotate(0deg) translateX(min(37%, 125px));
+  transform: translate(-50%, -50%) rotate(0deg)
+    translateX(clamp(52px, 8vw, 125px));
   transform-origin: 0 0;
   transition: opacity 0.35s ease;
 }
@@ -5691,6 +5692,73 @@ button {
       rotate(var(--art-rotate, 1deg));
   }
 }
+@keyframes reading-cell-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes reading-art-awaken {
+  from {
+    transform: translate3d(-3px, 2px, 0) rotate(-2deg) scale(0.98);
+  }
+  to {
+    transform: translate3d(var(--art-x, 5px), var(--art-y, -7px), 0)
+      rotate(var(--art-rotate, 1deg)) scale(1.06);
+  }
+}
+@keyframes reading-art-swing {
+  from {
+    transform: translate3d(-3px, 2px, 0) rotate(-4.5deg) scale(1.01);
+  }
+  to {
+    transform: translate3d(5px, -10px, 0) rotate(4.5deg) scale(1.065);
+  }
+}
+@keyframes reading-art-pulse {
+  0%,
+  100% {
+    transform: translateY(1px) scale(0.98);
+  }
+  50% {
+    transform: translateY(-8px) scale(1.075);
+  }
+}
+@keyframes reading-art-turn {
+  from {
+    transform: translateY(0) rotate(-3deg) scale(1.01);
+  }
+  to {
+    transform: translateY(-8px) rotate(12deg) scale(1.07);
+  }
+}
+@keyframes reading-art-slide {
+  0%,
+  100% {
+    transform: translate3d(-7px, 1px, 0) rotate(-2deg) scale(1.01);
+  }
+  50% {
+    transform: translate3d(9px, -8px, 0) rotate(2.5deg) scale(1.065);
+  }
+}
+@keyframes reading-index-orbit {
+  to {
+    transform: translate(-50%, -50%) rotate(360deg)
+      translateX(clamp(52px, 8vw, 125px));
+  }
+}
+@keyframes route-orbit {
+  from {
+    transform: rotate(-9deg);
+  }
+  to {
+    transform: rotate(351deg);
+  }
+}
 @keyframes crystal-scan {
   0%,
   18% {
@@ -6436,6 +6504,10 @@ button {
     transition-duration: 0.01ms !important;
   }
   .hero-shutters {
+    display: none;
+  }
+  .stage-transition,
+  .reading-route-transition {
     display: none;
   }
   .hero-meta,
