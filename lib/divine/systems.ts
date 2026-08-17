@@ -838,7 +838,7 @@ const zodiac = makeNamedDeck(
     'Sidney Hall’s Urania’s Mirror (1825), public-domain constellation cards via Wikimedia Commons; original DIVINE interpretation.',
 }));
 
-export const SYSTEMS: SystemDefinition[] = [
+const STANDARD_SYSTEMS: SystemDefinition[] = [
   {
     slug: 'tarot',
     index: '01',
@@ -1031,6 +1031,64 @@ export const SYSTEMS: SystemDefinition[] = [
   },
   ...TRADITIONAL_CARD_SYSTEMS,
 ];
+
+const divinePositions = [
+  'The root pattern',
+  'The image beneath words',
+  'The immediate fact',
+  'The act that shifts it',
+  'The ancestral echo',
+  'The larger timing',
+  'The social field',
+  'The active influence',
+  'The everyday current',
+  'The conversation unfolding',
+  'The force at work',
+  'The nature of change',
+  'The poetic counsel',
+  'The season of becoming',
+  'The event approaching',
+  'The final judgment',
+];
+
+const divineDecks = STANDARD_SYSTEMS.filter(
+  (system) => system.kind === 'cards',
+);
+
+export const DIVINE_SYSTEM: SystemDefinition = {
+  slug: 'divine',
+  index: '00',
+  name: 'DIVINE Reading',
+  shortName: 'DIVINE',
+  kind: 'cards',
+  countLabel: `${divineDecks.length} decks · ${divineDecks.reduce((count, deck) => count + deck.cards.length, 0)} cards`,
+  eyebrow: 'All decks / One pattern',
+  introduction:
+    'Every card deck enters one field. Sixteen distinct traditions answer in sequence, then their symbols are connected into a single living pattern.',
+  instruction:
+    'Hold one question at the center. Gather each deck without asking any one of them to speak alone.',
+  reversalStyle: 'optional',
+  cards: divineDecks.flatMap((deck) =>
+    deck.cards.map((card) => ({
+      ...card,
+      id: `${deck.slug}:${card.id}`,
+      sourceSystem: deck.slug,
+      sourceSystemName: deck.name,
+    })),
+  ),
+  spreads: [
+    spread(
+      'whole-constellation',
+      'The Whole Constellation',
+      'One card from every deck, read as one connected sequence.',
+      divinePositions,
+      'grid',
+    ),
+  ],
+  cover: '/hero/divine-crystal.webp',
+};
+
+export const SYSTEMS: SystemDefinition[] = [DIVINE_SYSTEM, ...STANDARD_SYSTEMS];
 
 export const SYSTEM_MAP = Object.fromEntries(
   SYSTEMS.map((system) => [system.slug, system]),

@@ -11,6 +11,18 @@ export interface MethodHistory {
 }
 
 export const METHOD_HISTORIES: Record<SystemSlug, MethodHistory> = {
+  divine: {
+    slug: 'divine',
+    period: 'DIVINE synthesis / present',
+    origin: 'Sixteen card traditions in conversation',
+    title: 'No single deck gets the last word.',
+    history: [
+      'The DIVINE Reading is a contemporary synthesis rather than a historical divination system. It draws one card from every card deck in the collection, preserving each tradition’s own imagery and vocabulary.',
+      'The cards are read in a fixed arc from underlying pattern to final judgment. Each voice modifies the one before it, so the reading’s meaning lives in the connections between decks as much as in the individual cards.',
+    ],
+    variant:
+      'For a reading rooted in one historical method, choose that deck directly. This mode is intentionally cross-traditional.',
+  },
   tarot: {
     slug: 'tarot',
     period: '15th century → present',

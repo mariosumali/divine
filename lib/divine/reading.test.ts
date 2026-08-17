@@ -14,7 +14,8 @@ import { FORTUNES, SYSTEM_MAP, SYSTEMS } from './systems';
 
 describe('DIVINE content libraries', () => {
   it('contains every complete launch deck', () => {
-    expect(SYSTEMS).toHaveLength(18);
+    expect(SYSTEMS).toHaveLength(19);
+    expect(SYSTEM_MAP.divine.cards).toHaveLength(681);
     expect(SYSTEM_MAP.tarot.cards).toHaveLength(78);
     expect(SYSTEM_MAP.oracle.cards).toHaveLength(44);
     expect(SYSTEM_MAP.lenormand.cards).toHaveLength(36);
@@ -105,9 +106,9 @@ describe('DIVINE content libraries', () => {
   });
 
   it('ships local, distinct artwork for every card in every system', () => {
-    const cards = SYSTEMS.filter((system) => system.kind === 'cards').flatMap(
-      (system) => system.cards,
-    );
+    const cards = SYSTEMS.filter(
+      (system) => system.kind === 'cards' && system.slug !== 'divine',
+    ).flatMap((system) => system.cards);
     const images = cards.map((card) => card.image);
 
     expect(cards).toHaveLength(681);
@@ -259,6 +260,31 @@ describe('reading engine', () => {
     ).toEqual(['sun', 'moon', 'mercury', 'venus', 'mars', 'jupiter', 'saturn']);
   });
 
+  it('draws one card from every deck and connects the full DIVINE reading', () => {
+    const system = SYSTEM_MAP.divine;
+    const spread = system.spreads[0];
+    const draws = drawCards(system, spread, true);
+    const sourceDecks = draws.map((draw) => draw.card.sourceSystem);
+
+    expect(draws).toHaveLength(16);
+    expect(new Set(sourceDecks).size).toBe(16);
+    expect(sourceDecks).not.toContain('divine');
+
+    const result = interpretReading(system, spread, draws, 'general');
+    expect(result.connections).toHaveLength(15);
+    expect(result.headline).toContain('Sixteen voices');
+    for (const draw of draws) {
+      expect(result.synthesis).toContain(draw.card.name);
+      expect(
+        result.connections?.some(
+          (connection) =>
+            connection.from.includes(draw.card.sourceSystemName!) ||
+            connection.to.includes(draw.card.sourceSystemName!),
+        ),
+      ).toBe(true);
+    }
+  });
+
   it('preserves all fixed traditional structures', () => {
     expect(
       new Set(SYSTEM_MAP['i-ching-cards'].cards.map((card) => card.glyph)).size,
@@ -303,6 +329,42 @@ describe('reading engine', () => {
     expect(result.positions[0].text).toContain('In the house of Rider');
     expect(result.positions[0].text).toContain('Nearest neighbors');
     expect(result.positions[0].text).toContain('Timing:');
+  });
+
+  it('gives every card an expanded interpretation and connects multi-card positions', () => {
+    const system = SYSTEM_MAP.tarot;
+    const singleSpread = system.spreads.find((item) => item.id === 'insight')!;
+    const singleDraws = [
+      {
+        card: system.cards[0],
+        position: singleSpread.positions[0],
+        reversed: false,
+      },
+    ];
+    const single = interpretReading(
+      system,
+      singleSpread,
+      singleDraws,
+      'general',
+    );
+    expect(single.positions[0].text.length).toBeGreaterThan(220);
+    expect(single.synthesis).toContain(singleDraws[0].card.name);
+
+    const spread = system.spreads.find((item) => item.id === 'three')!;
+    const draws = system.cards.slice(0, 3).map((card, index) => ({
+      card,
+      position: spread.positions[index],
+      reversed: index === 1,
+    }));
+    const result = interpretReading(system, spread, draws, 'love');
+    for (const [index, position] of result.positions.entries()) {
+      expect(position.text.length).toBeGreaterThan(300);
+      const neighbor = draws[index === 0 ? 1 : index - 1];
+      expect(position.text).toContain(neighbor.card.name);
+    }
+    for (const draw of draws)
+      expect(result.synthesis).toContain(draw.card.name);
+    expect(result.synthesis).toContain('no card stands alone');
   });
 
   it('produces unique lucky numbers within the expected range', () => {

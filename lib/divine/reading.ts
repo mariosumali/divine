@@ -9,9 +9,13 @@ import type {
 } from './types';
 
 export const OBJECT_RITUAL_STEPS = 3;
+export const COOKIE_RITUAL_STEPS = 4;
 
-export function nextObjectRitualStep(current: number): number {
-  return Math.min(OBJECT_RITUAL_STEPS, Math.max(0, Math.floor(current)) + 1);
+export function nextObjectRitualStep(
+  current: number,
+  maximum = OBJECT_RITUAL_STEPS,
+): number {
+  return Math.min(maximum, Math.max(0, Math.floor(current)) + 1);
 }
 
 export function secureIndex(max: number): number {
@@ -77,17 +81,39 @@ function bellineDraws(
   );
 }
 
+function divineDraws(
+  system: SystemDefinition,
+  spread: SpreadDefinition,
+): CardDefinition[] {
+  const sourceOrder = Array.from(
+    new Set(
+      system.cards
+        .map((card) => card.sourceSystem)
+        .filter((slug): slug is NonNullable<typeof slug> => Boolean(slug)),
+    ),
+  );
+
+  return sourceOrder.slice(0, spread.positions.length).map((sourceSystem) => {
+    const pool = system.cards.filter(
+      (card) => card.sourceSystem === sourceSystem,
+    );
+    return pool[secureIndex(pool.length)];
+  });
+}
+
 export function drawCards(
   system: SystemDefinition,
   spread: SpreadDefinition,
   allowReversals: boolean,
 ): DrawnCard[] {
   const picked =
-    system.slug === 'zodiac'
-      ? zodiacDraws(system, spread)
-      : system.slug === 'belline'
-        ? bellineDraws(system, spread)
-        : secureShuffle(system.cards).slice(0, spread.positions.length);
+    system.slug === 'divine'
+      ? divineDraws(system, spread)
+      : system.slug === 'zodiac'
+        ? zodiacDraws(system, spread)
+        : system.slug === 'belline'
+          ? bellineDraws(system, spread)
+          : secureShuffle(system.cards).slice(0, spread.positions.length);
 
   return picked.map((card, index) => ({
     card,
@@ -110,7 +136,83 @@ function cardText(draw: DrawnCard, focus: Focus): string {
       ? draw.card.reversedMeaning
       : draw.card.meaning;
   const modifier = draw.card.focusModifiers?.[focus];
-  return `${focusLenses[focus]}, ${base.charAt(0).toLowerCase()}${base.slice(1)}${modifier ? ` ${modifier}` : ''}`;
+  const orientation = draw.reversed
+    ? `Reversed, ${draw.card.name} shows ${draw.card.keywords[0]} turned inward, delayed, or expressed through its more difficult edge.`
+    : `${draw.card.name} is upright, so its theme of ${draw.card.keywords[0]} is available to meet directly and use deliberately.`;
+  const qualities = [
+    draw.card.domain ? `its ${draw.card.domain} domain` : null,
+    draw.card.element ? `${draw.card.element} element` : null,
+    typeof draw.card.numerology === 'number'
+      ? `number ${draw.card.numerology}`
+      : null,
+  ].filter((quality): quality is string => Boolean(quality));
+  const texture = qualities.length
+    ? `Its structure adds context through ${qualities.length === 1 ? qualities[0] : `${qualities.slice(0, -1).join(', ')} and ${qualities.at(-1)}`}.`
+    : `Its supporting theme of ${draw.card.keywords[1] ?? draw.card.keywords[0]} shows how the central message may appear in lived experience.`;
+
+  const introduction = draw.card.sourceSystemName
+    ? `${draw.card.sourceSystemName} gives ${draw.card.name} to ${draw.position.toLowerCase()}.`
+    : `${draw.position} is the part of the spread through which ${draw.card.name} speaks.`;
+
+  return `${introduction} ${focusLenses[focus]}, ${base.charAt(0).toLowerCase()}${base.slice(1)} ${orientation} ${texture}${modifier ? ` ${modifier}` : ''}`;
+}
+
+function cardReference(draw: DrawnCard): string {
+  return draw.card.sourceSystemName
+    ? `${draw.card.sourceSystemName}’s ${draw.card.name}`
+    : draw.card.name;
+}
+
+function transitionVerb(from: DrawnCard, to: DrawnCard): string {
+  if (to.card.polarity === 'challenging') return 'tests';
+  if (from.card.polarity === 'challenging' && to.card.polarity === 'positive')
+    return 'begins to resolve';
+  if (to.card.polarity === 'positive') return 'supports and opens';
+  if (from.card.domain && from.card.domain === to.card.domain) return 'deepens';
+  return 'redirects';
+}
+
+function connectionMeaning(from: DrawnCard, to: DrawnCard): string {
+  const sharedKeyword = from.card.keywords.find((keyword) =>
+    to.card.keywords.includes(keyword),
+  );
+  if (sharedKeyword)
+    return `${cardReference(from)} echoes ${sharedKeyword} inside ${cardReference(to)}, making that repeated theme difficult to ignore`;
+  if (from.card.element && from.card.element === to.card.element)
+    return `${cardReference(from)} and ${cardReference(to)} share the ${from.card.element} element, so ${from.card.keywords[0]} feeds ${to.card.keywords[0]} without changing its essential language`;
+  if (from.card.polarity === 'challenging' && to.card.polarity === 'positive')
+    return `${cardReference(to)} answers the friction of ${cardReference(from)}, turning ${from.card.keywords[0]} toward ${to.card.keywords[0]}`;
+  if (from.card.polarity === 'positive' && to.card.polarity === 'challenging')
+    return `${cardReference(to)} tests the promise in ${cardReference(from)}, asking whether ${from.card.keywords[0]} can remain intact under ${to.card.keywords[0]}`;
+  if (from.card.domain && from.card.domain === to.card.domain)
+    return `${cardReference(to)} deepens the shared ${from.card.domain} domain, carrying ${from.card.keywords[0]} into ${to.card.keywords[0]}`;
+  return `${cardReference(from)} passes ${from.card.keywords[0]} forward, and ${cardReference(to)} translates it into ${to.card.keywords[0]}`;
+}
+
+function cardConnectionText(draws: DrawnCard[], index: number): string {
+  if (draws.length < 2) return '';
+  const current = draws[index];
+  const previous = draws[index - 1];
+  const next = draws[index + 1];
+  const incoming = previous
+    ? `The incoming connection is clear: ${connectionMeaning(previous, current)}.`
+    : `${cardReference(current)} establishes ${current.card.keywords[0]} as the starting condition for the rest of the spread.`;
+  const outgoing = next
+    ? `From here, ${connectionMeaning(current, next)}.`
+    : `${cardReference(current)} gathers every preceding position into ${current.card.keywords[0]}, making this the direction in which the pattern settles.`;
+  return `${incoming} ${outgoing}`;
+}
+
+function spreadSynthesis(draws: DrawnCard[], focus: Focus): string {
+  const [first, ...rest] = draws;
+  const opening = `${cardReference(first)} begins in ${first.position}, establishing ${first.card.keywords[0]} as the reading's first condition.`;
+  const movement = rest.map((draw, index) => {
+    const previous = draws[index];
+    const isLast = index === rest.length - 1;
+    return `${isLast ? 'Finally' : 'Then'}, ${cardReference(draw)} in ${draw.position} ${transitionVerb(previous, draw)} ${previous.card.keywords[0]} with ${draw.card.keywords[0]}.`;
+  });
+  const consequence = `${focusLenses[focus]}, the sequence asks you to carry what ${cardReference(first)} reveals through every intervening position before acting on the ${draws.at(-1)!.card.keywords[0]} of ${cardReference(draws.at(-1)!)}; no card stands alone, and no deck stands apart from that conclusion.`;
+  return [opening, ...movement, consequence].join(' ');
 }
 
 const lenormandExceptions: Record<string, string> = {
@@ -150,6 +252,17 @@ export function interpretReading(
   const keywords = Array.from(
     new Set(draws.flatMap((draw) => draw.card.keywords)),
   ).slice(0, 4);
+  const connections =
+    system.slug === 'divine'
+      ? draws.slice(0, -1).map((draw, index) => {
+          const next = draws[index + 1];
+          return {
+            from: `${draw.card.sourceSystemName} · ${draw.card.name}`,
+            to: `${next.card.sourceSystemName} · ${next.card.name}`,
+            text: connectionMeaning(draw, next),
+          };
+        })
+      : undefined;
   const positions = draws.map((draw, index) => {
     let text = cardText(draw, focus);
     if (system.slug === 'lenormand') {
@@ -181,15 +294,21 @@ export function interpretReading(
           ? spread.positions[index].replace('House of ', '')
           : null;
       text += `${house ? ` In the house of ${house}, ${draw.card.name} places ${draw.card.subject} inside that domain.` : ''}${relationship ? ` Nearest neighbors: ${relationship}.` : ''} Timing: ${draw.card.timing}.`;
+    } else {
+      const connection = cardConnectionText(draws, index);
+      if (connection) text += ` ${connection}`;
     }
     return {
       label: draw.position,
-      card: `${draw.card.name}${draw.reversed ? ' · reversed' : ''}`,
+      card: `${draw.card.sourceSystemName ? `${draw.card.sourceSystemName} · ` : ''}${draw.card.name}${draw.reversed ? ' · reversed' : ''}`,
       text,
     };
   });
 
-  let synthesis = `The pattern moves from ${first.card.keywords[0]} toward ${last.card.keywords[0]}. ${focusLenses[focus]}, the decisive act is to let ${keywords[0]} shape what happens next without using certainty as a condition.`;
+  let synthesis =
+    draws.length > 1
+      ? spreadSynthesis(draws, focus)
+      : `${first.card.name} concentrates the reading around ${first.card.keywords[0]}. Its secondary theme of ${first.card.keywords[1] ?? first.card.keywords[0]} describes how that message is likely to become visible. ${focusLenses[focus]}, the decisive act is to let ${keywords[0]} shape what happens next without using certainty as a condition.`;
   if (system.slug === 'lenormand' && draws.length > 1) {
     const links = draws
       .slice(0, Math.min(draws.length - 1, 8))
@@ -204,11 +323,21 @@ export function interpretReading(
   }
 
   return {
-    headline: `${first.card.name} opens the way.`,
-    overview: `${system.name} has arranged ${draws.length === 1 ? 'one unmistakable signal' : `${draws.length} signals`} around ${keywords.join(', ')}. The answer is not neutral: it asks for movement.`,
+    headline:
+      system.slug === 'divine'
+        ? 'Sixteen voices become one pattern.'
+        : `${first.card.name} opens the way.`,
+    overview:
+      system.slug === 'divine'
+        ? `One card from every deck has entered the field around ${keywords.join(', ')}. The Whole Constellation moves from ${cardReference(first)} to ${cardReference(last)}, with each tradition translating what the previous one began. Read the individual voices, then follow the cross-deck thread that holds them together.`
+        : `${system.name} has arranged ${draws.length === 1 ? 'one concentrated signal' : `${draws.length} distinct signals`} around ${keywords.join(', ')}. ${spread.name} gives each symbol a specific job, so its position matters as much as its familiar meaning. The answer is not a fixed prediction; it is a pattern asking for attention, choice, and movement.`,
     positions,
     synthesis,
-    closing: `Carry ${last.card.keywords[0]} into the next decision. The reading has ended; its consequence begins with you.`,
+    closing:
+      system.slug === 'divine'
+        ? `Carry ${last.card.keywords[0]} forward, but remember how every deck changed its meaning on the way. The constellation is complete; your next choice is where it becomes real.`
+        : `Carry ${last.card.keywords[0]} into the next decision. The reading has ended; its consequence begins with you.`,
+    connections,
   };
 }
 

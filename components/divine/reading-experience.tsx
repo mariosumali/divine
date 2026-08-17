@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { SystemRitual } from '@/components/divine/system-ritual';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -32,6 +33,7 @@ import {
   type DeckFinish,
 } from '@/lib/divine/decks';
 import {
+  COOKIE_RITUAL_STEPS,
   OBJECT_RITUAL_STEPS,
   drawBallAnswer,
   drawCards,
@@ -40,6 +42,7 @@ import {
   nextObjectRitualStep,
   objectInterpretation,
 } from '@/lib/divine/reading';
+import { DIVINE_RITUAL, ritualForSystem } from '@/lib/divine/rituals';
 import { composeShare } from '@/lib/divine/share';
 import { saveReading } from '@/lib/divine/storage';
 import type {
@@ -65,10 +68,8 @@ type ShareStatus =
   | 'downloaded'
   | 'cancelled'
   | 'error';
-type DeckPhase = 'stacked' | 'shuffling' | 'cut' | 'fanned' | 'dealing';
-
 interface StoredReadingSession {
-  version: 1 | 2;
+  version: 1 | 2 | 3 | 4;
   system: string;
   stage: Stage;
   question: string;
@@ -87,6 +88,8 @@ interface StoredReadingSession {
   createdAt: string;
   cookieChoice: number | null;
   objectStep?: number;
+  cardRitualStep?: number;
+  ramlLines?: number[];
 }
 const focuses: Array<{ value: Focus; label: string }> = [
   { value: 'general', label: 'General' },
@@ -102,8 +105,6 @@ const readingStages: Stage[] = [
   'reveal',
   'result',
 ];
-const deckLayers = Array.from({ length: 9 }, (_, index) => index + 1);
-const fanCards = Array.from({ length: 21 }, (_, index) => index);
 const cookieCrumbs = [
   { x: -114, y: -42, r: -18 },
   { x: -76, y: 62, r: 22 },
@@ -482,7 +483,7 @@ function CardFace({
           style={colors}
           aria-hidden={revealed ? undefined : true}
         >
-          <small>{draw.position}</small>
+          <small>{draw.card.sourceSystemName ?? draw.position}</small>
           {image ? (
             <span className="card-art">
               <Image
@@ -565,6 +566,7 @@ function CardFace({
 
 function cardFacts(card: DrawnCard['card']) {
   return [
+    ['Deck', card.sourceSystemName],
     ['Domain', card.domain],
     ['Element', card.element],
     [
@@ -668,6 +670,9 @@ function InteractiveResultCard({
           className={`result-card-sticker deck-${finish} ${draw.reversed ? 'is-reversed' : ''}`}
           style={colors}
         >
+          {draw.card.sourceSystemName && (
+            <small>{draw.card.sourceSystemName}</small>
+          )}
           {image ? (
             <span className="result-card-art">
               <Image
@@ -685,6 +690,8 @@ function InteractiveResultCard({
           ) : (
             <strong aria-hidden="true">{draw.card.glyph}</strong>
           )}
+          {draw.card.sourceSystemName && <span>{draw.card.name}</span>}
+          {draw.reversed && <em>Reversed</em>}
         </span>
         <span
           className="result-card-back card-back"
@@ -722,14 +729,16 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
   const [motionSupported, setMotionSupported] = useState(false);
   const [motionEnabled, setMotionEnabled] = useState(false);
   const [announcement, setAnnouncement] = useState('');
-  const [cookieChoice, setCookieChoice] = useState<number | null>(() =>
-    system.kind === 'cookie' ? 0 : null,
-  );
+  const [cookieChoice, setCookieChoice] = useState<number | null>(null);
   const [objectStep, setObjectStep] = useState(0);
   const [objectAnimating, setObjectAnimating] = useState(false);
+  const [cookieGestureProgress, setCookieGestureProgress] = useState(0);
   const [isRevealingAll, setIsRevealingAll] = useState(false);
-  const [deckPhase, setDeckPhase] = useState<DeckPhase>('stacked');
-  const [hoveredFanCard, setHoveredFanCard] = useState<number | null>(null);
+  const [cardRitualStep, setCardRitualStep] = useState(0);
+  const [cardRitualAnimating, setCardRitualAnimating] = useState(false);
+  const [cardRitualDealing, setCardRitualDealing] = useState(false);
+  const [cardGestureProgress, setCardGestureProgress] = useState(0);
+  const [ramlLines, setRamlLines] = useState<number[]>([]);
   const [shareStatus, setShareStatus] = useState<ShareStatus>('idle');
   const [sessionReady, setSessionReady] = useState(false);
   const motionHandler = useRef<((event: DeviceMotionEvent) => void) | null>(
@@ -743,6 +752,8 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
   const fieldTiltX = useMotionValue(-3);
   const fieldTiltY = useMotionValue(5);
   const sessionKey = `divine-session:${system.slug}`;
+  const objectRitualSteps =
+    system.kind === 'cookie' ? COOKIE_RITUAL_STEPS : OBJECT_RITUAL_STEPS;
 
   useEffect(() => {
     queueMicrotask(() => setMotionSupported('DeviceMotionEvent' in window));
@@ -768,7 +779,10 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
     queueMicrotask(() => {
       if (cancelled) return;
       if (
-        (restored?.version === 1 || restored?.version === 2) &&
+        (restored?.version === 1 ||
+          restored?.version === 2 ||
+          restored?.version === 3 ||
+          restored?.version === 4) &&
         restored.system === system.slug
       ) {
         const restoredSpread =
@@ -791,7 +805,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
         const resolvedObject =
           candidateStage === 'ritual' &&
           system.kind !== 'cards' &&
-          restored.objectStep === OBJECT_RITUAL_STEPS &&
+          restored.objectStep === objectRitualSteps &&
           restored.interpretation;
         const nextStage = resolvedObject
           ? 'result'
@@ -814,7 +828,20 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
           system.reversalStyle === 'required' ? true : restored.reversals,
         );
         setShuffled(restored.shuffled);
-        setDeckPhase(restored.shuffled ? 'cut' : 'stacked');
+        setCardRitualStep(
+          typeof restored.cardRitualStep === 'number'
+            ? Math.max(0, Math.floor(restored.cardRitualStep))
+            : restored.shuffled
+              ? 1
+              : 0,
+        );
+        setRamlLines(
+          Array.isArray(restored.ramlLines)
+            ? restored.ramlLines
+                .filter((line) => line === 1 || line === 2)
+                .slice(0, 4)
+            : [],
+        );
         setDraws(restoredDraws);
         setRevealed(
           new Set(
@@ -823,7 +850,21 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
             ),
           ),
         );
-        setInterpretation(restored.interpretation ?? null);
+        setInterpretation(
+          candidateStage === 'result' &&
+            system.kind === 'cards' &&
+            restoredSpread &&
+            restoredDraws.length
+            ? interpretReading(
+                system,
+                restoredSpread,
+                restoredDraws,
+                focuses.some((item) => item.value === restored.focus)
+                  ? restored.focus
+                  : 'general',
+              )
+            : (restored.interpretation ?? null),
+        );
         setObjectMessage(
           typeof restored.objectMessage === 'string'
             ? restored.objectMessage
@@ -849,13 +890,11 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
             restored.cookieChoice === 1 ||
             restored.cookieChoice === 2
             ? restored.cookieChoice
-            : system.kind === 'cookie'
-              ? 0
-              : null,
+            : null,
         );
         setObjectStep(
           typeof restored.objectStep === 'number'
-            ? Math.max(0, Math.min(OBJECT_RITUAL_STEPS, restored.objectStep))
+            ? Math.max(0, Math.min(objectRitualSteps, restored.objectStep))
             : 0,
         );
         ritualLock.current = nextStage === 'result';
@@ -867,12 +906,12 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
     return () => {
       cancelled = true;
     };
-  }, [sessionKey, system]);
+  }, [objectRitualSteps, sessionKey, system]);
 
   useEffect(() => {
     if (!sessionReady) return;
     const session: StoredReadingSession = {
-      version: 2,
+      version: 4,
       system: system.slug,
       stage,
       question,
@@ -895,6 +934,8 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
       createdAt,
       cookieChoice,
       objectStep,
+      cardRitualStep,
+      ramlLines,
     };
     try {
       sessionStorage.setItem(sessionKey, JSON.stringify(session));
@@ -922,6 +963,8 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
     createdAt,
     cookieChoice,
     objectStep,
+    cardRitualStep,
+    ramlLines,
   ]);
 
   const record = useMemo<ReadingRecord | null>(
@@ -965,7 +1008,24 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
   const deckFinish = isCardSystemSlug(system.slug)
     ? deckFinishes[system.slug]
     : 'ink';
+  const cardSystemSlug = isCardSystemSlug(system.slug) ? system.slug : null;
+  const ritualSystemSlug =
+    cardSystemSlug ?? (system.slug === 'divine' ? 'divine' : null);
+  const cardRitual =
+    system.slug === 'divine'
+      ? DIVINE_RITUAL
+      : cardSystemSlug
+        ? ritualForSystem(cardSystemSlug)
+        : null;
   const openingDraw = draws[0] ?? null;
+  const visualSystemFor = (draw: DrawnCard) =>
+    draw.card.sourceSystem ?? system.slug;
+  const finishFor = (draw: DrawnCard): DeckFinish => {
+    const sourceSystem = visualSystemFor(draw);
+    return isCardSystemSlug(sourceSystem)
+      ? deckFinishes[sourceSystem]
+      : deckFinish;
+  };
 
   const beginRecord = () => {
     setRecordId(createId());
@@ -1043,71 +1103,93 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
     if (stage === 'ritual') {
       if (system.kind === 'cards') {
         setShuffled(false);
-        setDeckPhase('stacked');
+        setCardRitualStep(0);
+        setCardRitualAnimating(false);
+        setCardRitualDealing(false);
+        setCardGestureProgress(0);
+        setRamlLines([]);
       }
-      setCookieChoice(system.kind === 'cookie' ? 0 : null);
+      setCookieChoice(null);
       setObjectStep(0);
       setObjectAnimating(false);
+      setCookieGestureProgress(0);
       move(system.kind === 'cards' ? 'method' : 'frame');
     }
     if (stage === 'reveal') {
       setDraws([]);
       setRevealed(new Set());
       setShuffled(false);
-      setDeckPhase('stacked');
+      setCardRitualStep(0);
+      setCardRitualAnimating(false);
+      setCardRitualDealing(false);
+      setCardGestureProgress(0);
+      setRamlLines([]);
       completionQueued.current = false;
       move('method');
     }
   };
 
-  const shuffleDeck = () => {
-    if (deckPhase === 'shuffling' || deckPhase === 'dealing') return;
-    clearDeckTimer();
-    cue('shuffle');
-    setShuffled(false);
-    setDeckPhase('shuffling');
-    setAnnouncement('The deck is moving. Let the fixed order loosen.');
-    deckTimer.current = window.setTimeout(() => {
-      setShuffled(true);
-      setDeckPhase('cut');
-      setAnnouncement('The deck is shuffled. Cut and open the fan when ready.');
-      deckTimer.current = null;
-    }, 950);
-  };
-
-  const fanDeck = () => {
-    if (!shuffled || deckPhase === 'dealing') return;
-    cue('deal');
-    setDeckPhase('fanned');
-    setAnnouncement('The deck is fanned. The field is open.');
-  };
-
-  const advanceDeckRitual = () => {
-    if (deckPhase === 'stacked') shuffleDeck();
-    else if (deckPhase === 'cut') fanDeck();
-    else if (deckPhase === 'fanned') deal();
-  };
-
-  const deal = () => {
-    if (!spread || deckPhase !== 'fanned') return;
-    setHoveredFanCard(null);
+  const deal = (delay: number, geomanticLines = ramlLines) => {
+    if (!spread || cardRitualDealing) return;
     const next = drawCards(system, spread, reversals);
+    if (system.slug === 'ilm-al-raml' && geomanticLines.length === 4) {
+      const figureIndex = geomanticLines.reduce(
+        (index, line) => (index << 1) | (line === 1 ? 1 : 0),
+        0,
+      );
+      next[0] = { ...next[0], card: system.cards[figureIndex] };
+    }
     completionQueued.current = false;
     ritualLock.current = false;
     setDraws(next);
     setRevealed(new Set());
-    cue('deal');
-    setDeckPhase('dealing');
+    setCardRitualAnimating(false);
+    setCardRitualDealing(true);
     setAnnouncement(
-      `${spread.positions.length} ${spread.positions.length === 1 ? 'card is' : 'cards are'} leaving the fan.`,
+      cardRitual?.completion ??
+        `${spread.positions.length} ${spread.positions.length === 1 ? 'card is' : 'cards are'} entering the field.`,
     );
     const reveal = () => {
+      setCardRitualDealing(false);
       setStage('reveal');
       window.scrollTo({ top: 0, behavior: 'auto' });
       deckTimer.current = null;
     };
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) reveal();
-    else deckTimer.current = window.setTimeout(reveal, 720);
+    else deckTimer.current = window.setTimeout(reveal, delay);
+  };
+
+  const advanceCardRitual = (gestureValue?: number) => {
+    if (!cardRitual || cardRitualAnimating || cardRitualDealing) return;
+    const action = cardRitual.actions[cardRitualStep];
+    if (!action) return;
+    clearDeckTimer();
+    cue(action.cue);
+    setAnnouncement(action.announcement);
+    setCardGestureProgress(0);
+    setShuffled(true);
+    const nextRamlLines =
+      cardRitual.id === 'sand-figure' &&
+      cardRitualStep > 0 &&
+      (gestureValue === 1 || gestureValue === 2)
+        ? [...ramlLines, gestureValue].slice(0, 4)
+        : ramlLines;
+    if (nextRamlLines !== ramlLines) setRamlLines(nextRamlLines);
+    const next = cardRitualStep + 1;
+    if (next >= cardRitual.actions.length) {
+      deal(action.duration, nextRamlLines);
+      return;
+    }
+    setCardRitualAnimating(true);
+    setCardRitualStep(next);
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setCardRitualAnimating(false);
+      return;
+    }
+    deckTimer.current = window.setTimeout(() => {
+      setCardRitualAnimating(false);
+      deckTimer.current = null;
+    }, action.duration);
   };
 
   const finishCards = () => {
@@ -1209,10 +1291,11 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
   const advanceObjectRitual = () => {
     if (system.kind === 'cookie' && cookieChoice === null) return;
     if (objectAnimating || ritualLock.current) return;
-    const next = nextObjectRitualStep(objectStep);
+    const next = nextObjectRitualStep(objectStep, objectRitualSteps);
+    setCookieGestureProgress(0);
     setObjectStep(next);
     setObjectAnimating(true);
-    if (next === OBJECT_RITUAL_STEPS) {
+    if (next === objectRitualSteps) {
       resolveObjectRitual();
       return;
     }
@@ -1223,8 +1306,10 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
           ? 'The answer is moving. Shake again.'
           : 'The window is clouding. One final shake.'
         : next === 1
-          ? 'A hairline crack appears. Press again.'
-          : 'The shell gives way. One final press.',
+          ? 'A hairline crack appears. Bend the shell again.'
+          : next === 2
+            ? 'The fracture widens. Pull the cookie apart.'
+            : 'The shell breaks. Draw out the paper.',
     );
     objectTimer.current = window.setTimeout(() => {
       setObjectAnimating(false);
@@ -1311,7 +1396,11 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
     completionQueued.current = false;
     setStage('frame');
     setShuffled(false);
-    setDeckPhase('stacked');
+    setCardRitualStep(0);
+    setCardRitualAnimating(false);
+    setCardRitualDealing(false);
+    setCardGestureProgress(0);
+    setRamlLines([]);
     setDraws([]);
     setRevealed(new Set());
     setInterpretation(null);
@@ -1321,9 +1410,10 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
     setFavorite(false);
     setSaved(false);
     setAnnouncement('');
-    setCookieChoice(system.kind === 'cookie' ? 0 : null);
+    setCookieChoice(null);
     setObjectStep(0);
     setObjectAnimating(false);
+    setCookieGestureProgress(0);
     setShareStatus('idle');
     cue('tick');
   };
@@ -1471,171 +1561,32 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
           </motion.section>
         )}
 
-        {stage === 'ritual' && system.kind === 'cards' && (
-          <motion.section
-            className="reading-stage ritual-stage"
-            key="ritual-cards"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <div className={`deck-ritual-surface phase-${deckPhase}`}>
-              {deckPhase === 'fanned' || deckPhase === 'dealing' ? (
-                <motion.button
-                  type="button"
-                  className={`card-fan phase-${deckPhase}`}
-                  data-system={system.slug}
-                  onClick={advanceDeckRitual}
-                  onKeyDown={(event) => {
-                    if (event.key === 'Enter' || event.key === ' ') {
-                      event.preventDefault();
-                      advanceDeckRitual();
-                    }
-                  }}
-                  disabled={deckPhase === 'dealing'}
-                  drag={deckPhase === 'fanned'}
-                  dragConstraints={{
-                    left: -70,
-                    right: 70,
-                    top: -35,
-                    bottom: 35,
-                  }}
-                  dragElastic={0.14}
-                  dragMomentum={false}
-                  style={{ rotateX: fieldTiltX, rotateY: fieldTiltY }}
-                  onPointerMove={tiltField}
-                  onPointerLeave={() => {
-                    setHoveredFanCard(null);
-                    settleField();
-                  }}
-                  onDrag={dragField}
-                  onDragEnd={settleField}
-                  whileTap={{ scale: 0.985 }}
-                  aria-label={
-                    deckPhase === 'fanned'
-                      ? `Rotate the card fan or press to deal ${spread?.positions.length} cards`
-                      : 'The cards are being dealt'
-                  }
-                >
-                  {fanCards.map((index) => {
-                    const middle = (fanCards.length - 1) / 2;
-                    const distance =
-                      hoveredFanCard === null
-                        ? Number.POSITIVE_INFINITY
-                        : Math.abs(index - hoveredFanCard);
-                    const side =
-                      hoveredFanCard === null
-                        ? 0
-                        : Math.sign(index - hoveredFanCard);
-                    const ruffleDelay =
-                      hoveredFanCard === null ? 0 : Math.min(distance, 3) * 22;
-                    const pull =
-                      distance === 0
-                        ? 92
-                        : distance === 1
-                          ? 28
-                          : distance === 2
-                            ? 13
-                            : distance === 3
-                              ? 5
-                              : 0;
-                    const ruffle =
-                      distance === 1
-                        ? side * 3.4
-                        : distance === 2
-                          ? side * 1.7
-                          : distance === 3
-                            ? side * 0.65
-                            : 0;
-                    return (
-                      <span
-                        key={index}
-                        className={
-                          distance === 0
-                            ? 'is-hovered'
-                            : distance <= 3
-                              ? 'is-ruffling'
-                              : undefined
-                        }
-                        onPointerEnter={() => setHoveredFanCard(index)}
-                        style={
-                          {
-                            '--angle': `${(index - middle) * 6.1}deg`,
-                            '--lift': `${Math.abs(index - middle) * 3.4}px`,
-                            '--fan-index': index,
-                            '--direction': index % 2 ? 1 : -1,
-                            '--fan-pull': `${pull}px`,
-                            '--fan-ruffle': `${ruffle}deg`,
-                            '--fan-slide': `${side * Math.max(0, 10 - distance * 2)}px`,
-                            '--fan-tilt': distance === 0 ? '-8deg' : '0deg',
-                            '--fan-scale': distance === 0 ? 1.045 : 1,
-                            '--fan-depth': distance === 0 ? '48px' : '0px',
-                            '--fan-z': distance === 0 ? 80 : index + 1,
-                            '--ruffle-delay': `${ruffleDelay}ms`,
-                          } as React.CSSProperties
-                        }
-                      />
-                    );
-                  })}
-                </motion.button>
-              ) : (
-                <motion.button
-                  type="button"
-                  className={`deck-object phase-${deckPhase}`}
-                  data-system={system.slug}
-                  onClick={advanceDeckRitual}
-                  onKeyDown={(event) => {
-                    if (event.key === 'Enter' || event.key === ' ') {
-                      event.preventDefault();
-                      advanceDeckRitual();
-                    }
-                  }}
-                  disabled={deckPhase === 'shuffling'}
-                  drag={deckPhase !== 'shuffling'}
-                  dragConstraints={{
-                    left: -70,
-                    right: 70,
-                    top: -45,
-                    bottom: 45,
-                  }}
-                  dragElastic={0.14}
-                  dragMomentum={false}
-                  style={{ rotateX: fieldTiltX, rotateY: fieldTiltY }}
-                  onPointerMove={tiltField}
-                  onPointerLeave={settleField}
-                  onDrag={dragField}
-                  onDragEnd={settleField}
-                  whileTap={{ scale: 0.97 }}
-                  aria-label={
-                    deckPhase === 'cut'
-                      ? 'Rotate the deck or press to cut and open the fan'
-                      : deckPhase === 'shuffling'
-                        ? 'The deck is shuffling'
-                        : 'Rotate the deck or press to shuffle'
-                  }
-                >
-                  {deckLayers.map((layer) => (
-                    <span
-                      className="deck-layer"
-                      aria-hidden="true"
-                      key={layer}
-                      style={
-                        {
-                          '--layer': layer,
-                          '--direction': layer % 2 ? 1 : -1,
-                        } as React.CSSProperties
-                      }
-                    />
-                  ))}
-                  <span className="deck-face" aria-hidden="true" />
-                  <span className="deck-band" aria-hidden="true">
-                    <i>Break the seal</i>
-                  </span>
-                </motion.button>
-              )}
-            </div>
-          </motion.section>
-        )}
+        {stage === 'ritual' &&
+          system.kind === 'cards' &&
+          ritualSystemSlug &&
+          cardRitual &&
+          spread && (
+            <motion.section
+              className="reading-stage ritual-stage"
+              key="ritual-cards"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <SystemRitual
+                profile={cardRitual}
+                systemSlug={ritualSystemSlug}
+                spreadCount={spread.positions.length}
+                step={Math.min(cardRitualStep, cardRitual.actions.length - 1)}
+                disabled={cardRitualAnimating}
+                dealing={cardRitualDealing}
+                ritualValues={ramlLines}
+                gestureProgress={cardGestureProgress}
+                onGestureProgress={setCardGestureProgress}
+                onAdvance={advanceCardRitual}
+              />
+            </motion.section>
+          )}
 
         {stage === 'ritual' && system.kind === 'ball' && (
           <motion.section
@@ -1713,42 +1664,91 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            <div
-              className={`cookie-object object-step-${objectStep} ${objectStep === OBJECT_RITUAL_STEPS ? 'is-cracking' : ''} ${objectAnimating ? 'is-moving' : ''}`}
-            >
-              <Suspense fallback={<span className="cookie-webgl-fallback" />}>
-                <FortuneCookie3D
-                  step={objectStep}
-                  disabled={objectAnimating}
-                  onAdvance={advanceObjectRitual}
-                  ariaLabel={
-                    objectStep === 0
-                      ? 'Rotate the cookie or press to begin cracking it'
-                      : objectStep === 1
-                        ? 'Rotate the cookie or press again to widen the crack'
-                        : 'Rotate the cookie or press a third time to break it open'
-                  }
-                />
-              </Suspense>
-              <span className="cookie-paper" aria-hidden="true">
-                <em>{objectMessage}</em>
-              </span>
-              <span className="cookie-crumbs" aria-hidden="true">
-                {cookieCrumbs.map((crumb, index) => (
-                  <b
-                    key={index}
-                    style={
-                      {
-                        '--crumb-x': `${crumb.x}px`,
-                        '--crumb-y': `${crumb.y}px`,
-                        '--crumb-r': `${crumb.r}deg`,
-                        '--crumb-index': index,
-                      } as React.CSSProperties
+            {cookieChoice === null ? (
+              <div className="cookie-choice-field">
+                <div className="cookie-choice-row">
+                  {[0, 1, 2].map((choice) => (
+                    <motion.button
+                      type="button"
+                      className="cookie-choice"
+                      key={choice}
+                      onClick={() => {
+                        setCookieChoice(choice);
+                        setAnnouncement('The hand has chosen a shell.');
+                        cue('tick');
+                      }}
+                      aria-label={`Choose fortune cookie ${choice + 1}`}
+                      initial={{ opacity: 0, y: -70, rotate: (choice - 1) * 8 }}
+                      animate={{ opacity: 1, y: 0, rotate: (choice - 1) * 5 }}
+                      transition={{
+                        duration: 0.52,
+                        delay: choice * 0.09,
+                        ease: [0.22, 1, 0.36, 1],
+                      }}
+                      whileHover={{ y: -12, rotate: 0, scale: 1.04 }}
+                      whileTap={{ scale: 0.96 }}
+                    >
+                      <span aria-hidden="true">
+                        <i />
+                        <b />
+                      </span>
+                    </motion.button>
+                  ))}
+                </div>
+                <div className="cookie-choice-copy">
+                  <span>Three unopened shells</span>
+                  <strong>Choose</strong>
+                  <p>Do not study the options. Let the hand arrive first.</p>
+                </div>
+              </div>
+            ) : (
+              <div
+                className={`cookie-object object-step-${objectStep} ${objectStep >= 3 ? 'is-cracking' : ''} ${objectStep >= COOKIE_RITUAL_STEPS ? 'is-drawing' : ''} ${objectAnimating ? 'is-moving' : ''}`}
+                style={
+                  {
+                    '--cookie-gesture': cookieGestureProgress,
+                    '--cookie-pull': `${cookieGestureProgress * 120}px`,
+                  } as React.CSSProperties
+                }
+              >
+                <Suspense fallback={<span className="cookie-webgl-fallback" />}>
+                  <FortuneCookie3D
+                    step={objectStep}
+                    disabled={objectAnimating}
+                    onAdvance={advanceObjectRitual}
+                    onGestureProgress={setCookieGestureProgress}
+                    gestureProgress={cookieGestureProgress}
+                    ariaLabel={
+                      objectStep === 0
+                        ? 'Bend the cookie apart or press to begin cracking it'
+                        : objectStep === 1
+                          ? 'Bend the cookie again to widen the crack'
+                          : objectStep === 2
+                            ? 'Pull the cookie apart to break it open'
+                            : 'Draw the fortune paper to the right'
                     }
                   />
-                ))}
-              </span>
-            </div>
+                </Suspense>
+                <span className="cookie-paper" aria-hidden="true">
+                  <em>{objectMessage}</em>
+                </span>
+                <span className="cookie-crumbs" aria-hidden="true">
+                  {cookieCrumbs.map((crumb, index) => (
+                    <b
+                      key={index}
+                      style={
+                        {
+                          '--crumb-x': `${crumb.x}px`,
+                          '--crumb-y': `${crumb.y}px`,
+                          '--crumb-r': `${crumb.r}deg`,
+                          '--crumb-index': index,
+                        } as React.CSSProperties
+                      }
+                    />
+                  ))}
+                </span>
+              </div>
+            )}
           </motion.section>
         )}
 
@@ -1779,8 +1779,8 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
                 <CardFace
                   key={`${draw.card.id}-${index}`}
                   draw={draw}
-                  systemSlug={system.slug}
-                  finish={deckFinish}
+                  systemSlug={visualSystemFor(draw)}
+                  finish={finishFor(draw)}
                   index={index}
                   compact={draws.length > 10}
                   disabled={isRevealingAll}
@@ -1846,8 +1846,8 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
                 >
                   <InteractiveResultCard
                     draw={openingDraw}
-                    systemSlug={system.slug}
-                    finish={deckFinish}
+                    systemSlug={visualSystemFor(openingDraw)}
+                    finish={finishFor(openingDraw)}
                     opening
                     onTurn={() => cue('turn')}
                   />
@@ -1893,13 +1893,16 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
                       >
                         <InteractiveResultCard
                           draw={draw}
-                          systemSlug={system.slug}
-                          finish={deckFinish}
+                          systemSlug={visualSystemFor(draw)}
+                          finish={finishFor(draw)}
                           onTurn={() => cue('turn')}
                         />
                         <div className="result-card-copy">
                           <p className="eyebrow">
-                            {`${index + 1}`.padStart(2, '0')} / {draw.position}
+                            {`${index + 1}`.padStart(2, '0')} /{' '}
+                            {draw.card.sourceSystemName
+                              ? `${draw.card.sourceSystemName} · ${draw.position}`
+                              : draw.position}
                           </p>
                           <h2>
                             <KineticText text={draw.card.name} />
@@ -1951,6 +1954,35 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
                 </div>
               </section>
             )}
+            {interpretation.connections &&
+              interpretation.connections.length > 0 && (
+                <section
+                  className="result-connections"
+                  aria-labelledby="connections-title"
+                >
+                  <header>
+                    <p className="eyebrow">Every deck in conversation</p>
+                    <h2 id="connections-title">The cross-deck thread</h2>
+                    <p>
+                      Follow the handoff from one tradition to the next. Every
+                      card changes what the one before it can mean.
+                    </p>
+                  </header>
+                  <ol>
+                    {interpretation.connections.map((connection, index) => (
+                      <li key={`${connection.from}-${connection.to}`}>
+                        <span>{`${index + 1}`.padStart(2, '0')}</span>
+                        <div>
+                          <strong>{connection.from}</strong>
+                          <ArrowRight aria-hidden="true" />
+                          <strong>{connection.to}</strong>
+                        </div>
+                        <p>{connection.text}.</p>
+                      </li>
+                    ))}
+                  </ol>
+                </section>
+              )}
             <section
               className="result-synthesis"
               aria-labelledby="synthesis-title"

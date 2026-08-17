@@ -23,22 +23,24 @@ function CardPortrait({
   systemSlug: SystemSlug;
 }) {
   const { deckFinishes } = useExperience();
-  const finish = isCardSystemSlug(systemSlug)
-    ? deckFinishes[systemSlug]
+  const visualSystem =
+    card.sourceSystem && isCardSystemSlug(card.sourceSystem)
+      ? card.sourceSystem
+      : systemSlug;
+  const finish = isCardSystemSlug(visualSystem)
+    ? deckFinishes[visualSystem]
     : 'ink';
   const image = imageForFinish(card, finish);
   return (
     <div
       className={`library-card-portrait deck-${finish}`}
-      data-system={systemSlug}
-      style={
-        {
-          ...(isCardSystemSlug(systemSlug)
-            ? deckColors(systemSlug, card.id, finish)
-            : undefined),
-          aspectRatio: card.aspectRatio,
-        }
-      }
+      data-system={visualSystem}
+      style={{
+        ...(isCardSystemSlug(visualSystem)
+          ? deckColors(visualSystem, card.id, finish)
+          : undefined),
+        aspectRatio: card.aspectRatio,
+      }}
       aria-hidden="true"
     >
       {image ? (
@@ -72,6 +74,7 @@ export function LibraryBrowser() {
         card.element,
         card.subject,
         card.modifier,
+        card.sourceSystemName,
         ...card.keywords,
       ]
         .filter(Boolean)
@@ -186,7 +189,11 @@ export function LibraryBrowser() {
                   onClick={() => setSelectedId(card.id)}
                 >
                   <strong>{card.name}</strong>
-                  <em>{card.keywords[0]}</em>
+                  <em>
+                    {card.sourceSystemName
+                      ? `${card.sourceSystemName} · ${card.keywords[0]}`
+                      : card.keywords[0]}
+                  </em>
                 </button>
               ))}
               {filteredCards.length === 0 && (
@@ -197,7 +204,8 @@ export function LibraryBrowser() {
               <CardPortrait card={selected} systemSlug={system.slug} />
               <div className="card-profile-copy">
                 <p className="eyebrow">
-                  {system.name} / {selected.domain ?? 'Card'}
+                  {selected.sourceSystemName ?? system.name} /{' '}
+                  {selected.domain ?? 'Card'}
                 </p>
                 <h3>{selected.name}</h3>
                 <p className="card-keywords">{selected.keywords.join(' · ')}</p>

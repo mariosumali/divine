@@ -13,7 +13,9 @@ describe('DIVINE library', () => {
   });
 
   it('indexes every authored card with a standalone meaning', () => {
-    const cards = SYSTEMS.flatMap((system) => system.cards);
+    const cards = SYSTEMS.filter((system) => system.slug !== 'divine').flatMap(
+      (system) => system.cards,
+    );
     expect(cards).toHaveLength(681);
     expect(
       cards.every(

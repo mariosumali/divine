@@ -10,6 +10,8 @@ interface FortuneCookie3DProps {
   disabled: boolean;
   ariaLabel: string;
   onAdvance: () => void;
+  onGestureProgress: (progress: number) => void;
+  gestureProgress: number;
 }
 
 function seededRandom(seed: number) {
@@ -74,10 +76,12 @@ function CookieModel({
   step,
   rotation,
   reducedMotion,
+  gestureProgress,
 }: {
   step: number;
   rotation: [number, number];
   reducedMotion: boolean;
+  gestureProgress: number;
 }) {
   const gltf = useLoader(GLTFLoader, '/models/fortune-cookie.glb');
   const root = useRef<THREE.Group>(null);
@@ -141,14 +145,21 @@ function CookieModel({
       prepared.material.dispose();
       prepared.maps.color.dispose();
       prepared.maps.bump.dispose();
-    }, [prepared],
+    },
+    [prepared],
   );
 
   useFrame((state, delta) => {
     const time = state.clock.elapsedTime;
-    const separation = [0, 0.65, 3.4, 16.5][step] ?? 0;
-    const turn = step === 3 ? 0.24 : step === 2 ? 0.035 : 0;
-    const depth = step === 3 ? 4.5 : 0;
+    const visualStep = Math.min(step, 3);
+    const separations = [0, 0.65, 3.4, 16.5];
+    const separation = THREE.MathUtils.lerp(
+      separations[visualStep],
+      separations[Math.min(visualStep + 1, 3)],
+      gestureProgress,
+    );
+    const turn = visualStep === 3 ? 0.24 : visualStep === 2 ? 0.035 : 0;
+    const depth = visualStep === 3 ? 4.5 : 0;
 
     if (root.current) {
       root.current.rotation.x = THREE.MathUtils.damp(
@@ -163,7 +174,9 @@ function CookieModel({
         reducedMotion ? 18 : 8,
         delta,
       );
-      root.current.position.y = reducedMotion ? 0 : Math.sin(time * 0.7) * 0.035;
+      root.current.position.y = reducedMotion
+        ? 0
+        : Math.sin(time * 0.7) * 0.035;
     }
     if (left.current) {
       left.current.position.x = THREE.MathUtils.damp(
@@ -218,7 +231,7 @@ function CookieModel({
       );
     }
     if (crumbs.current) {
-      crumbs.current.visible = step === 3;
+      crumbs.current.visible = visualStep === 3;
       crumbs.current.rotation.y += delta * 0.3;
     }
   });
@@ -250,7 +263,12 @@ function CookieModel({
           [-0.12, 0.06, 0.48, 0.05],
           [0.16, 0.12, -0.18, 0.055],
         ].map(([x, y, z, size], index) => (
-          <mesh key={index} position={[x, y, z]} rotation={[x, z, y]} castShadow>
+          <mesh
+            key={index}
+            position={[x, y, z]}
+            rotation={[x, z, y]}
+            castShadow
+          >
             <tetrahedronGeometry args={[size, 0]} />
             <meshStandardMaterial color="#b97934" roughness={0.95} />
           </mesh>
@@ -267,6 +285,8 @@ export function FortuneCookie3D({
   disabled,
   ariaLabel,
   onAdvance,
+  onGestureProgress,
+  gestureProgress,
 }: FortuneCookie3DProps) {
   const [rotation, setRotation] = useState<[number, number]>([0.24, -0.58]);
   const [reducedMotion, setReducedMotion] = useState(false);
@@ -274,9 +294,15 @@ export function FortuneCookie3D({
     pointerId: number;
     x: number;
     y: number;
+    startX: number;
+    startY: number;
     moved: boolean;
   } | null>(null);
   const suppressClick = useRef(false);
+
+  const updateGestureProgress = (progress: number) => {
+    onGestureProgress(progress);
+  };
 
   useEffect(() => {
     const query = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -316,6 +342,7 @@ export function FortuneCookie3D({
             step={step}
             rotation={rotation}
             reducedMotion={reducedMotion}
+            gestureProgress={gestureProgress}
           />
         </Suspense>
       </Canvas>
@@ -344,6 +371,8 @@ export function FortuneCookie3D({
             pointerId: event.pointerId,
             x: event.clientX,
             y: event.clientY,
+            startX: event.clientX,
+            startY: event.clientY,
             moved: false,
           };
         }}
@@ -353,9 +382,19 @@ export function FortuneCookie3D({
             return;
           const dx = event.clientX - current.x;
           const dy = event.clientY - current.y;
-          if (Math.hypot(dx, dy) > 3) current.moved = true;
+          const totalX = event.clientX - current.startX;
+          const totalY = event.clientY - current.startY;
+          const progress =
+            step >= 3
+              ? Math.max(0, Math.min(1, totalX / 120))
+              : Math.max(
+                  0,
+                  Math.min(1, (Math.abs(totalX) + Math.max(0, -totalY)) / 125),
+                );
+          if (Math.hypot(totalX, totalY) > 3) current.moved = true;
           current.x = event.clientX;
           current.y = event.clientY;
+          updateGestureProgress(progress);
           setRotation(([x, y]) => [
             Math.max(-1.05, Math.min(0.92, x + dy * 0.008)),
             y + dx * 0.009,
@@ -369,6 +408,14 @@ export function FortuneCookie3D({
           }
           suppressClick.current = current.moved;
           if (current.moved) {
+            const totalX = event.clientX - current.startX;
+            const totalY = event.clientY - current.startY;
+            const progress =
+              step >= 3
+                ? Math.max(0, totalX / 120)
+                : (Math.abs(totalX) + Math.max(0, -totalY)) / 125;
+            if (progress >= 0.38 && !disabled) onAdvance();
+            else updateGestureProgress(0);
             window.setTimeout(() => {
               suppressClick.current = false;
             }, 0);
@@ -376,6 +423,7 @@ export function FortuneCookie3D({
           gesture.current = null;
         }}
         onPointerCancel={() => {
+          updateGestureProgress(0);
           gesture.current = null;
         }}
       />

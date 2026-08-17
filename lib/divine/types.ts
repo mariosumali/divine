@@ -1,4 +1,5 @@
 export type SystemSlug =
+  | 'divine'
   | 'tarot'
   | 'oracle'
   | 'lenormand'
@@ -39,6 +40,9 @@ export interface CardDefinition {
   timing?: string;
   focusModifiers?: Partial<Record<Focus, string>>;
   provenance?: string;
+  /** Present when a card is being read outside its original deck. */
+  sourceSystem?: SystemSlug;
+  sourceSystemName?: string;
 }
 
 export interface SpreadDefinition {
@@ -78,6 +82,7 @@ export interface InterpretationBlock {
   synthesis: string;
   closing: string;
   reflectionPrompt?: string;
+  connections?: Array<{ from: string; to: string; text: string }>;
 }
 
 export interface ReadingRecord {

@@ -21,7 +21,7 @@ export function composeShare(
     synthesis: record.interpretation.synthesis,
     date: record.createdAt,
     cards: record.draws.map((draw) => ({
-      name: draw.card.name,
+      name: `${draw.card.sourceSystemName ? `${draw.card.sourceSystemName} · ` : ''}${draw.card.name}`,
       position: draw.position,
       reversed: draw.reversed,
     })),

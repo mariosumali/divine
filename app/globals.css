@@ -592,11 +592,11 @@ button {
 
 .home-index {
   min-height: calc(100svh - 62px);
-  padding: 0 clamp(14px, 2.4vw, 38px) clamp(14px, 2.4vw, 38px);
+  padding: 0;
 }
 .divine-hero {
   position: relative;
-  height: clamp(560px, calc(100svh - 62px), 860px);
+  height: calc(100svh - 62px);
   min-height: 560px;
   overflow: hidden;
   border-bottom: 1px solid var(--line);
@@ -638,17 +638,87 @@ button {
   top: 18px;
   display: flex;
   justify-content: space-between;
+  padding-inline: clamp(20px, 4vw, 64px);
   color: var(--muted);
   font-size: 8px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
 }
-.hero-sigils {
+.hero-orbits {
   position: absolute;
-  z-index: 3;
+  z-index: 0;
   inset: 0;
   overflow: hidden;
   pointer-events: none;
+}
+.hero-orbit {
+  --orbit-start: -8deg;
+  --orbit-duration: 28s;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: block;
+  border: 1px solid color-mix(in srgb, var(--ink) 10%, transparent);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) rotate(var(--orbit-start));
+  animation: hero-orbit-spin var(--orbit-duration) linear infinite;
+}
+.hero-orbit i {
+  position: absolute;
+  inset: 0;
+  display: block;
+  border-radius: inherit;
+}
+.hero-orbit i::before,
+.hero-orbit i::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  border-radius: 50%;
+  background: var(--ink);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--ink) 18%, transparent);
+}
+.hero-orbit i::before {
+  left: -3px;
+  width: 6px;
+  height: 6px;
+}
+.hero-orbit i::after {
+  right: -2px;
+  width: 4px;
+  height: 4px;
+  opacity: 0.42;
+}
+.hero-orbit-wide {
+  width: min(82vw, 1240px);
+  aspect-ratio: 2.25;
+}
+.hero-orbit-tall {
+  --orbit-start: 54deg;
+  --orbit-duration: 34s;
+  width: min(48vw, 720px);
+  aspect-ratio: 1.42;
+  opacity: 0.68;
+  animation-direction: reverse;
+}
+.hero-orbit-small {
+  --orbit-start: 18deg;
+  --orbit-duration: 21s;
+  width: min(31vw, 470px);
+  aspect-ratio: 1.08;
+  opacity: 0.52;
+}
+.hero-sigils {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.hero-sigils-back {
+  z-index: 1;
+}
+.hero-sigils-front {
+  z-index: 4;
 }
 .hero-sigil {
   position: absolute;
@@ -661,61 +731,111 @@ button {
   position: absolute;
   inset: 0;
   display: block;
-  animation: hero-sigil-drift 8s ease-in-out infinite;
+  animation: hero-sigil-drift var(--drift-duration, 8s) ease-in-out
+    var(--drift-delay, 0s) infinite alternate;
 }
 .hero-sigil img {
   object-fit: contain;
   filter: grayscale(1) sepia(0.08) contrast(0.88) opacity(0.78);
   mix-blend-mode: multiply;
 }
+.hero-sigils-back .hero-sigil img {
+  filter: grayscale(1) sepia(0.08) contrast(0.84) opacity(0.36);
+}
 .hero-sigil-prism {
-  left: 6%;
-  top: 16%;
-  width: clamp(68px, 7.5vw, 110px);
+  left: 5%;
+  top: 14%;
+  width: clamp(72px, 8vw, 138px);
   rotate: -9deg;
 }
 .hero-sigil-hand {
-  right: 7%;
-  top: 12%;
-  width: clamp(72px, 8vw, 120px);
+  right: 5%;
+  top: 9%;
+  width: clamp(82px, 9vw, 154px);
   rotate: 8deg;
 }
 .hero-sigil-peony {
-  left: 2%;
-  bottom: 10%;
-  width: clamp(96px, 11vw, 164px);
+  left: 1%;
+  bottom: 7%;
+  width: clamp(118px, 13vw, 216px);
   rotate: -7deg;
 }
 .hero-sigil-key {
-  right: 5%;
-  bottom: 10%;
-  width: clamp(64px, 7vw, 104px);
+  right: 3%;
+  bottom: 9%;
+  width: clamp(60px, 6.5vw, 108px);
   rotate: 9deg;
 }
 .hero-sigil-star {
-  left: 19%;
-  bottom: 17%;
-  width: clamp(42px, 4.5vw, 68px);
+  left: 18%;
+  bottom: 15%;
+  width: clamp(38px, 4vw, 68px);
   rotate: 12deg;
 }
 .hero-sigil-eye {
-  right: 20%;
-  top: 20%;
-  width: clamp(46px, 5vw, 76px);
+  right: 18%;
+  top: 19%;
+  width: clamp(48px, 5.5vw, 92px);
   rotate: -8deg;
 }
-.hero-sigil-hand > span,
-.hero-sigil-peony > span,
-.hero-sigil-eye > span {
-  animation-delay: -3.8s;
-  animation-direction: reverse;
+.hero-sigil-moth {
+  left: 21%;
+  top: 7%;
+  width: clamp(72px, 9vw, 150px);
+  rotate: -13deg;
+}
+.hero-sigil-watch {
+  right: 33%;
+  top: 8%;
+  width: clamp(42px, 4.3vw, 72px);
+  rotate: 7deg;
+}
+.hero-sigil-feather {
+  left: 9%;
+  top: 45%;
+  width: clamp(44px, 4.6vw, 78px);
+  rotate: -17deg;
+}
+.hero-sigil-shell {
+  right: 10%;
+  bottom: 32%;
+  width: clamp(78px, 9vw, 150px);
+  rotate: 13deg;
+}
+.hero-sigil-snake {
+  left: 31%;
+  bottom: 7%;
+  width: clamp(82px, 9.5vw, 160px);
+  rotate: -8deg;
+}
+.hero-sigil-hourglass {
+  right: 27%;
+  bottom: 9%;
+  width: clamp(44px, 4.8vw, 80px);
+  rotate: 8deg;
+}
+.hero-sigil-apple {
+  left: 33%;
+  top: 8%;
+  width: clamp(60px, 6.5vw, 108px);
+  rotate: 6deg;
+}
+.hero-sigil-scissors {
+  right: 36%;
+  top: 31%;
+  width: clamp(52px, 5.5vw, 92px);
+  rotate: 12deg;
 }
 :root[data-theme='dark'] .hero-sigil img {
   filter: invert(1) grayscale(1) sepia(0.05) contrast(0.86) opacity(0.72);
   mix-blend-mode: screen;
 }
+:root[data-theme='dark'] .hero-sigils-back .hero-sigil img {
+  filter: invert(1) grayscale(1) sepia(0.05) contrast(0.82) opacity(0.32);
+}
 .hero-stage {
   position: absolute;
+  z-index: 2;
   inset: 42px 0 54px;
   display: grid;
   place-items: center;
@@ -731,7 +851,7 @@ button {
   display: flex;
   justify-content: center;
   font-family: var(--font-bodoni), Georgia, serif;
-  font-size: clamp(7rem, 17vw, 18rem);
+  font-size: clamp(7rem, 21vw, 25rem);
   font-weight: 500;
   line-height: 0.72;
   letter-spacing: -0.095em;
@@ -759,7 +879,7 @@ button {
 .hero-crystal {
   position: relative;
   z-index: 2;
-  width: min(43vw, 580px, 74svh);
+  width: min(48vw, 660px, 72svh);
   aspect-ratio: 1;
   transform-style: preserve-3d;
   will-change: transform;
@@ -844,6 +964,7 @@ button {
 .reading-index {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0 clamp(14px, 2.4vw, 38px) clamp(14px, 2.4vw, 38px);
   border-left: 1px solid var(--line);
 }
 .reading-index-item {
@@ -857,6 +978,19 @@ button {
   border-bottom: 1px solid var(--line);
   overflow: hidden;
   isolation: isolate;
+}
+.reading-index-item[data-system='divine'] {
+  grid-column: span 2;
+}
+.reading-index-item[data-system='divine'] .reading-index-art-float {
+  inset: clamp(4px, 0.8vw, 12px) 20%;
+}
+.reading-index-item[data-system='divine'] .reading-index-art img {
+  transform: scale(0.8);
+}
+.reading-index-item[data-system='divine']:hover .reading-index-art img,
+.reading-index-item[data-system='divine']:focus-visible .reading-index-art img {
+  transform: scale(0.86);
 }
 .reading-index-item::before {
   content: '';
@@ -877,11 +1011,19 @@ button {
   min-height: 0;
   will-change: transform;
 }
+.reading-index-art-float {
+  position: absolute;
+  inset: clamp(13px, 1.8vw, 29px) clamp(15px, 2.1vw, 34px);
+  display: block;
+  animation: reading-art-drift var(--art-duration, 8s) ease-in-out
+    var(--art-delay, 0s) infinite alternate;
+  will-change: transform;
+}
 .reading-index-art img {
   object-fit: contain;
   filter: grayscale(1) sepia(0.08) contrast(0.9) brightness(1.02);
   opacity: 0.94;
-  transform: scale(0.82);
+  transform: scale(0.94);
   transition:
     filter 0.45s ease,
     opacity 0.45s ease,
@@ -889,11 +1031,11 @@ button {
 }
 .reading-index-item[data-system='magic-8-ball'] .reading-index-art img,
 .reading-index-item[data-system='fortune-cookie'] .reading-index-art img {
-  transform: scale(0.74);
+  transform: scale(0.84);
 }
 .reading-index-item:hover .reading-index-art img,
 .reading-index-item:focus-visible .reading-index-art img {
-  transform: scale(0.87);
+  transform: scale(0.99);
 }
 .reading-index-item[data-system='magic-8-ball']:hover .reading-index-art img,
 .reading-index-item[data-system='magic-8-ball']:focus-visible
@@ -903,7 +1045,7 @@ button {
 .reading-index-item[data-system='fortune-cookie']:focus-visible
   .reading-index-art
   img {
-  transform: scale(0.79);
+  transform: scale(0.89);
 }
 .reading-index-name {
   position: relative;
@@ -914,6 +1056,16 @@ button {
   line-height: 0.92;
   letter-spacing: -0.045em;
   transition: color 0.35s ease;
+}
+.reading-index-name small {
+  display: block;
+  margin-top: 9px;
+  font-family: var(--font-geist), Arial, sans-serif;
+  font-size: 8px;
+  font-weight: 400;
+  line-height: 1.25;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 .reading-index-item:hover .reading-index-name,
 .reading-index-item:focus-visible .reading-index-name {
@@ -1688,6 +1840,1434 @@ button {
   z-index: 6;
   min-height: 48px;
 }
+.system-ritual {
+  --ritual-paper: #e7e0d1;
+  --ritual-dark: #11110f;
+  --ritual-mid: #817b70;
+  position: relative;
+  width: 100vw;
+  height: 100svh;
+  display: grid;
+  place-items: center;
+  isolation: isolate;
+  overflow: hidden;
+}
+.system-ritual::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 57%;
+  width: min(720px, 78vw);
+  height: 150px;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse,
+    color-mix(in srgb, var(--ink) 15%, transparent),
+    transparent 69%
+  );
+  filter: blur(20px);
+  transform: translate(-50%, -50%);
+  opacity: 0.68;
+}
+.system-ritual-control {
+  position: relative;
+  z-index: 2;
+  width: min(840px, 90vw);
+  height: min(620px, 72svh);
+  margin-top: -5svh;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  perspective: 1800px;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+.system-ritual-control:active {
+  cursor: grabbing;
+}
+.system-ritual-control:disabled {
+  cursor: wait;
+}
+.system-ritual-control:focus-visible {
+  outline: 0;
+}
+.system-ritual-control:focus-visible ~ .system-ritual-caption strong {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 7px;
+}
+.ritual-art,
+.ritual-art span,
+.ritual-art i,
+.ritual-art b {
+  box-sizing: border-box;
+}
+.ritual-art {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+.system-ritual-caption {
+  position: absolute;
+  z-index: 5;
+  left: 50%;
+  bottom: max(24px, 5svh);
+  width: min(560px, 86vw);
+  text-align: center;
+  transform: translateX(-50%);
+}
+.system-ritual-caption > span,
+.system-ritual-caption > strong {
+  display: block;
+  text-transform: uppercase;
+}
+.system-ritual-caption > span {
+  margin-bottom: 8px;
+  color: var(--muted);
+  font-size: 8px;
+  letter-spacing: 0.2em;
+}
+.system-ritual-caption > strong {
+  font-family: var(--font-bodoni), Georgia, serif;
+  font-size: clamp(26px, 4vw, 42px);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+}
+.system-ritual-caption > p {
+  margin: 7px 0 14px;
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+}
+.system-ritual-progress {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+.system-ritual-progress i {
+  width: 19px;
+  height: 2px;
+  background: color-mix(in srgb, var(--ink) 18%, transparent);
+  transition:
+    width 0.32s ease,
+    background 0.32s ease;
+}
+.system-ritual-progress i.is-complete,
+.system-ritual-progress i.is-current {
+  background: var(--ink);
+}
+.system-ritual-progress i.is-current {
+  width: 34px;
+}
+
+/* Tarot — silk, overhand shuffle, cut, fan. */
+.ritual-silk .silk-cloth {
+  position: absolute;
+  width: 270px;
+  height: 440px;
+  background:
+    linear-gradient(
+      115deg,
+      transparent 12%,
+      rgba(255, 255, 255, 0.1) 28%,
+      transparent 44%
+    ),
+    #171715;
+  border: 1px solid #35342f;
+  box-shadow: 0 35px 80px rgba(0, 0, 0, 0.3);
+  transition: transform 0.72s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.ritual-silk .silk-cloth-left {
+  clip-path: polygon(0 0, 100% 10%, 92% 100%, 8% 91%);
+  transform: translateX(calc(-34px - var(--ritual-shift) * 0.48)) rotate(-5deg);
+}
+.ritual-silk .silk-cloth-right {
+  clip-path: polygon(0 10%, 100% 0, 91% 92%, 7% 100%);
+  transform: translateX(calc(34px + var(--ritual-shift) * 0.48)) rotate(5deg);
+}
+.ritual-silk .silk-pack {
+  position: absolute;
+  width: 206px;
+  height: 326px;
+  transform: translateZ(-12px);
+  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.ritual-silk .silk-pack i,
+.ritual-silk .silk-pack b,
+.ritual-silk .silk-fan i {
+  position: absolute;
+  inset: 0;
+  border: 1px solid #6f695e;
+  background: #0c0c0b;
+  box-shadow: 0 13px 35px rgba(0, 0, 0, 0.3);
+}
+.ritual-silk .silk-pack i {
+  transform: translate(calc(var(--item) * -1.4px), calc(var(--item) * 1.5px));
+}
+.ritual-silk .silk-pack b {
+  background-image:
+    linear-gradient(rgba(5, 5, 5, 0.24), rgba(5, 5, 5, 0.38)),
+    url('/card-backs/owen-jones-ornament-60.jpg');
+  background-position: 66% 62%;
+  background-size: auto 800%;
+}
+.ritual-silk .silk-corner {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  display: grid;
+  place-items: center;
+  background: #24231f;
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+  transform: translate(-61px, -149px) translateX(var(--ritual-shift));
+  color: #dad2bf;
+  font-size: 22px;
+  transition: transform 0.1s linear;
+}
+.ritual-silk .silk-fan {
+  position: absolute;
+  width: 640px;
+  height: 410px;
+  opacity: 0;
+  transform: translateY(80px);
+  transition: opacity 0.4s ease;
+}
+.ritual-silk .silk-fan i {
+  left: 50%;
+  top: 43%;
+  width: 132px;
+  height: 215px;
+  transform-origin: 50% 138%;
+  transform: translateX(-50%) rotate(calc((var(--item) - 4) * 10deg));
+}
+.ritual-silk-deck.phase-1 .silk-cloth-left,
+.ritual-silk-deck.phase-2 .silk-cloth-left,
+.ritual-silk-deck.phase-3 .silk-cloth-left,
+.ritual-silk-deck.is-dealing .silk-cloth-left {
+  transform: translateX(-260px) rotate(-16deg);
+}
+.ritual-silk-deck.phase-1 .silk-cloth-right,
+.ritual-silk-deck.phase-2 .silk-cloth-right,
+.ritual-silk-deck.phase-3 .silk-cloth-right,
+.ritual-silk-deck.is-dealing .silk-cloth-right {
+  transform: translateX(260px) rotate(16deg);
+}
+.ritual-silk-deck.phase-1 .silk-corner,
+.ritual-silk-deck.phase-2 .silk-corner,
+.ritual-silk-deck.phase-3 .silk-corner,
+.ritual-silk-deck.is-dealing .silk-corner {
+  transform: translate(240px, -210px) rotate(28deg);
+  opacity: 0;
+  transition: 0.6s ease;
+}
+.ritual-silk-deck.phase-2 .silk-pack {
+  animation: ritual-overhand 0.82s cubic-bezier(0.16, 0.78, 0.18, 1);
+}
+.ritual-silk-deck.phase-3 .silk-pack {
+  transform: translateX(-24px) rotate(-2deg);
+}
+.ritual-silk-deck.is-dealing .silk-pack {
+  opacity: 0;
+  transform: translateY(90px) scale(0.76);
+}
+.ritual-silk-deck.is-dealing .silk-fan {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Oracle — portfolio and image plates. */
+.ritual-cabinet .cabinet-cover {
+  position: absolute;
+  width: 260px;
+  height: 360px;
+  background: #181916;
+  border: 1px solid #4d4c46;
+  box-shadow: 0 28px 65px rgba(0, 0, 0, 0.35);
+  transform-origin: center bottom;
+  transition: transform 0.68s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.ritual-cabinet .cabinet-cover-left {
+  transform: translateX(calc(-18px - var(--ritual-pull) * 0.6)) rotate(-2deg);
+}
+.ritual-cabinet .cabinet-cover-right {
+  transform: translateX(calc(18px + var(--ritual-pull) * 0.6)) rotate(2deg);
+}
+.ritual-cabinet .cabinet-plates {
+  position: absolute;
+  width: 220px;
+  height: 310px;
+}
+.ritual-cabinet .cabinet-plates i {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  border: 10px solid var(--ritual-paper);
+  background: #b8b2a5;
+  color: #25251f;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.24);
+  transform: translate(calc(var(--item) * 2px), calc(var(--item) * -2px));
+  transition: transform 0.72s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.ritual-cabinet .cabinet-plates b {
+  font-family: var(--font-bodoni), Georgia, serif;
+  font-size: 80px;
+  font-weight: 400;
+}
+.ritual-cabinet .cabinet-ribbon {
+  position: absolute;
+  width: 320px;
+  height: 26px;
+  border-block: 1px solid #6b675c;
+  background: #20201d;
+  transform: rotate(-4deg) translateX(var(--ritual-shift));
+  transition: opacity 0.3s ease;
+}
+.ritual-image-cabinet.phase-1 .cabinet-cover-left,
+.ritual-image-cabinet.phase-2 .cabinet-cover-left,
+.ritual-image-cabinet.is-dealing .cabinet-cover-left {
+  transform: translateX(-235px) rotateY(48deg) rotate(-5deg);
+}
+.ritual-image-cabinet.phase-1 .cabinet-cover-right,
+.ritual-image-cabinet.phase-2 .cabinet-cover-right,
+.ritual-image-cabinet.is-dealing .cabinet-cover-right {
+  transform: translateX(235px) rotateY(-48deg) rotate(5deg);
+}
+.ritual-image-cabinet.phase-1 .cabinet-ribbon,
+.ritual-image-cabinet.phase-2 .cabinet-ribbon,
+.ritual-image-cabinet.is-dealing .cabinet-ribbon {
+  opacity: 0;
+}
+.ritual-image-cabinet.phase-2 .cabinet-plates i {
+  transform: translate(calc((var(--item) - 2) * 34px), calc(var(--item) * -5px))
+    rotate(calc((var(--item) - 2) * 1.5deg));
+}
+.ritual-image-cabinet.is-dealing .cabinet-plates i:last-child {
+  transform: translateY(-165px) scale(1.1) rotate(-1deg);
+  filter: contrast(1.12);
+}
+
+/* Lenormand — continuous message ribbon. */
+.ritual-dispatch .dispatch-case {
+  position: absolute;
+  left: 50%;
+  width: 260px;
+  height: 210px;
+  border: 1px solid #5b574e;
+  background: #161613;
+  box-shadow: 0 32px 70px rgba(0, 0, 0, 0.34);
+  transform: translateX(-50%);
+}
+.ritual-dispatch .dispatch-case::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    150deg,
+    rgba(255, 255, 255, 0.06),
+    transparent 42%
+  );
+  transform-origin: top;
+  transition: transform 0.42s ease;
+}
+.ritual-dispatch .dispatch-case i {
+  position: absolute;
+  top: 92px;
+  left: 50%;
+  width: 46px;
+  height: 24px;
+  border: 1px solid #938c7e;
+  transform: translateX(calc(-50% + var(--ritual-shift) * 0.22));
+}
+.ritual-dispatch .dispatch-paper {
+  position: absolute;
+  left: 50%;
+  display: flex;
+  width: min(650px, 72vw);
+  height: 150px;
+  overflow: hidden;
+  background: var(--ritual-paper);
+  color: #171714;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.24);
+  clip-path: inset(0 var(--ritual-reveal) 0 0);
+  transform: translateX(-21px);
+  transform-origin: left;
+  transition:
+    clip-path 0.12s linear,
+    transform 0.72s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.ritual-dispatch .dispatch-paper i {
+  min-width: 96px;
+  display: grid;
+  place-items: center;
+  border-right: 1px dashed rgba(5, 5, 5, 0.25);
+  font-size: 28px;
+  font-style: normal;
+}
+.ritual-dispatch .dispatch-tear {
+  position: absolute;
+  left: calc(50% + min(325px, 36vw));
+  width: 1px;
+  height: 180px;
+  border-left: 1px dashed #c9c0ae;
+  opacity: 0;
+  transform: translateY(var(--ritual-pull));
+}
+.ritual-message-ribbon.phase-1 .dispatch-case::before,
+.ritual-message-ribbon.phase-2 .dispatch-case::before,
+.ritual-message-ribbon.is-dealing .dispatch-case::before {
+  transform: rotateX(112deg);
+}
+.ritual-message-ribbon.phase-1 .dispatch-paper {
+  clip-path: inset(0 82% 0 0);
+}
+.ritual-message-ribbon.phase-2 .dispatch-paper,
+.ritual-message-ribbon.is-dealing .dispatch-paper {
+  clip-path: inset(0);
+}
+.ritual-message-ribbon.phase-2 .dispatch-tear {
+  opacity: 1;
+}
+.ritual-message-ribbon.is-dealing .dispatch-paper {
+  transform: translateX(-50%) translateY(35px);
+}
+
+/* Spellcraft — altar, materials, traced seal. */
+.ritual-altar .altar-surface {
+  position: absolute;
+  width: min(500px, 68vw);
+  aspect-ratio: 1.45;
+  border: 1px solid #5a574f;
+  background: radial-gradient(circle at 50% 45%, #282822, #11110f 70%);
+  box-shadow: 0 38px 80px rgba(0, 0, 0, 0.38);
+  transform: rotateX(62deg) rotateZ(-2deg);
+}
+.ritual-altar .altar-token {
+  position: absolute;
+  width: 72px;
+  height: 72px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #81796a;
+  border-radius: 50%;
+  background: #181814;
+  font-size: 24px;
+  transition: transform 0.62s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.ritual-altar .token-flame {
+  transform: translate(-205px, -132px) translateY(calc(var(--ritual-pull) * -1));
+}
+.ritual-altar .token-water {
+  transform: translate(215px, -86px) translateY(calc(var(--ritual-pull) * -1));
+}
+.ritual-altar .token-stone {
+  transform: translate(-180px, 146px) translateY(calc(var(--ritual-pull) * -1));
+}
+.ritual-altar .altar-seal {
+  position: absolute;
+  width: 290px;
+  height: 290px;
+  overflow: visible;
+  transform: rotateX(58deg);
+}
+.ritual-altar .altar-seal circle,
+.ritual-altar .altar-seal path {
+  fill: none;
+  stroke: #d7cfbc;
+  stroke-width: 1.5;
+  stroke-dasharray: 670;
+  stroke-dashoffset: 670;
+  transition: stroke-dashoffset 0.76s ease;
+}
+.ritual-altar .altar-pulse {
+  position: absolute;
+  width: 240px;
+  aspect-ratio: 1;
+  border: 1px solid #d7cfbc;
+  border-radius: 50%;
+  opacity: 0;
+  transform: rotateX(58deg) scale(0.3);
+}
+.ritual-working-altar.phase-1 .altar-token {
+  transform: translate(0, 18px);
+}
+.ritual-working-altar.phase-1 .token-flame {
+  transform: translate(-92px, 28px);
+}
+.ritual-working-altar.phase-1 .token-water {
+  transform: translate(92px, 28px);
+}
+.ritual-working-altar.phase-1 .token-stone {
+  transform: translate(0, 82px);
+}
+.ritual-working-altar.phase-2 .altar-token,
+.ritual-working-altar.is-dealing .altar-token {
+  opacity: 0.75;
+}
+.ritual-working-altar.phase-2 .altar-seal circle,
+.ritual-working-altar.phase-2 .altar-seal path,
+.ritual-working-altar.is-dealing .altar-seal circle,
+.ritual-working-altar.is-dealing .altar-seal path {
+  stroke-dashoffset: 0;
+}
+.ritual-working-altar.is-dealing .altar-pulse {
+  animation: ritual-pulse 0.72s ease-out both;
+}
+
+/* Temple — conservation folio. */
+.ritual-papyrus .papyrus-sheet {
+  position: absolute;
+  width: min(560px, 70vw);
+  height: 245px;
+  display: flex;
+  overflow: hidden;
+  background:
+    repeating-linear-gradient(
+      4deg,
+      transparent 0 5px,
+      rgba(69, 53, 28, 0.07) 6px
+    ),
+    #d3bf91;
+  color: #332818;
+  clip-path: inset(
+    0 calc(50% - var(--ritual-pull) * 2.6) 0
+      calc(50% - var(--ritual-pull) * 2.6)
+  );
+  transition: clip-path 0.12s linear;
+}
+.ritual-papyrus .papyrus-sheet i {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  min-width: 90px;
+  border-right: 1px solid rgba(51, 40, 24, 0.18);
+  font-size: 42px;
+  font-style: normal;
+  transition: transform 0.72s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.ritual-papyrus .papyrus-rod {
+  position: absolute;
+  width: 24px;
+  height: 294px;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #332819, #a18b65 50%, #332819);
+  box-shadow: 0 20px 35px rgba(0, 0, 0, 0.28);
+  transition: transform 0.76s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.ritual-papyrus .papyrus-rod-left {
+  transform: translateX(-12px);
+}
+.ritual-papyrus .papyrus-rod-right {
+  transform: translateX(calc(12px + var(--ritual-shift)));
+}
+.ritual-papyrus .papyrus-guide {
+  position: absolute;
+  width: 94px;
+  height: 265px;
+  border: 1px solid rgba(255, 247, 222, 0.76);
+  opacity: 0;
+  transform: translateX(var(--ritual-shift));
+}
+.ritual-papyrus-folio.phase-1 .papyrus-sheet,
+.ritual-papyrus-folio.phase-2 .papyrus-sheet,
+.ritual-papyrus-folio.is-dealing .papyrus-sheet {
+  clip-path: inset(0);
+}
+.ritual-papyrus-folio.phase-1 .papyrus-rod-left,
+.ritual-papyrus-folio.phase-2 .papyrus-rod-left,
+.ritual-papyrus-folio.is-dealing .papyrus-rod-left {
+  transform: translateX(-292px);
+}
+.ritual-papyrus-folio.phase-1 .papyrus-rod-right,
+.ritual-papyrus-folio.phase-2 .papyrus-rod-right,
+.ritual-papyrus-folio.is-dealing .papyrus-rod-right {
+  transform: translateX(292px);
+}
+.ritual-papyrus-folio.phase-2 .papyrus-guide {
+  opacity: 1;
+}
+.ritual-papyrus-folio.is-dealing .papyrus-sheet i {
+  transform: translateY(-140px);
+}
+
+/* Zodiac — three rotating rings. */
+.ritual-celestial .celestial-ring {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  border: 1px solid #706b60;
+  border-radius: 50%;
+  box-shadow:
+    inset 0 0 0 9px #11110f,
+    inset 0 0 0 10px #3d3a34;
+  transition: transform 0.72s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.ritual-celestial .celestial-ring i {
+  color: #d8d0bd;
+  font-style: normal;
+  letter-spacing: 1.8em;
+  transform: translateX(0.9em);
+}
+.ritual-celestial .ring-signs {
+  width: min(480px, 62vw);
+  transform: rotate(var(--ritual-turn));
+}
+.ritual-celestial .ring-planets {
+  width: min(360px, 47vw);
+  transform: rotate(calc(var(--ritual-turn) * -1));
+}
+.ritual-celestial .ring-houses {
+  width: min(240px, 32vw);
+  transform: rotate(var(--ritual-turn));
+}
+.ritual-celestial .celestial-center {
+  position: absolute;
+  width: 106px;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border: 1px solid #7e7769;
+  border-radius: 50%;
+  background: #0e0e0d;
+  font-size: 31px;
+  transition: transform 0.72s ease;
+}
+.ritual-celestial .celestial-meridian {
+  position: absolute;
+  width: 1px;
+  height: min(530px, 68vw);
+  background: linear-gradient(transparent, #d8d0bd 18% 82%, transparent);
+}
+.ritual-celestial-instrument.phase-1 .ring-signs {
+  transform: rotate(78deg);
+}
+.ritual-celestial-instrument.phase-2 .ring-planets {
+  transform: rotate(-113deg);
+}
+.ritual-celestial-instrument.is-dealing .ring-houses {
+  transform: rotate(137deg);
+}
+.ritual-celestial-instrument.is-dealing .celestial-center {
+  transform: scale(1.55);
+  box-shadow: 0 0 70px rgba(230, 222, 201, 0.22);
+}
+
+/* Kipper — tear, open, extract. */
+.ritual-letter .letter-envelope {
+  position: absolute;
+  width: min(500px, 70vw);
+  aspect-ratio: 1.56;
+  border: 1px solid #b5ad9e;
+  background: #d3cbbb;
+  color: #211f1b;
+  box-shadow: 0 38px 80px rgba(0, 0, 0, 0.32);
+  transform: rotate(-2deg);
+}
+.ritual-letter .letter-back {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background:
+    linear-gradient(
+      32deg,
+      transparent 49.5%,
+      rgba(52, 47, 38, 0.24) 50%,
+      transparent 50.5%
+    ),
+    linear-gradient(
+      -32deg,
+      transparent 49.5%,
+      rgba(52, 47, 38, 0.24) 50%,
+      transparent 50.5%
+    );
+}
+.ritual-letter .letter-flap {
+  position: absolute;
+  z-index: 3;
+  inset: 0 0 38%;
+  background: #e4ddce;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  transform-origin: top;
+  transition: transform 0.56s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.ritual-letter .letter-seal {
+  position: absolute;
+  z-index: 5;
+  left: 50%;
+  top: 42%;
+  width: 54px;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #24231f;
+  color: #d9d1c2;
+  font-family: var(--font-bodoni), Georgia, serif;
+  font-style: normal;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.2s ease;
+}
+.ritual-letter .letter-strip {
+  position: absolute;
+  z-index: 6;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 27px;
+  border-bottom: 1px dashed rgba(40, 36, 29, 0.35);
+  background: #eee8dc;
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% 100%,
+    88% 82%,
+    72% 100%,
+    54% 84%,
+    35% 100%,
+    17% 86%,
+    0 100%
+  );
+  transform: translateX(var(--ritual-shift))
+    rotate(calc(var(--ritual-progress) * -4deg));
+  transition: opacity 0.24s ease;
+}
+.ritual-letter .letter-packet {
+  position: absolute;
+  z-index: 2;
+  left: 12%;
+  right: 12%;
+  top: 18%;
+  height: 78%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+  padding: 12px;
+  background: #f2ede3;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.18);
+  transform: translateY(calc(var(--ritual-pull) * -1));
+  opacity: 0;
+  transition:
+    transform 0.86s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.3s ease;
+}
+.ritual-letter .letter-packet b {
+  min-height: 58px;
+  border: 1px solid rgba(32, 29, 24, 0.25);
+  background:
+    linear-gradient(145deg, rgba(5, 5, 5, 0.06), transparent), #d6cfc1;
+}
+.ritual-sealed-letter.phase-1 .letter-strip,
+.ritual-sealed-letter.phase-2 .letter-strip,
+.ritual-sealed-letter.is-dealing .letter-strip {
+  opacity: 0;
+  transform: translate(410px, 90px) rotate(18deg);
+}
+.ritual-sealed-letter.phase-2 .letter-flap,
+.ritual-sealed-letter.is-dealing .letter-flap {
+  transform: rotateX(155deg);
+}
+.ritual-sealed-letter.phase-2 .letter-seal,
+.ritual-sealed-letter.is-dealing .letter-seal {
+  opacity: 0;
+}
+.ritual-sealed-letter.phase-2 .letter-packet,
+.ritual-sealed-letter.is-dealing .letter-packet {
+  opacity: 1;
+}
+.ritual-sealed-letter.is-dealing .letter-packet {
+  transform: translateY(-235px) rotate(2deg) scale(1.08);
+}
+
+/* Belline — prism and seven planetary facets. */
+.ritual-prism .prism-body {
+  position: absolute;
+  width: 250px;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border: 1px solid #8a8374;
+  clip-path: polygon(
+    50% 0,
+    92% 20%,
+    100% 65%,
+    68% 100%,
+    22% 94%,
+    0 55%,
+    12% 16%
+  );
+  background: radial-gradient(circle, #30302b, #11110f 68%);
+  transform: rotate(var(--ritual-turn));
+  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.ritual-prism .prism-body i {
+  position: absolute;
+  font-style: normal;
+  transform: rotate(calc(var(--item) * 51.43deg)) translateY(-86px)
+    rotate(calc(var(--item) * -51.43deg));
+}
+.ritual-prism .prism-beam-in {
+  position: absolute;
+  left: 4%;
+  width: 42%;
+  height: 2px;
+  background: #d9d2c2;
+  transform: rotate(-7deg);
+  transform-origin: right;
+}
+.ritual-prism .prism-beam-out {
+  position: absolute;
+  left: 64%;
+  width: 34%;
+  height: 180px;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+.ritual-prism .prism-beam-out i {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 100%;
+  height: 1px;
+  background: #d9d2c2;
+  transform: rotate(calc((var(--item) - 4) * 3deg));
+  transform-origin: left;
+}
+.ritual-planetary-prism.phase-1 .prism-body {
+  transform: rotate(102deg);
+}
+.ritual-planetary-prism.phase-2 .prism-body {
+  box-shadow: 0 0 78px rgba(223, 215, 195, 0.22);
+}
+.ritual-planetary-prism.is-dealing .prism-beam-out {
+  opacity: 1;
+}
+
+/* Playing cards — true table riffle. */
+.ritual-riffle .riffle-half {
+  position: absolute;
+  width: 180px;
+  height: 276px;
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.ritual-riffle .riffle-half i,
+.ritual-riffle .riffle-bridge i {
+  position: absolute;
+  inset: 0;
+  border: 1px solid #777166;
+  background: #11110f;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
+}
+.ritual-riffle .riffle-half i:nth-child(odd) {
+  transform: translate(-2px, 2px);
+}
+.ritual-riffle .riffle-left {
+  transform: translateX(calc(var(--ritual-pull) * -1));
+}
+.ritual-riffle .riffle-right {
+  transform: translateX(var(--ritual-pull));
+}
+.ritual-riffle .riffle-bridge {
+  position: absolute;
+  width: 440px;
+  height: 270px;
+  opacity: 0;
+}
+.ritual-riffle .riffle-bridge i {
+  left: 50%;
+  top: 48%;
+  width: 126px;
+  height: 196px;
+  transform: translateX(var(--riffle-x)) translateY(var(--riffle-y))
+    rotate(var(--riffle-r));
+}
+.ritual-table-riffle.phase-1 .riffle-left,
+.ritual-table-riffle.phase-2 .riffle-left {
+  transform: translateX(-112px) rotate(-3deg);
+}
+.ritual-table-riffle.phase-1 .riffle-right,
+.ritual-table-riffle.phase-2 .riffle-right {
+  transform: translateX(112px) rotate(3deg);
+}
+.ritual-table-riffle.phase-2 .riffle-half {
+  transform: translateX(0) rotate(0);
+  animation: ritual-riffle-halves 0.72s ease both;
+}
+.ritual-table-riffle.is-dealing .riffle-half {
+  opacity: 0;
+}
+.ritual-table-riffle.is-dealing .riffle-bridge {
+  opacity: 1;
+  animation: ritual-bridge 0.76s ease both;
+}
+
+/* Sibilla — conversation theatre. */
+.ritual-theatre .theatre-frame {
+  position: absolute;
+  width: min(620px, 78vw);
+  height: 350px;
+  border: 28px solid #181815;
+  border-top-width: 40px;
+  box-shadow:
+    inset 0 0 0 1px #6a655b,
+    0 34px 70px rgba(0, 0, 0, 0.34);
+}
+.ritual-theatre .theatre-curtain {
+  position: absolute;
+  z-index: 4;
+  width: min(310px, 39vw);
+  height: 300px;
+  background: repeating-linear-gradient(
+    90deg,
+    #161613 0 26px,
+    #292722 27px 48px
+  );
+  transition: transform 0.64s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.ritual-theatre .theatre-curtain-left {
+  transform: translateX(calc(-50% - var(--ritual-pull) * 0.7));
+}
+.ritual-theatre .theatre-curtain-right {
+  transform: translateX(calc(50% + var(--ritual-pull) * 0.7));
+}
+.ritual-theatre .theatre-scenes {
+  position: absolute;
+  display: flex;
+  gap: 10px;
+}
+.ritual-theatre .theatre-scenes i {
+  width: clamp(58px, 9vw, 96px);
+  aspect-ratio: 0.68;
+  display: grid;
+  place-items: center;
+  border: 7px solid #e3dccd;
+  background: #afa99e;
+  color: #292722;
+  opacity: 0;
+  transform: translateX(calc((var(--item, 1) - 1) * 30px));
+  transition: 0.72s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.ritual-theatre .theatre-scenes b {
+  font-family: var(--font-bodoni), Georgia, serif;
+  font-size: 30px;
+}
+.ritual-theatre .theatre-cord {
+  position: absolute;
+  right: 12%;
+  width: 1px;
+  height: 280px;
+  background: #7f796d;
+  transform: translateX(var(--ritual-shift));
+}
+.ritual-conversation-theatre.phase-1 .theatre-curtain-left,
+.ritual-conversation-theatre.phase-2 .theatre-curtain-left,
+.ritual-conversation-theatre.is-dealing .theatre-curtain-left {
+  transform: translateX(-112%);
+}
+.ritual-conversation-theatre.phase-1 .theatre-curtain-right,
+.ritual-conversation-theatre.phase-2 .theatre-curtain-right,
+.ritual-conversation-theatre.is-dealing .theatre-curtain-right {
+  transform: translateX(112%);
+}
+.ritual-conversation-theatre.phase-2 .theatre-scenes i,
+.ritual-conversation-theatre.is-dealing .theatre-scenes i {
+  opacity: 1;
+  transform: translateX(0);
+}
+.ritual-conversation-theatre.is-dealing .theatre-scenes i {
+  transform: rotateY(calc((var(--item, 1) - 1) * -4deg));
+}
+
+/* Runes — cloth pouch and cast tiles. */
+.ritual-pouch .pouch-body {
+  position: absolute;
+  width: 270px;
+  height: 320px;
+  border-radius: 45% 45% 38% 38% / 28% 28% 52% 52%;
+  background:
+    linear-gradient(
+      100deg,
+      transparent,
+      rgba(255, 255, 255, 0.07) 42%,
+      transparent 60%
+    ),
+    #22211d;
+  border: 1px solid #5c574d;
+  box-shadow: 0 38px 75px rgba(0, 0, 0, 0.35);
+  transition: transform 0.7s ease;
+}
+.ritual-pouch .pouch-body::before {
+  content: '';
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  top: 45px;
+  height: 22px;
+  border-block: 1px solid #777064;
+}
+.ritual-pouch .pouch-cord {
+  position: absolute;
+  width: 330px;
+  height: 4px;
+  border-block: 1px solid #746e62;
+  transform: translateX(var(--ritual-shift));
+}
+.ritual-pouch .rune-tiles {
+  position: absolute;
+  width: min(620px, 76vw);
+  height: 390px;
+}
+.ritual-pouch .rune-tiles i {
+  position: absolute;
+  left: 50%;
+  top: 42%;
+  width: 74px;
+  height: 92px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #756e60;
+  border-radius: 38% 45% 40% 34%;
+  background: #989082;
+  color: #24221d;
+  font-size: 29px;
+  font-style: normal;
+  opacity: 0;
+  transform: translate(-50%, 0) rotate(calc((var(--item) - 2) * 12deg));
+  transition: 0.9s cubic-bezier(0.12, 0.7, 0.2, 1);
+}
+.ritual-rune-pouch.phase-1 .pouch-body,
+.ritual-rune-pouch.phase-2 .pouch-body {
+  border-radius: 32% 32% 38% 38% / 18% 18% 52% 52%;
+}
+.ritual-rune-pouch.phase-1 .pouch-cord,
+.ritual-rune-pouch.phase-2 .pouch-cord {
+  transform: translateX(115px);
+}
+.ritual-rune-pouch.phase-2 .pouch-body {
+  animation: ritual-pouch-shake 0.7s ease both;
+}
+.ritual-rune-pouch.is-dealing .pouch-body {
+  transform: translateY(170px) rotate(9deg);
+}
+.ritual-rune-pouch.is-dealing .rune-tiles i {
+  opacity: 1;
+  transform: translate(calc(-50% + (var(--item) - 2) *
+    104px), calc((var(--item) % 2) * 70px - 95px)) rotate(calc((var(--item) - 2)
+    * 13deg));
+}
+
+/* I Ching and Hafez — related books, distinct content. */
+.ritual-book .book-cover {
+  position: absolute;
+  width: 250px;
+  height: 350px;
+  border: 1px solid #625d52;
+  background: #191915;
+  box-shadow: 0 32px 70px rgba(0, 0, 0, 0.34);
+  transform-origin: center;
+  transition: transform 0.72s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.ritual-book .book-cover-left {
+  transform: translateX(-8px);
+}
+.ritual-book .book-cover-right {
+  transform: translateX(8px);
+}
+.ritual-book .book-pages {
+  position: absolute;
+  width: 230px;
+  height: 328px;
+}
+.ritual-book .book-pages i {
+  position: absolute;
+  inset: 0;
+  border: 1px solid #aaa18f;
+  background: #dfd6c4;
+  transform: translateX(calc(var(--item) * 2px));
+}
+.ritual-book .hexagram-lines {
+  position: absolute;
+  width: 150px;
+  display: grid;
+  gap: 13px;
+  opacity: 0;
+}
+.ritual-book .hexagram-lines i {
+  height: 7px;
+  background: #24231f;
+  transform: scaleX(0);
+  transform-origin: left;
+}
+.ritual-hexagram-book.phase-1 .book-pages {
+  animation: ritual-page-riffle 0.72s ease both;
+}
+.ritual-hexagram-book.phase-2 .book-cover-left,
+.ritual-hexagram-book.is-dealing .book-cover-left {
+  transform: translateX(-130px) rotateY(22deg);
+}
+.ritual-hexagram-book.phase-2 .book-cover-right,
+.ritual-hexagram-book.is-dealing .book-cover-right {
+  transform: translateX(130px) rotateY(-22deg);
+}
+.ritual-hexagram-book.is-dealing .hexagram-lines {
+  opacity: 1;
+}
+.ritual-hexagram-book.is-dealing .hexagram-lines i {
+  animation: ritual-inscribe 0.28s ease forwards;
+  animation-delay: calc((5 - var(--item)) * 90ms);
+}
+.ritual-divan .book-cover {
+  background: linear-gradient(135deg, #2b2923, #121210);
+}
+.ritual-divan .book-cover::before {
+  content: 'دیوان حافظ';
+  position: absolute;
+  inset: 19%;
+  display: grid;
+  place-items: center;
+  border: 1px solid #766e5e;
+  color: #c8beaa;
+  font-size: 22px;
+}
+.ritual-divan .divan-illumination,
+.ritual-divan .divan-lines {
+  position: absolute;
+  z-index: 3;
+  color: #3e3324;
+  opacity: 0;
+  transition: opacity 0.7s ease;
+}
+.ritual-divan .divan-illumination {
+  font-size: 82px;
+  transform: translateX(-116px);
+}
+.ritual-divan .divan-lines {
+  max-width: 180px;
+  transform: translateX(112px);
+  line-height: 2.2;
+}
+.ritual-divan .divan-thread {
+  position: absolute;
+  width: 2px;
+  height: 390px;
+  background: #797060;
+  transform: translate(30px, 185px);
+}
+.ritual-divan.phase-1 .book-cover {
+  box-shadow:
+    0 0 0 1px #625d52,
+    0 0 90px rgba(214, 204, 181, 0.12);
+}
+.ritual-divan.phase-2 .book-pages {
+  animation: ritual-page-riffle 0.76s ease both;
+}
+.ritual-divan.is-dealing .book-cover-left {
+  transform: translateX(-130px) rotateY(22deg);
+}
+.ritual-divan.is-dealing .book-cover-right {
+  transform: translateX(130px) rotateY(-22deg);
+}
+.ritual-divan.is-dealing .divan-illumination,
+.ritual-divan.is-dealing .divan-lines {
+  opacity: 1;
+}
+
+/* Hanafuda — paulownia box and seasonal arc. */
+.ritual-flower-box .flower-box-base,
+.ritual-flower-box .flower-box-lid {
+  position: absolute;
+  width: 245px;
+  height: 330px;
+  border: 1px solid #6b5742;
+  background:
+    repeating-linear-gradient(
+      86deg,
+      transparent 0 17px,
+      rgba(66, 45, 25, 0.11) 18px 19px
+    ),
+    #6f563b;
+  box-shadow: 0 31px 65px rgba(0, 0, 0, 0.32);
+}
+.ritual-flower-box .flower-box-lid {
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  color: #d9cdb7;
+  font-size: 46px;
+  transform: translateY(calc(var(--ritual-shift) * -1));
+  transition: transform 0.62s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.ritual-flower-box .flower-cards {
+  position: absolute;
+  width: min(720px, 84vw);
+  height: 380px;
+}
+.ritual-flower-box .flower-cards i {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 84px;
+  height: 142px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #767065;
+  background: #171714;
+  font-size: 28px;
+  font-style: normal;
+  opacity: 0;
+  transform-origin: 50% 180%;
+  transition: 0.76s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.ritual-flower-box.phase-1 .flower-box-lid,
+.ritual-flower-box.phase-2 .flower-box-lid,
+.ritual-flower-box.is-dealing .flower-box-lid {
+  transform: translateY(-245px) rotate(-4deg);
+}
+.ritual-flower-box.phase-2 .flower-cards i,
+.ritual-flower-box.is-dealing .flower-cards i {
+  opacity: 1;
+  transform: translateX(-50%) rotate(calc((var(--item) - 4) * 11deg))
+    translateY(-95px);
+}
+.ritual-flower-box.is-dealing .flower-cards i {
+  transform: translate(calc(-50% + (var(--item) - 4) * 66px), -155px)
+    rotate(calc((var(--item) - 4) * 2deg));
+}
+
+/* Zigeunerkarten — picture album. */
+.ritual-album .album-cover {
+  position: absolute;
+  width: 270px;
+  height: 365px;
+  border: 1px solid #655f54;
+  background: #181815;
+  box-shadow: 0 34px 75px rgba(0, 0, 0, 0.34);
+  transform-origin: center;
+  transition: transform 0.68s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.ritual-album .album-cover-left {
+  transform: translateX(-5px);
+}
+.ritual-album .album-cover-right {
+  transform: translateX(5px);
+}
+.ritual-album .album-clasp {
+  position: absolute;
+  z-index: 4;
+  width: 74px;
+  height: 22px;
+  border: 1px solid #8a8376;
+  background: #25231f;
+  transition: transform 0.48s ease;
+}
+.ritual-album .album-clasp-left {
+  transform: translateX(calc(-44px - var(--ritual-pull)));
+}
+.ritual-album .album-clasp-right {
+  transform: translateX(calc(44px + var(--ritual-pull)));
+}
+.ritual-album .album-scenes {
+  position: absolute;
+  width: min(650px, 78vw);
+  height: 360px;
+}
+.ritual-album .album-scenes i {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 150px;
+  height: 220px;
+  display: grid;
+  place-items: center;
+  border: 10px solid #ddd5c5;
+  background: #aaa397;
+  color: #28251f;
+  opacity: 0;
+  transform: translate(-50%, -50%) rotate(calc((var(--item) - 2) * 4deg));
+  transition: 0.82s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.ritual-album .album-scenes b {
+  font-size: 44px;
+}
+.ritual-picture-album.phase-1 .album-cover-left,
+.ritual-picture-album.phase-2 .album-cover-left,
+.ritual-picture-album.is-dealing .album-cover-left {
+  transform: translateX(-150px) rotateY(24deg);
+}
+.ritual-picture-album.phase-1 .album-cover-right,
+.ritual-picture-album.phase-2 .album-cover-right,
+.ritual-picture-album.is-dealing .album-cover-right {
+  transform: translateX(150px) rotateY(-24deg);
+}
+.ritual-picture-album.phase-1 .album-clasp,
+.ritual-picture-album.phase-2 .album-clasp,
+.ritual-picture-album.is-dealing .album-clasp {
+  opacity: 0;
+}
+.ritual-picture-album.phase-2 .album-scenes i,
+.ritual-picture-album.is-dealing .album-scenes i {
+  opacity: 1;
+  transform: translate(calc(-50% + (var(--item) - 2) * 36px), -50%)
+    rotate(calc((var(--item) - 2) * 5deg));
+}
+.ritual-picture-album.is-dealing .album-scenes i:last-child {
+  transform: translate(-50%, -140px) scale(1.12);
+}
+
+/* ʿIlm al-Raml — marks visibly reduce into a figure. */
+.ritual-sand .sand-field {
+  position: absolute;
+  width: min(650px, 78vw);
+  height: 360px;
+  overflow: hidden;
+  border: 1px solid #6d6252;
+  border-radius: 48%;
+  background:
+    repeating-radial-gradient(
+      circle at 48% 40%,
+      transparent 0 8px,
+      rgba(74, 55, 31, 0.06) 9px 10px
+    ),
+    #9c8768;
+  box-shadow:
+    inset 0 0 80px rgba(43, 32, 19, 0.42),
+    0 35px 75px rgba(0, 0, 0, 0.3);
+  transform: rotateX(58deg);
+}
+.ritual-sand .sand-field i {
+  position: absolute;
+  left: var(--sand-x);
+  top: var(--sand-y);
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #4b3924;
+  box-shadow: inset 1px 1px 2px rgba(255, 255, 255, 0.18);
+  opacity: 0;
+  transition: opacity 0.28s ease;
+}
+.ritual-sand .sand-sweep {
+  position: absolute;
+  width: 130px;
+  height: 340px;
+  border-right: 1px solid rgba(231, 219, 194, 0.45);
+  transform: translateX(calc(-330px + var(--ritual-shift) * 5.8)) rotateX(58deg);
+}
+.ritual-sand .sand-result {
+  position: absolute;
+  display: grid;
+  gap: 6px;
+  padding: 22px 31px;
+  border: 1px solid rgba(238, 226, 201, 0.62);
+  background: rgba(56, 43, 28, 0.22);
+  color: #f0e4ce;
+  opacity: 0;
+  transform: translateY(-28px) scale(0.82);
+  transition: 0.62s ease;
+}
+.ritual-sand .sand-result i {
+  min-width: 54px;
+  font-size: 22px;
+  font-style: normal;
+  letter-spacing: 0.4em;
+  transform: translateX(0.2em);
+}
+.ritual-sand-figure.phase-2 .sand-field i:nth-child(-n + 5),
+.ritual-sand-figure.phase-3 .sand-field i:nth-child(-n + 10),
+.ritual-sand-figure.phase-4 .sand-field i,
+.ritual-sand-figure.is-dealing .sand-field i {
+  opacity: 1;
+}
+.ritual-sand-figure.is-dealing .sand-result {
+  opacity: 1;
+  transform: translateY(-28px) scale(1);
+}
+
+@keyframes ritual-overhand {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  24% {
+    transform: translate(-42px, -42px) rotate(-5deg);
+  }
+  50% {
+    transform: translate(38px, 22px) rotate(4deg);
+  }
+  74% {
+    transform: translate(-22px, -24px) rotate(-2deg);
+  }
+}
+@keyframes ritual-pulse {
+  0% {
+    opacity: 0.9;
+    transform: rotateX(58deg) scale(0.25);
+  }
+  100% {
+    opacity: 0;
+    transform: rotateX(58deg) scale(2.15);
+  }
+}
+@keyframes ritual-riffle-halves {
+  0%,
+  100% {
+    filter: none;
+  }
+  45% {
+    filter: blur(1px);
+    transform: translateY(12px) scaleY(0.92);
+  }
+}
+@keyframes ritual-bridge {
+  0% {
+    transform: scaleY(0.88) rotateX(42deg);
+  }
+  62% {
+    transform: scaleY(1.08) rotateX(-10deg);
+  }
+  100% {
+    transform: scaleY(1) rotateX(0);
+  }
+}
+@keyframes ritual-pouch-shake {
+  0%,
+  100% {
+    transform: translateX(0) rotate(0);
+  }
+  18% {
+    transform: translateX(-24px) rotate(-5deg);
+  }
+  36% {
+    transform: translateX(22px) rotate(5deg);
+  }
+  56% {
+    transform: translateX(-15px) rotate(-3deg);
+  }
+  76% {
+    transform: translateX(10px) rotate(2deg);
+  }
+}
+@keyframes ritual-page-riffle {
+  0%,
+  100% {
+    transform: skewY(0);
+    filter: none;
+  }
+  45% {
+    transform: skewY(-8deg) translateX(26px);
+    filter: blur(1px);
+  }
+}
+@keyframes ritual-inscribe {
+  to {
+    transform: scaleX(1);
+  }
+}
 .eight-ball {
   position: relative;
   width: min(520px, 58vw, 68svh);
@@ -1782,6 +3362,93 @@ button {
 }
 .eight-ball.object-step-3 .ball-window {
   opacity: 1;
+}
+.cookie-choice-field {
+  position: relative;
+  width: min(920px, 94vw);
+  height: min(620px, 72svh);
+  display: grid;
+  place-items: center;
+  margin-top: -4svh;
+}
+.cookie-choice-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(18px, 5vw, 68px);
+}
+.cookie-choice {
+  position: relative;
+  width: clamp(122px, 18vw, 210px);
+  aspect-ratio: 1.25;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  perspective: 800px;
+}
+.cookie-choice:focus-visible {
+  outline: 1px solid var(--ink);
+  outline-offset: 9px;
+}
+.cookie-choice > span {
+  position: absolute;
+  inset: 0;
+  filter: drop-shadow(0 24px 22px rgba(0, 0, 0, 0.24));
+}
+.cookie-choice i,
+.cookie-choice b {
+  position: absolute;
+  top: 18%;
+  width: 64%;
+  height: 64%;
+  border: 1px solid #9b6a31;
+  background:
+    radial-gradient(
+      circle at 30% 28%,
+      rgba(255, 255, 255, 0.38),
+      transparent 18%
+    ),
+    #d99d4f;
+  clip-path: polygon(5% 18%, 42% 0, 95% 24%, 74% 95%, 28% 100%, 0 63%);
+}
+.cookie-choice i {
+  left: 4%;
+  transform: rotateY(26deg) rotate(-9deg);
+}
+.cookie-choice b {
+  right: 4%;
+  transform: rotateY(-26deg) rotate(9deg);
+}
+.cookie-choice-copy {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: min(520px, 88vw);
+  text-align: center;
+  transform: translateX(-50%);
+}
+.cookie-choice-copy span,
+.cookie-choice-copy strong {
+  display: block;
+  text-transform: uppercase;
+}
+.cookie-choice-copy span {
+  margin-bottom: 8px;
+  color: var(--muted);
+  font-size: 8px;
+  letter-spacing: 0.2em;
+}
+.cookie-choice-copy strong {
+  font-family: var(--font-bodoni), Georgia, serif;
+  font-size: clamp(32px, 5vw, 52px);
+  font-weight: 500;
+}
+.cookie-choice-copy p {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: 0.06em;
 }
 .cookie-object {
   position: relative;
@@ -1910,15 +3577,22 @@ button {
 }
 .cookie-object.is-cracking .cookie-paper {
   opacity: 1;
-  transform: rotate(-2.4deg) scaleX(1);
+  transform: translateX(var(--cookie-pull, 0)) rotate(-2.4deg)
+    scaleX(calc(0.12 + var(--cookie-gesture, 0) * 0.88));
 }
-.cookie-object.is-cracking .cookie-paper em {
+.cookie-object.is-drawing .cookie-paper {
+  transform: translateX(0) rotate(-2.4deg) scaleX(1);
+}
+.cookie-object.is-drawing .cookie-paper em {
   opacity: 1;
   transform: translateY(0);
 }
 .cookie-object.is-cracking .cookie-crumbs b {
   animation: crumb-fly 0.88s cubic-bezier(0.18, 0.7, 0.2, 1)
     calc(var(--crumb-index) * 45ms) both;
+}
+.cookie-object.is-drawing.is-moving {
+  animation: none;
 }
 .object-actions {
   display: flex;
@@ -2896,6 +4570,80 @@ button {
   padding: 30px clamp(20px, 5vw, 52px);
   border: 1px solid var(--line);
 }
+.result-connections {
+  width: calc(100% - clamp(40px, 10vw, 160px));
+  max-width: 1080px;
+  margin: clamp(72px, 10vw, 140px) auto 0;
+  border-top: 1px solid var(--line);
+}
+.result-connections > header {
+  display: grid;
+  grid-template-columns: 0.7fr 1.3fr;
+  gap: 14px clamp(28px, 6vw, 90px);
+  padding: 42px 0;
+}
+.result-connections > header .eyebrow {
+  grid-row: span 2;
+  margin: 6px 0 0;
+  color: var(--muted);
+}
+.result-connections > header h2 {
+  margin: 0;
+  font-family: var(--font-bodoni), Georgia, serif;
+  font-size: clamp(2.8rem, 5vw, 5.5rem);
+  font-weight: 500;
+  line-height: 0.9;
+  letter-spacing: -0.055em;
+}
+.result-connections > header > p:last-child {
+  max-width: 48ch;
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.55;
+}
+.result-connections ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+.result-connections li {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 22px;
+  align-items: center;
+  padding: 22px 0;
+  border-bottom: 1px solid var(--line);
+}
+.result-connections li > span {
+  color: var(--muted);
+  font-size: 8px;
+  letter-spacing: 0.14em;
+}
+.result-connections li > div {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 14px minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+}
+.result-connections li strong {
+  font-family: var(--font-bodoni), Georgia, serif;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.2;
+}
+.result-connections li svg {
+  width: 13px;
+  color: var(--muted);
+}
+.result-connections li > p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.55;
+}
 .result-synthesis .eyebrow {
   margin: 0 0 12px;
   color: var(--muted);
@@ -3177,6 +4925,52 @@ button {
 .journal-draws p {
   margin: 0;
   color: var(--muted);
+}
+.journal-synthesis {
+  max-width: 760px;
+  margin: -8px 0 36px;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--line);
+}
+.journal-connections {
+  max-width: 880px;
+  margin: -8px 0 36px;
+  border-top: 1px solid var(--line);
+}
+.journal-connections > span {
+  display: block;
+  padding: 18px 0 8px;
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.journal-connections p {
+  margin: 0;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.5;
+}
+.journal-connections strong {
+  color: var(--ink);
+  font-weight: 500;
+}
+.journal-synthesis span {
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.journal-synthesis p {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-family: var(--font-bodoni), Georgia, serif;
+  font-size: 17px;
+  line-height: 1.5;
+}
+.journal-synthesis p:last-child {
+  color: var(--ink);
+  font-style: italic;
 }
 .journal-actions {
   display: flex;
@@ -3661,12 +5455,29 @@ button {
   }
 }
 @keyframes hero-sigil-drift {
-  0%,
-  100% {
-    transform: translate3d(0, 0, 0) rotate(-1deg);
+  from {
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(0.98);
   }
-  50% {
-    transform: translate3d(7px, -12px, 12px) rotate(2deg);
+  to {
+    transform: translate3d(var(--drift-x, 7px), var(--drift-y, -12px), 12px)
+      rotate(var(--drift-rotate, 2deg)) scale(1.025);
+  }
+}
+@keyframes hero-orbit-spin {
+  from {
+    transform: translate(-50%, -50%) rotate(var(--orbit-start));
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(calc(var(--orbit-start) + 360deg));
+  }
+}
+@keyframes reading-art-drift {
+  from {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  to {
+    transform: translate3d(var(--art-x, 5px), var(--art-y, -7px), 0)
+      rotate(var(--art-rotate, 1deg));
   }
 }
 @keyframes crystal-scan {
@@ -3953,6 +5764,39 @@ button {
     margin: 0;
     overflow: hidden;
   }
+  .system-ritual-control {
+    width: 100vw;
+    height: min(560px, 70svh);
+    margin-top: -10svh;
+  }
+  .system-ritual .ritual-art {
+    transform: scale(0.76);
+  }
+  .system-ritual-caption {
+    bottom: max(18px, 3svh);
+  }
+  .system-ritual-caption > strong {
+    font-size: clamp(25px, 9vw, 38px);
+  }
+  .system-ritual-caption > p {
+    min-height: 30px;
+    margin-inline: auto;
+    max-width: 34ch;
+    line-height: 1.45;
+  }
+  .ritual-dispatch .dispatch-paper,
+  .ritual-papyrus .papyrus-sheet {
+    width: 84vw;
+  }
+  .ritual-theatre .theatre-frame {
+    width: 94vw;
+  }
+  .ritual-theatre .theatre-curtain {
+    width: 47vw;
+  }
+  .ritual-sand .sand-field {
+    width: 92vw;
+  }
   .deck-object {
     width: min(190px, 50vw);
     height: auto;
@@ -3974,6 +5818,21 @@ button {
     width: min(96vw, 610px, 108svh);
     margin-left: 0;
     margin-right: 0;
+  }
+  .cookie-choice-field {
+    width: 100vw;
+    height: 72svh;
+    margin-top: -8svh;
+  }
+  .cookie-choice-row {
+    width: 94vw;
+    gap: 6px;
+  }
+  .cookie-choice {
+    width: min(31vw, 130px);
+  }
+  .cookie-choice-copy {
+    bottom: 2svh;
   }
   .cookie-paper {
     left: 19%;
@@ -4118,6 +5977,38 @@ button {
   }
   .result-card-facts {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .result-connections {
+    width: calc(100% - 40px);
+    margin-top: 72px;
+  }
+  .result-connections > header {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    padding: 34px 0;
+  }
+  .result-connections > header .eyebrow {
+    grid-row: auto;
+    margin: 0;
+  }
+  .result-connections > header h2 {
+    font-size: clamp(2.8rem, 13vw, 4.2rem);
+  }
+  .result-connections li {
+    grid-template-columns: 26px minmax(0, 1fr);
+    gap: 12px;
+    align-items: start;
+    padding: 18px 0;
+  }
+  .result-connections li > div {
+    grid-template-columns: 1fr;
+    gap: 5px;
+  }
+  .result-connections li svg {
+    transform: rotate(90deg);
+  }
+  .result-connections li > p {
+    grid-column: 2;
   }
   .result-synthesis {
     margin-top: 54px;
@@ -4282,10 +6173,10 @@ button {
 
 @media (max-width: 720px) {
   .home-index {
-    padding-inline: 10px;
+    padding-inline: 0;
   }
   .divine-hero {
-    height: min(650px, calc(100svh - 62px));
+    height: calc(100svh - 62px);
     min-height: 520px;
   }
   .divine-hero::before {
@@ -4293,23 +6184,29 @@ button {
   }
   .hero-meta {
     top: 12px;
+    padding-inline: 14px;
   }
   .hero-stage {
     inset: 36px 0 50px;
   }
   .hero-stage h1 {
-    font-size: clamp(4.8rem, 22vw, 7.6rem);
+    font-size: clamp(4.8rem, 24vw, 7.8rem);
     letter-spacing: -0.1em;
   }
   .hero-crystal {
-    width: min(78vw, 420px, 58svh);
+    width: min(82vw, 430px, 60svh);
   }
   .hero-sigil {
     width: 72px;
   }
   .hero-sigil-prism,
   .hero-sigil-hand,
-  .hero-sigil-eye {
+  .hero-sigil-eye,
+  .hero-sigil-moth,
+  .hero-sigil-watch,
+  .hero-sigil-shell,
+  .hero-sigil-snake,
+  .hero-sigil-scissors {
     display: none;
   }
   .hero-sigil-key {
@@ -4329,11 +6226,36 @@ button {
     bottom: 12%;
     width: 44px;
   }
+  .hero-sigil-feather {
+    left: 8%;
+    top: 26%;
+    width: 44px;
+  }
+  .hero-sigil-hourglass {
+    right: 25%;
+    bottom: 8%;
+    width: 42px;
+  }
+  .hero-sigil-apple {
+    left: 22%;
+    top: 12%;
+    width: 54px;
+  }
+  .hero-orbit-wide {
+    width: 120vw;
+  }
+  .hero-orbit-tall {
+    width: 82vw;
+  }
+  .hero-orbit-small {
+    width: 68vw;
+  }
   .hero-enter {
     bottom: 10px;
   }
   .reading-index {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 0 10px 10px;
   }
   .reading-index-item {
     height: min(64vw, 280px);
@@ -4370,6 +6292,10 @@ button {
     transform: none !important;
   }
   .hero-sigil > span {
+    animation: none !important;
+  }
+  .hero-orbit,
+  .reading-index-art-float {
     animation: none !important;
   }
   .hero-enter {

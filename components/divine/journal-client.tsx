@@ -206,6 +206,28 @@ export function JournalClient() {
                       ),
                     )}
                   </div>
+                  {record.interpretation.connections && (
+                    <div className="journal-connections">
+                      <span>The cross-deck thread</span>
+                      {record.interpretation.connections.map((connection) => (
+                        <p key={`${connection.from}-${connection.to}`}>
+                          <strong>
+                            {connection.from} → {connection.to}
+                          </strong>{' '}
+                          {connection.text}.
+                        </p>
+                      ))}
+                    </div>
+                  )}
+                  <div className="journal-synthesis">
+                    <span>
+                      {record.draws.length > 1
+                        ? 'How the cards connect'
+                        : 'The pattern'}
+                    </span>
+                    <p>{record.interpretation.synthesis}</p>
+                    <p>{record.interpretation.closing}</p>
+                  </div>
                   <label htmlFor={`note-${record.id}`}>
                     Reflection
                     <Textarea
