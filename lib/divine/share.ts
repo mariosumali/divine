@@ -24,7 +24,10 @@ interface SharedReadingPayload {
   focus: Focus;
   cards: Array<[id: string, reversed: 0 | 1]>;
   question?: string;
+<<<<<<< HEAD
   headline?: string;
+=======
+>>>>>>> refs/remotes/sites/main
   message?: string;
   prompt?: string;
   numbers?: number[];
@@ -55,7 +58,13 @@ function decodeBase64Url(value: string): string {
     '=',
   );
   const binary = atob(padded);
+<<<<<<< HEAD
   const bytes = Uint8Array.from(binary, (character) => character.charCodeAt(0));
+=======
+  const bytes = Uint8Array.from(binary, (character) =>
+    character.charCodeAt(0),
+  );
+>>>>>>> refs/remotes/sites/main
   return new TextDecoder('utf-8', { fatal: true }).decode(bytes);
 }
 
@@ -78,11 +87,15 @@ function isSharedReadingPayload(value: unknown): value is SharedReadingPayload {
         (card[1] === 0 || card[1] === 1),
     ) &&
     (payload.question === undefined ||
+<<<<<<< HEAD
       (typeof payload.question === 'string' &&
         payload.question.length <= 180)) &&
     (payload.headline === undefined ||
       (typeof payload.headline === 'string' &&
         payload.headline.length <= 500)) &&
+=======
+      (typeof payload.question === 'string' && payload.question.length <= 180)) &&
+>>>>>>> refs/remotes/sites/main
     (payload.message === undefined ||
       (typeof payload.message === 'string' && payload.message.length <= 500)) &&
     (payload.prompt === undefined ||
@@ -91,7 +104,12 @@ function isSharedReadingPayload(value: unknown): value is SharedReadingPayload {
       (Array.isArray(payload.numbers) &&
         payload.numbers.length <= 6 &&
         payload.numbers.every(
+<<<<<<< HEAD
           (number) => Number.isInteger(number) && number >= 1 && number <= 49,
+=======
+          (number) =>
+            Number.isInteger(number) && number >= 1 && number <= 49,
+>>>>>>> refs/remotes/sites/main
         )))
   );
 }
@@ -106,14 +124,24 @@ export function createReadingShareToken(
     spread: record.spreadId,
     created: record.createdAt,
     focus: record.focus,
+<<<<<<< HEAD
     cards: record.draws.map((draw) => [draw.card.id, draw.reversed ? 1 : 0]),
+=======
+    cards: record.draws.map((draw) => [
+      draw.card.id,
+      draw.reversed ? 1 : 0,
+    ]),
+>>>>>>> refs/remotes/sites/main
     question:
       includeQuestion && record.question
         ? record.question.slice(0, 180)
         : undefined,
+<<<<<<< HEAD
     headline: record.draws.length
       ? record.interpretation.headline.slice(0, 500)
       : undefined,
+=======
+>>>>>>> refs/remotes/sites/main
     message: record.draws.length ? undefined : record.interpretation.headline,
     prompt: record.draws.length
       ? undefined
@@ -148,21 +176,34 @@ export function decodeReadingShareToken(
     const spread =
       system.spreads.find((item) => item.id === candidate.spread) ?? null;
     const isCardReading = system.kind === 'cards';
+<<<<<<< HEAD
     const positions = spread?.positions ?? [];
     if (isCardReading && !spread) return null;
     if (isCardReading && candidate.cards.length !== positions.length)
+=======
+    if (isCardReading && !spread) return null;
+    if (isCardReading && candidate.cards.length !== spread.positions.length)
+>>>>>>> refs/remotes/sites/main
       return null;
     if (!isCardReading && candidate.cards.length > 0) return null;
 
     const cardIds = new Set<string>();
     const draws = candidate.cards.flatMap(([id, reversed], index) => {
       const card = system.cards.find((item) => item.id === id);
+<<<<<<< HEAD
       if (!card || cardIds.has(id) || !positions[index]) return [];
+=======
+      if (!card || cardIds.has(id) || !spread) return [];
+>>>>>>> refs/remotes/sites/main
       cardIds.add(id);
       return [
         {
           card,
+<<<<<<< HEAD
           position: positions[index],
+=======
+          position: spread.positions[index],
+>>>>>>> refs/remotes/sites/main
           reversed: Boolean(reversed),
         },
       ];
@@ -171,6 +212,7 @@ export function decodeReadingShareToken(
 
     const interpretation =
       isCardReading && spread
+<<<<<<< HEAD
         ? {
             ...interpretReading(
               system,
@@ -181,6 +223,9 @@ export function decodeReadingShareToken(
             ),
             ...(candidate.headline ? { headline: candidate.headline } : {}),
           }
+=======
+        ? interpretReading(system, spread, draws, candidate.focus)
+>>>>>>> refs/remotes/sites/main
         : candidate.message
           ? objectInterpretation(
               system,

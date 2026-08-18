@@ -1948,12 +1948,17 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
                     })}
                   </time>
                 </div>
+<<<<<<< HEAD
                 <p>
                   {record.systemName} · {record.spreadName}
                 </p>
                 {record.question && (
                   <blockquote>“{record.question}”</blockquote>
                 )}
+=======
+                <p>{record.systemName} · {record.spreadName}</p>
+                {record.question && <blockquote>“{record.question}”</blockquote>}
+>>>>>>> refs/remotes/sites/main
               </motion.aside>
             )}
             <header
@@ -2044,6 +2049,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
                   </ol>
                 </section>
               )}
+<<<<<<< HEAD
             {draws.length > 0 && (
               <details id="full-reading" className="result-reading">
                 <summary className="result-reading-summary">
@@ -2147,6 +2153,8 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
                 </div>
               </details>
             )}
+=======
+>>>>>>> refs/remotes/sites/main
             {draws.length > 1 && (
               <section
                 className="result-synthesis"

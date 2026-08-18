@@ -9,6 +9,7 @@ import {
 } from '@/lib/divine/share';
 import type { ReadingRecord } from '@/lib/divine/types';
 
+<<<<<<< HEAD
 type LinkStatus =
   | 'idle'
   | 'working'
@@ -20,6 +21,25 @@ type LinkStatus =
 async function copyText(value: string) {
   if (!navigator.clipboard?.writeText) throw new Error('Copy unavailable');
   await navigator.clipboard.writeText(value);
+=======
+type LinkStatus = 'idle' | 'working' | 'copied' | 'shared' | 'cancelled' | 'error';
+
+async function copyText(value: string) {
+  if (navigator.clipboard?.writeText) {
+    await navigator.clipboard.writeText(value);
+    return;
+  }
+  const field = document.createElement('textarea');
+  field.value = value;
+  field.setAttribute('readonly', '');
+  field.style.position = 'fixed';
+  field.style.opacity = '0';
+  document.body.appendChild(field);
+  field.select();
+  const copied = document.execCommand('copy');
+  field.remove();
+  if (!copied) throw new Error('Copy unavailable');
+>>>>>>> refs/remotes/sites/main
 }
 
 function linkFor(record: ReadingRecord, includeQuestion: boolean) {
@@ -38,6 +58,7 @@ export function ReadingShare({
   includeQuestion: boolean;
   onIncludeQuestionChange: (include: boolean) => void;
   onImageExport: () => void;
+<<<<<<< HEAD
   imageStatus:
     | 'idle'
     | 'working'
@@ -45,6 +66,9 @@ export function ReadingShare({
     | 'downloaded'
     | 'cancelled'
     | 'error';
+=======
+  imageStatus: 'idle' | 'working' | 'shared' | 'downloaded' | 'cancelled' | 'error';
+>>>>>>> refs/remotes/sites/main
   onAnnounce: (message: string) => void;
 }) {
   const [status, setStatus] = useState<LinkStatus>('idle');
@@ -103,8 +127,13 @@ export function ReadingShare({
         <p className="eyebrow">Pass the pattern on</p>
         <h2 id="reading-share-title">A reading made to travel.</h2>
         <p>
+<<<<<<< HEAD
           Send this exact constellation to someone. No account, no journal, just
           the reading held inside the link.
+=======
+          Send this exact constellation to someone. No account, no journal,
+          just the reading held inside the link.
+>>>>>>> refs/remotes/sites/main
         </p>
       </header>
       <div className="reading-share-seal" aria-hidden="true">
@@ -118,10 +147,14 @@ export function ReadingShare({
         <code>{token.slice(-12)}</code>
       </div>
       {record.question && (
+<<<<<<< HEAD
         <label
           className="reading-share-privacy"
           aria-label="Include my question in the shared link"
         >
+=======
+        <label className="reading-share-privacy">
+>>>>>>> refs/remotes/sites/main
           <input
             type="checkbox"
             checked={includeQuestion}

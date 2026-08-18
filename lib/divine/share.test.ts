@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest';
+<<<<<<< HEAD
 import { interpretReading, objectInterpretation } from './reading';
+=======
+import { interpretReading } from './reading';
+>>>>>>> refs/remotes/sites/main
 import {
   composeShare,
   createReadingShareToken,
@@ -59,6 +63,7 @@ describe('share composition privacy', () => {
   it('round-trips an exact card reading through a share link', () => {
     const system = SYSTEM_MAP.tarot;
     const spread = system.spreads[1];
+<<<<<<< HEAD
     const draws = system.cards
       .slice(0, spread.positions.length)
       .map((card, index) => ({
@@ -66,6 +71,15 @@ describe('share composition privacy', () => {
         position: spread.positions[index],
         reversed: index === 1,
       }));
+=======
+    const draws = system.cards.slice(0, spread.positions.length).map(
+      (card, index) => ({
+        card,
+        position: spread.positions[index],
+        reversed: index === 1,
+      }),
+    );
+>>>>>>> refs/remotes/sites/main
     const tarotRecord: ReadingRecord = {
       ...record,
       system: system.slug,
@@ -75,10 +89,14 @@ describe('share composition privacy', () => {
       focus: 'growth',
       question: 'What is becoming? ✦',
       draws,
+<<<<<<< HEAD
       interpretation: {
         ...interpretReading(system, spread, draws, 'growth', record.createdAt),
         headline: 'This exact headline travels with the reading.',
       },
+=======
+      interpretation: interpretReading(system, spread, draws, 'growth'),
+>>>>>>> refs/remotes/sites/main
     };
     const token = createReadingShareToken(tarotRecord, true);
     const decoded = decodeReadingShareToken(token, system)?.record;
@@ -114,6 +132,7 @@ describe('share composition privacy', () => {
 
   it('rejects malformed or cross-system share tokens', () => {
     const token = createReadingShareToken(record);
+<<<<<<< HEAD
     expect(
       decodeReadingShareToken('not-a-reading', SYSTEM_MAP.tarot),
     ).toBeNull();
@@ -178,4 +197,9 @@ describe('share composition privacy', () => {
       }
     }
   });
+=======
+    expect(decodeReadingShareToken('not-a-reading', SYSTEM_MAP.tarot)).toBeNull();
+    expect(decodeReadingShareToken(token, SYSTEM_MAP.tarot)).toBeNull();
+  });
+>>>>>>> refs/remotes/sites/main
 });

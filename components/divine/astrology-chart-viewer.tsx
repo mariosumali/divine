@@ -109,8 +109,12 @@ export function AstrologyChartViewer({
   };
 
   const stageStyle = {
+<<<<<<< HEAD
     '--chart-desktop-width': `${70 * (chart.width / chart.height)}svh`,
     '--chart-mobile-width': `${56 * (chart.width / chart.height)}svh`,
+=======
+    '--chart-aspect': chart.width / chart.height,
+>>>>>>> refs/remotes/sites/main
     aspectRatio: `${chart.width} / ${chart.height}`,
     transform: `translate(calc(-50% + ${position.x}px), calc(-50% + ${position.y}px)) scale(${scale})`,
   } as CSSProperties;

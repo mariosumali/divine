@@ -6810,7 +6810,11 @@ button {
   position: absolute;
   left: 50%;
   top: 50%;
+<<<<<<< HEAD
   width: min(84%, var(--chart-desktop-width));
+=======
+  width: min(84%, calc(70svh * var(--chart-aspect)));
+>>>>>>> refs/remotes/sites/main
   transform-origin: center;
   box-shadow: 0 26px 80px rgba(0, 0, 0, 0.52);
   will-change: transform;
@@ -7071,7 +7075,11 @@ button {
     min-height: 64svh;
   }
   .chart-image-layer {
+<<<<<<< HEAD
     width: min(138%, var(--chart-mobile-width));
+=======
+    width: min(138%, calc(56svh * var(--chart-aspect)));
+>>>>>>> refs/remotes/sites/main
   }
   .chart-detail-panel {
     min-height: 470px;
