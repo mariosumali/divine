@@ -47,13 +47,9 @@ export function AstrologyStudio() {
     [firstIndex, secondIndex],
   );
 
-  const chooseSign = (index: number, moveToReading = false) => {
+  const chooseSign = (index: number) => {
     setActiveIndex(index);
     cue('tick');
-
-    if (moveToReading) {
-      document.querySelector('#today')?.scrollIntoView({ behavior: 'smooth' });
-    }
   };
 
   return (
@@ -84,7 +80,6 @@ export function AstrologyStudio() {
 
       <nav className="astrology-subnav" aria-label="Astrology sections">
         <a href="#today">Today</a>
-        <a href="#signs">Signs</a>
         <a href="#alignment">Alignment</a>
         <a href="#atlas">Atlas</a>
       </nav>
@@ -99,7 +94,10 @@ export function AstrologyStudio() {
           <h2 id="today-title">Today, briefly.</h2>
         </header>
 
-        <div className="sign-switcher" aria-label="Choose your sun sign">
+        <div
+          className="sign-profile-grid daily-sign-grid"
+          aria-label="Choose your sun sign"
+        >
           {ASTROLOGY_SIGNS.map((sign, index) => (
             <button
               type="button"
@@ -108,8 +106,14 @@ export function AstrologyStudio() {
               onClick={() => chooseSign(index)}
               key={sign.name}
             >
+              <span className="sign-number">
+                {String(index + 1).padStart(2, '0')}
+              </span>
               <ZodiacMark sign={sign.name} />
-              {sign.name}
+              <h3>{sign.name}</h3>
+              <p>
+                {sign.element} / {sign.modality}
+              </p>
             </button>
           ))}
         </div>
@@ -138,41 +142,12 @@ export function AstrologyStudio() {
       </section>
 
       <section
-        className="sign-architecture"
-        id="signs"
-        aria-labelledby="signs-title"
-      >
-        <header className="astro-section-heading inverse">
-          <p>02 / Star signs</p>
-          <h2 id="signs-title">Twelve ways energy moves.</h2>
-        </header>
-        <div className="sign-profile-grid">
-          {ASTROLOGY_SIGNS.map((sign, index) => (
-            <button
-              type="button"
-              onClick={() => chooseSign(index, true)}
-              key={sign.name}
-            >
-              <span className="sign-number">
-                {String(index + 1).padStart(2, '0')}
-              </span>
-              <ZodiacMark sign={sign.name} />
-              <h3>{sign.name}</h3>
-              <p>
-                {sign.element} / {sign.modality}
-              </p>
-            </button>
-          ))}
-        </div>
-      </section>
-
-      <section
         className="alignment-lab"
         id="alignment"
         aria-labelledby="alignment-title"
       >
         <header className="astro-section-heading">
-          <p>03 / Alignment</p>
+          <p>02 / Alignment</p>
           <h2 id="alignment-title">Two energies.</h2>
         </header>
 

@@ -6624,7 +6624,7 @@ button {
 
 /* Condensed astrology index */
 .astrology-studio-condensed .astrology-subnav {
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
 }
 .astrology-studio-condensed .astro-section-heading {
   grid-template-columns: 0.7fr 2.2fr;
@@ -6666,6 +6666,14 @@ button {
   width: 54px;
   height: 54px;
   margin: auto 0 24px;
+}
+.astrology-studio-condensed .daily-sign-grid {
+  background: var(--ink);
+  color: var(--paper);
+}
+.astrology-studio-condensed .daily-sign-grid button.active {
+  background: var(--paper);
+  color: var(--ink);
 }
 .astrology-studio-condensed .alignment-result {
   min-height: 300px;
@@ -7001,7 +7009,7 @@ button {
 
 @media (max-width: 720px) {
   .astrology-studio-condensed .astrology-subnav {
-    grid-template-columns: repeat(4, minmax(88px, 1fr));
+    grid-template-columns: repeat(3, minmax(88px, 1fr));
   }
   .astrology-studio-condensed .astro-section-heading {
     grid-template-columns: 1fr;
