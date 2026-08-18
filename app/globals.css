@@ -1100,17 +1100,27 @@ button {
   letter-spacing: -0.02em;
   transform: translateX(4px);
 }
-.reading-index-item:hover .reading-index-art img,
-.reading-index-item:focus-visible .reading-index-art img {
+.reading-index-item:not([data-art-treatment='positive-tone']):hover
+  .reading-index-art
+  img,
+.reading-index-item:not([data-art-treatment='positive-tone']):focus-visible
+  .reading-index-art
+  img {
   filter: invert(1) grayscale(1) sepia(0.06) contrast(0.9);
   opacity: 1;
 }
-:root[data-theme='dark'] .reading-index-art img {
+:root[data-theme='dark']
+  .reading-index-item:not([data-art-treatment='positive-tone'])
+  .reading-index-art
+  img {
   filter: invert(1) grayscale(1) sepia(0.06) contrast(0.9);
 }
-:root[data-theme='dark'] .reading-index-item:hover .reading-index-art img,
 :root[data-theme='dark']
-  .reading-index-item:focus-visible
+  .reading-index-item:not([data-art-treatment='positive-tone']):hover
+  .reading-index-art
+  img,
+:root[data-theme='dark']
+  .reading-index-item:not([data-art-treatment='positive-tone']):focus-visible
   .reading-index-art
   img {
   filter: invert(0) grayscale(1) sepia(0.08) contrast(0.9) brightness(1.02);
@@ -1145,6 +1155,9 @@ button {
   margin-bottom: 0;
 }
 .route-transition-object img {
+  filter: grayscale(1) sepia(0.08) contrast(0.9) brightness(1.02);
+}
+.route-transition-object:not([data-art-treatment='positive-tone']) img {
   filter: invert(1) grayscale(1) sepia(0.06) contrast(0.9);
 }
 .route-transition-copy {
@@ -1381,13 +1394,10 @@ button {
   position: absolute !important;
   right: 0;
   top: 50%;
-  width: 48px !important;
-  height: 48px !important;
+  width: 54px !important;
+  height: 46px !important;
   padding: 0 !important;
-  border: 0 !important;
-  border-radius: 50% !important;
-  background: var(--ink) !important;
-  color: var(--paper) !important;
+  border-radius: 0 !important;
   transform: translateY(-56%);
 }
 .ask-submit:hover {
@@ -4183,6 +4193,21 @@ button {
 .result-reading-content {
   border-top: 1px solid var(--line);
 }
+.result-cards-summary {
+  border-bottom: 1px solid var(--line);
+}
+.result-cards-show {
+  display: none;
+}
+.result-cards-disclosure:not([open]) .result-cards-hide {
+  display: none;
+}
+.result-cards-disclosure:not([open]) .result-cards-show {
+  display: inline;
+}
+.result-cards-disclosure[open] .result-cards-summary svg {
+  transform: rotate(180deg);
+}
 .result-reading-intro {
   max-width: 1180px;
   display: grid;
@@ -4418,58 +4443,9 @@ button {
   font-size: clamp(3.2rem, 5.4vw, 6.4rem);
   line-height: 0.82;
 }
-.result-card-description {
-  margin-top: 22px;
-}
-.result-card-description > summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  padding: 13px 0;
-  border-block: 1px solid var(--line);
-  color: var(--muted);
-  cursor: pointer;
-  list-style: none;
-  font-size: 8px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-.result-card-description > summary::-webkit-details-marker {
-  display: none;
-}
-.result-card-description > summary > span:last-child {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-}
-.result-card-description-show {
-  display: none;
-}
-.result-card-description:not([open]) .result-card-description-hide {
-  display: none;
-}
-.result-card-description:not([open]) .result-card-description-show {
-  display: inline;
-}
-.result-card-description > summary svg {
-  width: 14px;
-  transition: transform 0.24s ease-out;
-}
-.result-card-description[open] > summary svg {
-  transform: rotate(180deg);
-}
-.result-card-description > summary:hover,
-.result-card-description > summary:focus-visible {
-  color: var(--ink);
-}
-.result-card-description > summary:focus-visible {
-  outline: 1px solid var(--ink);
-  outline-offset: 4px;
-}
-.result-card-description > .result-position-meaning {
+.result-card-copy > .result-position-meaning {
   max-width: 52ch;
-  margin: 22px 0 0;
+  margin: 0;
   color: var(--ink);
   font-family: var(--font-bodoni), Georgia, serif;
   font-size: clamp(19px, 1.7vw, 24px);
@@ -5445,6 +5421,7 @@ button {
   margin-top: 0;
 }
 .library-masthead h1 {
+  justify-self: center;
   margin: 0;
   font-family: var(--font-geist), Arial, sans-serif;
   font-size: clamp(4.25rem, 8vw, 7.5rem);
@@ -5591,24 +5568,29 @@ button {
   }
 }
 .method-history {
-  display: grid;
-  grid-template-columns: clamp(200px, 20vw, 300px) minmax(0, 1fr);
-  align-items: center;
-  gap: clamp(28px, 4vw, 72px);
   padding: clamp(28px, 4vw, 56px) 0;
   border-bottom: 1px solid var(--line);
 }
-.method-history > header {
+.method-history-layout {
+  width: min(100%, 1280px);
+  display: grid;
+  grid-template-columns: 252px minmax(0, 900px);
+  align-items: center;
+  justify-content: center;
+  gap: clamp(28px, 4vw, 72px);
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 64px);
+}
+.method-history-layout > header {
   min-height: clamp(240px, 26vw, 340px);
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  margin-left: clamp(20px, 3vw, 48px);
   padding: clamp(24px, 2.4vw, 36px);
   background: var(--ink);
   color: var(--paper);
 }
-.method-history > header p {
+.method-history-layout > header p {
   margin: 0;
   max-width: 24ch;
   font-size: 9px;
@@ -5616,13 +5598,12 @@ button {
   line-height: 1.5;
   text-transform: uppercase;
 }
-.method-history > header p + p {
+.method-history-layout > header p + p {
   margin-top: 10px;
   color: color-mix(in srgb, var(--paper) 60%, transparent);
 }
 .method-history-copy {
-  padding: clamp(28px, 4vw, 64px) clamp(24px, 7vw, 100px) clamp(28px, 4vw, 64px)
-    0;
+  padding: clamp(28px, 4vw, 64px) 0;
 }
 .method-history-copy .eyebrow {
   margin-top: 0;
@@ -6704,16 +6685,19 @@ button {
     display: none;
   }
   .method-history {
-    grid-template-columns: 1fr;
-    gap: 0;
     padding: 24px 0 0;
   }
-  .method-history > header {
+  .method-history-layout {
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding: 0;
+  }
+  .method-history-layout > header {
     min-height: 140px;
     margin: 0 20px;
     padding: 22px;
   }
-  .method-history > header span {
+  .method-history-layout > header span {
     font-size: clamp(11rem, 55vw, 16rem);
   }
   .method-history-copy {
@@ -7920,7 +7904,12 @@ button {
 }
 .sign-prism-stage {
   position: relative;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
   perspective: 720px;
   background:
     linear-gradient(
@@ -7934,24 +7923,16 @@ button {
       transparent 0 51px,
       color-mix(in srgb, var(--ink) 9%, transparent) 51px 52px
     );
+  color: inherit;
+  cursor: grab;
+  touch-action: none;
 }
-.sign-prism-stage:has(.sign-prism-input:focus-visible) {
+.sign-prism-stage:active {
+  cursor: grabbing;
+}
+.sign-prism-stage:focus-visible {
   outline: 1px solid var(--ink);
   outline-offset: -5px;
-}
-.sign-prism-input {
-  position: absolute;
-  z-index: 3;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  appearance: none;
-  opacity: 0;
-  cursor: grab;
-}
-.sign-prism-input:active {
-  cursor: grabbing;
 }
 .sign-prism-stage::before,
 .sign-prism-stage::after {
@@ -7980,9 +7961,12 @@ button {
   height: 64px;
   margin-top: -32px;
   transform: translateZ(calc(var(--prism-radius) * -1))
-    rotateX(calc(var(--prism-index) * -30deg));
+    rotateX(calc(var(--prism-index) * -30deg + var(--prism-drag, 0deg)));
   transform-style: preserve-3d;
   transition: transform 620ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.sign-prism-ring.is-dragging {
+  transition: none;
 }
 .sign-prism-face {
   position: absolute;
@@ -8508,19 +8492,18 @@ button {
   display: grid;
   place-items: center;
   padding: 0;
-  border: 1px solid rgba(244, 242, 236, 0.46);
-  border-radius: 50%;
-  background: rgba(5, 5, 5, 0.78);
-  color: #f4f2ec;
-  backdrop-filter: blur(10px);
+  border: 1px solid #050505;
+  border-radius: 0;
+  background: #f4f2ec;
+  color: #050505;
   cursor: pointer;
   transition:
     background 0.2s ease,
     color 0.2s ease;
 }
 .atlas-lightbox-close:hover {
-  background: #f4f2ec;
-  color: #050505;
+  background: #050505;
+  color: #f4f2ec;
 }
 .atlas-lightbox-close svg {
   width: 19px;
