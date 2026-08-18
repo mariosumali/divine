@@ -8,13 +8,25 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Astrology — DIVINE',
     description: 'Explore signs, horoscopes, alignment, and celestial charts.',
-    images: ['/astrology/zodiac-circle-medieval.webp'],
+    images: [
+      {
+        url: '/og.jpg',
+        width: 1536,
+        height: 1024,
+        alt: 'DIVINE — eight instruments for the unknown',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Astrology — DIVINE',
     description: 'Explore signs, horoscopes, alignment, and celestial charts.',
-    images: ['/astrology/zodiac-circle-medieval.webp'],
+    images: [
+      {
+        url: '/og.jpg',
+        alt: 'DIVINE — eight instruments for the unknown',
+      },
+    ],
   },
 };
 
