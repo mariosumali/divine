@@ -65,11 +65,20 @@ function seededUnit(seed: number) {
   return value - Math.floor(value);
 }
 
+const DESKTOP_ARCHIVE_COLUMNS = 14;
+const MOBILE_ARCHIVE_COLUMNS = 6;
+const DESKTOP_ARCHIVE_ROWS = Math.ceil(
+  archiveManifest.length / DESKTOP_ARCHIVE_COLUMNS,
+);
+const MOBILE_ARCHIVE_ROWS = Math.ceil(
+  archiveManifest.length / MOBILE_ARCHIVE_COLUMNS,
+);
+
 const ARCHIVE_HERO_OBJECTS = archiveManifest.map((asset, index) => {
-  const desktopColumn = index % 11;
-  const desktopRow = Math.floor(index / 11);
-  const mobileColumn = index % 5;
-  const mobileRow = Math.floor(index / 5);
+  const desktopColumn = index % DESKTOP_ARCHIVE_COLUMNS;
+  const desktopRow = Math.floor(index / DESKTOP_ARCHIVE_COLUMNS);
+  const mobileColumn = index % MOBILE_ARCHIVE_COLUMNS;
+  const mobileRow = Math.floor(index / MOBILE_ARCHIVE_COLUMNS);
   const seed = asset.objectID + index * 97;
   const jitterX = seededUnit(seed) - 0.5;
   const jitterY = seededUnit(seed + 1) - 0.5;
@@ -96,18 +105,18 @@ const ARCHIVE_HERO_OBJECTS = archiveManifest.map((asset, index) => {
   return {
     ...asset,
     placement: {
-      x: `${desktopColumn * 9.6 - 3 + jitterX * 4}%`,
-      y: `${desktopRow * 13.8 - 2 + jitterY * 5}%`,
+      x: `${desktopColumn * (100 / (DESKTOP_ARCHIVE_COLUMNS - 1)) - 3 + jitterX * 3}%`,
+      y: `${desktopRow * (96 / (DESKTOP_ARCHIVE_ROWS - 1)) - 2 + jitterY * 4}%`,
       size: desktopSize,
       rotate: rotation,
     },
     mobilePlacement: {
-      x: `${mobileColumn * 21 - 3 + jitterX * 5}%`,
-      y: `${mobileRow * 6.25 - 1 + jitterY * 4}%`,
+      x: `${mobileColumn * (100 / (MOBILE_ARCHIVE_COLUMNS - 1)) - 3 + jitterX * 4}%`,
+      y: `${mobileRow * (98 / (MOBILE_ARCHIVE_ROWS - 1)) - 1 + jitterY * 3}%`,
       size: mobileSize,
       rotate: rotation,
     },
-    opacity: 0.42 + seededUnit(seed + 4) * 0.24,
+    opacity: 0.54 + seededUnit(seed + 4) * 0.26,
   };
 });
 

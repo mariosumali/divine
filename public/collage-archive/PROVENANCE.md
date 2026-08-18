@@ -1,6 +1,6 @@
 # DIVINE Archive Collage
 
-80 real collection objects sourced from The Metropolitan Museum of Art's Open Access collection on 2026-09-03. Every source record is marked public domain by The Met and is available under CC0. Images were locally cropped, background-masked, converted to monochrome, and exported as transparent WebP files to match DIVINE's editorial collage treatment.
+100 real collection objects sourced from The Metropolitan Museum of Art's Open Access collection on 2026-09-03. Every source record is marked public domain by The Met and is available under CC0. Images were locally cropped, background-masked, converted to monochrome, and exported as transparent WebP files to match DIVINE's editorial collage treatment.
 
 Source policy: https://www.metmuseum.org/policies/image-resources
 
@@ -86,3 +86,23 @@ Source policy: https://www.metmuseum.org/policies/image-resources
 | dice | [Dice](https://www.metmuseum.org/art/collection/search/449308) | 449308 | 9th–10th century |
 | domino | [Nude bust of boy playing dominoes (Les Dominos)](https://www.metmuseum.org/art/collection/search/188805) | 188805 | before 1903 |
 | globe | [Celestial globe with clockwork](https://www.metmuseum.org/art/collection/search/193606) | 193606 | 1579 |
+| chess piece | [Chess Piece in the Form of a King](https://www.metmuseum.org/art/collection/search/472935) | 472935 | 1350–1400 |
+| celestial globe | [Celestial globe](https://www.metmuseum.org/art/collection/search/207816) | 207816 | after 1621 |
+| zodiac | [Inkwell with Zodiac Signs](https://www.metmuseum.org/art/collection/search/451491) | 451491 | early 13th century |
+| moon | [Moon jar](https://www.metmuseum.org/art/collection/search/45432) | 45432 | second half 18th century |
+| angel | [Angel](https://www.metmuseum.org/art/collection/search/206288) | 206288 | mid-18th century |
+| dragon | [Dragon](https://www.metmuseum.org/art/collection/search/49580) | 49580 | 7th century |
+| griffin | [Gold rosette with the head of a griffin](https://www.metmuseum.org/art/collection/search/248696) | 248696 | ca. 630–620 BCE |
+| sphinx | [Sphinx of Hatshepsut](https://www.metmuseum.org/art/collection/search/544442) | 544442 | ca. 1473–1458 BCE |
+| lion | [Lion](https://www.metmuseum.org/art/collection/search/49588) | 49588 | 8th century |
+| owl | [Owl](https://www.metmuseum.org/art/collection/search/199527) | 199527 | ca. 1750 or later |
+| raven | [Raven rattle](https://www.metmuseum.org/art/collection/search/751537) | 751537 | ca. 1850 |
+| butterfly | [Butterfly](https://www.metmuseum.org/art/collection/search/43763) | 43763 | 17th century |
+| moth | [An Orange-Headed Ground Thrush and a Death's-Head Moth on a Purple Ebony Orchid Branch](https://www.metmuseum.org/art/collection/search/457758) | 457758 | dated 1778 |
+| beetle | [Rhinoceros beetle box](https://www.metmuseum.org/art/collection/search/545202) | 545202 | 332–30 BCE |
+| lizard | [Lizard](https://www.metmuseum.org/art/collection/search/212216) | 212216 | ca. 1887 |
+| frog | [Frog](https://www.metmuseum.org/art/collection/search/552331) | 552331 | 664–525 BCE |
+| fish | [Fish](https://www.metmuseum.org/art/collection/search/550156) | 550156 | 305 BCE–CE 100 |
+| crab | [Crab](https://www.metmuseum.org/art/collection/search/41911) | 41911 | 18th century |
+| lobster | [Terracotta vase in the form of a lobster claw](https://www.metmuseum.org/art/collection/search/251401) | 251401 | ca. 460 BCE |
+| shell | [Longcase clock with calendrical, lunar, and tidal indications, also known as the Graves Tompion](https://www.metmuseum.org/art/collection/search/209296) | 209296 | ca. 1677–80 |

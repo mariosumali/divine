@@ -924,7 +924,8 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
         const resolvedObject =
           candidateStage === 'ritual' &&
           system.kind !== 'cards' &&
-          restored.objectStep === objectRitualSteps &&
+          typeof restored.objectStep === 'number' &&
+          restored.objectStep >= objectRitualSteps &&
           restored.interpretation;
         const nextStage = resolvedObject
           ? 'result'
@@ -1380,11 +1381,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
         ? next === 1
           ? 'The answer is moving. Shake again.'
           : 'The window is clouding. One final shake.'
-        : next === 1
-          ? 'A hairline crack appears. Bend the shell again.'
-          : next === 2
-            ? 'The fracture widens. Pull the cookie apart.'
-            : 'The shell breaks. Draw out the paper.',
+        : 'A hairline crack appears. Break the shell open.',
     );
     objectTimer.current = window.setTimeout(() => {
       setObjectAnimating(false);
@@ -1739,7 +1736,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
           >
             <>
               <div
-                className={`cookie-object object-step-${objectStep} ${objectStep >= 3 ? 'is-cracking' : ''} ${objectStep >= COOKIE_RITUAL_STEPS ? 'is-drawing' : ''} ${objectAnimating ? 'is-moving' : ''}`}
+                className={`cookie-object object-step-${objectStep} ${objectStep >= COOKIE_RITUAL_STEPS ? 'is-cracking is-unfurling' : ''} ${objectAnimating ? 'is-moving' : ''}`}
                 style={
                   {
                     '--cookie-gesture': cookieGestureProgress,
@@ -1760,11 +1757,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
                       ariaLabel={
                         objectStep === 0
                           ? 'Bend the cookie apart or press to begin cracking it'
-                          : objectStep === 1
-                            ? 'Bend the cookie again to widen the crack'
-                            : objectStep === 2
-                              ? 'Pull the cookie apart to break it open'
-                              : 'Draw the fortune paper to the right'
+                          : 'Break the cookie open and unfurl the fortune'
                       }
                     />
                   </Suspense>
@@ -1778,11 +1771,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
                     ariaLabel={
                       objectStep === 0
                         ? 'Press to begin cracking the cookie'
-                        : objectStep === 1
-                          ? 'Press to widen the crack'
-                          : objectStep === 2
-                            ? 'Press to break the cookie open'
-                            : 'Press to draw the fortune paper'
+                        : 'Press to break the cookie open and unfurl the fortune'
                     }
                   />
                 )}
@@ -1811,20 +1800,18 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
                   {objectStep === 0
                     ? 'Bend'
                     : objectStep === 1
-                      ? 'Widen'
-                      : objectStep === 2
-                        ? 'Break'
-                        : 'Draw'}
+                      ? 'Break'
+                      : 'Unfurling'}
                 </strong>
                 <p>
-                  {objectStep < 2
+                  {objectStep === 0
                     ? 'Move the two sides apart and let the fracture deepen.'
-                    : objectStep === 2
+                    : objectStep === 1
                       ? 'Pull firmly enough for the shell to give way.'
-                      : 'Draw the narrow paper out to the right.'}
+                      : 'The fortune opens itself.'}
                 </p>
                 <div className="system-ritual-progress" aria-hidden="true">
-                  {[0, 1, 2, 3].map((index) => (
+                  {[0, 1].map((index) => (
                     <i
                       key={index}
                       className={

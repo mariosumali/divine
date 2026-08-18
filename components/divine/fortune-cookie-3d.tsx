@@ -149,7 +149,7 @@ function CookieModel({
 
   useFrame((state, delta) => {
     const time = state.clock.elapsedTime;
-    const visualStep = Math.min(step, 3);
+    const visualStep = step >= 2 ? 3 : step;
     const separations = [0, 0.65, 3.4, 16.5];
     const separation = THREE.MathUtils.lerp(
       separations[visualStep],
@@ -370,13 +370,10 @@ export function FortuneCookie3D({
           const dy = event.clientY - current.y;
           const totalX = event.clientX - current.startX;
           const totalY = event.clientY - current.startY;
-          const progress =
-            step >= 3
-              ? Math.max(0, Math.min(1, totalX / 120))
-              : Math.max(
-                  0,
-                  Math.min(1, (Math.abs(totalX) + Math.max(0, -totalY)) / 125),
-                );
+          const progress = Math.max(
+            0,
+            Math.min(1, (Math.abs(totalX) + Math.max(0, -totalY)) / 125),
+          );
           if (Math.hypot(totalX, totalY) > 3) current.moved = true;
           current.x = event.clientX;
           current.y = event.clientY;
@@ -396,10 +393,7 @@ export function FortuneCookie3D({
           if (current.moved) {
             const totalX = event.clientX - current.startX;
             const totalY = event.clientY - current.startY;
-            const progress =
-              step >= 3
-                ? Math.max(0, totalX / 120)
-                : (Math.abs(totalX) + Math.max(0, -totalY)) / 125;
+            const progress = (Math.abs(totalX) + Math.max(0, -totalY)) / 125;
             if (progress >= 0.38 && !disabled) onAdvance();
             else updateGestureProgress(0);
             window.setTimeout(() => {

@@ -185,30 +185,57 @@ export type AstrologySign = (typeof ASTROLOGY_SIGNS)[number];
 
 export const ASTROLOGY_CHARTS = [
   {
+    slug: 'celestial-field',
     title: 'The celestial field',
     date: '1715',
     detail: 'An engraved study of planetary orbits and astrological order.',
     src: '/astrology/astrological-charts-1715.webp',
-    download: '/astrology/astrological-charts-1715.webp',
     alt: 'A 1715 engraving of astrological and astronomical charts',
+    width: 1536,
+    height: 1135,
+    features: [
+      { x: 27, y: 24, label: 'Concentric order', note: 'Nested rings turn planetary motion into a single visual field.' },
+      { x: 72, y: 43, label: 'Observed bodies', note: 'Repeated circular marks compare position, scale, and movement.' },
+      { x: 22, y: 67, label: 'Orbital study', note: 'The lower diagrams isolate different models of celestial motion.' },
+    ],
   },
   {
+    slug: 'twelve-signs',
     title: 'The twelve signs',
     date: '1750',
     detail: 'John Bevis’s complete atlas of the zodiac constellations.',
     src: '/astrology/zodiac-star-charts-1750.webp',
-    download: '/astrology/zodiac-star-charts-1750.webp',
     alt: 'Twelve historical star charts representing the zodiac signs',
+    width: 1800,
+    height: 1153,
+    features: [
+      { x: 24, y: 25, label: 'Constellation figure', note: 'Each sign is drawn across the stars that give it form.' },
+      { x: 73, y: 27, label: 'Coordinate grid', note: 'The engraved grid locates the constellation within the sky.' },
+      { x: 54, y: 68, label: 'Twelve-part atlas', note: 'Separate plates turn the zodiac into a navigable sequence.' },
+    ],
   },
   {
+    slug: 'zodiac-circle',
     title: 'The zodiac circle',
     date: 'c. 1000',
     detail: 'A medieval astronomy manuscript wheel mapping signs and planets.',
     src: '/astrology/zodiac-circle-medieval.webp',
-    download: '/astrology/zodiac-circle-medieval.webp',
     alt: 'A medieval manuscript zodiac circle with planetary symbols',
+    width: 1600,
+    height: 1469,
+    features: [
+      { x: 50, y: 48, label: 'Planetary spheres', note: 'The center orders celestial bodies through concentric rings.' },
+      { x: 25, y: 23, label: 'Zodiac figures', note: 'The signs appear as figures around the edge of the cosmos.' },
+      { x: 78, y: 71, label: 'Outer order', note: 'Image and inscription bind the zodiac into a continuous cycle.' },
+    ],
   },
 ] as const;
+
+export type AstrologyChart = (typeof ASTROLOGY_CHARTS)[number];
+
+export function getAstrologyChart(slug: string) {
+  return ASTROLOGY_CHARTS.find((chart) => chart.slug === slug);
+}
 
 const complementaryElements = new Set([
   'Air:Fire',

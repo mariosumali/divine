@@ -10,7 +10,7 @@ import type {
 } from './types';
 
 export const OBJECT_RITUAL_STEPS = 3;
-export const COOKIE_RITUAL_STEPS = 4;
+export const COOKIE_RITUAL_STEPS = 2;
 
 export function nextObjectRitualStep(
   current: number,

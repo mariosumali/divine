@@ -716,7 +716,7 @@ button {
   display: flex;
   justify-content: center;
   font-family: var(--font-bodoni), Georgia, serif;
-  font-size: clamp(7rem, 21vw, 25rem);
+  font-size: clamp(6.3rem, 19vw, 22.5rem);
   font-weight: 500;
   line-height: 0.72;
   letter-spacing: -0.095em;
@@ -846,8 +846,8 @@ button {
   overflow: hidden;
   isolation: isolate;
   animation: reading-cell-arrive 0.82s
-    calc(0.04s + var(--reading-order, 0) * 0.025s) cubic-bezier(0.22, 1, 0.36, 1)
-    both;
+    calc(0.04s + var(--reading-order, 0) * 0.025s)
+    cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 .reading-index-item[data-system='divine'] {
   grid-column: span 2;
@@ -3523,10 +3523,6 @@ button {
   transform: scale(0.88) rotate(1deg);
 }
 .lightweight-cookie.object-step-2 img {
-  transform: scale(0.91) rotate(-1deg);
-}
-.lightweight-cookie.object-step-3 img,
-.lightweight-cookie.object-step-4 img {
   opacity: 0.82;
   transform: scale(0.96);
 }
@@ -3660,10 +3656,10 @@ button {
   transform: translateX(var(--cookie-pull, 0)) rotate(-2.4deg)
     scaleX(calc(0.12 + var(--cookie-gesture, 0) * 0.88));
 }
-.cookie-object.is-drawing .cookie-paper {
+.cookie-object.is-unfurling .cookie-paper {
   transform: translateX(0) rotate(-2.4deg) scaleX(1);
 }
-.cookie-object.is-drawing .cookie-paper em {
+.cookie-object.is-unfurling .cookie-paper em {
   opacity: 1;
   transform: translateY(0);
 }
@@ -3671,7 +3667,7 @@ button {
   animation: crumb-fly 0.88s cubic-bezier(0.18, 0.7, 0.2, 1)
     calc(var(--crumb-index) * 45ms) both;
 }
-.cookie-object.is-drawing.is-moving {
+.cookie-object.is-unfurling.is-moving {
   animation: none;
 }
 .object-actions {
@@ -6300,7 +6296,7 @@ button {
     inset: 36px 0 50px;
   }
   .hero-stage h1 {
-    font-size: clamp(4.8rem, 24vw, 7.8rem);
+    font-size: clamp(4.3rem, 21.5vw, 7rem);
     letter-spacing: -0.1em;
   }
   .hero-crystal {
