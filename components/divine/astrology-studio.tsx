@@ -1,9 +1,9 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { type CSSProperties, useMemo, useState } from 'react';
 import { motion } from 'motion/react';
 import { Dialog } from '@base-ui/react/dialog';
-import { ArrowDown, X } from 'lucide-react';
+import { ArrowDown, ChevronDown, ChevronUp, X } from 'lucide-react';
 import Image from 'next/image';
 import { useExperience } from '@/app/providers';
 import {
@@ -13,26 +13,80 @@ import {
 } from '@/lib/divine/astrology';
 import { ZodiacMark } from './zodiac-mark';
 
-function SignSelect({
+function SignPrism({
+  id,
   label,
   value,
   onChange,
 }: {
+  id: string;
   label: string;
   value: number;
   onChange: (value: number) => void;
 }) {
+  const selectedSign = ASTROLOGY_SIGNS[value];
+
+  const changeBy = (amount: number) => {
+    onChange(
+      (value + amount + ASTROLOGY_SIGNS.length) % ASTROLOGY_SIGNS.length,
+    );
+  };
+
   return (
-    <label className="alignment-select">
-      <span>{label}</span>
-      <select value={value} onChange={(event) => onChange(+event.target.value)}>
-        {ASTROLOGY_SIGNS.map((sign, index) => (
-          <option value={index} key={sign.name}>
-            {sign.name}
-          </option>
-        ))}
-      </select>
-    </label>
+    <div className="sign-prism" aria-labelledby={`${id}-label`}>
+      <p id={`${id}-label`}>{label}</p>
+      <div className="sign-prism-control">
+        <button
+          type="button"
+          className="sign-prism-step"
+          aria-label={`Previous ${label.toLowerCase()}`}
+          onClick={() => changeBy(-1)}
+        >
+          <ChevronUp aria-hidden="true" />
+        </button>
+        <div className="sign-prism-stage">
+          <input
+            className="sign-prism-input"
+            type="range"
+            min={0}
+            max={ASTROLOGY_SIGNS.length - 1}
+            step={1}
+            value={value}
+            aria-labelledby={`${id}-label`}
+            aria-valuetext={selectedSign.name}
+            onChange={(event) => onChange(Number(event.target.value))}
+          />
+          <div
+            className="sign-prism-ring"
+            style={{ '--prism-index': value } as CSSProperties}
+          >
+            {ASTROLOGY_SIGNS.map((sign, index) => (
+              <span
+                className="sign-prism-face"
+                data-active={index === value}
+                aria-hidden={index !== value}
+                style={{ '--face-index': index } as CSSProperties}
+                key={sign.name}
+              >
+                <small>{String(index + 1).padStart(2, '0')}</small>
+                <ZodiacMark sign={sign.name} />
+                <strong>{sign.name}</strong>
+                <em>{sign.element}</em>
+              </span>
+            ))}
+          </div>
+        </div>
+        <button
+          type="button"
+          className="sign-prism-step"
+          aria-label={`Next ${label.toLowerCase()}`}
+          onClick={() => changeBy(1)}
+        >
+          <ChevronDown aria-hidden="true" />
+        </button>
+      </div>
+      <small className="sign-prism-hint">Drag or use arrow keys</small>
+    </div>
   );
 }
 
@@ -154,11 +208,12 @@ export function AstrologyStudio() {
       >
         <header className="astro-section-heading">
           <p>02 / Alignment</p>
-          <h2 id="alignment-title">Two energies.</h2>
+          <h2 id="alignment-title">How you meet.</h2>
         </header>
 
         <div className="alignment-controls">
-          <SignSelect
+          <SignPrism
+            id="first-sign"
             label="First sign"
             value={firstIndex}
             onChange={(value) => {
@@ -167,7 +222,8 @@ export function AstrologyStudio() {
             }}
           />
           <span aria-hidden="true">×</span>
-          <SignSelect
+          <SignPrism
+            id="second-sign"
             label="Second sign"
             value={secondIndex}
             onChange={(value) => {
@@ -183,9 +239,22 @@ export function AstrologyStudio() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <p>{alignment.dynamic}</p>
-          <strong>{alignment.score}</strong>
-          <h3>{alignment.headline}</h3>
+          <div className="alignment-pair">
+            <div aria-hidden="true">
+              <ZodiacMark sign={ASTROLOGY_SIGNS[firstIndex].name} />
+              <span>×</span>
+              <ZodiacMark sign={ASTROLOGY_SIGNS[secondIndex].name} />
+            </div>
+            <p>
+              {ASTROLOGY_SIGNS[firstIndex].name} +{' '}
+              {ASTROLOGY_SIGNS[secondIndex].name}
+            </p>
+            <small>{alignment.label}</small>
+          </div>
+          <div className="alignment-message">
+            <h3>{alignment.headline}</h3>
+            <p>{alignment.summary}</p>
+          </div>
         </motion.article>
       </section>
 

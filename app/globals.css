@@ -7005,13 +7005,12 @@ button {
   color: var(--ink);
 }
 .astrology-studio-condensed .alignment-result {
-  min-height: 300px;
-  grid-template-columns: 0.55fr 0.5fr 1.4fr;
+  min-height: 340px;
+  grid-template-columns: minmax(220px, 0.56fr) minmax(0, 1.44fr);
   align-items: stretch;
 }
 .astrology-studio-condensed .alignment-result > * {
   display: flex;
-  align-items: center;
   margin: 0;
   padding: clamp(28px, 4vw, 62px);
   border-right: 1px solid var(--line);
@@ -7019,26 +7018,60 @@ button {
 .astrology-studio-condensed .alignment-result > *:last-child {
   border-right: 0;
 }
-.astrology-studio-condensed .alignment-result > p {
+.astrology-studio-condensed .alignment-pair {
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+.astrology-studio-condensed .alignment-pair > div {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+.astrology-studio-condensed .alignment-pair svg {
+  width: 42px;
+  height: 42px;
+}
+.astrology-studio-condensed .alignment-pair > div span {
   color: var(--muted);
-  font-size: 9px;
+  font-size: 14px;
+}
+.astrology-studio-condensed .alignment-pair p {
+  margin: 42px 0 8px;
+  font-family: var(--font-bodoni), Georgia, serif;
+  font-size: clamp(1.7rem, 2.4vw, 2.5rem);
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+.astrology-studio-condensed .alignment-pair small,
+.astrology-studio-condensed .alignment-message > p {
+  color: var(--muted);
+}
+.astrology-studio-condensed .alignment-pair small {
+  font-size: 8px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
 }
-.astrology-studio-condensed .alignment-result > strong {
+.astrology-studio-condensed .alignment-message {
+  flex-direction: column;
+  align-items: flex-start;
   justify-content: center;
-  font-family: var(--font-bodoni), Georgia, serif;
-  font-size: clamp(5rem, 9vw, 9rem);
-  font-weight: 500;
-  letter-spacing: -0.08em;
-  line-height: 0.8;
 }
-.astrology-studio-condensed .alignment-result > h3 {
+.astrology-studio-condensed .alignment-message h3 {
+  max-width: 12ch;
+  margin: 0;
   font-family: var(--font-bodoni), Georgia, serif;
-  font-size: clamp(2.2rem, 4.2vw, 4.8rem);
+  font-size: clamp(3rem, 5vw, 5.8rem);
   font-weight: 500;
-  letter-spacing: -0.05em;
-  line-height: 0.96;
+  letter-spacing: -0.06em;
+  line-height: 0.9;
+}
+.astrology-studio-condensed .alignment-message > p {
+  max-width: 58ch;
+  margin: 24px 0 0;
+  font-size: 15px;
+  line-height: 1.6;
 }
 .astrology-studio-condensed .atlas-grid > a {
   min-width: 0;
@@ -7357,8 +7390,11 @@ button {
   .astrology-studio-condensed .alignment-result > *:last-child {
     border-bottom: 0;
   }
-  .astrology-studio-condensed .alignment-result > strong {
-    justify-content: flex-start;
+  .astrology-studio-condensed .alignment-result > .alignment-pair {
+    min-height: 220px;
+  }
+  .astrology-studio-condensed .alignment-result > .alignment-message {
+    min-height: 300px;
   }
   .astrology-studio-condensed .atlas-grid > a:last-child {
     grid-column: auto;
@@ -7987,14 +8023,171 @@ button {
 .alignment-controls {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
-  align-items: end;
-  gap: 28px;
+  align-items: center;
+  gap: clamp(18px, 3vw, 42px);
   margin-bottom: 36px;
 }
 .alignment-controls > span {
-  padding-bottom: 22px;
+  padding: 0;
   font-family: var(--font-bodoni), Georgia, serif;
   font-size: 34px;
+}
+.sign-prism {
+  min-width: 0;
+}
+.sign-prism > p,
+.sign-prism-hint {
+  color: var(--muted);
+  font-size: 8px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.sign-prism > p {
+  margin: 0 0 10px;
+}
+.sign-prism-hint {
+  display: block;
+  margin-top: 10px;
+  text-align: center;
+}
+.sign-prism-control {
+  display: grid;
+  grid-template-rows: 38px 210px 38px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+}
+.sign-prism-step {
+  display: grid;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition:
+    background 180ms ease,
+    color 180ms ease;
+}
+.sign-prism-step:first-child {
+  border-bottom: 1px solid var(--line);
+}
+.sign-prism-step:last-child {
+  border-top: 1px solid var(--line);
+}
+.sign-prism-step:hover,
+.sign-prism-step:focus-visible {
+  background: var(--ink);
+  color: var(--paper);
+  outline: 0;
+}
+.sign-prism-step svg {
+  width: 16px;
+  height: 16px;
+}
+.sign-prism-stage {
+  position: relative;
+  overflow: hidden;
+  perspective: 720px;
+  background:
+    linear-gradient(
+      var(--paper),
+      transparent 32%,
+      transparent 68%,
+      var(--paper)
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent 0 51px,
+      color-mix(in srgb, var(--ink) 9%, transparent) 51px 52px
+    );
+}
+.sign-prism-stage:has(.sign-prism-input:focus-visible) {
+  outline: 1px solid var(--ink);
+  outline-offset: -5px;
+}
+.sign-prism-input {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  appearance: none;
+  opacity: 0;
+  cursor: grab;
+}
+.sign-prism-input:active {
+  cursor: grabbing;
+}
+.sign-prism-stage::before,
+.sign-prism-stage::after {
+  position: absolute;
+  z-index: 2;
+  right: 0;
+  left: 0;
+  height: 52px;
+  pointer-events: none;
+  content: '';
+}
+.sign-prism-stage::before {
+  top: 0;
+  background: linear-gradient(var(--paper), transparent);
+}
+.sign-prism-stage::after {
+  bottom: 0;
+  background: linear-gradient(transparent, var(--paper));
+}
+.sign-prism-ring {
+  --prism-radius: 120px;
+  position: absolute;
+  top: 50%;
+  right: 24px;
+  left: 24px;
+  height: 64px;
+  margin-top: -32px;
+  transform: translateZ(calc(var(--prism-radius) * -1))
+    rotateX(calc(var(--prism-index) * -30deg));
+  transform-style: preserve-3d;
+  transition: transform 620ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.sign-prism-face {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: 38px 34px minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: center;
+  padding: 0 20px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  backface-visibility: hidden;
+  transform: rotateX(calc(var(--face-index) * 30deg))
+    translateZ(var(--prism-radius));
+}
+.sign-prism-face[data-active='true'] {
+  background: var(--ink);
+  color: var(--paper);
+}
+.sign-prism-face > small,
+.sign-prism-face > em {
+  color: var(--muted);
+  font-size: 8px;
+  font-style: normal;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.sign-prism-face > svg {
+  width: 26px;
+  height: 26px;
+}
+.sign-prism-face > strong {
+  min-width: 0;
+  overflow: hidden;
+  font-family: var(--font-bodoni), Georgia, serif;
+  font-size: clamp(1.6rem, 2.8vw, 2.35rem);
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .alignment-select {
   display: flex;
@@ -8314,6 +8507,21 @@ button {
     padding: 0;
     text-align: center;
   }
+  .sign-prism-control {
+    grid-template-rows: 34px 180px 34px;
+  }
+  .sign-prism-ring {
+    right: 12px;
+    left: 12px;
+  }
+  .sign-prism-face {
+    grid-template-columns: 30px 28px minmax(0, 1fr);
+    gap: 9px;
+    padding: 0 12px;
+  }
+  .sign-prism-face > em {
+    display: none;
+  }
   .alignment-select select {
     height: 64px;
   }
@@ -8514,7 +8722,8 @@ button {
 
 @media (prefers-reduced-motion: reduce) {
   .atlas-lightbox,
-  .atlas-lightbox-backdrop {
+  .atlas-lightbox-backdrop,
+  .sign-prism-ring {
     transition: none;
   }
 }

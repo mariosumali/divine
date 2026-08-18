@@ -289,6 +289,13 @@ const complementaryElements = new Set([
   'Water:Earth',
 ]);
 
+const elementNeeds = {
+  Fire: 'room to act',
+  Earth: 'a dependable plan',
+  Air: 'room to talk it through',
+  Water: 'honest reassurance',
+} satisfies Record<AstrologySign['element'], string>;
+
 export function alignmentFor(firstIndex: number, secondIndex: number) {
   const first = ASTROLOGY_SIGNS[firstIndex];
   const second = ASTROLOGY_SIGNS[secondIndex];
@@ -297,42 +304,27 @@ export function alignmentFor(firstIndex: number, secondIndex: number) {
   const complementary = complementaryElements.has(
     `${first.element}:${second.element}`,
   );
-  const sameModality = first.modality === second.modality;
-  const distance = Math.min(
-    Math.abs(firstIndex - secondIndex),
-    12 - Math.abs(firstIndex - secondIndex),
-  );
-  const score = Math.min(
-    96,
-    51 +
-      (sameSign ? 32 : sameElement ? 23 : complementary ? 16 : 5) +
-      (sameModality ? 2 : 9) +
-      ((distance * 7) % 8),
-  );
-
-  const dynamic = sameSign
-    ? 'Mirror'
+  const label = sameSign
+    ? 'Same wavelength'
     : sameElement
-      ? 'Fluency'
+      ? 'Easy flow'
       : complementary
-        ? 'Exchange'
-        : 'Friction';
+        ? 'Useful balance'
+        : 'Different instincts';
   const headline = sameSign
-    ? 'You recognize the instinct before it is spoken.'
+    ? 'Do not skip the check-in.'
     : sameElement
-      ? 'Your energies understand one another’s native language.'
+      ? 'Say the obvious part aloud.'
       : complementary
-        ? 'Difference becomes fuel when neither side tries to lead alone.'
-        : 'The misread is also the invitation: translate before reacting.';
-  const communication =
-    first.element === 'Air' || second.element === 'Air'
-      ? 'Meaning moves quickly. Slow the exchange enough for feeling to stay present.'
-      : first.element === 'Water' || second.element === 'Water'
-        ? 'Subtext speaks first. Make the implicit request explicit.'
-        : 'Trust grows through observable choices more than explanation.';
-  const rhythm = sameModality
-    ? `Two ${first.modality.toLowerCase()} signs can agree on pace and compete for the same role.`
-    : `${first.modality} meets ${second.modality}: one sets the tempo while the other changes its shape.`;
+        ? 'Take turns leading.'
+        : 'Say what you need.';
+  const summary = sameSign
+    ? `You tend to want the same things. That feels easy, but it can hide what neither of you is noticing.`
+    : sameElement
+      ? `${first.name} and ${second.name} move in a similar way. Quick understanding is useful, but it is not a full conversation.`
+      : complementary
+        ? `${first.name} looks for ${elementNeeds[first.element]}; ${second.name} looks for ${elementNeeds[second.element]}. Let each person handle what comes naturally.`
+        : `${first.name} looks for ${elementNeeds[first.element]}; ${second.name} looks for ${elementNeeds[second.element]}. Be direct, then check what the other person heard.`;
 
-  return { score, dynamic, headline, communication, rhythm };
+  return { label, headline, summary };
 }
