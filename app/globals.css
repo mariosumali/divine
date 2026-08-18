@@ -5516,19 +5516,16 @@ button {
       transparent 1px
     ),
     var(--paper);
-  background-size: 100% 28px, auto;
+  background-size:
+    100% 28px,
+    auto;
   box-shadow: 0 16px 42px color-mix(in srgb, #000 14%, transparent);
   color: var(--ink);
   cursor: pointer;
   text-align: left;
-  transform:
-    translateX(
-      calc(-50% + var(--rolodex-offset) * clamp(112px, 15.5vw, 218px))
-    )
-    translateY(calc(-50% + var(--rolodex-distance) * 14px))
-    translateZ(calc(var(--rolodex-distance) * -72px))
-    rotateY(calc(var(--rolodex-offset) * -7deg))
-    rotateZ(calc(var(--rolodex-offset) * 0.8deg));
+  transform: translateX(calc(-50% + var(--rolodex-x)))
+    translateY(calc(-50% + var(--rolodex-y))) translateZ(var(--rolodex-z))
+    rotateY(var(--rolodex-rotate-y)) rotateZ(var(--rolodex-rotate-z));
   transform-origin: 50% 92%;
   transition:
     color 0.42s ease,
@@ -5539,20 +5536,17 @@ button {
   will-change: transform;
 }
 .library-rolodex-card:hover:not(.active) {
-  transform:
-    translateX(
-      calc(-50% + var(--rolodex-offset) * clamp(112px, 15.5vw, 218px))
-    )
-    translateY(calc(-55% + var(--rolodex-distance) * 14px))
-    translateZ(calc(var(--rolodex-distance) * -56px))
-    rotateY(calc(var(--rolodex-offset) * -4deg))
-    rotateZ(calc(var(--rolodex-offset) * 0.4deg));
+  transform: translateX(calc(-50% + var(--rolodex-x)))
+    translateY(calc(-55% + var(--rolodex-y))) translateZ(var(--rolodex-z))
+    rotateY(var(--rolodex-hover-rotate-y))
+    rotateZ(var(--rolodex-hover-rotate-z));
 }
 .library-rolodex-card.active {
   background:
-    linear-gradient(rgba(244, 242, 236, 0.055) 1px, transparent 1px),
-    var(--ink);
-  background-size: 100% 28px, auto;
+    linear-gradient(rgba(244, 242, 236, 0.055) 1px, transparent 1px), var(--ink);
+  background-size:
+    100% 28px,
+    auto;
   color: var(--paper);
   box-shadow: 0 26px 64px color-mix(in srgb, #000 24%, transparent);
 }
@@ -6813,14 +6807,66 @@ button {
     text-align: left;
   }
   .library-system-nav {
-    top: 59px;
-    display: flex;
-    overflow-x: auto;
-    scrollbar-width: none;
+    min-height: 345px;
+    padding: 24px 18px 20px;
+    overflow: hidden;
   }
-  .library-system-nav button {
-    flex: 0 0 auto;
-    min-width: 112px;
+  .library-rolodex-heading span:last-child {
+    display: none;
+  }
+  .library-rolodex-deck {
+    inset: 42px 0 50px;
+  }
+  .library-rolodex-card {
+    top: 47%;
+    width: min(72vw, 320px);
+    height: 188px;
+    padding: 22px 20px;
+    transform: translateX(calc(-50% + var(--rolodex-mobile-x)))
+      translateY(calc(-50% + var(--rolodex-y))) translateZ(var(--rolodex-z))
+      rotateY(var(--rolodex-rotate-y)) rotateZ(var(--rolodex-rotate-z));
+  }
+  .library-rolodex-card:hover:not(.active) {
+    transform: translateX(calc(-50% + var(--rolodex-mobile-x)))
+      translateY(calc(-53% + var(--rolodex-y))) translateZ(var(--rolodex-z))
+      rotateY(var(--rolodex-hover-rotate-y))
+      rotateZ(var(--rolodex-hover-rotate-z));
+  }
+  .library-rolodex-card strong {
+    font-size: clamp(2rem, 10vw, 3.15rem);
+  }
+  .library-rolodex-card-bottom {
+    gap: 8px;
+  }
+  .library-rolodex-card-bottom small {
+    max-width: 48%;
+  }
+  .library-rolodex-spindle {
+    top: calc(47% + 71px);
+    width: min(76vw, 338px);
+  }
+  .library-rolodex-control {
+    top: 48%;
+    width: 42px;
+    min-height: 42px;
+    justify-content: center;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter: blur(8px);
+  }
+  .library-rolodex-control span {
+    display: none;
+  }
+  .library-rolodex-control.is-previous {
+    left: 12px;
+  }
+  .library-rolodex-control.is-next {
+    right: 12px;
+  }
+  .library-rolodex-index {
+    bottom: 14px;
+    gap: 4px;
   }
   .method-history {
     grid-template-columns: 1fr;

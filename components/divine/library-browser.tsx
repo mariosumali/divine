@@ -122,9 +122,7 @@ export function LibraryBrowser() {
     chooseSystem(SYSTEMS[nextIndex].slug);
   };
 
-  const handleRolodexKeyDown = (
-    event: ReactKeyboardEvent<HTMLElement>,
-  ) => {
+  const handleRolodexKeyDown = (event: ReactKeyboardEvent<HTMLElement>) => {
     if (event.key === 'ArrowLeft') {
       event.preventDefault();
       flipSystem(-1);
@@ -147,11 +145,7 @@ export function LibraryBrowser() {
         <h1>Library</h1>
       </header>
 
-      <nav
-        className="library-system-nav"
-        aria-label="Reading methods"
-        onKeyDown={handleRolodexKeyDown}
-      >
+      <nav className="library-system-nav" aria-label="Reading methods">
         <div className="library-rolodex-heading" aria-hidden="true">
           <span>Reading index</span>
           <span>Flip through the archive</span>
@@ -162,6 +156,7 @@ export function LibraryBrowser() {
           type="button"
           aria-label="Previous reading method"
           onClick={() => flipSystem(-1)}
+          onKeyDown={handleRolodexKeyDown}
         >
           <ChevronLeft aria-hidden="true" />
           <span>Previous</span>
@@ -185,8 +180,14 @@ export function LibraryBrowser() {
                 onClick={() => chooseSystem(item.slug)}
                 style={
                   {
-                    '--rolodex-offset': offset,
-                    '--rolodex-distance': distance,
+                    '--rolodex-x': `${offset * 44}%`,
+                    '--rolodex-mobile-x': `${offset * 78}%`,
+                    '--rolodex-y': `${distance * 14}px`,
+                    '--rolodex-z': `${distance * -72}px`,
+                    '--rolodex-rotate-y': `${offset * -7}deg`,
+                    '--rolodex-rotate-z': `${offset * 0.8}deg`,
+                    '--rolodex-hover-rotate-y': `${offset * -4}deg`,
+                    '--rolodex-hover-rotate-z': `${offset * 0.4}deg`,
                     zIndex: SYSTEMS.length - distance,
                   } as CSSProperties
                 }
@@ -219,12 +220,16 @@ export function LibraryBrowser() {
           type="button"
           aria-label="Next reading method"
           onClick={() => flipSystem(1)}
+          onKeyDown={handleRolodexKeyDown}
         >
           <span>Next</span>
           <ChevronRight aria-hidden="true" />
         </button>
 
-        <div className="library-rolodex-index" aria-label="Choose a reading method">
+        <div
+          className="library-rolodex-index"
+          aria-label="Choose a reading method"
+        >
           {SYSTEMS.map((item, index) => (
             <button
               type="button"
@@ -233,6 +238,7 @@ export function LibraryBrowser() {
               aria-label={item.name}
               aria-current={item.slug === system.slug ? 'true' : undefined}
               onClick={() => chooseSystem(item.slug)}
+              onKeyDown={handleRolodexKeyDown}
             >
               <span>{`${index + 1}`.padStart(2, '0')}</span>
             </button>
