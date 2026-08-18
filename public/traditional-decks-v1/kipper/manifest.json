@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-09-02",
-  "renderRevision": 2,
+  "renderRevision": 3,
   "sourceCollection": "https://onlinesammlung.museumsstiftung.de/detail/collection/30221e8f-182a-4e3b-9e22-883f6894bff7",
   "rightsNote": "Cards 1–34 are crops of a CC BY-SA 4.0 museum photograph. Cards 35–36 use explicitly identified period substitutes because those faces are not visible in that photograph.",
   "cards": [
@@ -207,7 +207,7 @@
     {
       "cardIndex": 21,
       "file": "kipper-21.webp",
-      "bytes": 23798,
+      "bytes": 21150,
       "sourceTitle": "Karten der berühmten Wahrsagerin Frau Kipper, cards 1–34",
       "sourceUrl": "https://onlinesammlung.museumsstiftung.de/detail/collection/30221e8f-182a-4e3b-9e22-883f6894bff7",
       "license": "CC BY-SA 4.0",
@@ -217,7 +217,7 @@
     {
       "cardIndex": 22,
       "file": "kipper-22.webp",
-      "bytes": 19634,
+      "bytes": 20214,
       "sourceTitle": "Karten der berühmten Wahrsagerin Frau Kipper, cards 1–34",
       "sourceUrl": "https://onlinesammlung.museumsstiftung.de/detail/collection/30221e8f-182a-4e3b-9e22-883f6894bff7",
       "license": "CC BY-SA 4.0",

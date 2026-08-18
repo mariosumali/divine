@@ -20,8 +20,15 @@ const spread = (
   layout: SpreadDefinition['layout'],
 ): SpreadDefinition => ({ id, name, description, positions, layout });
 
-const traditionalImage = (collection: string, index: number) =>
-  `/traditional-decks-v1/${collection}/${collection}-${String(index + 1).padStart(2, '0')}.webp`;
+const traditionalImageRevisions: Partial<Record<string, number>> = {
+  sibilla: 4,
+};
+
+const traditionalImage = (collection: string, index: number) => {
+  const path = `/traditional-decks-v1/${collection}/${collection}-${String(index + 1).padStart(2, '0')}.webp`;
+  const revision = traditionalImageRevisions[collection];
+  return revision ? `${path}?v=${revision}` : path;
+};
 
 const makeSituationalDeck = (
   slug: string,
@@ -749,7 +756,7 @@ const playingCards: CardDefinition[] = playingCardSuits.flatMap(
       name: `${name} of ${suit.name}`,
       glyph: suit.glyph,
       keywords: [keyword, suit.name.toLowerCase()],
-      meaning: `${movement} In ${suit.name}, attend to ${suit.domain}: ${suit.tone}.`,
+      meaning: `${movement} ${suit.name} concerns ${suit.domain}. Notice ${suit.tone}.`,
       domain: suit.id,
       element: suit.element,
       numerology: index + 1,
@@ -1135,8 +1142,8 @@ const sibillaCards: CardDefinition[] = sibillaSuits.flatMap((suit, suitIndex) =>
     name: italian,
     glyph: suit.glyph,
     keywords: [english, keyword, suit.name],
-    meaning: `${english} makes ${keyword} concrete in ordinary life. In ${suit.name}, read the scene through ${suit.domain}.`,
-    reversedMeaning: `${english} is reversed: ${shadow}. Read the change literally before looking for metaphor.`,
+    meaning: `${english} points to ${keyword} in everyday life. In ${suit.name}, the scene concerns ${suit.domain}.`,
+    reversedMeaning: `${english} reversed warns that ${shadow}. Start with the literal situation before treating it as a metaphor.`,
     domain: suit.name,
     numerology: index + 1,
     polarity:
@@ -1329,7 +1336,7 @@ const runeCards: CardDefinition[] = runeEntries.map(
     name,
     glyph,
     keywords: [keyword, literal],
-    meaning: `${name} names ${literal}. In a contemporary reflective reading, ${counsel.charAt(0).toLowerCase()}${counsel.slice(1)}`,
+    meaning: `${name} means ${literal}. For a modern reflective reading: ${counsel.charAt(0).toLowerCase()}${counsel.slice(1)}`,
     domain: `ætt ${Math.floor(index / 8) + 1}`,
     numerology: index + 1,
     image: traditionalImage('runes', index),
@@ -1796,7 +1803,7 @@ const iChingCards: CardDefinition[] = iChingEntries.map(
     name: `${String(index + 1).padStart(2, '0')} · ${han} ${pinyin}`,
     glyph: String.fromCodePoint(0x4dc0 + index),
     keywords: [title, keyword],
-    meaning: `${title} describes ${keyword}. ${counsel}`,
+    meaning: `${title} concerns ${keyword}. ${counsel}`,
     domain: 'King Wen sequence',
     numerology: index + 1,
     image: traditionalImage('i-ching', index),
@@ -2164,7 +2171,7 @@ const hanafudaCards: CardDefinition[] = hanafudaMonths.flatMap(
               ? '〰'
               : '❀',
       keywords: [keyword, category.toLowerCase(), month],
-      meaning: `${month}'s ${flower} carries ${keyword}. ${hanafudaCategoryMeaning[category]}`,
+      meaning: `${month}'s ${flower} suggests ${keyword}. ${hanafudaCategoryMeaning[category]}`,
       domain: `${month} · ${flower}`,
       element: category,
       numerology: monthIndex + 1,
@@ -2674,7 +2681,7 @@ export const TRADITIONAL_CARD_SYSTEMS: SystemDefinition[] = [
     countLabel: '52 cards',
     eyebrow: 'Suit / Number',
     introduction:
-      'The familiar fifty-two-card pack becomes a practical language of suit, number, court, color, and sequence.',
+      'The familiar fifty-two-card pack uses each rank for the event and each suit for the area of life it affects.',
     instruction:
       'Read the rank as movement and the suit as the part of life where that movement becomes concrete.',
     cards: playingCards,
@@ -2828,9 +2835,9 @@ export const TRADITIONAL_CARD_SYSTEMS: SystemDefinition[] = [
     countLabel: '36 motif cards',
     eyebrow: 'Poem / Omen',
     introduction:
-      'A transparent contemporary card adaptation of Persian bibliomancy, built from recurring poetic motifs rather than invented quotations.',
+      'A contemporary card deck inspired by Persian bibliomancy, using original poetic motifs rather than quotations from Hafez.',
     instruction:
-      'Hold one sincere question. Read the omen first and the witness second, allowing image and reaction to meet.',
+      'Keep one sincere question in mind. Read the first image as the omen and the second as a clarification or challenge.',
     cards: hafezCards,
     spreads: [
       spread(
@@ -2859,9 +2866,9 @@ export const TRADITIONAL_CARD_SYSTEMS: SystemDefinition[] = [
     countLabel: '48 cards',
     eyebrow: 'Flower / Season',
     introduction:
-      'The complete forty-eight-card Japanese flower-card structure becomes a contemporary seasonal reflection organized by month and card class.',
+      'The complete forty-eight-card Japanese flower deck is presented as a modern seasonal reflection organized by month and card class.',
     instruction:
-      'Read the month as atmosphere, the flower and motif as image, and the card class as intensity—not as a historical divination claim.',
+      'Use the month for atmosphere, the flower and motif for imagery, and the card class for emphasis. This is a modern reflection, not a historical divination method.',
     cards: hanafudaCards,
     spreads: [
       spread(
@@ -2897,7 +2904,7 @@ export const TRADITIONAL_CARD_SYSTEMS: SystemDefinition[] = [
     countLabel: '36 cards',
     eyebrow: 'Person / Event',
     introduction:
-      'The traditional thirty-six German-titled subjects form a direct oracle of visitors, relationships, resources, hopes, losses, and turns of fortune.',
+      'Thirty-six traditional German-titled cards describe visitors, relationships, money, hopes, losses, and changes in circumstance.',
     instruction:
       'Read adjacent cards as one practical sentence. The artwork is a sourced historical-art edition, not a facsimile of a commercial pack.',
     cards: zigeunerCards,

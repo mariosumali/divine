@@ -1,6 +1,6 @@
 # DIVINE Archive Collage
 
-100 real collection objects sourced from The Metropolitan Museum of Art's Open Access collection on 2026-09-03. Every source record is marked public domain by The Met and is available under CC0. Images were locally cropped, background-masked, converted to monochrome, and exported as transparent WebP files to match DIVINE's editorial collage treatment.
+200 real collection objects sourced from The Metropolitan Museum of Art's Open Access collection on 2026-09-03. Every source record is marked public domain by The Met and is available under CC0. Images were locally cropped, background-masked, converted to monochrome, and exported as transparent WebP files to match DIVINE's editorial collage treatment.
 
 Source policy: https://www.metmuseum.org/policies/image-resources
 
@@ -106,3 +106,103 @@ Source policy: https://www.metmuseum.org/policies/image-resources
 | crab | [Crab](https://www.metmuseum.org/art/collection/search/41911) | 41911 | 18th century |
 | lobster | [Terracotta vase in the form of a lobster claw](https://www.metmuseum.org/art/collection/search/251401) | 251401 | ca. 460 BCE |
 | shell | [Longcase clock with calendrical, lunar, and tidal indications, also known as the Graves Tompion](https://www.metmuseum.org/art/collection/search/209296) | 209296 | ca. 1677–80 |
+| snake | [Snake](https://www.metmuseum.org/art/collection/search/570331) | 570331 | 664–30 BCE |
+| coral | [Yatagan with Scabbard](https://www.metmuseum.org/art/collection/search/24329) | 24329 | dated A.H. 1238/1822 CE |
+| flower | [Chinese figure with bird](https://www.metmuseum.org/art/collection/search/207138) | 207138 | ca. 1727, mounts and flowers ca. 1750 |
+| lotus | [Jar with carp in lotus pond](https://www.metmuseum.org/art/collection/search/42549) | 42549 | mid-16th century |
+| pomegranate | [Pomegranate Pendant](https://www.metmuseum.org/art/collection/search/551380) | 551380 | ca. 1386–1347 BCE |
+| grapes | [Grapes](https://www.metmuseum.org/art/collection/search/853192) | 853192 | ca. 1480–92 |
+| acorn | [Bowl with acorn bosses at shoulder, lotus pattern beneath, and rosette on bottom, and with inscribed weight](https://www.metmuseum.org/art/collection/search/551307) | 551307 | 4th century BCE |
+| leaf | [Leaf](https://www.metmuseum.org/art/collection/search/190441) | 190441 | 18th century |
+| feather | [Cabinet with scenes from the Story of Esther](https://www.metmuseum.org/art/collection/search/229034) | 229034 | after 1665 |
+| hand | [Hand](https://www.metmuseum.org/art/collection/search/549211) | 549211 | ca. 1347–1330 BCE |
+| eye | [Wedjat Eye Amulet](https://www.metmuseum.org/art/collection/search/561047) | 561047 | ca. 1080–664 BCE |
+| heart | [Heart Scarab of Hatnefer](https://www.metmuseum.org/art/collection/search/545146) | 545146 | ca. 1491–1473 BCE |
+| skull | [Skull](https://www.metmuseum.org/art/collection/search/207770) | 207770 | 17th century |
+| skeleton | [Table clock with skeleton movement](https://www.metmuseum.org/art/collection/search/196395) | 196395 | mid-16th century or earlier |
+| wing | [Wing Brooch](https://www.metmuseum.org/art/collection/search/469961) | 469961 | 100–200 |
+| ankh | [Model ankh](https://www.metmuseum.org/art/collection/search/546309) | 546309 | ca. 1981–1802 B.C. |
+| canopic jar | [Canopic Jar (07.226.1) with a Lid Depicting a Queen (30.8.54)](https://www.metmuseum.org/art/collection/search/544689) | 544689 | ca. 1347–1330 BCE or shortly thereafter |
+| canopic chest | [Canopic Chest of Senbi](https://www.metmuseum.org/art/collection/search/546275) | 546275 | ca. 1961–1878 B.C. |
+| heart scarab | [Heart Scarab of Neferkhawet](https://www.metmuseum.org/art/collection/search/545166) | 545166 | ca. 1504–1447 BCE |
+| wedjat eye | [Wedjat Eye Amulet](https://www.metmuseum.org/art/collection/search/587566) | 587566 | ca. 1000–945 BCE |
+| sistrum | [Sistrum](https://www.metmuseum.org/art/collection/search/545681) | 545681 | 1st–2nd century CE |
+| menat | [Menat](https://www.metmuseum.org/art/collection/search/573006) | 573006 | ca. 1347–1314 BCE |
+| cartouche | [Cartouche](https://www.metmuseum.org/art/collection/search/189599) | 189599 | 18th century |
+| funerary mask | [Funerary mask of Hatnefer](https://www.metmuseum.org/art/collection/search/545147) | 545147 | ca. 1491–1473 BCE |
+| mummy mask | [Mummy Mask of Khonsu](https://www.metmuseum.org/art/collection/search/544709) | 544709 | ca. 1290–1224 BCE |
+| funerary cone | [Funerary Cone of Djehutynefer](https://www.metmuseum.org/art/collection/search/555011) | 555011 | ca. 1550–1347 BCE |
+| votive figure | [Female Votive Figure](https://www.metmuseum.org/art/collection/search/549425) | 549425 | ca. 1473–1458 BCE |
+| offering table | [Offering table](https://www.metmuseum.org/art/collection/search/552696) | 552696 | 664–332 BCE |
+| ritual vessel | [Aduno Koro (Ark of the World) vessel with ancestral figures](https://www.metmuseum.org/art/collection/search/312231) | 312231 | 16th–19th century |
+| libation vessel | [Libation Vessel of Manuwai](https://www.metmuseum.org/art/collection/search/547550) | 547550 | ca. 1479–1425 BCE |
+| necklace | [Necklace](https://www.metmuseum.org/art/collection/search/20138) | 20138 | ca. 1880 |
+| sun | [Stamp with uraeus and sun disk](https://www.metmuseum.org/art/collection/search/571364) | 571364 | ca. 712–343 B.C. |
+| oracle bone | [Oracle bone](https://www.metmuseum.org/art/collection/search/42045) | 42045 | Date unknown |
+| talisman | [Talisman](https://www.metmuseum.org/art/collection/search/44906) | 44906 | Date unknown |
+| reliquary cross | [Reliquary cross](https://www.metmuseum.org/art/collection/search/191909) | 191909 | early 17th century |
+| processional cross | [Processional cross](https://www.metmuseum.org/art/collection/search/186602) | 186602 | 19th century, after 17th century original |
+| monstrance | [Monstrance](https://www.metmuseum.org/art/collection/search/193574) | 193574 | 16th–17th century |
+| pilgrim badge | [Pilgrim Badge with Adoration of the Magi](https://www.metmuseum.org/art/collection/search/460380) | 460380 | late 16th century or 19th century (before 1890) |
+| votive hand | [Hand, right, votive](https://www.metmuseum.org/art/collection/search/246771) | 246771 | 1st–3rd century CE later |
+| equinoctial dial | [Equinoctial dial](https://www.metmuseum.org/art/collection/search/188856) | 188856 | 1740 |
+| quadrant | [Horary Quadrant](https://www.metmuseum.org/art/collection/search/449085) | 449085 | 10th century |
+| orrery | [Orrery clock](https://www.metmuseum.org/art/collection/search/785846) | 785846 | 1790 |
+| crescent moon | [Crescent Moon Amulet](https://www.metmuseum.org/art/collection/search/551377) | 551377 | ca. 1390–1352 B.C. |
+| earring | [Earring](https://www.metmuseum.org/art/collection/search/189052) | 189052 | ca. 1873 |
+| torc | [Torc](https://www.metmuseum.org/art/collection/search/464904) | 464904 | 4th–3rd century BCE |
+| pectoral | [Pectoral](https://www.metmuseum.org/art/collection/search/255191) | 255191 | 6th century BCE |
+| cameo | [Cameo Medallion](https://www.metmuseum.org/art/collection/search/1111) | 1111 | 1760–1800 |
+| intaglio | [Intaglio in ring](https://www.metmuseum.org/art/collection/search/250653) | 250653 | 7th century CE |
+| hair ornament | [Hair Ornament](https://www.metmuseum.org/art/collection/search/452929) | 452929 | 12th century |
+| crown | [Crown](https://www.metmuseum.org/art/collection/search/186562) | 186562 | 19th century, after 17th century original |
+| scepter | [Was scepter](https://www.metmuseum.org/art/collection/search/546307) | 546307 | ca. 1981–1802 B.C. |
+| pomander | [Pomander](https://www.metmuseum.org/art/collection/search/192886) | 192886 | 1840 |
+| scent bottle | [Scent Bottle](https://www.metmuseum.org/art/collection/search/7328) | 7328 | 1740–1800 |
+| jewel box | [Jewel box](https://www.metmuseum.org/art/collection/search/60976) | 60976 | Date unknown |
+| amulet case | [Amulet Case](https://www.metmuseum.org/art/collection/search/446800) | 446800 | 19th century |
+| kylix | [Kylix](https://www.metmuseum.org/art/collection/search/240035) | 240035 | 750–600 BCE |
+| amphora | [Amphora](https://www.metmuseum.org/art/collection/search/239999) | 239999 | Date unknown |
+| lekythos | [Lekythos](https://www.metmuseum.org/art/collection/search/19833) | 19833 | ca. 1875–77 |
+| krater | [Krater](https://www.metmuseum.org/art/collection/search/239966) | 239966 | 750–600 BCE |
+| hydria | [Hydria](https://www.metmuseum.org/art/collection/search/240003) | 240003 | 400–310 BCE |
+| kantharos | [Kantharos](https://www.metmuseum.org/art/collection/search/246198) | 246198 | 2nd half of the 6th century BCE–early 5th century BCE |
+| pyxis | [Pyxis](https://www.metmuseum.org/art/collection/search/255265) | 255265 | ca. 325–300 BCE |
+| askos | [Askos](https://www.metmuseum.org/art/collection/search/239987) | 239987 | 600–480 BCE |
+| phiale | [Phiale](https://www.metmuseum.org/art/collection/search/244475) | 244475 | 5th century BCE |
+| balance scale | [Balance scale](https://www.metmuseum.org/art/collection/search/629597) | 629597 | ca. 1845–55 |
+| mortar and pestle | [Mortar and Pestle](https://www.metmuseum.org/art/collection/search/5229) | 5229 | 1739–80 |
+| inkstand | [Inkstand](https://www.metmuseum.org/art/collection/search/4432) | 4432 | 1830–40 |
+| seal matrix | [Seal Matrix](https://www.metmuseum.org/art/collection/search/466069) | 466069 | 19th or 20th century (13th century style) |
+| pocket watch | [Pocket watch](https://www.metmuseum.org/art/collection/search/187193) | 187193 | early 19th century |
+| padlock | [Padlock](https://www.metmuseum.org/art/collection/search/186848) | 186848 | 17th century |
+| hand bell | [Hand Bell](https://www.metmuseum.org/art/collection/search/501703) | 501703 | 19th century |
+| candelabrum | [Candelabrum](https://www.metmuseum.org/art/collection/search/1117) | 1117 | ca. 1840 |
+| brazier | [Brazier](https://www.metmuseum.org/art/collection/search/972) | 972 | 1700–1800 |
+| cauldron | [Cauldron](https://www.metmuseum.org/art/collection/search/244512) | 244512 | ca. 7th century BCE? |
+| crozier | [Crozier head](https://www.metmuseum.org/art/collection/search/207714) | 207714 | early 17th century |
+| scorpion | [Scorpion Amulet (?)](https://www.metmuseum.org/art/collection/search/587641) | 587641 | ca. 1802–1450 B.C. |
+| spider | [Spider Helmet](https://www.metmuseum.org/art/collection/search/26430) | 26430 | ca. 1650–1700 |
+| bat | [Bat amulet](https://www.metmuseum.org/art/collection/search/556930) | 556930 | ca. 1981–1640 B.C. |
+| serpent | [Serpent](https://www.metmuseum.org/art/collection/search/504257) | 504257 | ca. 1810 |
+| cobra | [Cobra](https://www.metmuseum.org/art/collection/search/552460) | 552460 | 664–30 B.C. |
+| crocodile | [Crocodile](https://www.metmuseum.org/art/collection/search/547481) | 547481 | ca. 3100–2649 B.C. |
+| hare | [Hare amulet](https://www.metmuseum.org/art/collection/search/544087) | 544087 | 664–30 B.C. |
+| stag | [Bronze statuette of a stag](https://www.metmuseum.org/art/collection/search/244468) | 244468 | 9th–8th century BCE |
+| ram | [Ram amulet](https://www.metmuseum.org/art/collection/search/546235) | 546235 | 664–30 B.C. |
+| fox | [Fox](https://www.metmuseum.org/art/collection/search/546786) | 546786 | ca. 1850–1700 B.C. |
+| peacock | [Peacock](https://www.metmuseum.org/art/collection/search/203034) | 203034 | 1741 |
+| eagle | [Eagle](https://www.metmuseum.org/art/collection/search/10024) | 10024 | 1800–1825 |
+| falcon | [Falcon](https://www.metmuseum.org/art/collection/search/570747) | 570747 | 664–30 B.C. |
+| ibis | [Ibis](https://www.metmuseum.org/art/collection/search/546053) | 546053 | 600–30 B.C. |
+| dove | [Eucharistic Dove](https://www.metmuseum.org/art/collection/search/464324) | 464324 | ca. 1215–35 |
+| dolphin | [Dolphin pendant](https://www.metmuseum.org/art/collection/search/551297) | 551297 | 2nd–3rd century |
+| octopus | [Terracotta stirrup jar with octopus](https://www.metmuseum.org/art/collection/search/254779) | 254779 | ca. 1200–1100 BCE |
+| pine cone | [Limestone votive pine cone](https://www.metmuseum.org/art/collection/search/242331) | 242331 | 3rd–1st century BCE |
+| lily | [Jewelry element in the form of a lily](https://www.metmuseum.org/art/collection/search/545732) | 545732 | ca. 1878–1805 B.C. |
+| poppy | [Poppy-Bead Necklace](https://www.metmuseum.org/art/collection/search/546091) | 546091 | ca. 1550–1295 B.C. |
+| pectoral cross | [Pectoral with Christ and the Lamb of God and the Symbols of the Four Evangelists](https://www.metmuseum.org/art/collection/search/464220) | 464220 | 1000–1050 |
+| crucifix | [Crucifix](https://www.metmuseum.org/art/collection/search/186833) | 186833 | 17th century |
+| triptych | [Triptych](https://www.metmuseum.org/art/collection/search/187210) | 187210 | 19th century |
+| diptych | [Diptych](https://www.metmuseum.org/art/collection/search/231813) | 231813 | 1736 |
+| sun disk | [Mold for an Amulet of Horns and Sun Disk](https://www.metmuseum.org/art/collection/search/559157) | 559157 | ca. 1390–1352 B.C. |

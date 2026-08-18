@@ -11,6 +11,7 @@ export interface ShareComposition {
   title: string;
   subtitle: string;
   methodArt: string;
+  displayHeadline: string;
   headline: string;
   synthesis: string;
   date: string;
@@ -46,6 +47,62 @@ export interface DecodedSharedReading {
 
 const MAX_SHARE_TOKEN_LENGTH = 12_000;
 const focuses: Focus[] = ['general', 'love', 'work', 'growth'];
+const OBJECT_SHARE_HEADLINES: Partial<Record<SystemSlug, readonly string[]>> = {
+  'magic-8-ball': [
+    'Someone shook the future. This is what surfaced.',
+    'A question met the oracle. Here is what it said.',
+    'The oracle spoke. Someone thought of you.',
+    'Someone shook the silence. An answer rose to meet it.',
+    'A question was left to chance. This is what came back.',
+    'Someone asked the unknown for an answer. Here it is.',
+    'A question was set in motion. See what surfaced.',
+    'Someone gave uncertainty a shake—and sent you the answer.',
+    'The ball was given one question. This is its reply.',
+    'An answer was shaken loose and sent to you.',
+    'Someone turned a question over to chance. Here is where it landed.',
+    'The unknown received one question. This was the answer.',
+  ],
+  'fortune-cookie': [
+    'A small fortune found its way to you.',
+    'Someone cracked open a message—and sent it your way.',
+    'A little luck, opened and passed along.',
+    'A quiet fortune was opened with you in mind.',
+    'Someone found a message inside and passed it on.',
+    'A small paper fortune has made its way to you.',
+    'This fortune traveled from one hand to yours.',
+    'Someone broke the shell. The message was meant to travel.',
+    'A sentence from chance found its way to you.',
+    'A small piece of luck, passed from hand to hand.',
+    'The message hidden inside has found its way to you.',
+    'Someone opened a fortune. Now the message is yours.',
+  ],
+};
+
+function stableIndex(value: string, length: number): number {
+  let hash = 2166136261;
+  for (let index = 0; index < value.length; index += 1) {
+    hash ^= value.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+  return (hash >>> 0) % length;
+}
+
+function shareDisplayHeadline(record: ReadingRecord): string {
+  if (record.draws.length) return record.interpretation.headline;
+  const headlines = OBJECT_SHARE_HEADLINES[record.system];
+  if (!headlines?.length)
+    return 'A message from the oracle found its way to you.';
+  // Use immutable share data so each reading gets variety without its preview,
+  // decoded link, and exported image ever choosing different copy.
+  const seed = [
+    record.system,
+    record.createdAt,
+    record.focus,
+    record.interpretation.headline,
+    ...(record.luckyNumbers ?? []),
+  ].join('|');
+  return headlines[stableIndex(seed, headlines.length)];
+}
 
 function encodeBase64Url(value: string): string {
   const bytes = new TextEncoder().encode(value);
@@ -235,6 +292,7 @@ export function composeShare(
     title: 'DIVINE',
     subtitle: `${record.systemName} · ${record.spreadName}`,
     methodArt: READING_INDEX_ART[record.system],
+    displayHeadline: shareDisplayHeadline(record),
     headline: record.interpretation.headline,
     synthesis: record.interpretation.synthesis,
     date: record.createdAt,

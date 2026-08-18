@@ -204,7 +204,7 @@ async function isComplete(slug, count, renderRevision) {
 
 async function renderKipper() {
   const slug = 'kipper';
-  const renderRevision = 2;
+  const renderRevision = 3;
   if (await isComplete(slug, 36, renderRevision)) return;
   const directory = join(outputRoot, slug);
   await mkdir(directory, { recursive: true });
@@ -219,8 +219,8 @@ async function renderKipper() {
   // The rows recede and skew independently in the museum photograph, so a
   // fixed origin and step captures parts of adjacent rows. These cells end in
   // the white gaps between cards and leave trim enough surround to find each
-  // physical edge. Cards 30–32 overlap in image-space; their four corners are
-  // rectified separately below.
+  // physical edge. Cards 21–22 and 30–32 overlap in image-space; their four
+  // corners are rectified separately below.
   const crops = [
     '281x444+350+225',
     '293x439+631+225',
@@ -242,8 +242,16 @@ async function renderKipper() {
     '309x452+586+1091',
     '311x464+895+1076',
     '304x460+1206+1073',
-    '339x463+1510+1070',
-    '278x451+1849+1076',
+    {
+      crop: '410x520+1470+1035',
+      viewport: '300x426',
+      perspective: '51,58 0,0 334,53 300,0 357,469 300,426 60,473 0,426',
+    },
+    {
+      crop: '420x520+1790+1035',
+      viewport: '300x426',
+      perspective: '41,46 0,0 310,51 300,0 333,470 300,426 51,463 0,426',
+    },
     '303x445+2127+1078',
     '315x441+2430+1074',
     '338x473+215+1550',
@@ -278,7 +286,7 @@ async function renderKipper() {
         ? ['-fuzz', '8%', '-trim', '+repage']
         : [
             '-define',
-            'distort:viewport=300x460+0+0',
+            `distort:viewport=${crop.viewport ?? '300x460'}+0+0`,
             '-virtual-pixel',
             'white',
             '-distort',
@@ -557,9 +565,104 @@ const sibillaTitles = {
   diamonds: 'File:Print, playing-card (BM 1896,0501.729.1-52).jpg',
 };
 
+// The cards are photographed with uneven margins and small rotations, so equal
+// grid cells either cut through a card or retain a strip of its neighbour. Each
+// window ends in the visible white gutter around one physical card; trim then
+// follows that card's own skewed edge.
+const sibillaCrops = {
+  hearts: [
+    '387x535+28+3',
+    '362x535+415+0',
+    '367x528+777+0',
+    '366x525+1144+0',
+    '376x524+1510+0',
+    '373x545+63+538',
+    '354x548+436+535',
+    '362x551+790+528',
+    '360x550+1152+525',
+    '381x555+1512+524',
+  ],
+  clubs: [
+    '375x553+37+8',
+    '368x568+412+0',
+    '370x561+780+0',
+    '360x562+1150+0',
+    '382x558+1510+0',
+    '369x549+28+561',
+    '368x542+397+568',
+    '365x549+765+561',
+    '365x548+1130+562',
+    '386x544+1495+558',
+  ],
+  spades: [
+    '383x563+13+0',
+    '368x548+396+0',
+    '374x536+764+0',
+    '379x531+1138+0',
+    '385x526+1517+0',
+    '398x572+8+563',
+    '374x567+406+548',
+    '372x577+780+536',
+    '373x584+1152+531',
+    '386x589+1525+526',
+  ],
+  diamonds: [
+    '379x552+2+0',
+    '363x543+381+0',
+    '376x550+744+0',
+    '384x550+1120+0',
+    '402x534+1504+0',
+    '382x537+7+552',
+    '363x546+389+543',
+    '383x539+752+550',
+    '376x539+1135+550',
+    '375x555+1511+534',
+  ],
+  redCourts: [
+    '571x817+74+10',
+    '565x799+645+10',
+    '553x792+1210+10',
+    '566x787+135+827',
+    '521x789+701+809',
+    '550x793+1222+802',
+  ],
+  mixedCourts: [
+    '442x640+475+0',
+    '425x645+917+0',
+    '434x648+1342+0',
+    '438x643+480+640',
+    '422x638+918+645',
+    '431x635+1340+648',
+  ],
+};
+
+async function largestSibillaCardBounds(path) {
+  const { stdout } = await execFileAsync('magick', [
+    path,
+    '-colorspace',
+    'gray',
+    '-threshold',
+    '95%',
+    '-negate',
+    '-define',
+    'connected-components:area-threshold=1000',
+    '-define',
+    'connected-components:verbose=true',
+    '-connected-components',
+    '4',
+    'null:',
+  ]);
+  const bounds = stdout.match(
+    /^\s+\d+:\s+(\d+x\d+\+\d+\+\d+).*gray\((?:255|100%)\)/m,
+  )?.[1];
+  if (!bounds) throw new Error(`Could not locate Sibilla card in ${path}`);
+  return bounds;
+}
+
 async function renderSibilla() {
   const slug = 'sibilla';
-  if (await isComplete(slug, 52)) return;
+  const renderRevision = 4;
+  if (await isComplete(slug, 52, renderRevision)) return;
   const directory = join(outputRoot, slug);
   await mkdir(directory, { recursive: true });
   const infoByTitle = knownCommonsInfo(
@@ -581,61 +684,49 @@ async function renderSibilla() {
       name: 'hearts',
       numericSource: 'hearts',
       courtSource: 'redCourts',
-      courtRow: 1,
-      courtColumns: [0, 1, 2],
-      courtCols: 3,
+      courtCrops: [3, 4, 5],
     },
     {
       name: 'clubs',
       numericSource: 'clubs',
       courtSource: 'redCourts',
-      courtRow: 0,
-      courtColumns: [0, 1, 2],
-      courtCols: 3,
+      courtCrops: [0, 1, 2],
     },
     {
       name: 'spades',
       numericSource: 'spades',
       courtSource: 'mixedCourts',
-      courtRow: 1,
-      courtColumns: [3, 2, 1],
-      courtCols: 4,
+      courtCrops: [5, 4, 3],
     },
     {
       name: 'diamonds',
       numericSource: 'diamonds',
       courtSource: 'mixedCourts',
-      courtRow: 0,
-      courtColumns: [1, 2, 3],
-      courtCols: 4,
+      courtCrops: [0, 1, 2],
     },
   ];
   const cards = [];
   let cardIndex = 0;
 
-  async function extract(sourceKey, columns, rows, column, row, label) {
+  async function extract(sourceKey, cropIndex, label) {
     cardIndex += 1;
-    const dimensions = (
-      await execFileAsync('magick', [
-        'identify',
-        '-format',
-        '%w %h',
-        sources[sourceKey],
-      ])
-    ).stdout
-      .trim()
-      .split(/\s+/)
-      .map(Number);
-    const cellWidth = Math.floor(dimensions[0] / columns);
-    const cellHeight = Math.floor(dimensions[1] / rows);
     const filename = `sibilla-${String(cardIndex).padStart(2, '0')}.webp`;
     const output = join(directory, filename);
-    await magick(sources[sourceKey], output, [
+    const deskewed = join(scratch, `deskewed-${filename}.png`);
+    await magick(sources[sourceKey], deskewed, [
       '-crop',
-      `${cellWidth}x${cellHeight}+${column * cellWidth}+${row * cellHeight}`,
-      '-fuzz',
-      '7%',
-      '-trim',
+      sibillaCrops[sourceKey][cropIndex],
+      '+repage',
+      '-background',
+      'white',
+      '-deskew',
+      '40%',
+      '+repage',
+    ]);
+    const cardBounds = await largestSibillaCardBounds(deskewed);
+    await magick(deskewed, output, [
+      '-crop',
+      cardBounds,
       '+repage',
       '-colorspace',
       'sRGB',
@@ -663,26 +754,17 @@ async function renderSibilla() {
 
   for (const suit of suitDefinitions) {
     for (let rank = 0; rank < 10; rank += 1)
-      await extract(
-        suit.numericSource,
-        5,
-        2,
-        rank % 5,
-        Math.floor(rank / 5),
-        `${suit.name} ${rank + 1}`,
-      );
-    for (const [courtIndex, column] of suit.courtColumns.entries())
+      await extract(suit.numericSource, rank, `${suit.name} ${rank + 1}`);
+    for (const [courtIndex, cropIndex] of suit.courtCrops.entries())
       await extract(
         suit.courtSource,
-        suit.courtCols,
-        2,
-        column,
-        suit.courtRow,
+        cropIndex,
         `${suit.name} ${['jack', 'queen', 'king'][courtIndex]}`,
       );
   }
 
   await writeManifest(slug, {
+    renderRevision,
     sourceCollection:
       'https://commons.wikimedia.org/wiki/Category:Sibilla_cards',
     rightsNote:
@@ -1150,7 +1232,8 @@ async function renderHafez() {
 
 async function renderHanafuda() {
   const slug = 'hanafuda';
-  if (await isComplete(slug, 48)) return;
+  const renderRevision = 3;
+  if (await isComplete(slug, 48, renderRevision)) return;
   const directory = join(outputRoot, slug);
   await mkdir(directory, { recursive: true });
   const title = 'File:白美人印の八八花札（昭和前期）.jpg';
@@ -1161,14 +1244,35 @@ async function renderHanafuda() {
   const license = assertReusable(info, title);
   const source = join(scratch, 'hanafuda.jpg');
   await download(info.url, source);
-  const dimensions = (
-    await execFileAsync('magick', ['identify', '-format', '%w %h', source])
-  ).stdout
-    .trim()
-    .split(/\s+/)
-    .map(Number);
-  const cellWidth = Math.floor(dimensions[0] / 13);
-  const cellHeight = Math.floor(dimensions[1] / 4);
+  const sourceSize = (
+    await execFileAsync('magick', ['identify', '-format', '%wx%h', source])
+  ).stdout.trim();
+  if (sourceSize !== '3840x1876')
+    throw new Error(`Unexpected Hanafuda source size: ${sourceSize}`);
+  // The scan has 12 deck columns plus two spare cards in a partial thirteenth
+  // column. Its physical cards sit inside uneven white gutters, so dividing the
+  // full sheet into 13 equal cells clips one edge and includes its neighbor.
+  // These bounds end in the gutters around each of the 48 deck cards.
+  const columnBounds = [
+    [16, 325],
+    [326, 618],
+    [619, 907],
+    [908, 1199],
+    [1200, 1488],
+    [1489, 1763],
+    [1764, 2062],
+    [2063, 2335],
+    [2336, 2632],
+    [2633, 2905],
+    [2906, 3208],
+    [3209, 3477],
+  ];
+  const rowBounds = [
+    [15, 480],
+    [481, 935],
+    [936, 1397],
+    [1398, 1858],
+  ];
   const cards = [];
   let cardIndex = 0;
   for (let month = 0; month < 12; month += 1) {
@@ -1176,9 +1280,11 @@ async function renderHanafuda() {
       cardIndex += 1;
       const filename = `hanafuda-${String(cardIndex).padStart(2, '0')}.webp`;
       const output = join(directory, filename);
+      const [left, right] = columnBounds[month];
+      const [top, bottom] = rowBounds[row];
       await magick(source, output, [
         '-crop',
-        `${cellWidth}x${cellHeight}+${month * cellWidth}+${row * cellHeight}`,
+        `${right - left + 1}x${bottom - top + 1}+${left}+${top}`,
         '-fuzz',
         '7%',
         '-trim',
@@ -1207,6 +1313,7 @@ async function renderHanafuda() {
     }
   }
   await writeManifest(slug, {
+    renderRevision,
     sourceCollection: info.descriptionurl,
     rightsNote:
       'This is a public-domain early-Shōwa Hachihachi hanafuda deck (1926–1945), arranged by month from January through December.',

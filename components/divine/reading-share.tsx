@@ -3,10 +3,11 @@
 import { useMemo, useState } from 'react';
 import type { CSSProperties } from 'react';
 import Image from 'next/image';
-import { Check, Copy, ImageDown, Share2 } from 'lucide-react';
+import { Check, Copy, ImageDown, LoaderCircle, Share2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { READING_INDEX_ART } from '@/lib/divine/catalog';
 import {
+  composeShare,
   createReadingShareToken,
   createReadingShareUrl,
 } from '@/lib/divine/share';
@@ -55,6 +56,10 @@ export function ReadingShare({
     () => createReadingShareToken(record, includeQuestion),
     [record, includeQuestion],
   );
+  const composition = useMemo(
+    () => composeShare(record, includeQuestion),
+    [record, includeQuestion],
+  );
   const finish = (next: LinkStatus, announcement: string) => {
     setStatus(next);
     onAnnounce(announcement);
@@ -71,13 +76,47 @@ export function ReadingShare({
             ? 8
             : 12;
   const dense = cardCount > 10;
+  const drawnImageSizes =
+    cardCount === 1
+      ? '(max-width: 720px) calc(100vw - 96px), 460px'
+      : cardCount <= 3
+        ? '(max-width: 720px) 44vw, 330px'
+        : cardCount <= 5
+          ? '(max-width: 720px) 104px, 240px'
+          : '(max-width: 720px) 104px, 190px';
+  const shareLabel =
+    status === 'working'
+      ? 'Opening share options'
+      : status === 'shared'
+        ? 'Reading shared'
+        : status === 'copied'
+          ? 'Reading link copied'
+          : 'Share reading';
+  const copyLabel =
+    status === 'working'
+      ? 'Copying reading link'
+      : status === 'copied'
+        ? 'Reading link copied'
+        : status === 'error'
+          ? 'Try copying reading link again'
+          : 'Copy reading link';
+  const imageLabel =
+    imageStatus === 'working'
+      ? 'Creating image keepsake'
+      : imageStatus === 'downloaded'
+        ? 'Image keepsake saved'
+        : imageStatus === 'shared'
+          ? 'Image keepsake shared'
+          : imageStatus === 'error'
+            ? 'Try creating image keepsake again'
+            : 'Create image keepsake';
 
   const copy = async () => {
     if (status === 'working') return;
     setStatus('working');
     try {
       await copyText(linkFor(record, includeQuestion));
-      finish('copied', 'Private reading link copied.');
+      finish('copied', 'Reading link copied.');
     } catch {
       finish('error', 'The reading link could not be copied.');
     }
@@ -112,6 +151,7 @@ export function ReadingShare({
       <p className="reading-share-kicker">Share this reading</p>
       <article
         className={`reading-share-card ${dense ? 'is-dense' : ''} ${cardCount ? 'has-cards' : 'is-object-reading'}`}
+        data-card-count={cardCount || undefined}
       >
         <header className="reading-share-card-top">
           <span>DIVINE</span>
@@ -128,11 +168,7 @@ export function ReadingShare({
             <p>
               {record.systemName} · {record.spreadName}
             </p>
-            <h2 id="reading-share-title">
-              {cardCount
-                ? record.interpretation.headline
-                : 'The answer has arrived.'}
-            </h2>
+            <h2 id="reading-share-title">{composition.displayHeadline}</h2>
           </div>
           <figure className="reading-share-method-art">
             <span>
@@ -140,7 +176,7 @@ export function ReadingShare({
                 src={READING_INDEX_ART[record.system]}
                 alt=""
                 fill
-                sizes="(max-width: 720px) 32vw, 190px"
+                sizes="(max-width: 720px) 32vw, 270px"
                 style={{ objectFit: 'contain' }}
               />
             </span>
@@ -156,11 +192,18 @@ export function ReadingShare({
           <div
             className="reading-share-draws"
             style={{ '--share-columns': columns } as CSSProperties}
-            aria-label={`${cardCount} cards drawn`}
+            aria-label={`${cardCount} ${cardCount === 1 ? 'card' : 'cards'} drawn`}
           >
             {record.draws.map((draw, index) => (
               <figure key={`${draw.card.id}-${index}`}>
-                <span className="reading-share-drawn-card">
+                <span
+                  className="reading-share-drawn-card"
+                  style={
+                    {
+                      '--share-card-ratio': draw.card.aspectRatio ?? 2 / 3,
+                    } as CSSProperties
+                  }
+                >
                   {draw.card.image ? (
                     <Image
                       src={draw.card.image}
@@ -169,7 +212,7 @@ export function ReadingShare({
                       height={Math.round(
                         360 / (draw.card.aspectRatio ?? 2 / 3),
                       )}
-                      sizes="(max-width: 720px) 24vw, 150px"
+                      sizes={drawnImageSizes}
                       className={draw.reversed ? 'is-reversed' : ''}
                     />
                   ) : (
@@ -200,7 +243,9 @@ export function ReadingShare({
           </div>
         )}
         <footer className="reading-share-card-footer">
-          <span>{record.focus} focus</span>
+          <span>
+            {record.focus.charAt(0).toUpperCase() + record.focus.slice(1)} focus
+          </span>
           <span>
             {cardCount
               ? `${cardCount} ${cardCount === 1 ? 'card' : 'cards'} drawn`
@@ -210,7 +255,7 @@ export function ReadingShare({
       </article>
       <div className="reading-share-controls">
         <div className="reading-share-link" aria-label="Unique reading link">
-          <span>A private link to this exact reading</span>
+          <span>Anyone with this link can view this reading</span>
           <code>
             divine / {record.system} / {token.slice(-8)}
           </code>
@@ -242,51 +287,56 @@ export function ReadingShare({
         )}
         <div className="reading-share-actions">
           <Button
-            className="primary-action"
+            className="primary-action icon-action"
             onClick={() => void share()}
             disabled={status === 'working'}
+            aria-label={shareLabel}
+            title={shareLabel}
           >
-            {status === 'shared' || status === 'copied' ? (
+            {status === 'working' ? (
+              <LoaderCircle className="action-spinner" />
+            ) : status === 'shared' || status === 'copied' ? (
               <Check />
             ) : (
               <Share2 />
             )}
-            {status === 'working'
-              ? 'Opening…'
-              : status === 'shared'
-                ? 'Shared'
-                : status === 'copied'
-                  ? 'Link copied'
-                  : 'Share reading'}
           </Button>
           <Button
-            className="quiet-action"
+            className="quiet-action icon-action"
             onClick={() => void copy()}
             disabled={status === 'working'}
+            aria-label={copyLabel}
+            title={copyLabel}
           >
-            {status === 'copied' ? <Check /> : <Copy />}
-            {status === 'copied' ? 'Copied' : 'Copy link'}
+            {status === 'working' ? (
+              <LoaderCircle className="action-spinner" />
+            ) : status === 'copied' ? (
+              <Check />
+            ) : (
+              <Copy />
+            )}
           </Button>
           <Button
-            className="quiet-action"
+            className="quiet-action icon-action"
             onClick={onImageExport}
             disabled={imageStatus === 'working'}
+            aria-label={imageLabel}
+            title={imageLabel}
           >
-            <ImageDown />
-            {imageStatus === 'working'
-              ? 'Rendering…'
-              : imageStatus === 'downloaded'
-                ? 'Image saved'
-                : imageStatus === 'shared'
-                  ? 'Image shared'
-                  : 'Image keepsake'}
+            {imageStatus === 'working' ? (
+              <LoaderCircle className="action-spinner" />
+            ) : imageStatus === 'downloaded' || imageStatus === 'shared' ? (
+              <Check />
+            ) : (
+              <ImageDown />
+            )}
           </Button>
         </div>
         {(status === 'error' || imageStatus === 'error') && (
           <output className="reading-share-error">
             {status === 'error'
               ? 'The link could not be shared. Try copying it again.'
-              : 'The keepsake image could not be created. The link still works.'}
+              : 'The image could not be created. The link still works.'}
           </output>
         )}
       </div>
@@ -306,18 +356,24 @@ export function CopyReadingLinkButton({ record }: { record: ReadingRecord }) {
   };
   return (
     <Button
-      className="quiet-action"
+      className="quiet-action icon-action"
       onClick={() => void copy()}
       aria-label={
-        status === 'error' ? 'Try copying share link again' : 'Copy share link'
+        status === 'copied'
+          ? 'Reading link copied'
+          : status === 'error'
+            ? 'Try copying reading link again'
+            : 'Copy reading link'
+      }
+      title={
+        status === 'copied'
+          ? 'Reading link copied'
+          : status === 'error'
+            ? 'Try copying reading link again'
+            : 'Copy reading link'
       }
     >
       {status === 'copied' ? <Check /> : <Share2 />}
-      {status === 'copied'
-        ? 'Link copied'
-        : status === 'error'
-          ? 'Try copy again'
-          : 'Share link'}
     </Button>
   );
 }
