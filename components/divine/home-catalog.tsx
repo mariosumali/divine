@@ -844,12 +844,7 @@ export function HomeCatalog() {
         </span>
         <span className="astrology-home-copy">
           <small>New / Astrology studio</small>
-          <strong>
-            Read the sky.
-            <br />
-            Keep your agency.
-          </strong>
-          <span>Horoscopes · signs · alignment · open chart atlas</span>
+          <strong>Read the sky.</strong>
           <i>
             Enter <span aria-hidden="true">↗</span>
           </i>
