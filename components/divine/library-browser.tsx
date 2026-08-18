@@ -1,7 +1,14 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { ArrowRight, ExternalLink, Search } from 'lucide-react';
+import type { CSSProperties, KeyboardEvent as ReactKeyboardEvent } from 'react';
+import {
+  ArrowRight,
+  ChevronLeft,
+  ChevronRight,
+  ExternalLink,
+  Search,
+} from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Input } from '@/components/ui/input';
@@ -14,6 +21,16 @@ import {
 import { METHOD_HISTORIES } from '@/lib/divine/library';
 import { SYSTEMS } from '@/lib/divine/systems';
 import type { CardDefinition, SystemSlug } from '@/lib/divine/types';
+
+function circularOffset(index: number, activeIndex: number, total: number) {
+  let offset = index - activeIndex;
+  const midpoint = total / 2;
+
+  if (offset > midpoint) offset -= total;
+  if (offset < -midpoint) offset += total;
+
+  return offset;
+}
 
 function CardPortrait({
   card,
@@ -59,10 +76,15 @@ function CardPortrait({
 }
 
 export function LibraryBrowser() {
+  const { cue } = useExperience();
   const [activeSlug, setActiveSlug] = useState<SystemSlug>('tarot');
   const [query, setQuery] = useState('');
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const system = SYSTEMS.find((item) => item.slug === activeSlug) ?? SYSTEMS[0];
+  const activeIndex = Math.max(
+    0,
+    SYSTEMS.findIndex((item) => item.slug === activeSlug),
+  );
+  const system = SYSTEMS[activeIndex] ?? SYSTEMS[0];
   const history = METHOD_HISTORIES[system.slug];
   const filteredCards = useMemo(() => {
     const normalized = query.trim().toLowerCase();
@@ -88,9 +110,34 @@ export function LibraryBrowser() {
     null;
 
   const chooseSystem = (slug: SystemSlug) => {
+    cue('tick');
     setActiveSlug(slug);
     setQuery('');
     setSelectedId(null);
+  };
+
+  const flipSystem = (direction: -1 | 1) => {
+    const nextIndex =
+      (activeIndex + direction + SYSTEMS.length) % SYSTEMS.length;
+    chooseSystem(SYSTEMS[nextIndex].slug);
+  };
+
+  const handleRolodexKeyDown = (
+    event: ReactKeyboardEvent<HTMLElement>,
+  ) => {
+    if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      flipSystem(-1);
+    } else if (event.key === 'ArrowRight') {
+      event.preventDefault();
+      flipSystem(1);
+    } else if (event.key === 'Home') {
+      event.preventDefault();
+      chooseSystem(SYSTEMS[0].slug);
+    } else if (event.key === 'End') {
+      event.preventDefault();
+      chooseSystem(SYSTEMS[SYSTEMS.length - 1].slug);
+    }
   };
 
   return (
@@ -100,18 +147,101 @@ export function LibraryBrowser() {
         <h1>Library</h1>
       </header>
 
-      <nav className="library-system-nav" aria-label="Reading methods">
-        {SYSTEMS.map((item) => (
-          <button
-            type="button"
-            key={item.slug}
-            className={item.slug === system.slug ? 'active' : ''}
-            aria-pressed={item.slug === system.slug}
-            onClick={() => chooseSystem(item.slug)}
-          >
-            {item.name}
-          </button>
-        ))}
+      <nav
+        className="library-system-nav"
+        aria-label="Reading methods"
+        onKeyDown={handleRolodexKeyDown}
+      >
+        <div className="library-rolodex-heading" aria-hidden="true">
+          <span>Reading index</span>
+          <span>Flip through the archive</span>
+        </div>
+
+        <button
+          className="library-rolodex-control is-previous"
+          type="button"
+          aria-label="Previous reading method"
+          onClick={() => flipSystem(-1)}
+        >
+          <ChevronLeft aria-hidden="true" />
+          <span>Previous</span>
+        </button>
+
+        <div className="library-rolodex-deck">
+          {SYSTEMS.map((item, index) => {
+            const offset = circularOffset(index, activeIndex, SYSTEMS.length);
+            const distance = Math.abs(offset);
+            const itemHistory = METHOD_HISTORIES[item.slug];
+            const isActive = item.slug === system.slug;
+
+            return (
+              <button
+                type="button"
+                key={item.slug}
+                className={`library-rolodex-card${isActive ? ' active' : ''}${distance > 2 ? ' is-hidden' : ''}`}
+                aria-pressed={isActive}
+                aria-label={`Select ${item.name}`}
+                tabIndex={distance <= 2 ? 0 : -1}
+                onClick={() => chooseSystem(item.slug)}
+                style={
+                  {
+                    '--rolodex-offset': offset,
+                    '--rolodex-distance': distance,
+                    zIndex: SYSTEMS.length - distance,
+                  } as CSSProperties
+                }
+              >
+                <span className="library-rolodex-tab" aria-hidden="true">
+                  {`${index + 1}`.padStart(2, '0')}
+                </span>
+                <span className="library-rolodex-card-top">
+                  <small>Reading method</small>
+                  <small>
+                    {`${index + 1}`.padStart(2, '0')} / {SYSTEMS.length}
+                  </small>
+                </span>
+                <strong>{item.name}</strong>
+                <span className="library-rolodex-card-bottom">
+                  <small>{itemHistory.origin}</small>
+                  <small>{itemHistory.period}</small>
+                </span>
+              </button>
+            );
+          })}
+          <span className="library-rolodex-spindle" aria-hidden="true">
+            <i />
+            <i />
+          </span>
+        </div>
+
+        <button
+          className="library-rolodex-control is-next"
+          type="button"
+          aria-label="Next reading method"
+          onClick={() => flipSystem(1)}
+        >
+          <span>Next</span>
+          <ChevronRight aria-hidden="true" />
+        </button>
+
+        <div className="library-rolodex-index" aria-label="Choose a reading method">
+          {SYSTEMS.map((item, index) => (
+            <button
+              type="button"
+              key={item.slug}
+              className={item.slug === system.slug ? 'active' : ''}
+              aria-label={item.name}
+              aria-current={item.slug === system.slug ? 'true' : undefined}
+              onClick={() => chooseSystem(item.slug)}
+            >
+              <span>{`${index + 1}`.padStart(2, '0')}</span>
+            </button>
+          ))}
+        </div>
+
+        <p className="sr-only" aria-live="polite">
+          {system.name}, method {activeIndex + 1} of {SYSTEMS.length}
+        </p>
       </nav>
 
       <section className="method-history" aria-labelledby="method-title">

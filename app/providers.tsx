@@ -217,6 +217,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
           </div>
         </header>
         {children}
+        <footer className="site-footer">
+          <a href="https://mariosumali.com">Created by Mario Sumali</a>
+        </footer>
       </div>
 
       <AnimatePresence>

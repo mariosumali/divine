@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { READING_INDEX_ART } from './catalog';
 import { interpretReading, objectInterpretation } from './reading';
 import {
   composeShare,
@@ -53,7 +54,10 @@ describe('share composition privacy', () => {
     expect(composition.cards[0]).toMatchObject({
       position: 'Position 1',
       reversed: true,
+      glyph: draws[0].card.glyph,
+      image: draws[0].card.image,
     });
+    expect(composition.methodArt).toBe(READING_INDEX_ART[record.system]);
   });
 
   it('round-trips an exact card reading through a share link', () => {
