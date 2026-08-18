@@ -4089,6 +4089,7 @@ button {
   padding: 0 0 64px;
 }
 .result-hero {
+  position: relative;
   width: 100%;
   min-height: calc(100svh - 46px);
   max-width: 1480px;
@@ -4146,12 +4147,14 @@ button {
   transform: translate(-50%, 55%);
 }
 .result-scroll-cue {
-  width: 48px;
-  height: 64px;
+  position: absolute;
+  left: 50%;
+  bottom: clamp(20px, 3.5vh, 42px);
+  width: 44px;
+  height: 44px;
   display: grid;
   place-items: center;
-  margin-top: clamp(34px, 6vh, 72px);
-  border: 1px solid var(--line);
+  margin-left: -22px;
   color: var(--ink);
 }
 .result-scroll-cue svg {
@@ -6303,8 +6306,8 @@ button {
   }
   .result-scroll-cue {
     width: 44px;
-    height: 52px;
-    margin: 30px auto 0;
+    height: 44px;
+    margin-left: -22px;
   }
   .result-opening-card .result-card-object {
     width: min(215px, 56vw, 34svh);

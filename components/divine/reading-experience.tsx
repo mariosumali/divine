@@ -21,7 +21,7 @@ import {
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { SystemRitual } from '@/components/divine/system-ritual';
+// import { SystemRitual } from '@/components/divine/system-ritual';
 import { ReadingShare } from '@/components/divine/reading-share';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -824,9 +824,9 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
   const [cookieGestureProgress, setCookieGestureProgress] = useState(0);
   const [isRevealingAll, setIsRevealingAll] = useState(false);
   const [cardRitualStep, setCardRitualStep] = useState(0);
-  const [cardRitualAnimating, setCardRitualAnimating] = useState(false);
+  const [, setCardRitualAnimating] = useState(false);
   const [cardRitualDealing, setCardRitualDealing] = useState(false);
-  const [cardGestureProgress, setCardGestureProgress] = useState(0);
+  const [, setCardGestureProgress] = useState(0);
   const [ramlLines, setRamlLines] = useState<number[]>([]);
   const [shareStatus, setShareStatus] = useState<ShareStatus>('idle');
   const [isSharedView, setIsSharedView] = useState(false);
@@ -1111,6 +1111,17 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
     ramlLines,
   ]);
 
+  useEffect(() => {
+    if (
+      CARD_UNWRAPPING_ENABLED ||
+      !sessionReady ||
+      system.kind !== 'cards' ||
+      stage !== 'ritual'
+    )
+      return;
+    queueMicrotask(() => setStage(draws.length ? 'reveal' : 'method'));
+  }, [draws.length, sessionReady, stage, system.kind]);
+
   const record = useMemo<ReadingRecord | null>(
     () =>
       interpretation
@@ -1154,15 +1165,6 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
   const deckFinish = isCardSystemSlug(system.slug)
     ? deckFinishes[system.slug]
     : 'ink';
-  const cardSystemSlug = isCardSystemSlug(system.slug) ? system.slug : null;
-  const ritualSystemSlug =
-    cardSystemSlug ?? (system.slug === 'divine' ? 'divine' : null);
-  const cardRitual =
-    system.slug === 'divine'
-      ? DIVINE_RITUAL
-      : cardSystemSlug
-        ? ritualForSystem(cardSystemSlug)
-        : null;
   const openingDraw = draws[0] ?? null;
   const visualSystemFor = (draw: DrawnCard) =>
     draw.card.sourceSystem ?? system.slug;
@@ -1265,8 +1267,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
     setCardRitualAnimating(false);
     setCardRitualDealing(true);
     setAnnouncement(
-      cardRitual?.completion ??
-        `${spread.positions.length} ${spread.positions.length === 1 ? 'card is' : 'cards are'} entering the field.`,
+      `${spread.positions.length} ${spread.positions.length === 1 ? 'card is' : 'cards are'} entering the field.`,
     );
     const reveal = () => {
       setCardRitualDealing(false);
@@ -1282,15 +1283,13 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
   };
 
   const continueFromMethod = () => {
-    if (CARD_UNWRAPPING_ENABLED) {
-      move('ritual');
-      return;
-    }
+    // move('ritual'); // Card unwrapping is temporarily disabled.
     cue('tick');
     setShuffled(true);
     deal(0);
   };
 
+  /* Card-unwrapping interaction temporarily disabled.
   const advanceCardRitual = (gestureValue?: number) => {
     if (!cardRitual || cardRitualAnimating || cardRitualDealing) return;
     const action = cardRitual.actions[cardRitualStep];
@@ -1319,6 +1318,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
       deckTimer.current = null;
     }, action.duration);
   };
+  */
 
   const finishCards = () => {
     if (!spread || ritualLock.current) return;
@@ -1684,6 +1684,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
           </motion.section>
         )}
 
+        {/* Card-unwrapping UI temporarily disabled.
         {stage === 'ritual' &&
           system.kind === 'cards' &&
           ritualSystemSlug &&
@@ -1708,6 +1709,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
               />
             </motion.section>
           )}
+        */}
 
         {stage === 'ritual' && system.kind === 'ball' && (
           <motion.section
@@ -1963,18 +1965,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
                 <h1>
                   <KineticText text={interpretation.headline} />
                 </h1>
-                {openingDraw ? (
-                  <motion.a
-                    href="#full-reading"
-                    className="result-scroll-cue"
-                    aria-label="Go to the full reading"
-                    initial={{ opacity: 0, y: -12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.9 }}
-                  >
-                    <ArrowDown />
-                  </motion.a>
-                ) : (
+                {!openingDraw && (
                   <motion.p
                     className="result-overview"
                     initial={{ opacity: 0, clipPath: 'inset(0 0 100%)' }}
@@ -2008,6 +1999,18 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
                     onTurn={() => cue('turn')}
                   />
                 </motion.div>
+              )}
+              {openingDraw && (
+                <motion.a
+                  href="#full-reading"
+                  className="result-scroll-cue"
+                  aria-label="Go to the full reading"
+                  initial={{ opacity: 0, y: -12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.9 }}
+                >
+                  <ArrowDown />
+                </motion.a>
               )}
             </header>
             {system.kind !== 'cards' && luckyNumbers.length > 0 && (
