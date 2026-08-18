@@ -1963,18 +1963,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
                 <h1>
                   <KineticText text={interpretation.headline} />
                 </h1>
-                {openingDraw ? (
-                  <motion.a
-                    href="#full-reading"
-                    className="result-scroll-cue"
-                    aria-label="Go to the full reading"
-                    initial={{ opacity: 0, y: -12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.9 }}
-                  >
-                    <ArrowDown />
-                  </motion.a>
-                ) : (
+                {!openingDraw && (
                   <motion.p
                     className="result-overview"
                     initial={{ opacity: 0, clipPath: 'inset(0 0 100%)' }}
@@ -2008,6 +1997,18 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
                     onTurn={() => cue('turn')}
                   />
                 </motion.div>
+              )}
+              {openingDraw && (
+                <motion.a
+                  href="#full-reading"
+                  className="result-scroll-cue"
+                  aria-label="Go to the full reading"
+                  initial={{ opacity: 0, y: -12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.9 }}
+                >
+                  <ArrowDown />
+                </motion.a>
               )}
             </header>
             {system.kind !== 'cards' && luckyNumbers.length > 0 && (
