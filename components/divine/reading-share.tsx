@@ -1,8 +1,11 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { Check, Copy, ImageDown, Link2, Share2 } from 'lucide-react';
+import type { CSSProperties } from 'react';
+import Image from 'next/image';
+import { Check, Copy, ImageDown, Share2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { READING_INDEX_ART } from '@/lib/divine/catalog';
 import {
   createReadingShareToken,
   createReadingShareUrl,
@@ -56,6 +59,18 @@ export function ReadingShare({
     setStatus(next);
     onAnnounce(announcement);
   };
+  const cardCount = record.draws.length;
+  const columns =
+    cardCount <= 1
+      ? 1
+      : cardCount <= 5
+        ? cardCount
+        : cardCount <= 10
+          ? 5
+          : cardCount <= 20
+            ? 8
+            : 12;
+  const dense = cardCount > 10;
 
   const copy = async () => {
     if (status === 'working') return;
@@ -94,95 +109,187 @@ export function ReadingShare({
 
   return (
     <section className="reading-share" aria-labelledby="reading-share-title">
-      <div className="reading-share-orbit" aria-hidden="true">
-        <i />
-        <i />
-        <i />
-      </div>
-      <header className="reading-share-heading">
-        <p className="eyebrow">Pass the pattern on</p>
-        <h2 id="reading-share-title">A reading made to travel.</h2>
-        <p>
-          Send this exact constellation to someone. No account, no journal, just
-          the reading held inside the link.
-        </p>
-      </header>
-      <div className="reading-share-seal" aria-hidden="true">
-        <Share2 />
-        <span>Divine</span>
-      </div>
-      <div className="reading-share-link" aria-label="Unique reading link">
-        <span>
-          <Link2 /> divine / {record.system}
-        </span>
-        <code>{token.slice(-12)}</code>
-      </div>
-      {record.question && (
-        <label
-          className="reading-share-privacy"
-          aria-label="Include my question in the shared link"
-        >
-          <input
-            type="checkbox"
-            checked={includeQuestion}
-            onChange={(event) => onIncludeQuestionChange(event.target.checked)}
-          />
+      <p className="reading-share-kicker">Share this reading</p>
+      <article
+        className={`reading-share-card ${dense ? 'is-dense' : ''} ${cardCount ? 'has-cards' : 'is-object-reading'}`}
+      >
+        <header className="reading-share-card-top">
+          <span>DIVINE</span>
+          <time dateTime={record.createdAt}>
+            {new Date(record.createdAt).toLocaleDateString(undefined, {
+              month: 'short',
+              day: 'numeric',
+              year: 'numeric',
+            })}
+          </time>
+        </header>
+        <div className="reading-share-card-intro">
+          <div>
+            <p>
+              {record.systemName} · {record.spreadName}
+            </p>
+            <h2 id="reading-share-title">
+              {cardCount
+                ? record.interpretation.headline
+                : 'The answer has arrived.'}
+            </h2>
+          </div>
+          <figure className="reading-share-method-art">
+            <span>
+              <Image
+                src={READING_INDEX_ART[record.system]}
+                alt=""
+                fill
+                sizes="(max-width: 720px) 32vw, 190px"
+                style={{ objectFit: 'contain' }}
+              />
+            </span>
+            <figcaption>{record.systemName}</figcaption>
+          </figure>
+        </div>
+        {includeQuestion && record.question && (
+          <blockquote className="reading-share-card-question">
+            “{record.question}”
+          </blockquote>
+        )}
+        {cardCount > 0 ? (
+          <div
+            className="reading-share-draws"
+            style={{ '--share-columns': columns } as CSSProperties}
+            aria-label={`${cardCount} cards drawn`}
+          >
+            {record.draws.map((draw, index) => (
+              <figure key={`${draw.card.id}-${index}`}>
+                <span className="reading-share-drawn-card">
+                  {draw.card.image ? (
+                    <Image
+                      src={draw.card.image}
+                      alt={`${draw.card.name}${draw.reversed ? ', reversed' : ''}`}
+                      width={360}
+                      height={Math.round(
+                        360 / (draw.card.aspectRatio ?? 2 / 3),
+                      )}
+                      sizes="(max-width: 720px) 24vw, 150px"
+                      className={draw.reversed ? 'is-reversed' : ''}
+                    />
+                  ) : (
+                    <strong aria-hidden="true">{draw.card.glyph}</strong>
+                  )}
+                  <i>{`${index + 1}`.padStart(2, '0')}</i>
+                </span>
+                <figcaption className={dense ? 'sr-only' : undefined}>
+                  <span>{draw.position}</span>
+                  <strong>
+                    {draw.card.sourceSystemName
+                      ? `${draw.card.sourceSystemName} · `
+                      : ''}
+                    {draw.card.name}
+                    {draw.reversed ? ' · reversed' : ''}
+                  </strong>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        ) : (
+          <div className="reading-share-object-answer">
+            <small>The answer</small>
+            <p>{record.interpretation.headline}</p>
+            {record.luckyNumbers && record.luckyNumbers.length > 0 && (
+              <span>{record.luckyNumbers.join(' · ')}</span>
+            )}
+          </div>
+        )}
+        <footer className="reading-share-card-footer">
+          <span>{record.focus} focus</span>
           <span>
-            <strong>Include my question</strong>
-            <small>Your reflection and journal notes are never included.</small>
+            {cardCount
+              ? `${cardCount} ${cardCount === 1 ? 'card' : 'cards'} drawn`
+              : record.systemName}
           </span>
-        </label>
-      )}
-      {!record.question && (
-        <p className="reading-share-private-note">
-          Your reflection and journal notes are never included.
-        </p>
-      )}
-      <div className="reading-share-actions">
-        <Button
-          className="primary-action"
-          onClick={() => void share()}
-          disabled={status === 'working'}
-        >
-          {status === 'shared' || status === 'copied' ? <Check /> : <Share2 />}
-          {status === 'working'
-            ? 'Opening…'
-            : status === 'shared'
-              ? 'Shared'
-              : status === 'copied'
-                ? 'Link copied'
-                : 'Share reading'}
-        </Button>
-        <Button
-          className="quiet-action"
-          onClick={() => void copy()}
-          disabled={status === 'working'}
-        >
-          {status === 'copied' ? <Check /> : <Copy />}
-          {status === 'copied' ? 'Copied' : 'Copy link'}
-        </Button>
-        <Button
-          className="quiet-action"
-          onClick={onImageExport}
-          disabled={imageStatus === 'working'}
-        >
-          <ImageDown />
-          {imageStatus === 'working'
-            ? 'Rendering…'
-            : imageStatus === 'downloaded'
-              ? 'Image saved'
-              : imageStatus === 'shared'
-                ? 'Image shared'
-                : 'Image keepsake'}
-        </Button>
+        </footer>
+      </article>
+      <div className="reading-share-controls">
+        <div className="reading-share-link" aria-label="Unique reading link">
+          <span>A private link to this exact reading</span>
+          <code>
+            divine / {record.system} / {token.slice(-8)}
+          </code>
+        </div>
+        {record.question && (
+          <label
+            className="reading-share-privacy"
+            aria-label="Include my question in the shared link"
+          >
+            <input
+              type="checkbox"
+              checked={includeQuestion}
+              onChange={(event) =>
+                onIncludeQuestionChange(event.target.checked)
+              }
+            />
+            <span>
+              <strong>Include my question</strong>
+              <small>
+                Your reflection and journal notes are never included.
+              </small>
+            </span>
+          </label>
+        )}
+        {!record.question && (
+          <p className="reading-share-private-note">
+            Your reflection and journal notes are never included.
+          </p>
+        )}
+        <div className="reading-share-actions">
+          <Button
+            className="primary-action"
+            onClick={() => void share()}
+            disabled={status === 'working'}
+          >
+            {status === 'shared' || status === 'copied' ? (
+              <Check />
+            ) : (
+              <Share2 />
+            )}
+            {status === 'working'
+              ? 'Opening…'
+              : status === 'shared'
+                ? 'Shared'
+                : status === 'copied'
+                  ? 'Link copied'
+                  : 'Share reading'}
+          </Button>
+          <Button
+            className="quiet-action"
+            onClick={() => void copy()}
+            disabled={status === 'working'}
+          >
+            {status === 'copied' ? <Check /> : <Copy />}
+            {status === 'copied' ? 'Copied' : 'Copy link'}
+          </Button>
+          <Button
+            className="quiet-action"
+            onClick={onImageExport}
+            disabled={imageStatus === 'working'}
+          >
+            <ImageDown />
+            {imageStatus === 'working'
+              ? 'Rendering…'
+              : imageStatus === 'downloaded'
+                ? 'Image saved'
+                : imageStatus === 'shared'
+                  ? 'Image shared'
+                  : 'Image keepsake'}
+          </Button>
+        </div>
+        {(status === 'error' || imageStatus === 'error') && (
+          <output className="reading-share-error">
+            {status === 'error'
+              ? 'The link could not be shared. Try copying it again.'
+              : 'The keepsake image could not be created. The link still works.'}
+          </output>
+        )}
       </div>
-      {(status === 'error' || imageStatus === 'error') && (
-        <output className="reading-share-error">
-          {status === 'error'
-            ? 'The link could not be shared. Try copying it again.'
-            : 'The keepsake image could not be created. The link still works.'}
-        </output>
-      )}
     </section>
   );
 }
@@ -205,7 +312,7 @@ export function CopyReadingLinkButton({ record }: { record: ReadingRecord }) {
         status === 'error' ? 'Try copying share link again' : 'Copy share link'
       }
     >
-      {status === 'copied' ? <Check /> : <Link2 />}
+      {status === 'copied' ? <Check /> : <Share2 />}
       {status === 'copied'
         ? 'Link copied'
         : status === 'error'

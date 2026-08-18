@@ -1,6 +1,7 @@
 export const ASTROLOGY_SIGNS = [
   {
     name: 'Aries',
+    art: '/astrology/signs/aries.webp',
     dates: 'Mar 21 — Apr 19',
     element: 'Fire',
     modality: 'Cardinal',
@@ -15,6 +16,7 @@ export const ASTROLOGY_SIGNS = [
   },
   {
     name: 'Taurus',
+    art: '/astrology/signs/taurus.webp',
     dates: 'Apr 20 — May 20',
     element: 'Earth',
     modality: 'Fixed',
@@ -29,6 +31,7 @@ export const ASTROLOGY_SIGNS = [
   },
   {
     name: 'Gemini',
+    art: '/astrology/signs/gemini.webp',
     dates: 'May 21 — Jun 20',
     element: 'Air',
     modality: 'Mutable',
@@ -43,6 +46,7 @@ export const ASTROLOGY_SIGNS = [
   },
   {
     name: 'Cancer',
+    art: '/astrology/signs/cancer.webp',
     dates: 'Jun 21 — Jul 22',
     element: 'Water',
     modality: 'Cardinal',
@@ -57,6 +61,7 @@ export const ASTROLOGY_SIGNS = [
   },
   {
     name: 'Leo',
+    art: '/astrology/signs/leo.webp',
     dates: 'Jul 23 — Aug 22',
     element: 'Fire',
     modality: 'Fixed',
@@ -71,6 +76,7 @@ export const ASTROLOGY_SIGNS = [
   },
   {
     name: 'Virgo',
+    art: '/astrology/signs/virgo.webp',
     dates: 'Aug 23 — Sep 22',
     element: 'Earth',
     modality: 'Mutable',
@@ -85,6 +91,7 @@ export const ASTROLOGY_SIGNS = [
   },
   {
     name: 'Libra',
+    art: '/astrology/signs/libra.webp',
     dates: 'Sep 23 — Oct 22',
     element: 'Air',
     modality: 'Cardinal',
@@ -99,6 +106,7 @@ export const ASTROLOGY_SIGNS = [
   },
   {
     name: 'Scorpio',
+    art: '/astrology/signs/scorpio.webp',
     dates: 'Oct 23 — Nov 21',
     element: 'Water',
     modality: 'Fixed',
@@ -113,6 +121,7 @@ export const ASTROLOGY_SIGNS = [
   },
   {
     name: 'Sagittarius',
+    art: '/astrology/signs/sagittarius.webp',
     dates: 'Nov 22 — Dec 21',
     element: 'Fire',
     modality: 'Mutable',
@@ -127,6 +136,7 @@ export const ASTROLOGY_SIGNS = [
   },
   {
     name: 'Capricorn',
+    art: '/astrology/signs/capricorn.webp',
     dates: 'Dec 22 — Jan 19',
     element: 'Earth',
     modality: 'Cardinal',
@@ -141,6 +151,7 @@ export const ASTROLOGY_SIGNS = [
   },
   {
     name: 'Aquarius',
+    art: '/astrology/signs/aquarius.webp',
     dates: 'Jan 20 — Feb 18',
     element: 'Air',
     modality: 'Fixed',
@@ -155,6 +166,7 @@ export const ASTROLOGY_SIGNS = [
   },
   {
     name: 'Pisces',
+    art: '/astrology/signs/pisces.webp',
     dates: 'Feb 19 — Mar 20',
     element: 'Water',
     modality: 'Mutable',
