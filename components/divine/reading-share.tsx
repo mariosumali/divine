@@ -373,7 +373,7 @@ export function CopyReadingLinkButton({ record }: { record: ReadingRecord }) {
             : 'Copy reading link'
       }
     >
-      {status === 'copied' ? <Check /> : <Share2 />}
+      {status === 'copied' ? <Check /> : <Copy />}
     </Button>
   );
 }
