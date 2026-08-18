@@ -61,12 +61,7 @@ export function AstrologyStudio() {
       <section className="astrology-hero" aria-labelledby="astrology-title">
         <div className="astrology-hero-copy">
           <p className="astro-kicker">DIVINE / Astrology</p>
-          <h1 id="astrology-title">
-            Read the sky.
-            <br />
-            Keep your agency.
-          </h1>
-          <p>Signs, signals, and celestial archives.</p>
+          <h1 id="astrology-title">Read the sky.</h1>
           <a href="#today" onClick={() => cue('tick')}>
             Choose a sign <ArrowDown aria-hidden="true" />
           </a>

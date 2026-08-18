@@ -7,15 +7,13 @@ export const metadata: Metadata = {
     'Daily horoscopes, star-sign profiles, alignment readings, and an open atlas of historical celestial charts.',
   openGraph: {
     title: 'Astrology — DIVINE',
-    description:
-      'Read the sky. Keep your agency. Explore signs, horoscopes, alignment, and celestial charts.',
+    description: 'Explore signs, horoscopes, alignment, and celestial charts.',
     images: ['/astrology/zodiac-circle-medieval.webp'],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Astrology — DIVINE',
-    description:
-      'Read the sky. Keep your agency. Explore signs, horoscopes, alignment, and celestial charts.',
+    description: 'Explore signs, horoscopes, alignment, and celestial charts.',
     images: ['/astrology/zodiac-circle-medieval.webp'],
   },
 };
