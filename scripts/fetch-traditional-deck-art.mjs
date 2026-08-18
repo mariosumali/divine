@@ -184,12 +184,14 @@ async function writeManifest(slug, data) {
   );
 }
 
-async function isComplete(slug, count) {
+async function isComplete(slug, count, renderRevision) {
   try {
     const manifest = JSON.parse(
       await readFile(join(outputRoot, slug, 'manifest.json'), 'utf8'),
     );
     if (manifest.cards?.length !== count) return false;
+    if (renderRevision && manifest.renderRevision !== renderRevision)
+      return false;
     await Promise.all(
       manifest.cards.map(({ file }) => access(join(outputRoot, slug, file))),
     );
@@ -202,7 +204,8 @@ async function isComplete(slug, count) {
 
 async function renderKipper() {
   const slug = 'kipper';
-  if (await isComplete(slug, 36)) return;
+  const renderRevision = 2;
+  if (await isComplete(slug, 36, renderRevision)) return;
   const directory = join(outputRoot, slug);
   await mkdir(directory, { recursive: true });
 
@@ -213,51 +216,101 @@ async function renderKipper() {
   const source = join(scratch, 'kipper-museum.jpg');
   await download(museumSource, source);
 
-  // The museum photograph preserves cards 1–34 in four eight-card rows plus
-  // two cards on the final row. Boxes intentionally include a little white
-  // surround; the trim operation follows the physical card edges.
-  const rows = [
-    { x: 330, y: 235, step: 292, width: 300, height: 440, count: 8 },
-    { x: 270, y: 675, step: 303, width: 315, height: 460, count: 8 },
-    { x: 225, y: 1090, step: 309, width: 325, height: 475, count: 8 },
-    { x: 185, y: 1490, step: 314, width: 335, height: 500, count: 8 },
-    { x: 145, y: 1970, step: 375, width: 365, height: 620, count: 2 },
+  // The rows recede and skew independently in the museum photograph, so a
+  // fixed origin and step captures parts of adjacent rows. These cells end in
+  // the white gaps between cards and leave trim enough surround to find each
+  // physical edge. Cards 30–32 overlap in image-space; their four corners are
+  // rectified separately below.
+  const crops = [
+    '281x444+350+225',
+    '293x439+631+225',
+    '277x437+924+225',
+    '284x421+1201+225',
+    '287x426+1485+225',
+    '293x433+1772+225',
+    '293x434+2065+225',
+    '307x441+2358+225',
+    '314x437+305+669',
+    '297x427+619+664',
+    '290x414+916+662',
+    '300x427+1206+646',
+    '304x419+1506+651',
+    '287x418+1810+658',
+    '294x419+2097+659',
+    '314x408+2391+666',
+    '326x444+260+1106',
+    '309x452+586+1091',
+    '311x464+895+1076',
+    '304x460+1206+1073',
+    '339x463+1510+1070',
+    '278x451+1849+1076',
+    '303x445+2127+1078',
+    '315x441+2430+1074',
+    '338x473+215+1550',
+    '331x483+553+1543',
+    '323x480+884+1540',
+    '317x485+1207+1533',
+    '330x485+1524+1533',
+    {
+      crop: '500x600+1750+1450',
+      perspective: '108,94 0,0 390,88 300,0 420,529 300,460 133,531 0,460',
+    },
+    {
+      crop: '600x600+2050+1400',
+      perspective: '97,139 0,0 367,133 300,0 421,567 300,460 146,581 0,460',
+    },
+    {
+      crop: '550x600+2350+1400',
+      perspective: '114,130 0,0 397,127 300,0 445,571 300,460 162,582 0,460',
+    },
+    '345x507+180+2023',
+    '330x504+525+2026',
   ];
   const cards = [];
   let cardIndex = 0;
-  for (const row of rows) {
-    for (let column = 0; column < row.count; column += 1) {
-      cardIndex += 1;
-      const filename = `kipper-${String(cardIndex).padStart(2, '0')}.webp`;
-      const output = join(directory, filename);
-      await magick(source, output, [
-        '-crop',
-        `${row.width}x${row.height}+${row.x + row.step * column}+${row.y}`,
-        '-fuzz',
-        '11%',
-        '-trim',
-        '+repage',
-        '-auto-orient',
-        '-colorspace',
-        'sRGB',
-        '-resize',
-        '900x1200>',
-        '-strip',
-        '-quality',
-        '84',
-      ]);
-      cards.push({
-        cardIndex,
-        file: filename,
-        bytes: await bytes(output),
-        sourceTitle: 'Karten der berühmten Wahrsagerin Frau Kipper, cards 1–34',
-        sourceUrl: museumPage,
-        license: 'CC BY-SA 4.0',
-        artist:
-          'Matthias Seidlein (publisher); photograph by Peter Boesang / Museumsstiftung Post und Telekommunikation',
-        treatment: 'Cropped from the museum’s complete-object photograph.',
-      });
-    }
+  for (const crop of crops) {
+    cardIndex += 1;
+    const filename = `kipper-${String(cardIndex).padStart(2, '0')}.webp`;
+    const output = join(directory, filename);
+    const cropGeometry = typeof crop === 'string' ? crop : crop.crop;
+    const extraction =
+      typeof crop === 'string'
+        ? ['-fuzz', '8%', '-trim', '+repage']
+        : [
+            '-define',
+            'distort:viewport=300x460+0+0',
+            '-virtual-pixel',
+            'white',
+            '-distort',
+            'Perspective',
+            crop.perspective,
+            '+repage',
+          ];
+    await magick(source, output, [
+      '-crop',
+      cropGeometry,
+      '+repage',
+      ...extraction,
+      '-auto-orient',
+      '-colorspace',
+      'sRGB',
+      '-resize',
+      '900x1200>',
+      '-strip',
+      '-quality',
+      '84',
+    ]);
+    cards.push({
+      cardIndex,
+      file: filename,
+      bytes: await bytes(output),
+      sourceTitle: 'Karten der berühmten Wahrsagerin Frau Kipper, cards 1–34',
+      sourceUrl: museumPage,
+      license: 'CC BY-SA 4.0',
+      artist:
+        'Matthias Seidlein (publisher); photograph by Peter Boesang / Museumsstiftung Post und Telekommunikation',
+      treatment: 'Cropped from the museum’s complete-object photograph.',
+    });
   }
 
   const substitutes = [
@@ -312,6 +365,7 @@ async function renderKipper() {
   }
 
   await writeManifest(slug, {
+    renderRevision,
     sourceCollection: museumPage,
     rightsNote:
       'Cards 1–34 are crops of a CC BY-SA 4.0 museum photograph. Cards 35–36 use explicitly identified period substitutes because those faces are not visible in that photograph.',
