@@ -3,9 +3,6 @@ import { notFound } from 'next/navigation';
 import { ReadingExperience } from '@/components/divine/reading-experience';
 import { isSystemSlug, SYSTEMS, SYSTEM_MAP } from '@/lib/divine/systems';
 
-const PRODUCTION_ORIGIN =
-  'https://divine-readings.grassy-peony-5538.chatgpt.site';
-
 export function generateStaticParams() {
   return SYSTEMS.map((system) => ({ slug: system.slug }));
 }
@@ -20,7 +17,6 @@ export async function generateMetadata({
   const system = SYSTEM_MAP[slug];
   const title = `${system.name} reading — DIVINE`;
   const description = system.introduction;
-  const image = new URL(system.cover, PRODUCTION_ORIGIN).toString();
   return {
     title,
     description,
@@ -29,10 +25,10 @@ export async function generateMetadata({
       description,
       images: [
         {
-          url: image,
-          width: 1122,
-          height: 1402,
-          alt: `${system.name} cover artwork`,
+          url: '/og.jpg',
+          width: 1536,
+          height: 1024,
+          alt: 'DIVINE — eight instruments for the unknown',
         },
       ],
     },
@@ -40,7 +36,12 @@ export async function generateMetadata({
       card: 'summary_large_image',
       title,
       description,
-      images: [image],
+      images: [
+        {
+          url: '/og.jpg',
+          alt: 'DIVINE — eight instruments for the unknown',
+        },
+      ],
     },
   };
 }
