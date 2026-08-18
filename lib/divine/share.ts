@@ -1,4 +1,5 @@
 import { interpretReading, objectInterpretation } from './reading';
+import { READING_INDEX_ART } from './catalog';
 import type {
   Focus,
   ReadingRecord,
@@ -9,10 +10,18 @@ import type {
 export interface ShareComposition {
   title: string;
   subtitle: string;
+  methodArt: string;
   headline: string;
   synthesis: string;
   date: string;
-  cards: Array<{ name: string; position: string; reversed: boolean }>;
+  focus: Focus;
+  cards: Array<{
+    name: string;
+    position: string;
+    reversed: boolean;
+    glyph: string;
+    image?: string;
+  }>;
   question?: string;
 }
 
@@ -225,13 +234,17 @@ export function composeShare(
   return {
     title: 'DIVINE',
     subtitle: `${record.systemName} · ${record.spreadName}`,
+    methodArt: READING_INDEX_ART[record.system],
     headline: record.interpretation.headline,
     synthesis: record.interpretation.synthesis,
     date: record.createdAt,
+    focus: record.focus,
     cards: record.draws.map((draw) => ({
       name: `${draw.card.sourceSystemName ? `${draw.card.sourceSystemName} · ` : ''}${draw.card.name}`,
       position: draw.position,
       reversed: draw.reversed,
+      glyph: draw.card.glyph,
+      image: draw.card.image,
     })),
     question: includeQuestion ? record.question : undefined,
   };

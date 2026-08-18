@@ -2,9 +2,9 @@
 
 import { useMemo, useState } from 'react';
 import { motion } from 'motion/react';
-import { ArrowDown, ArrowRight } from 'lucide-react';
+import { Dialog } from '@base-ui/react/dialog';
+import { ArrowDown, X } from 'lucide-react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useExperience } from '@/app/providers';
 import {
   alignmentFor,
@@ -47,13 +47,9 @@ export function AstrologyStudio() {
     [firstIndex, secondIndex],
   );
 
-  const chooseSign = (index: number, moveToReading = false) => {
+  const chooseSign = (index: number) => {
     setActiveIndex(index);
     cue('tick');
-
-    if (moveToReading) {
-      document.querySelector('#today')?.scrollIntoView({ behavior: 'smooth' });
-    }
   };
 
   return (
@@ -84,7 +80,6 @@ export function AstrologyStudio() {
 
       <nav className="astrology-subnav" aria-label="Astrology sections">
         <a href="#today">Today</a>
-        <a href="#signs">Signs</a>
         <a href="#alignment">Alignment</a>
         <a href="#atlas">Atlas</a>
       </nav>
@@ -99,58 +94,16 @@ export function AstrologyStudio() {
           <h2 id="today-title">Today, briefly.</h2>
         </header>
 
-        <div className="sign-switcher" aria-label="Choose your sun sign">
+        <div
+          className="sign-profile-grid daily-sign-grid"
+          aria-label="Choose your sun sign"
+        >
           {ASTROLOGY_SIGNS.map((sign, index) => (
             <button
               type="button"
               className={activeIndex === index ? 'active' : ''}
               aria-pressed={activeIndex === index}
               onClick={() => chooseSign(index)}
-              key={sign.name}
-            >
-              <ZodiacMark sign={sign.name} />
-              {sign.name}
-            </button>
-          ))}
-        </div>
-
-        <motion.article
-          className="horoscope-reading"
-          key={activeSign.name}
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45 }}
-        >
-          <div className="horoscope-signature">
-            <ZodiacMark
-              sign={activeSign.name}
-              label={`${activeSign.name} zodiac sign`}
-            />
-            <p>{activeSign.name}</p>
-            <small>{activeSign.dates}</small>
-          </div>
-          <div className="horoscope-copy">
-            <p className="astro-kicker">Your signal</p>
-            <h3>{activeSign.headline}</h3>
-            <p>{activeSign.overview}</p>
-          </div>
-        </motion.article>
-      </section>
-
-      <section
-        className="sign-architecture"
-        id="signs"
-        aria-labelledby="signs-title"
-      >
-        <header className="astro-section-heading inverse">
-          <p>02 / Star signs</p>
-          <h2 id="signs-title">Twelve ways energy moves.</h2>
-        </header>
-        <div className="sign-profile-grid">
-          {ASTROLOGY_SIGNS.map((sign, index) => (
-            <button
-              type="button"
-              onClick={() => chooseSign(index, true)}
               key={sign.name}
             >
               <span className="sign-number">
@@ -164,6 +117,34 @@ export function AstrologyStudio() {
             </button>
           ))}
         </div>
+
+        <motion.article
+          className="horoscope-reading"
+          key={activeSign.name}
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45 }}
+        >
+          <div className="horoscope-signature">
+            <div className="horoscope-signature-art">
+              <Image
+                src={activeSign.art}
+                alt={`${activeSign.name} from John Bevis's historical zodiac atlas`}
+                fill
+                sizes="(max-width: 720px) 100vw, 36vw"
+              />
+            </div>
+            <div className="horoscope-signature-label">
+              <p>{activeSign.name}</p>
+              <small>{activeSign.dates}</small>
+            </div>
+          </div>
+          <div className="horoscope-copy">
+            <p className="astro-kicker">Your signal</p>
+            <h3>{activeSign.headline}</h3>
+            <p>{activeSign.overview}</p>
+          </div>
+        </motion.article>
       </section>
 
       <section
@@ -172,7 +153,7 @@ export function AstrologyStudio() {
         aria-labelledby="alignment-title"
       >
         <header className="astro-section-heading">
-          <p>03 / Alignment</p>
+          <p>02 / Alignment</p>
           <h2 id="alignment-title">Two energies.</h2>
         </header>
 
@@ -211,42 +192,57 @@ export function AstrologyStudio() {
       <section
         className="astrology-atlas"
         id="atlas"
-        aria-labelledby="atlas-title"
+        aria-label="Historical astrology charts"
       >
-        <header className="astro-section-heading inverse">
-          <p>04 / Open atlas</p>
-          <h2 id="atlas-title">Enter the charts.</h2>
-        </header>
-
         <div className="atlas-grid">
-          {ASTROLOGY_CHARTS.map((chart, index) => (
-            <Link href={`/astrology/charts/${chart.slug}`} key={chart.slug}>
-              <article>
-                <div className="atlas-image">
+          {ASTROLOGY_CHARTS.map((chart) => (
+            <Dialog.Root key={chart.slug}>
+              <Dialog.Trigger
+                type="button"
+                className="atlas-chart-trigger"
+                aria-label={`View ${chart.title} full size`}
+                onClick={() => cue('turn')}
+              >
+                <span className="atlas-image">
                   <Image
                     src={chart.src}
                     alt={chart.alt}
                     fill
                     sizes="(max-width: 760px) 100vw, 33vw"
                   />
-                </div>
-                <div className="atlas-meta">
-                  <span>{String(index + 1).padStart(2, '0')}</span>
-                  <div>
-                    <h3>{chart.title}</h3>
-                    <p>{chart.date}</p>
+                </span>
+              </Dialog.Trigger>
+
+              <Dialog.Portal>
+                <Dialog.Backdrop className="atlas-lightbox-backdrop" />
+                <Dialog.Popup className="atlas-lightbox">
+                  <Dialog.Title className="sr-only">
+                    {chart.title}
+                  </Dialog.Title>
+                  <Dialog.Close
+                    type="button"
+                    className="atlas-lightbox-close"
+                    aria-label="Close full-size chart"
+                    onClick={() => cue('tick')}
+                  >
+                    <X aria-hidden="true" />
+                  </Dialog.Close>
+                  <div className="atlas-lightbox-image">
+                    <Image
+                      src={chart.src}
+                      alt={chart.alt}
+                      fill
+                      sizes="100vw"
+                      priority
+                    />
                   </div>
-                  <ArrowRight aria-hidden="true" />
-                </div>
-              </article>
-            </Link>
+                </Dialog.Popup>
+              </Dialog.Portal>
+            </Dialog.Root>
           ))}
         </div>
       </section>
 
-      <footer className="astrology-footnote">
-        <p>For reflection, not instruction.</p>
-      </footer>
     </main>
   );
 }

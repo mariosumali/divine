@@ -231,6 +231,91 @@ function createId() {
     : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
 
+function loadShareImage(source?: string): Promise<HTMLImageElement | null> {
+  if (!source) return Promise.resolve(null);
+  return new Promise((resolve) => {
+    const image = new window.Image();
+    let settled = false;
+    const finish = (value: HTMLImageElement | null) => {
+      if (settled) return;
+      settled = true;
+      window.clearTimeout(timeout);
+      resolve(value);
+    };
+    const timeout = window.setTimeout(() => finish(null), 5000);
+    image.decoding = 'async';
+    image.onload = () => finish(image);
+    image.onerror = () => finish(null);
+    image.src = source;
+    if (image.complete && image.naturalWidth > 0) finish(image);
+  });
+}
+
+function canvasTextLines(
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  maxWidth: number,
+  maxLines: number,
+) {
+  const lines: string[] = [];
+  let line = '';
+  for (const word of text.split(/\s+/u)) {
+    const candidate = `${line} ${word}`.trim();
+    if (line && ctx.measureText(candidate).width > maxWidth) {
+      lines.push(line);
+      line = word;
+      if (lines.length === maxLines - 1) break;
+    } else {
+      line = candidate;
+    }
+  }
+  if (line && lines.length < maxLines) lines.push(line);
+  const represented = lines.join(' ').length;
+  if (represented < text.trim().length && lines.length) {
+    let last = lines.at(-1) ?? '';
+    while (last && ctx.measureText(`${last}…`).width > maxWidth) {
+      last = last.slice(0, -1);
+    }
+    lines[lines.length - 1] = `${last.trimEnd()}…`;
+  }
+  return lines;
+}
+
+function drawShareImage(
+  ctx: CanvasRenderingContext2D,
+  image: HTMLImageElement,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  reversed = false,
+) {
+  const scale = Math.min(
+    width / image.naturalWidth,
+    height / image.naturalHeight,
+  );
+  const drawWidth = image.naturalWidth * scale;
+  const drawHeight = image.naturalHeight * scale;
+  const drawX = x + (width - drawWidth) / 2;
+  const drawY = y + (height - drawHeight) / 2;
+  ctx.save();
+  ctx.filter = 'grayscale(1) contrast(1.04)';
+  if (reversed) {
+    ctx.translate(x + width / 2, y + height / 2);
+    ctx.rotate(Math.PI);
+    ctx.drawImage(
+      image,
+      -drawWidth / 2,
+      -drawHeight / 2,
+      drawWidth,
+      drawHeight,
+    );
+  } else {
+    ctx.drawImage(image, drawX, drawY, drawWidth, drawHeight);
+  }
+  ctx.restore();
+}
+
 async function exportReading(
   record: ReadingRecord,
   includeQuestion: boolean,
@@ -242,126 +327,206 @@ async function exportReading(
   canvas.height = 1500;
   const ctx = canvas.getContext('2d');
   if (!ctx) throw new Error('Canvas unavailable');
-  ctx.fillStyle = '#050505';
+  const [methodImage, ...cardImages] = await Promise.all([
+    loadShareImage(composition.methodArt),
+    ...composition.cards.map((card) => loadShareImage(card.image)),
+  ]);
+
+  ctx.fillStyle = '#efede5';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.strokeStyle = 'rgba(244,242,236,.35)';
-  ctx.strokeRect(72, 72, 1056, 1356);
-  ctx.fillStyle = '#f4f2ec';
-  ctx.textAlign = 'center';
-  ctx.font = '500 58px "Bodoni Moda", Georgia, serif';
-  ctx.fillText(composition.title, 600, 160);
-  ctx.font = '12px Arial';
-  ctx.letterSpacing = '5px';
-  ctx.fillText(composition.subtitle.toUpperCase(), 600, 225);
+  ctx.strokeStyle = 'rgba(5,5,5,.22)';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(34, 34, 1132, 1432);
+  ctx.strokeRect(52, 52, 1096, 1396);
+
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'alphabetic';
+  ctx.fillStyle = '#050505';
+  ctx.font = '500 28px "Bodoni Moda", Georgia, serif';
+  ctx.letterSpacing = '3px';
+  ctx.fillText(composition.title, 80, 112);
+  ctx.textAlign = 'right';
+  ctx.font = '12px Arial, sans-serif';
+  ctx.letterSpacing = '2px';
+  ctx.fillStyle = 'rgba(5,5,5,.58)';
+  ctx.fillText(
+    new Date(composition.date)
+      .toLocaleDateString(undefined, {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+      })
+      .toUpperCase(),
+    1120,
+    110,
+  );
+  ctx.beginPath();
+  ctx.moveTo(80, 140);
+  ctx.lineTo(1120, 140);
+  ctx.stroke();
+
+  ctx.textAlign = 'left';
+  ctx.font = '12px Arial, sans-serif';
+  ctx.letterSpacing = '3px';
+  ctx.fillText(composition.subtitle.toUpperCase(), 80, 210);
   ctx.letterSpacing = '0px';
-  ctx.font = '500 78px "Bodoni Moda", Georgia, serif';
-  const words = composition.headline.split(' ');
-  const lines: string[] = [];
-  let line = '';
-  words.forEach((word) => {
-    const test = `${line} ${word}`.trim();
-    if (ctx.measureText(test).width > 900) {
-      lines.push(line);
-      line = word;
-    } else line = test;
-  });
-  lines.push(line);
-  lines
-    .slice(0, 3)
-    .forEach((value, index) => ctx.fillText(value, 600, 390 + index * 92));
-  ctx.fillStyle = '#aaa7a0';
+
+  ctx.fillStyle = '#050505';
+  ctx.font = '500 72px "Bodoni Moda", Georgia, serif';
+  const headlineLines = canvasTextLines(
+    ctx,
+    composition.cards.length ? composition.headline : 'The answer has arrived.',
+    750,
+    3,
+  );
+  headlineLines.forEach((value, index) =>
+    ctx.fillText(value, 80, 290 + index * 76),
+  );
+
+  if (methodImage) {
+    drawShareImage(ctx, methodImage, 880, 178, 210, 210);
+  }
+  ctx.textAlign = 'center';
+  ctx.fillStyle = 'rgba(5,5,5,.58)';
+  ctx.font = '10px Arial, sans-serif';
+  ctx.letterSpacing = '2px';
+  ctx.fillText(record.systemName.toUpperCase(), 985, 416);
+  ctx.letterSpacing = '0px';
+
+  let contentStart = Math.max(500, 316 + headlineLines.length * 76);
+  if (composition.question) {
+    ctx.strokeStyle = 'rgba(5,5,5,.18)';
+    ctx.strokeRect(80, contentStart, 1040, 76);
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#050505';
+    ctx.font = 'italic 24px "Bodoni Moda", Georgia, serif';
+    const question = canvasTextLines(ctx, `“${composition.question}”`, 960, 2);
+    question.forEach((value, index) =>
+      ctx.fillText(value, 600, contentStart + 32 + index * 26),
+    );
+    contentStart += 112;
+  }
+
   if (composition.cards.length) {
     const preview = composition.cards;
     const dense = preview.length > 10;
-    const columns = Math.min(preview.length, dense ? 6 : 5);
-    const gap = dense ? 12 : 18;
-    const rowGap = dense ? 12 : 18;
-    const height = dense ? 74 : 132;
-    const startY = dense ? 625 : 680;
-    const width = Math.min(
-      dense ? 145 : 170,
-      (930 - gap * (columns - 1)) / columns,
+    const columns = Math.min(
+      preview.length,
+      preview.length <= 5
+        ? preview.length
+        : dense
+          ? preview.length > 20
+            ? 12
+            : 8
+          : 5,
     );
+    const gap = dense ? 10 : 18;
+    const width = Math.min(180, (1040 - gap * (columns - 1)) / columns);
+    const height = width * 1.56;
+    const captionHeight = dense ? 0 : 62;
+    const rowGap = dense ? 14 : 22;
+    const cellHeight = height + captionHeight;
     const totalWidth = width * columns + gap * (columns - 1);
+    ctx.beginPath();
+    ctx.moveTo(80, contentStart - 20);
+    ctx.lineTo(1120, contentStart - 20);
+    ctx.strokeStyle = 'rgba(5,5,5,.22)';
+    ctx.stroke();
     preview.forEach((draw, index) => {
       const column = index % columns;
       const row = Math.floor(index / columns);
       const x = (canvas.width - totalWidth) / 2 + column * (width + gap);
-      const y = startY + row * (height + rowGap);
-      ctx.strokeStyle = 'rgba(244,242,236,.35)';
+      const y = contentStart + row * (cellHeight + rowGap);
+      ctx.fillStyle = '#dedbd2';
+      ctx.fillRect(x, y, width, height);
+      ctx.strokeStyle = 'rgba(5,5,5,.28)';
       ctx.strokeRect(x, y, width, height);
-      ctx.fillStyle = '#aaa7a0';
-      ctx.font = `${dense ? 9 : 10}px Arial, sans-serif`;
-      ctx.fillText(
-        draw.position.toUpperCase().slice(0, dense ? 18 : 24),
-        x + width / 2,
-        y + (dense ? 17 : 25),
-      );
-      ctx.fillStyle = '#f4f2ec';
-      ctx.font = `500 ${dense ? 15 : 20}px "Bodoni Moda", Georgia, serif`;
-      const label = `${draw.name}${draw.reversed ? ' · R' : ''}`;
-      const splitAt = dense ? 15 : 18;
-      const midpoint =
-        label.length > splitAt ? label.lastIndexOf(' ', splitAt) : -1;
-      if (midpoint > 0 && !dense) {
-        ctx.fillText(label.slice(0, midpoint), x + width / 2, y + 70);
-        ctx.fillText(label.slice(midpoint + 1), x + width / 2, y + 96);
-      } else
-        ctx.fillText(
-          label.slice(0, dense ? 19 : 28),
-          x + width / 2,
-          y + (dense ? 51 : 85),
+      const image = cardImages[index];
+      if (image) {
+        drawShareImage(
+          ctx,
+          image,
+          x + 4,
+          y + 4,
+          width - 8,
+          height - 8,
+          draw.reversed,
         );
-    });
-    const excerptWords = composition.synthesis.split(' ');
-    const excerptLines: string[] = [];
-    line = '';
-    ctx.fillStyle = '#aaa7a0';
-    ctx.font = `${dense ? 18 : 21}px Arial, sans-serif`;
-    excerptWords.forEach((word) => {
-      const test = `${line} ${word}`.trim();
-      if (ctx.measureText(test).width > 900) {
-        excerptLines.push(line);
-        line = word;
-      } else line = test;
-    });
-    excerptLines.push(line);
-    const excerptY =
-      startY + Math.ceil(preview.length / columns) * (height + rowGap) + 24;
-    excerptLines
-      .slice(0, dense ? 2 : 3)
-      .forEach((value, index) =>
-        ctx.fillText(value, 600, excerptY + index * 30),
+      } else {
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#050505';
+        ctx.font = `400 ${dense ? 32 : 48}px "Bodoni Moda", Georgia, serif`;
+        ctx.fillText(draw.glyph, x + width / 2, y + height / 2 + 14);
+      }
+      ctx.fillStyle = 'rgba(239,237,229,.9)';
+      ctx.fillRect(x + width - 28, y + height - 25, 24, 21);
+      ctx.textAlign = 'center';
+      ctx.fillStyle = '#050505';
+      ctx.font = '8px Arial, sans-serif';
+      ctx.fillText(
+        String(index + 1).padStart(2, '0'),
+        x + width - 16,
+        y + height - 11,
       );
-  } else {
-    ctx.font = '24px Arial, sans-serif';
-    const detailWords = composition.synthesis.split(' ');
-    const detailLines: string[] = [];
-    line = '';
-    detailWords.forEach((word) => {
-      const test = `${line} ${word}`.trim();
-      if (ctx.measureText(test).width > 930) {
-        detailLines.push(line);
-        line = word;
-      } else line = test;
+      if (!dense) {
+        ctx.fillStyle = 'rgba(5,5,5,.5)';
+        ctx.font = '8px Arial, sans-serif';
+        ctx.fillText(
+          draw.position.toUpperCase().slice(0, 22),
+          x + width / 2,
+          y + height + 19,
+        );
+        ctx.fillStyle = '#050505';
+        ctx.font = '500 13px "Bodoni Moda", Georgia, serif';
+        const label = `${draw.name}${draw.reversed ? ' · R' : ''}`;
+        ctx.fillText(label.slice(0, 25), x + width / 2, y + height + 42);
+      }
     });
-    detailLines.push(line);
-    detailLines
-      .slice(0, 5)
-      .forEach((value, index) => ctx.fillText(value, 600, 770 + index * 38));
+    contentStart +=
+      Math.ceil(preview.length / columns) * (cellHeight + rowGap) + 8;
+  } else {
+    ctx.beginPath();
+    ctx.moveTo(80, contentStart - 20);
+    ctx.lineTo(1120, contentStart - 20);
+    ctx.strokeStyle = 'rgba(5,5,5,.22)';
+    ctx.stroke();
+    ctx.textAlign = 'center';
+    ctx.fillStyle = 'rgba(5,5,5,.5)';
+    ctx.font = '10px Arial, sans-serif';
+    ctx.letterSpacing = '3px';
+    ctx.fillText('THE ANSWER', 600, contentStart + 58);
+    ctx.letterSpacing = '0px';
+    ctx.fillStyle = '#050505';
+    ctx.font = '500 74px "Bodoni Moda", Georgia, serif';
+    const answerLines = canvasTextLines(ctx, composition.headline, 880, 4);
+    answerLines.forEach((value, index) =>
+      ctx.fillText(value, 600, contentStart + 150 + index * 78),
+    );
+    if (record.luckyNumbers?.length) {
+      ctx.font = '15px Arial, sans-serif';
+      ctx.letterSpacing = '7px';
+      ctx.fillText(record.luckyNumbers.join(' · '), 600, contentStart + 500);
+      ctx.letterSpacing = '0px';
+    }
   }
-  if (composition.question) {
-    ctx.font = 'italic 30px "Bodoni Moda", Georgia, serif';
-    ctx.fillStyle = '#f4f2ec';
-    ctx.fillText(`“${composition.question.slice(0, 70)}”`, 600, 1270);
-  }
-  ctx.fillStyle = '#aaa7a0';
-  ctx.font = '14px Arial';
-  ctx.letterSpacing = '4px';
+
+  ctx.beginPath();
+  ctx.moveTo(80, 1370);
+  ctx.lineTo(1120, 1370);
+  ctx.strokeStyle = 'rgba(5,5,5,.22)';
+  ctx.stroke();
+  ctx.textAlign = 'left';
+  ctx.fillStyle = 'rgba(5,5,5,.58)';
+  ctx.font = '10px Arial, sans-serif';
+  ctx.letterSpacing = '3px';
+  ctx.fillText(`${composition.focus.toUpperCase()} FOCUS`, 80, 1412);
+  ctx.textAlign = 'right';
   ctx.fillText(
-    new Date(composition.date).toLocaleDateString().toUpperCase(),
-    600,
-    1370,
+    composition.cards.length
+      ? `${composition.cards.length} ${composition.cards.length === 1 ? 'CARD' : 'CARDS'} DRAWN`
+      : record.systemName.toUpperCase(),
+    1120,
+    1412,
   );
   ctx.letterSpacing = '0px';
 
@@ -369,25 +534,10 @@ async function exportReading(
     canvas.toBlob(resolve, 'image/png'),
   );
   if (!blob) throw new Error('Unable to render share image');
-  const file = new File([blob], `divine-${record.system}-${record.id}.png`, {
-    type: 'image/png',
-  });
-  if (navigator.share && navigator.canShare?.({ files: [file] })) {
-    try {
-      await navigator.share({
-        title: `DIVINE · ${record.systemName}`,
-        files: [file],
-      });
-      return 'shared';
-    } catch (error) {
-      if (error instanceof DOMException && error.name === 'AbortError')
-        return 'cancelled';
-    }
-  }
   const url = URL.createObjectURL(blob);
   const anchor = document.createElement('a');
   anchor.href = url;
-  anchor.download = file.name;
+  anchor.download = `divine-${record.system}-${record.id}.png`;
   document.body.appendChild(anchor);
   anchor.click();
   anchor.remove();

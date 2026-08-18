@@ -576,9 +576,6 @@ button {
   width: 14px;
 }
 .site-footer {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
   margin: 0 clamp(20px, 4vw, 64px);
   padding: 28px 0 44px;
   border-top: 1px solid var(--line);
@@ -586,8 +583,18 @@ button {
   font-size: 9px;
   letter-spacing: 0.15em;
 }
-.site-footer span:last-child {
-  text-align: right;
+.site-footer a {
+  color: var(--muted);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--muted) 45%, transparent);
+  text-underline-offset: 4px;
+  transition:
+    color 0.25s ease,
+    text-decoration-color 0.25s ease;
+}
+.site-footer a:hover {
+  color: var(--ink);
+  text-decoration-color: var(--ink);
 }
 
 .home-index {
@@ -4809,155 +4816,235 @@ button {
   line-height: 1.3;
 }
 .reading-share {
-  position: relative;
-  isolation: isolate;
   width: calc(100% - clamp(40px, 10vw, 160px));
   max-width: 1080px;
-  display: grid;
-  grid-template-columns: minmax(0, 1.5fr) minmax(180px, 0.5fr);
-  gap: 36px clamp(38px, 8vw, 112px);
   margin: clamp(78px, 11vw, 154px) auto 0;
-  padding: clamp(34px, 6vw, 74px);
-  overflow: hidden;
-  background:
-    linear-gradient(rgba(244, 242, 236, 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(244, 242, 236, 0.035) 1px, transparent 1px),
-    #050505;
-  background-size: 44px 44px;
-  color: #f4f2ec;
 }
-.reading-share::after {
-  content: '✦';
-  position: absolute;
-  z-index: -1;
-  right: -0.08em;
-  bottom: -0.28em;
-  color: rgba(244, 242, 236, 0.035);
-  font-family: Georgia, serif;
-  font-size: clamp(14rem, 35vw, 30rem);
-  line-height: 1;
-}
-.reading-share-heading {
-  position: relative;
-  z-index: 2;
-}
-.reading-share-heading .eyebrow {
-  margin: 0 0 20px;
-  color: rgba(244, 242, 236, 0.58);
-}
-.reading-share-heading h2 {
-  max-width: 8ch;
-  margin: 0;
-  font-family: var(--font-bodoni), Georgia, serif;
-  font-size: clamp(3.5rem, 7vw, 7rem);
-  font-weight: 500;
-  line-height: 0.78;
-  letter-spacing: -0.065em;
-  text-wrap: balance;
-}
-.reading-share-heading > p:last-child {
-  max-width: 48ch;
-  margin: 30px 0 0;
-  color: rgba(244, 242, 236, 0.62);
-  font-size: 12px;
-  line-height: 1.65;
-}
-.reading-share-seal {
-  position: relative;
-  z-index: 2;
-  width: 146px;
-  height: 146px;
-  display: grid;
-  place-content: center;
-  justify-self: end;
-  gap: 7px;
-  border: 1px solid rgba(244, 242, 236, 0.42);
-  border-radius: 50%;
-  text-align: center;
-}
-.reading-share-seal::before,
-.reading-share-seal::after {
-  content: '';
-  position: absolute;
-  inset: 8px;
-  border: 1px solid rgba(244, 242, 236, 0.14);
-  border-radius: inherit;
-}
-.reading-share-seal::after {
-  inset: 18px;
-}
-.reading-share-seal svg {
-  width: 18px;
-  margin: auto;
-}
-.reading-share-seal span {
-  font-family: var(--font-bodoni), Georgia, serif;
-  font-size: 11px;
-  letter-spacing: 0.18em;
+.reading-share-kicker {
+  margin: 0 0 14px;
+  color: var(--muted);
+  font-size: 8px;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
 }
-.reading-share-orbit {
-  position: absolute;
-  z-index: -1;
-  top: -220px;
-  right: -175px;
-  width: 510px;
-  height: 510px;
-  border: 1px solid rgba(244, 242, 236, 0.12);
-  border-radius: 50%;
-  animation: reading-share-orbit 28s linear infinite;
+.reading-share-card {
+  position: relative;
+  isolation: isolate;
+  min-height: 620px;
+  padding: clamp(30px, 5vw, 60px);
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 82% 18%, rgba(5, 5, 5, 0.045), transparent 28%),
+    linear-gradient(rgba(5, 5, 5, 0.025) 1px, transparent 1px), #efede5;
+  background-size:
+    auto,
+    100% 46px,
+    auto;
+  border: 1px solid rgba(5, 5, 5, 0.24);
+  box-shadow: 0 34px 90px color-mix(in srgb, #050505 16%, transparent);
+  color: #050505;
 }
-.reading-share-orbit::before,
-.reading-share-orbit::after {
+.reading-share-card::before {
   content: '';
   position: absolute;
-  border: 1px solid rgba(244, 242, 236, 0.08);
-  border-radius: inherit;
+  z-index: -1;
+  inset: 13px;
+  border: 1px solid rgba(5, 5, 5, 0.1);
+  pointer-events: none;
 }
-.reading-share-orbit::before {
-  inset: 45px;
+.reading-share-card-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba(5, 5, 5, 0.22);
 }
-.reading-share-orbit::after {
-  inset: 96px;
+.reading-share-card-top > span {
+  font-family: var(--font-bodoni), Georgia, serif;
+  font-size: 19px;
+  letter-spacing: 0.08em;
 }
-.reading-share-orbit i {
+.reading-share-card-top time,
+.reading-share-card-intro > div > p,
+.reading-share-card-footer,
+.reading-share-object-answer small {
+  font-size: 8px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.reading-share-card-top time {
+  color: rgba(5, 5, 5, 0.55);
+}
+.reading-share-card-intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(140px, 210px);
+  gap: clamp(28px, 6vw, 84px);
+  align-items: center;
+  padding: clamp(34px, 6vw, 70px) 0 clamp(28px, 5vw, 54px);
+}
+.reading-share-card-intro > div > p {
+  margin: 0 0 13px;
+  color: rgba(5, 5, 5, 0.58);
+}
+.reading-share-card-intro h2 {
+  max-width: 11ch;
+  margin: 0;
+  font-family: var(--font-bodoni), Georgia, serif;
+  font-size: clamp(2.8rem, 5.5vw, 5.8rem);
+  font-weight: 500;
+  line-height: 0.86;
+  letter-spacing: -0.055em;
+  text-wrap: balance;
+}
+.reading-share-method-art {
+  margin: 0;
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  text-align: center;
+}
+.reading-share-method-art > span {
+  position: relative;
+  width: min(100%, 190px);
+  aspect-ratio: 1;
+  display: block;
+}
+.reading-share-method-art img {
+  filter: grayscale(1) contrast(1.04);
+}
+.reading-share-method-art figcaption {
+  color: rgba(5, 5, 5, 0.56);
+  font-size: 7px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.reading-share-card-question {
+  margin: 0 0 28px;
+  padding: 16px 20px;
+  border: 1px solid rgba(5, 5, 5, 0.16);
+  font-family: var(--font-bodoni), Georgia, serif;
+  font-size: clamp(16px, 2vw, 22px);
+  line-height: 1.35;
+}
+.reading-share-draws {
+  display: grid;
+  grid-template-columns: repeat(var(--share-columns), minmax(0, 1fr));
+  gap: clamp(8px, 1.4vw, 16px);
+  align-items: start;
+  padding: clamp(22px, 4vw, 38px) 0;
+  border-top: 1px solid rgba(5, 5, 5, 0.22);
+  border-bottom: 1px solid rgba(5, 5, 5, 0.22);
+}
+.reading-share-draws > figure {
+  min-width: 0;
+  margin: 0;
+}
+.reading-share-drawn-card {
+  position: relative;
+  width: 100%;
+  max-width: 166px;
+  aspect-ratio: 2 / 3.12;
+  display: grid;
+  place-items: center;
+  margin: 0 auto;
+  overflow: hidden;
+  border: 1px solid rgba(5, 5, 5, 0.26);
+  background: #dedbd2;
+}
+.reading-share-drawn-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: grayscale(1) contrast(1.02);
+}
+.reading-share-drawn-card img.is-reversed {
+  transform: rotate(180deg);
+}
+.reading-share-drawn-card > strong {
+  font-family: var(--font-bodoni), Georgia, serif;
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: 400;
+}
+.reading-share-drawn-card > i {
   position: absolute;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: #f4f2ec;
-  box-shadow: 0 0 18px rgba(244, 242, 236, 0.82);
+  right: 4px;
+  bottom: 4px;
+  min-width: 19px;
+  padding: 4px;
+  background: rgba(239, 237, 229, 0.9);
+  font-size: 6px;
+  font-style: normal;
+  letter-spacing: 0.08em;
+  text-align: center;
 }
-.reading-share-orbit i:first-child {
-  left: 43px;
-  top: 245px;
+.reading-share-draws figcaption {
+  display: grid;
+  gap: 5px;
+  margin-top: 10px;
+  text-align: center;
 }
-.reading-share-orbit i:nth-child(2) {
-  right: 86px;
-  bottom: 78px;
+.reading-share-draws figcaption span {
+  color: rgba(5, 5, 5, 0.5);
+  font-size: 7px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
-.reading-share-orbit i:nth-child(3) {
-  right: 170px;
-  top: 92px;
+.reading-share-draws figcaption strong {
+  overflow-wrap: anywhere;
+  font-family: var(--font-bodoni), Georgia, serif;
+  font-size: clamp(12px, 1.4vw, 16px);
+  font-weight: 500;
+  line-height: 1.15;
+}
+.reading-share-card.is-dense .reading-share-draws {
+  gap: 7px;
+}
+.reading-share-object-answer {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  padding: clamp(28px, 5vw, 52px) 20px;
+  border-top: 1px solid rgba(5, 5, 5, 0.22);
+  border-bottom: 1px solid rgba(5, 5, 5, 0.22);
+  text-align: center;
+}
+.reading-share-object-answer small {
+  color: rgba(5, 5, 5, 0.48);
+}
+.reading-share-object-answer p {
+  max-width: 16ch;
+  margin: 0;
+  font-family: var(--font-bodoni), Georgia, serif;
+  font-size: clamp(2.6rem, 6vw, 5.8rem);
+  line-height: 0.9;
+}
+.reading-share-object-answer span {
+  margin-top: 8px;
+  font-size: 9px;
+  letter-spacing: 0.16em;
+}
+.reading-share-card-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding-top: 18px;
+  color: rgba(5, 5, 5, 0.55);
+}
+.reading-share-controls {
+  display: grid;
+  gap: 18px;
+  margin-top: 14px;
+  padding: 22px;
+  border: 1px solid var(--line);
 }
 .reading-share-link {
-  position: relative;
-  z-index: 2;
-  grid-column: 1 / -1;
-  min-height: 74px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  padding: 0 22px;
-  border: 1px solid rgba(244, 242, 236, 0.25);
-  background: rgba(244, 242, 236, 0.055);
 }
 .reading-share-link span {
   min-width: 0;
-  display: flex;
-  align-items: center;
-  gap: 11px;
   overflow: hidden;
   font-size: 9px;
   letter-spacing: 0.13em;
@@ -4965,21 +5052,14 @@ button {
   text-transform: uppercase;
   white-space: nowrap;
 }
-.reading-share-link svg {
-  width: 14px;
-  flex: 0 0 auto;
-}
 .reading-share-link code {
-  color: rgba(244, 242, 236, 0.48);
+  color: var(--muted);
   font-family: var(--font-geist), Arial, sans-serif;
   font-size: 8px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
 }
 .reading-share-privacy {
-  position: relative;
-  z-index: 2;
-  grid-column: 1 / -1;
   display: flex;
   gap: 14px;
   align-items: flex-start;
@@ -4989,7 +5069,7 @@ button {
   width: 16px;
   height: 16px;
   margin: 2px 0 0;
-  accent-color: #f4f2ec;
+  accent-color: var(--ink);
 }
 .reading-share-privacy > span {
   display: grid;
@@ -5003,35 +5083,19 @@ button {
 }
 .reading-share-privacy small,
 .reading-share-private-note {
-  color: rgba(244, 242, 236, 0.5);
+  color: var(--muted);
   font-size: 10px;
 }
 .reading-share-private-note {
-  position: relative;
-  z-index: 2;
-  grid-column: 1 / -1;
   margin: 0;
 }
 .reading-share-actions {
-  position: relative;
-  z-index: 2;
-  grid-column: 1 / -1;
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
-.reading-share .primary-action {
-  background: #f4f2ec !important;
-  color: #050505 !important;
-  border-color: #f4f2ec !important;
-}
-.reading-share .quiet-action {
-  color: #f4f2ec !important;
-  border-color: rgba(244, 242, 236, 0.32) !important;
-}
 .reading-share-error {
-  grid-column: 1 / -1;
-  color: rgba(244, 242, 236, 0.7);
+  color: var(--muted);
   font-size: 10px;
 }
 .object-result {
@@ -6021,12 +6085,6 @@ button {
   }
 }
 
-@keyframes reading-share-orbit {
-  to {
-    transform: rotate(1turn);
-  }
-}
-
 @keyframes cookie-impact {
   0%,
   100% {
@@ -6109,12 +6167,6 @@ button {
     grid-template-columns: 1fr auto;
   }
   .home-statement > a small {
-    display: none;
-  }
-  .site-footer {
-    grid-template-columns: 1fr 1fr;
-  }
-  .site-footer span:nth-child(2) {
     display: none;
   }
   .reading-titlebar {
@@ -6434,31 +6486,56 @@ button {
   }
   .reading-share {
     width: calc(100% - 40px);
-    grid-template-columns: 1fr;
-    gap: 30px;
     margin-top: 72px;
-    padding: 38px 22px;
   }
-  .reading-share-heading h2 {
-    font-size: clamp(3.7rem, 17vw, 5.2rem);
+  .reading-share-card {
+    min-height: 0;
+    padding: 28px 20px;
   }
-  .reading-share-seal {
-    width: 112px;
-    height: 112px;
-    justify-self: start;
+  .reading-share-card::before {
+    inset: 8px;
   }
-  .reading-share-link,
-  .reading-share-privacy,
-  .reading-share-private-note,
-  .reading-share-actions {
-    grid-column: 1;
+  .reading-share-card-intro {
+    grid-template-columns: minmax(0, 1fr) 92px;
+    gap: 16px;
+    padding: 34px 0 28px;
+  }
+  .reading-share-card-intro h2 {
+    font-size: clamp(2.25rem, 11vw, 3.35rem);
+  }
+  .reading-share-method-art > span {
+    width: 92px;
+  }
+  .reading-share-method-art figcaption {
+    font-size: 6px;
+  }
+  .reading-share-draws {
+    grid-template-columns: repeat(var(--share-columns), minmax(68px, 1fr));
+    gap: 8px;
+    overflow-x: auto;
+    scrollbar-width: thin;
+  }
+  .reading-share-draws figcaption strong {
+    font-size: 12px;
+  }
+  .reading-share-card-footer {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .reading-share-controls {
+    padding: 18px 14px;
   }
   .reading-share-link {
-    min-height: 64px;
-    padding: 0 14px;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
   }
   .reading-share-link code {
-    display: none;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   .reading-share-actions {
     flex-direction: column;
@@ -6616,15 +6693,9 @@ button {
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .reading-share-orbit {
-    animation: none;
-  }
-}
-
 /* Condensed astrology index */
 .astrology-studio-condensed .astrology-subnav {
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
 }
 .astrology-studio-condensed .astro-section-heading {
   grid-template-columns: 0.7fr 2.2fr;
@@ -6666,6 +6737,14 @@ button {
   width: 54px;
   height: 54px;
   margin: auto 0 24px;
+}
+.astrology-studio-condensed .daily-sign-grid {
+  background: var(--ink);
+  color: var(--paper);
+}
+.astrology-studio-condensed .daily-sign-grid button.active {
+  background: var(--paper);
+  color: var(--ink);
 }
 .astrology-studio-condensed .alignment-result {
   min-height: 300px;
@@ -6723,18 +6802,6 @@ button {
   width: 16px;
   height: 16px;
 }
-.astrology-footnote {
-  padding: 28px clamp(20px, 4vw, 64px) 44px;
-  border-top: 1px solid var(--line);
-}
-.astrology-footnote p {
-  margin: 0;
-  color: var(--muted);
-  font-size: 8px;
-  letter-spacing: 0.13em;
-  text-transform: uppercase;
-}
-
 /* Interactive astrology archive */
 .astrology-chart-page {
   min-height: 100svh;
@@ -7001,7 +7068,7 @@ button {
 
 @media (max-width: 720px) {
   .astrology-studio-condensed .astrology-subnav {
-    grid-template-columns: repeat(4, minmax(88px, 1fr));
+    grid-template-columns: repeat(3, minmax(88px, 1fr));
   }
   .astrology-studio-condensed .astro-section-heading {
     grid-template-columns: 1fr;
@@ -8019,5 +8086,177 @@ button {
   .astrology-note p:last-child {
     justify-self: start;
     text-align: left;
+  }
+}
+
+/* Astrology sign plates and chart lightbox */
+.astrology-studio-condensed .horoscope-signature {
+  position: relative;
+  display: block;
+  min-height: 400px;
+  overflow: hidden;
+  background: #d8d7d2;
+}
+.horoscope-signature-art {
+  position: absolute;
+  inset: 0;
+}
+.horoscope-signature-art::after {
+  content: '';
+  position: absolute;
+  inset: 42% 0 0;
+  background: linear-gradient(transparent, rgba(5, 5, 5, 0.76));
+  pointer-events: none;
+}
+.horoscope-signature-art img {
+  object-fit: cover;
+  filter: grayscale(1) contrast(1.12);
+}
+.horoscope-signature-label {
+  position: absolute;
+  z-index: 1;
+  inset: auto 0 0;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 24px clamp(20px, 2.5vw, 36px);
+  color: #f4f2ec;
+}
+.astrology-studio-condensed .horoscope-signature-label p {
+  margin: 0;
+  color: inherit;
+}
+.horoscope-signature-label small {
+  color: rgba(244, 242, 236, 0.7);
+}
+
+.astrology-studio-condensed .astrology-atlas {
+  padding: 0;
+}
+.astrology-studio-condensed .atlas-grid {
+  border-color: color-mix(in srgb, var(--paper) 28%, transparent);
+}
+.atlas-chart-trigger {
+  min-width: 0;
+  display: block;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-right: 1px solid color-mix(in srgb, var(--paper) 28%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--paper) 28%, transparent);
+  background: #d8d7d2;
+  cursor: zoom-in;
+}
+.atlas-chart-trigger .atlas-image {
+  display: block;
+  aspect-ratio: 1;
+}
+.atlas-chart-trigger:hover .atlas-image img,
+.atlas-chart-trigger:focus-visible .atlas-image img {
+  transform: scale(1.035);
+}
+.atlas-chart-trigger:focus-visible {
+  position: relative;
+  z-index: 1;
+  outline-color: var(--paper);
+  outline-offset: -5px;
+}
+
+.atlas-lightbox-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  background: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(14px);
+  transition: opacity 0.24s ease;
+}
+.atlas-lightbox-backdrop[data-starting-style],
+.atlas-lightbox-backdrop[data-ending-style] {
+  opacity: 0;
+}
+.atlas-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 81;
+  width: 100vw;
+  max-width: none;
+  height: 100dvh;
+  margin: 0;
+  padding: clamp(14px, 3vw, 44px);
+  border: 0;
+  outline: 0;
+  background: #050505;
+  color: #f4f2ec;
+  transition:
+    opacity 0.24s ease,
+    transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.atlas-lightbox[data-starting-style],
+.atlas-lightbox[data-ending-style] {
+  opacity: 0;
+  transform: scale(0.985);
+}
+.atlas-lightbox-close {
+  position: absolute;
+  z-index: 2;
+  top: clamp(18px, 3vw, 42px);
+  right: clamp(18px, 3vw, 42px);
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid rgba(244, 242, 236, 0.46);
+  border-radius: 50%;
+  background: rgba(5, 5, 5, 0.78);
+  color: #f4f2ec;
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+.atlas-lightbox-close:hover {
+  background: #f4f2ec;
+  color: #050505;
+}
+.atlas-lightbox-close svg {
+  width: 19px;
+  height: 19px;
+}
+.atlas-lightbox-image {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.atlas-lightbox-image img {
+  object-fit: contain;
+  filter: grayscale(1) contrast(1.08);
+}
+
+@media (max-width: 720px) {
+  .astrology-studio-condensed .horoscope-signature {
+    min-height: 310px;
+  }
+  .horoscope-signature-label {
+    padding: 22px;
+  }
+  .atlas-chart-trigger .atlas-image {
+    aspect-ratio: 1.08;
+  }
+  .atlas-lightbox {
+    padding: 10px;
+  }
+  .atlas-lightbox-close {
+    top: 18px;
+    right: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .atlas-lightbox,
+  .atlas-lightbox-backdrop {
+    transition: none;
   }
 }
