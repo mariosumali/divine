@@ -194,9 +194,24 @@ export const ASTROLOGY_CHARTS = [
     width: 1536,
     height: 1135,
     features: [
-      { x: 27, y: 24, label: 'Concentric order', note: 'Nested rings turn planetary motion into a single visual field.' },
-      { x: 72, y: 43, label: 'Observed bodies', note: 'Repeated circular marks compare position, scale, and movement.' },
-      { x: 22, y: 67, label: 'Orbital study', note: 'The lower diagrams isolate different models of celestial motion.' },
+      {
+        x: 27,
+        y: 24,
+        label: 'Concentric order',
+        note: 'Nested rings turn planetary motion into a single visual field.',
+      },
+      {
+        x: 72,
+        y: 43,
+        label: 'Observed bodies',
+        note: 'Repeated circular marks compare position, scale, and movement.',
+      },
+      {
+        x: 22,
+        y: 67,
+        label: 'Orbital study',
+        note: 'The lower diagrams isolate different models of celestial motion.',
+      },
     ],
   },
   {
@@ -209,9 +224,24 @@ export const ASTROLOGY_CHARTS = [
     width: 1800,
     height: 1153,
     features: [
-      { x: 24, y: 25, label: 'Constellation figure', note: 'Each sign is drawn across the stars that give it form.' },
-      { x: 73, y: 27, label: 'Coordinate grid', note: 'The engraved grid locates the constellation within the sky.' },
-      { x: 54, y: 68, label: 'Twelve-part atlas', note: 'Separate plates turn the zodiac into a navigable sequence.' },
+      {
+        x: 24,
+        y: 25,
+        label: 'Constellation figure',
+        note: 'Each sign is drawn across the stars that give it form.',
+      },
+      {
+        x: 73,
+        y: 27,
+        label: 'Coordinate grid',
+        note: 'The engraved grid locates the constellation within the sky.',
+      },
+      {
+        x: 54,
+        y: 68,
+        label: 'Twelve-part atlas',
+        note: 'Separate plates turn the zodiac into a navigable sequence.',
+      },
     ],
   },
   {
@@ -224,9 +254,24 @@ export const ASTROLOGY_CHARTS = [
     width: 1600,
     height: 1469,
     features: [
-      { x: 50, y: 48, label: 'Planetary spheres', note: 'The center orders celestial bodies through concentric rings.' },
-      { x: 25, y: 23, label: 'Zodiac figures', note: 'The signs appear as figures around the edge of the cosmos.' },
-      { x: 78, y: 71, label: 'Outer order', note: 'Image and inscription bind the zodiac into a continuous cycle.' },
+      {
+        x: 50,
+        y: 48,
+        label: 'Planetary spheres',
+        note: 'The center orders celestial bodies through concentric rings.',
+      },
+      {
+        x: 25,
+        y: 23,
+        label: 'Zodiac figures',
+        note: 'The signs appear as figures around the edge of the cosmos.',
+      },
+      {
+        x: 78,
+        y: 71,
+        label: 'Outer order',
+        note: 'Image and inscription bind the zodiac into a continuous cycle.',
+      },
     ],
   },
 ] as const;

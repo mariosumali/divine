@@ -17,11 +17,11 @@ import {
   ChevronLeft,
   Heart,
   RotateCcw,
-  Share2,
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { SystemRitual } from '@/components/divine/system-ritual';
+import { ReadingShare } from '@/components/divine/reading-share';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -44,7 +44,7 @@ import {
 } from '@/lib/divine/reading';
 import { DIVINE_RITUAL, ritualForSystem } from '@/lib/divine/rituals';
 import { setReadingAmbience } from '@/lib/divine/audio';
-import { composeShare } from '@/lib/divine/share';
+import { composeShare, decodeReadingShareToken } from '@/lib/divine/share';
 import { saveReading } from '@/lib/divine/storage';
 import type {
   DrawnCard,
@@ -851,6 +851,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
   const [cardGestureProgress, setCardGestureProgress] = useState(0);
   const [ramlLines, setRamlLines] = useState<number[]>([]);
   const [shareStatus, setShareStatus] = useState<ShareStatus>('idle');
+  const [isSharedView, setIsSharedView] = useState(false);
   const [sessionReady, setSessionReady] = useState(false);
   const [enhancedObjects, setEnhancedObjects] = useState(false);
   const motionHandler = useRef<((event: DeviceMotionEvent) => void) | null>(
@@ -889,7 +890,12 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
   useEffect(() => {
     let cancelled = false;
     let restored: StoredReadingSession | null = null;
+    let sharedReading: ReturnType<typeof decodeReadingShareToken> = null;
     try {
+      const token = new URLSearchParams(window.location.hash.slice(1)).get(
+        'reading',
+      );
+      sharedReading = token ? decodeReadingShareToken(token, system) : null;
       const raw = sessionStorage.getItem(sessionKey);
       restored = raw ? (JSON.parse(raw) as StoredReadingSession) : null;
     } catch {
@@ -897,6 +903,36 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
     }
     queueMicrotask(() => {
       if (cancelled) return;
+      if (sharedReading) {
+        const shared = sharedReading.record;
+        const sharedSpread =
+          system.spreads.find((item) => item.id === shared.spreadId) ??
+          system.spreads[0] ??
+          null;
+        setStage('result');
+        setQuestion(shared.question ?? '');
+        setFocus(shared.focus);
+        setSpread(sharedSpread);
+        setReversals(shared.draws.some((draw) => draw.reversed));
+        setShuffled(true);
+        setDraws(shared.draws);
+        setRevealed(new Set(shared.draws.map((_, index) => index)));
+        setInterpretation(shared.interpretation);
+        setObjectMessage(
+          system.kind === 'cards' ? '' : shared.interpretation.headline,
+        );
+        setLuckyNumbers(sharedReading.luckyNumbers);
+        setNote('');
+        setFavorite(false);
+        setRecordId(shared.id);
+        setCreatedAt(shared.createdAt);
+        setObjectStep(system.kind === 'cards' ? 0 : objectRitualSteps);
+        setIsSharedView(true);
+        ritualLock.current = true;
+        setAnnouncement('A shared reading has opened.');
+        setSessionReady(true);
+        return;
+      }
       if (
         (restored?.version === 1 ||
           restored?.version === 2 ||
@@ -1104,6 +1140,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
             question: question.trim() || undefined,
             draws,
             interpretation,
+            luckyNumbers: luckyNumbers.length ? luckyNumbers : undefined,
             note,
             favorite,
           }
@@ -1115,6 +1152,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
       focus,
       question,
       draws,
+      luckyNumbers,
       note,
       favorite,
       recordId,
@@ -1436,7 +1474,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
     }
   };
 
-  const share = async () => {
+  const shareImage = async () => {
     if (!record || shareStatus === 'working') return;
     setShareStatus('working');
     try {
@@ -1486,6 +1524,14 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
     setObjectAnimating(false);
     setCookieGestureProgress(0);
     setShareStatus('idle');
+    if (isSharedView) {
+      window.history.replaceState(
+        null,
+        '',
+        `${window.location.pathname}${window.location.search}`,
+      );
+      setIsSharedView(false);
+    }
     cue('tick');
   };
 
@@ -1874,6 +1920,27 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
             key="result"
             {...stageMotion}
           >
+            {isSharedView && (
+              <motion.aside
+                className="shared-reading-arrival"
+                initial={{ opacity: 0, y: -16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.65, duration: 0.6 }}
+              >
+                <div>
+                  <span>Shared with you</span>
+                  <time dateTime={record.createdAt}>
+                    {new Date(record.createdAt).toLocaleDateString(undefined, {
+                      month: 'long',
+                      day: 'numeric',
+                      year: 'numeric',
+                    })}
+                  </time>
+                </div>
+                <p>{record.systemName} · {record.spreadName}</p>
+                {record.question && <blockquote>“{record.question}”</blockquote>}
+              </motion.aside>
+            )}
             <header
               className={`result-hero ${openingDraw ? 'has-opening-card' : 'object-only'}`}
             >
@@ -2057,24 +2124,28 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
                   </ol>
                 </section>
               )}
-            <section
-              className="result-synthesis"
-              aria-labelledby="synthesis-title"
-            >
-              <p className="eyebrow">
-                {draws.length > 1
-                  ? 'How the cards connect'
-                  : draws.length === 1
-                    ? 'The message in full'
-                    : 'What follows'}
-              </p>
-              <h2 id="synthesis-title">The pattern</h2>
-              <p>{interpretation.synthesis}</p>
-              <p className="result-closing">{interpretation.closing}</p>
-            </section>
+            {draws.length > 1 && (
+              <section
+                className="result-synthesis"
+                aria-labelledby="synthesis-title"
+              >
+                <p className="eyebrow">How the cards connect</p>
+                <h2 id="synthesis-title">The pattern</h2>
+                <p>{interpretation.synthesis}</p>
+                <p className="result-closing">{interpretation.closing}</p>
+              </section>
+            )}
             {interpretation.reflectionPrompt && (
               <p className="result-prompt">{interpretation.reflectionPrompt}</p>
             )}
+            <ReadingShare
+              record={{ ...record, note, favorite }}
+              includeQuestion={includeQuestion}
+              onIncludeQuestionChange={setIncludeQuestion}
+              onImageExport={() => void shareImage()}
+              imageStatus={shareStatus}
+              onAnnounce={setAnnouncement}
+            />
             <details className="reflection-drawer">
               <summary>
                 Keep this reading <ArrowRight />
@@ -2090,26 +2161,10 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
                   }}
                   placeholder="What stayed with you?"
                 />
-                <label className="privacy-check">
-                  <input
-                    type="checkbox"
-                    checked={includeQuestion}
-                    onChange={(event) =>
-                      setIncludeQuestion(event.target.checked)
-                    }
-                  />
-                  <span>Include my question in shared images</span>
-                </label>
                 {storageError && (
                   <output className="error-note">
                     The private journal is unavailable. You can still download
                     this reading.
-                  </output>
-                )}
-                {shareStatus === 'error' && (
-                  <output className="error-note">
-                    The share image could not be created. Your reading is
-                    unchanged.
                   </output>
                 )}
                 <div className="result-actions">
@@ -2121,20 +2176,6 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
                     }}
                   >
                     <Heart fill={favorite ? 'currentColor' : 'none'} /> Favorite
-                  </Button>
-                  <Button
-                    className="quiet-action"
-                    onClick={() => void share()}
-                    disabled={shareStatus === 'working'}
-                  >
-                    <Share2 />{' '}
-                    {shareStatus === 'working'
-                      ? 'Preparing image…'
-                      : shareStatus === 'downloaded'
-                        ? 'Image downloaded'
-                        : shareStatus === 'shared'
-                          ? 'Shared'
-                          : 'Share / download'}
                   </Button>
                   <Button
                     className="primary-action"

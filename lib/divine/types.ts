@@ -96,6 +96,7 @@ export interface ReadingRecord {
   question?: string;
   draws: DrawnCard[];
   interpretation: InterpretationBlock;
+  luckyNumbers?: number[];
   note: string;
   favorite: boolean;
 }
