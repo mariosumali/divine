@@ -4,11 +4,15 @@ import { motion, useMotionValue, useSpring, useTransform } from 'motion/react';
 import type { MotionStyle, MotionValue } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { CSSProperties, MouseEvent as ReactMouseEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { useExperience } from '@/app/providers';
-import { CATALOG_SYSTEMS, READING_INDEX_ART } from '@/lib/divine/catalog';
+import {
+  CATALOG_SYSTEMS,
+  READING_INDEX_ART,
+  readingIndexArtTreatment,
+} from '@/lib/divine/catalog';
 import archiveManifest from '@/public/collage-archive/manifest.json';
 
 const ART_MOTIONS = [
@@ -43,60 +47,88 @@ function seededUnit(seed: number) {
   return value - Math.floor(value);
 }
 
-const DESKTOP_ARCHIVE_COLUMNS = 14;
-const MOBILE_ARCHIVE_COLUMNS = 6;
-const DESKTOP_ARCHIVE_ROWS = Math.ceil(
-  archiveManifest.length / DESKTOP_ARCHIVE_COLUMNS,
-);
-const MOBILE_ARCHIVE_ROWS = Math.ceil(
-  archiveManifest.length / MOBILE_ARCHIVE_COLUMNS,
-);
+type HeroBounds = {
+  width: number;
+  height: number;
+};
 
-const ARCHIVE_HERO_OBJECTS = archiveManifest.map((asset, index) => {
-  const desktopColumn = index % DESKTOP_ARCHIVE_COLUMNS;
-  const desktopRow = Math.floor(index / DESKTOP_ARCHIVE_COLUMNS);
-  const mobileColumn = index % MOBILE_ARCHIVE_COLUMNS;
-  const mobileRow = Math.floor(index / MOBILE_ARCHIVE_COLUMNS);
-  const seed = asset.objectID + index * 97;
-  const jitterX = seededUnit(seed) - 0.5;
-  const jitterY = seededUnit(seed + 1) - 0.5;
-  const scale = seededUnit(seed + 2);
-  const rotation = -44 + seededUnit(seed + 3) * 88;
-  const isGiant = index % 20 === 0;
-  const isLarge = !isGiant && (index % 9 === 0 || index % 13 === 0);
-  const isSmall = !isGiant && !isLarge && index % 3 === 0;
-  const desktopSize = isGiant
-    ? `clamp(${118 + Math.round(scale * 32)}px, ${13 + scale * 3}vw, ${210 + Math.round(scale * 50)}px)`
-    : isLarge
-      ? `clamp(${72 + Math.round(scale * 22)}px, ${7.4 + scale * 2.4}vw, ${136 + Math.round(scale * 46)}px)`
-      : isSmall
-        ? `clamp(${22 + Math.round(scale * 12)}px, ${2 + scale * 1.8}vw, ${44 + Math.round(scale * 30)}px)`
-        : `clamp(${42 + Math.round(scale * 18)}px, ${4.2 + scale * 2.4}vw, ${82 + Math.round(scale * 38)}px)`;
-  const mobileSize = isGiant
-    ? `${104 + Math.round(scale * 28)}px`
-    : isLarge
-      ? `${72 + Math.round(scale * 24)}px`
-      : isSmall
-        ? `${26 + Math.round(scale * 16)}px`
-        : `${44 + Math.round(scale * 24)}px`;
+const DEFAULT_HERO_BOUNDS: HeroBounds = { width: 1440, height: 838 };
+const ARCHIVE_OBJECT_AREA = 9_900;
+const MIN_ARCHIVE_OBJECTS = 18;
+const MAX_ARCHIVE_OBJECTS = 900;
 
-  return {
-    ...asset,
-    placement: {
-      x: `${desktopColumn * (100 / (DESKTOP_ARCHIVE_COLUMNS - 1)) - 3 + jitterX * 3}%`,
-      y: `${desktopRow * (96 / (DESKTOP_ARCHIVE_ROWS - 1)) - 2 + jitterY * 4}%`,
-      size: desktopSize,
-      rotate: rotation,
-    },
-    mobilePlacement: {
-      x: `${mobileColumn * (100 / (MOBILE_ARCHIVE_COLUMNS - 1)) - 3 + jitterX * 4}%`,
-      y: `${mobileRow * (98 / (MOBILE_ARCHIVE_ROWS - 1)) - 1 + jitterY * 3}%`,
-      size: mobileSize,
-      rotate: rotation,
-    },
-    opacity: 0.54 + seededUnit(seed + 4) * 0.26,
-  };
-});
+function clamp(value: number, minimum: number, maximum: number) {
+  return Math.min(Math.max(value, minimum), maximum);
+}
+
+function archiveHeroObjects({ width, height }: HeroBounds) {
+  const safeWidth = Math.max(width, 1);
+  const safeHeight = Math.max(height, 1);
+  const viewportAspect = safeWidth / safeHeight;
+  const targetCount = clamp(
+    Math.round((safeWidth * safeHeight) / ARCHIVE_OBJECT_AREA),
+    MIN_ARCHIVE_OBJECTS,
+    MAX_ARCHIVE_OBJECTS,
+  );
+  // Wide compositions need more rows than a square grid would produce. This
+  // keeps the collage's editorial rhythm while the object count follows area.
+  const cellAspect = 0.9 + clamp((safeWidth - 720) / 1200, 0, 1) * 1.1;
+  const rows = Math.max(
+    4,
+    Math.round(Math.sqrt((targetCount * cellAspect) / viewportAspect)),
+  );
+  const columns = Math.max(4, Math.ceil(targetCount / rows));
+  const compact = safeWidth <= 720;
+
+  return Array.from({ length: targetCount }, (_, index) => {
+    const asset = archiveManifest[index % archiveManifest.length];
+    const cycle = Math.floor(index / archiveManifest.length);
+    const row = Math.floor(index / columns);
+    const column = index % columns;
+    const itemsInRow = Math.min(columns, targetCount - row * columns);
+    const columnOffset = (columns - itemsInRow) / 2;
+    const normalizedX =
+      columns === 1 ? 0.5 : (column + columnOffset) / (columns - 1);
+    const normalizedY = rows === 1 ? 0.5 : row / (rows - 1);
+    const seed = asset.objectID + index * 97;
+    const jitterX = seededUnit(seed) - 0.5;
+    const jitterY = seededUnit(seed + 1) - 0.5;
+    const scale = seededUnit(seed + 2);
+    const rotation = -44 + seededUnit(seed + 3) * 88;
+    const isGiant = index % 20 === 0;
+    const isLarge = !isGiant && (index % 9 === 0 || index % 13 === 0);
+    const isSmall = !isGiant && !isLarge && index % 3 === 0;
+    const size = compact
+      ? isGiant
+        ? 104 + Math.round(scale * 28)
+        : isLarge
+          ? 72 + Math.round(scale * 24)
+          : isSmall
+            ? 26 + Math.round(scale * 16)
+            : 44 + Math.round(scale * 24)
+      : isGiant
+        ? 150 + Math.round(scale * 60)
+        : isLarge
+          ? 94 + Math.round(scale * 56)
+          : isSmall
+            ? 30 + Math.round(scale * 26)
+            : 58 + Math.round(scale * 42);
+
+    return {
+      ...asset,
+      instanceID: `${asset.objectID}-${cycle}`,
+      placement: {
+        x: `${-2 + normalizedX * 104 + jitterX * (compact ? 5 : 3)}%`,
+        y: `${-3 + normalizedY * 103 + jitterY * (compact ? 4 : 3)}%`,
+        size: `${size}px`,
+        rotate: rotation,
+      },
+      opacity: 0.54 + seededUnit(seed + 4) * 0.26,
+    };
+  });
+}
+
+type ArchiveHeroObjectData = ReturnType<typeof archiveHeroObjects>[number];
 
 const HERO_OBJECTS = [
   {
@@ -593,10 +625,10 @@ function ArchiveHeroObject({
   object,
   index,
 }: {
-  object: (typeof ARCHIVE_HERO_OBJECTS)[number];
+  object: ArchiveHeroObjectData;
   index: number;
 }) {
-  const { placement, mobilePlacement } = object;
+  const { placement } = object;
 
   return (
     <span
@@ -607,10 +639,10 @@ function ArchiveHeroObject({
           '--sigil-y': placement.y,
           '--sigil-size': placement.size,
           '--sigil-rotate': `${placement.rotate}deg`,
-          '--sigil-mobile-x': mobilePlacement.x,
-          '--sigil-mobile-y': mobilePlacement.y,
-          '--sigil-mobile-size': mobilePlacement.size,
-          '--sigil-mobile-rotate': `${mobilePlacement.rotate}deg`,
+          '--sigil-mobile-x': placement.x,
+          '--sigil-mobile-y': placement.y,
+          '--sigil-mobile-size': placement.size,
+          '--sigil-mobile-rotate': `${placement.rotate}deg`,
           '--archive-delay': `${-((index % 12) * 0.7)}s`,
           '--archive-opacity': object.opacity.toFixed(2),
         } as CSSProperties
@@ -632,10 +664,16 @@ function ArchiveHeroObject({
 export function HomeCatalog() {
   const { cue } = useExperience();
   const router = useRouter();
+  const heroRef = useRef<HTMLElement | null>(null);
   const departureTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [heroBounds, setHeroBounds] = useState<HeroBounds>(DEFAULT_HERO_BOUNDS);
   const [departingSystem, setDepartingSystem] = useState<
     (typeof CATALOG_SYSTEMS)[number] | null
   >(null);
+  const archiveObjects = useMemo(
+    () => archiveHeroObjects(heroBounds),
+    [heroBounds],
+  );
   const heroXSource = useMotionValue(0);
   const heroYSource = useMotionValue(0);
   const heroX = useSpring(heroXSource, { stiffness: 80, damping: 18 });
@@ -649,6 +687,43 @@ export function HomeCatalog() {
     },
     [],
   );
+
+  useEffect(() => {
+    const hero = heroRef.current;
+    if (!hero) return;
+
+    let animationFrame: number | null = null;
+    const measure = () => {
+      animationFrame = null;
+      const bounds = hero.getBoundingClientRect();
+      const nextBounds = {
+        width: Math.round(bounds.width),
+        height: Math.round(bounds.height),
+      };
+
+      setHeroBounds((currentBounds) =>
+        Math.abs(currentBounds.width - nextBounds.width) < 2 &&
+        Math.abs(currentBounds.height - nextBounds.height) < 2
+          ? currentBounds
+          : nextBounds,
+      );
+    };
+    const scheduleMeasure = () => {
+      if (animationFrame !== null) cancelAnimationFrame(animationFrame);
+      animationFrame = requestAnimationFrame(measure);
+    };
+    const resizeObserver = new ResizeObserver(scheduleMeasure);
+
+    resizeObserver.observe(hero);
+    window.addEventListener('resize', scheduleMeasure, { passive: true });
+    scheduleMeasure();
+
+    return () => {
+      resizeObserver.disconnect();
+      window.removeEventListener('resize', scheduleMeasure);
+      if (animationFrame !== null) cancelAnimationFrame(animationFrame);
+    };
+  }, []);
 
   const enterReading = (
     event: ReactMouseEvent<HTMLAnchorElement>,
@@ -676,6 +751,7 @@ export function HomeCatalog() {
   return (
     <main className="home-index">
       <section
+        ref={heroRef}
         className="divine-hero"
         aria-labelledby="home-title"
         onPointerMove={(event) => {
@@ -700,11 +776,11 @@ export function HomeCatalog() {
             key={layer}
           >
             {layer === 'back'
-              ? ARCHIVE_HERO_OBJECTS.map((object, index) => (
+              ? archiveObjects.map((object, index) => (
                   <ArchiveHeroObject
                     object={object}
                     index={index}
-                    key={object.objectID}
+                    key={object.instanceID}
                   />
                 ))
               : null}
@@ -793,28 +869,6 @@ export function HomeCatalog() {
         </motion.a>
       </section>
 
-      <Link
-        className="astrology-home-entry"
-        href="/astrology"
-        onClick={() => cue('tick')}
-      >
-        <span className="astrology-home-art">
-          <Image
-            src="/astrology/zodiac-circle-medieval.webp"
-            alt=""
-            fill
-            sizes="(max-width: 720px) 100vw, 50vw"
-          />
-        </span>
-        <span className="astrology-home-copy">
-          <small>New / Astrology studio</small>
-          <strong>Read the sky.</strong>
-          <i>
-            Enter <span aria-hidden="true">↗</span>
-          </i>
-        </span>
-      </Link>
-
       <section className="reading-index" id="readings" aria-label="Readings">
         {CATALOG_SYSTEMS.map((system, index) => {
           const artMotion = ART_MOTIONS[index % ART_MOTIONS.length];
@@ -823,6 +877,7 @@ export function HomeCatalog() {
             <Link
               className="reading-index-item"
               data-system={system.slug}
+              data-art-treatment={readingIndexArtTreatment(system.slug)}
               href={`/read/${system.slug}`}
               key={system.slug}
               onClick={(event) => enterReading(event, system)}
@@ -903,6 +958,28 @@ export function HomeCatalog() {
         })}
       </section>
 
+      <Link
+        className="astrology-home-entry"
+        href="/astrology"
+        onClick={() => cue('tick')}
+      >
+        <span className="astrology-home-art">
+          <Image
+            src="/astrology/zodiac-circle-medieval.webp"
+            alt=""
+            fill
+            sizes="(max-width: 720px) 100vw, 50vw"
+          />
+        </span>
+        <span className="astrology-home-copy">
+          <small>New / Astrology studio</small>
+          <strong>Read the sky.</strong>
+          <i>
+            Enter <span aria-hidden="true">↗</span>
+          </i>
+        </span>
+      </Link>
+
       {departingSystem && (
         <motion.div
           className="reading-route-transition"
@@ -925,6 +1002,7 @@ export function HomeCatalog() {
           </div>
           <motion.div
             className="route-transition-object"
+            data-art-treatment={readingIndexArtTreatment(departingSystem.slug)}
             initial={{ opacity: 0, scale: 0.7, rotate: -8 }}
             animate={{ opacity: 1, scale: 1, rotate: 0 }}
             transition={{
