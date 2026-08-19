@@ -471,8 +471,6 @@ export function playSound(cue: SoundCue) {
       filter: 'highpass',
       frequency: 520,
     });
-    tone(ctx, 523, 0.55, 0.03, 0.12);
-    tone(ctx, 784, 0.5, 0.014, 0.17);
   }
   if (cue === 'liquid') {
     noise(ctx, 0.55, 0.05, 280);
