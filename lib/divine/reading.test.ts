@@ -66,6 +66,12 @@ describe('DIVINE content libraries', () => {
     }
   });
 
+  it('keeps every Tarot card at its full-height archival ratio', () => {
+    expect(
+      SYSTEM_MAP.tarot.cards.every((card) => card.aspectRatio === 52 / 90),
+    ).toBe(true);
+  });
+
   it('ships a complete, uncropped archival image library for every illustrated deck', () => {
     const collections = [
       ['oracle', 'oracle', 44],
