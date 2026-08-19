@@ -103,7 +103,7 @@ export function LibraryBrowser() {
     null;
 
   const chooseSystem = (slug: SystemSlug) => {
-    cue('tick');
+    cue('turn');
     setActiveSlug(slug);
     setQuery('');
     setSelectedId(null);
@@ -175,40 +175,42 @@ export function LibraryBrowser() {
       </nav>
 
       <section className="method-history" aria-labelledby="method-title">
-        <header>
-          <p>{history.period}</p>
-          <p>{history.origin}</p>
-        </header>
-        <div className="method-history-copy">
-          <p className="eyebrow">{system.name} / History</p>
-          <h2 id="method-title">{history.title}</h2>
-          {history.history.map((paragraph) => (
-            <p key={paragraph}>{paragraph}</p>
-          ))}
-          {history.variant && (
-            <aside>
-              <small>Variant note</small>
-              <p>{history.variant}</p>
-            </aside>
-          )}
-          <div className="method-history-actions">
-            <Link href={`/read/${system.slug}`}>
-              Begin a reading <ArrowRight />
-            </Link>
-            {history.source && (
-              <a href={history.source.url} target="_blank" rel="noreferrer">
-                Source · {history.source.label} <ExternalLink />
-              </a>
+        <div className="method-history-layout">
+          <header>
+            <p>{history.period}</p>
+            <p>{history.origin}</p>
+          </header>
+          <div className="method-history-copy">
+            <p className="eyebrow">{system.name} / History</p>
+            <h2 id="method-title">{history.title}</h2>
+            {history.history.map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
+            ))}
+            {history.variant && (
+              <aside>
+                <small>Variant note</small>
+                <p>{history.variant}</p>
+              </aside>
             )}
-            {system.slug === 'fortune-cookie' && (
-              <a
-                href="https://poly.pizza/m/8diHwxl9PEK"
-                target="_blank"
-                rel="noreferrer"
-              >
-                3D model · Poly by Google <ExternalLink />
-              </a>
-            )}
+            <div className="method-history-actions">
+              <Link href={`/read/${system.slug}`}>
+                Begin a reading <ArrowRight />
+              </Link>
+              {history.source && (
+                <a href={history.source.url} target="_blank" rel="noreferrer">
+                  Source · {history.source.label} <ExternalLink />
+                </a>
+              )}
+              {system.slug === 'fortune-cookie' && (
+                <a
+                  href="https://poly.pizza/m/8diHwxl9PEK"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  3D model · Poly by Google <ExternalLink />
+                </a>
+              )}
+            </div>
           </div>
         </div>
       </section>
