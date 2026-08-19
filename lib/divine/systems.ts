@@ -179,12 +179,15 @@ const focusModifiers = (keyword: string): CardDefinition['focusModifiers'] => ({
   growth: `For personal growth, notice how you respond when ${keyword} feels difficult.`,
 });
 
+const tarotCardAspectRatio = 52 / 90;
+
 const tarotMajors: CardDefinition[] = majorArcana.map(
   ([name, glyph, keyword, meaning, reversedMeaning], index) => ({
     id: `major-${index}`,
     name,
     glyph,
     image: `/tarot/major-${index}.webp`,
+    aspectRatio: tarotCardAspectRatio,
     keywords: [keyword, 'major arcana'],
     meaning,
     reversedMeaning,
@@ -343,6 +346,7 @@ const tarotMinors: CardDefinition[] = suits.flatMap((suit) =>
     name: `${rank.name} of ${suit.name}`,
     glyph: suit.glyph,
     image: `/tarot/${suit.id}-${rank.id}.webp`,
+    aspectRatio: tarotCardAspectRatio,
     keywords: [rank.theme, suit.domain, suit.element],
     meaning: `${rank.light} In matters of ${suit.domain}, ${suit.gift}`,
     reversedMeaning: `${rank.dark} In matters of ${suit.domain}, ${suit.shadow}`,
