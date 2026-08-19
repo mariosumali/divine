@@ -128,6 +128,17 @@ export const READING_INDEX_ART: Record<SystemSlug, string> = {
   'fortune-cookie': '/index-art/fortune-cookie.webp',
 };
 
+const POSITIVE_TONE_INDEX_ART = new Set<SystemSlug>([
+  'zigeunerkarten',
+  'ilm-al-raml',
+]);
+
+export function readingIndexArtTreatment(
+  system: SystemSlug,
+): 'cutout' | 'positive-tone' {
+  return POSITIVE_TONE_INDEX_ART.has(system) ? 'positive-tone' : 'cutout';
+}
+
 export const CARD_TRADITION_COUNT = CARD_SYSTEM_SLUGS.length;
 export const INDIVIDUAL_READING_COUNT = CATALOG_SYSTEMS.length - 1;
 export const TOTAL_READING_EXPERIENCE_COUNT = CATALOG_SYSTEMS.length;
