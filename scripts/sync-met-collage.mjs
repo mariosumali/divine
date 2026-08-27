@@ -1,4 +1,4 @@
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, unlink, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import sharp from 'sharp';
 
@@ -13,6 +13,27 @@ const LIMIT = Number(
 const SEED_PATH = process.argv
   .find((argument) => argument.startsWith('--seed='))
   ?.split('=')[1];
+const REPROCESS = process.argv.includes('--reprocess');
+const REPLACE_SEED = process.argv.includes('--replace-seed');
+const PREVIEW_DIR = process.argv
+  .find((argument) => argument.startsWith('--preview-dir='))
+  ?.split('=')[1];
+const DISCOVER_TERMS_PATH = process.argv
+  .find((argument) => argument.startsWith('--discover-terms='))
+  ?.split('=')[1];
+const DISCOVER_OUTPUT_PATH = process.argv
+  .find((argument) => argument.startsWith('--discover-output='))
+  ?.split('=')[1];
+const REPROCESS_IDS = new Set(
+  (
+    process.argv
+      .find((argument) => argument.startsWith('--object-ids='))
+      ?.split('=')[1]
+      ?.split(',') ?? []
+  )
+    .map(Number)
+    .filter(Number.isFinite),
+);
 
 const SEARCH_TERMS = [
   'astrolabe',
@@ -452,6 +473,85 @@ function colorDistance(r, g, b, background) {
   return Math.sqrt(red * red * 0.3 + green * green * 0.59 + blue * blue * 0.11);
 }
 
+function removeDetachedArtifacts(alpha, width, height) {
+  const pixelCount = width * height;
+  const labels = new Int32Array(pixelCount);
+  const queue = new Int32Array(pixelCount);
+  const components = [];
+
+  for (let start = 0; start < pixelCount; start += 1) {
+    if (alpha[start] < 48 || labels[start]) continue;
+
+    const label = components.length + 1;
+    let head = 0;
+    let tail = 0;
+    let area = 0;
+    let minX = width;
+    let minY = height;
+    let maxX = 0;
+    let maxY = 0;
+    labels[start] = label;
+    queue[tail++] = start;
+
+    while (head < tail) {
+      const index = queue[head++];
+      const x = index % width;
+      const y = Math.floor(index / width);
+      area += 1;
+      minX = Math.min(minX, x);
+      minY = Math.min(minY, y);
+      maxX = Math.max(maxX, x);
+      maxY = Math.max(maxY, y);
+
+      for (let offsetY = -1; offsetY <= 1; offsetY += 1) {
+        for (let offsetX = -1; offsetX <= 1; offsetX += 1) {
+          if (!offsetX && !offsetY) continue;
+          const neighborX = x + offsetX;
+          const neighborY = y + offsetY;
+          if (
+            neighborX < 0 ||
+            neighborX >= width ||
+            neighborY < 0 ||
+            neighborY >= height
+          ) {
+            continue;
+          }
+          const neighbor = neighborY * width + neighborX;
+          if (alpha[neighbor] < 48 || labels[neighbor]) continue;
+          labels[neighbor] = label;
+          queue[tail++] = neighbor;
+        }
+      }
+    }
+
+    components.push({ area, minX, minY, maxX, maxY });
+  }
+
+  if (components.length < 2) return;
+  const largestArea = Math.max(
+    ...components.map((component) => component.area),
+  );
+  const minimumArea = Math.max(16, largestArea * 0.003);
+  const keep = components.map((component) => {
+    if (component.area === largestArea) return true;
+    if (component.area < minimumArea) return false;
+    const componentWidth = component.maxX - component.minX + 1;
+    const componentHeight = component.maxY - component.minY + 1;
+    const aspectRatio = Math.max(
+      componentWidth / componentHeight,
+      componentHeight / componentWidth,
+    );
+    const isDetachedLine =
+      aspectRatio > 6 && component.area < largestArea * 0.14;
+    return !isDetachedLine;
+  });
+
+  for (let index = 0; index < pixelCount; index += 1) {
+    const label = labels[index];
+    if (!label || !keep[label - 1]) alpha[index] = 0;
+  }
+}
+
 function buildCutout(pixels, width, height, channels) {
   const edgeWidth = Math.max(3, Math.floor(width * 0.075));
   const rowBackgrounds = Array.from({ length: height }, (_, y) => {
@@ -470,6 +570,7 @@ function buildCutout(pixels, width, height, channels) {
 
   const pixelCount = width * height;
   const backgroundCandidate = new Uint8Array(pixelCount);
+  const obviousInteriorBackground = new Uint8Array(pixelCount);
   for (let y = 0; y < height; y += 1) {
     for (let x = 0; x < width; x += 1) {
       const pixelIndex = y * width + x;
@@ -486,6 +587,7 @@ function buildCutout(pixels, width, height, channels) {
         background,
       );
       backgroundCandidate[pixelIndex] = distance < 43 ? 1 : 0;
+      obviousInteriorBackground[pixelIndex] = distance < 12 ? 1 : 0;
     }
   }
 
@@ -520,7 +622,8 @@ function buildCutout(pixels, width, height, channels) {
 
   const alpha = new Uint8Array(pixelCount);
   for (let index = 0; index < pixelCount; index += 1) {
-    alpha[index] = isBackground[index] ? 0 : 255;
+    alpha[index] =
+      isBackground[index] || obviousInteriorBackground[index] ? 0 : 255;
   }
 
   for (let pass = 0; pass < 2; pass += 1) {
@@ -541,6 +644,8 @@ function buildCutout(pixels, width, height, channels) {
     }
     alpha.set(next);
   }
+
+  removeDetachedArtifacts(alpha, width, height);
 
   let minX = width;
   let minY = height;
@@ -640,7 +745,7 @@ async function processImage(imageUrl, outputPath) {
     .toFile(outputPath);
 }
 
-async function appendObject(items, usedIDs, term, object) {
+async function appendObject(items, usedIDs, term, object, replaceTerm = null) {
   if (!object?.isPublicDomain) {
     throw new Error(`Met object ${object?.objectID ?? 'unknown'} is not CC0`);
   }
@@ -673,10 +778,22 @@ async function appendObject(items, usedIDs, term, object) {
     objectURL: object.objectURL,
     license: 'CC0',
   };
-  items.push(item);
+  const existingIndex = items.findIndex(
+    (existing) => existing.searchTerm === (replaceTerm ?? term),
+  );
+  const previousSrc = existingIndex >= 0 ? items[existingIndex].src : null;
+  if (existingIndex >= 0) items[existingIndex] = item;
+  else items.push(item);
   usedIDs.add(object.objectID);
   await writeFile(MANIFEST_PATH, `${JSON.stringify(items, null, 2)}\n`);
-  console.log(`${items.length}/${LIMIT} ${term}: ${object.title}`);
+  if (previousSrc && previousSrc !== item.src) {
+    await unlink(path.join(process.cwd(), 'public', previousSrc)).catch(
+      () => {},
+    );
+  }
+  console.log(
+    `${existingIndex >= 0 ? 'Replaced' : `${items.length}/${LIMIT}`} ${term}: ${object.title}`,
+  );
 }
 
 function buildProvenance(items) {
@@ -697,20 +814,126 @@ async function main() {
   const usedIDs = new Set(previous.map((item) => item.objectID));
   const items = [...previous];
 
+  if (DISCOVER_TERMS_PATH && PREVIEW_DIR) {
+    const previewDirectory = path.resolve(process.cwd(), PREVIEW_DIR);
+    const outputPath = path.resolve(
+      process.cwd(),
+      DISCOVER_OUTPUT_PATH ?? path.join(previewDirectory, 'candidates.json'),
+    );
+    const terms = JSON.parse(
+      await readFile(path.resolve(process.cwd(), DISCOVER_TERMS_PATH), 'utf8'),
+    );
+    const candidates = [];
+    await mkdir(previewDirectory, { recursive: true });
+    await mkdir(path.dirname(outputPath), { recursive: true });
+    for (const searchTerm of terms) {
+      let object;
+      try {
+        object = await findObject(searchTerm, usedIDs);
+      } catch (error) {
+        console.warn(
+          `Could not discover a candidate for ${searchTerm}: ${error.message}`,
+        );
+        continue;
+      }
+      if (!object) {
+        console.warn(`No preview candidate found for ${searchTerm}`);
+        continue;
+      }
+      const filename = `${slugify(searchTerm)}-${object.objectID}.webp`;
+      try {
+        await processImage(
+          object.primaryImageSmall,
+          path.join(previewDirectory, filename),
+        );
+      } catch (error) {
+        console.warn(
+          `Could not preview Met object ${object.objectID}: ${error.message}`,
+        );
+        continue;
+      }
+      usedIDs.add(object.objectID);
+      candidates.push({
+        searchTerm,
+        objectID: object.objectID,
+        isPublicDomain: object.isPublicDomain,
+        title: object.title,
+        objectName: object.objectName,
+        objectDate: object.objectDate,
+        department: object.department,
+        primaryImageSmall: object.primaryImageSmall,
+        primaryImage: object.primaryImage,
+        objectURL: object.objectURL,
+      });
+      await writeFile(outputPath, `${JSON.stringify(candidates, null, 2)}\n`);
+      console.log(`Previewed ${searchTerm}: ${object.title}`);
+    }
+    await writeFile(outputPath, `${JSON.stringify(candidates, null, 2)}\n`);
+    return;
+  }
+
+  if (SEED_PATH && PREVIEW_DIR) {
+    const previewDirectory = path.resolve(process.cwd(), PREVIEW_DIR);
+    const seeds = JSON.parse(
+      await readFile(path.resolve(process.cwd(), SEED_PATH), 'utf8'),
+    );
+    await mkdir(previewDirectory, { recursive: true });
+    for (const { searchTerm, replaceTerm: _replaceTerm, ...object } of seeds) {
+      if (!object.isPublicDomain) continue;
+      const filename = `${slugify(searchTerm)}-${object.objectID}.webp`;
+      const outputPath = path.join(previewDirectory, filename);
+      try {
+        await processImage(object.primaryImageSmall, outputPath);
+      } catch (error) {
+        if (!object.primaryImage) {
+          console.warn(
+            `Could not preview Met object ${object.objectID}: ${error.message}`,
+          );
+          continue;
+        }
+        try {
+          await processImage(object.primaryImage, outputPath);
+        } catch (fallbackError) {
+          console.warn(
+            `Could not preview Met object ${object.objectID}: ${fallbackError.message}`,
+          );
+        }
+      }
+    }
+    return;
+  }
+
+  if (REPROCESS) {
+    for (const item of items) {
+      if (REPROCESS_IDS.size && !REPROCESS_IDS.has(item.objectID)) continue;
+      try {
+        await processImage(
+          item.imageURL,
+          path.join(OUTPUT_DIR, item.src.split('/').at(-1)),
+        );
+        console.log(
+          `Reprocessed ${item.objectID} ${item.searchTerm}: ${item.title}`,
+        );
+      } catch (error) {
+        console.warn(
+          `Could not reprocess Met object ${item.objectID}: ${error.message}`,
+        );
+      }
+    }
+    return;
+  }
+
   if (SEED_PATH) {
     const seeds = JSON.parse(
       await readFile(path.resolve(process.cwd(), SEED_PATH), 'utf8'),
     );
-    for (const { searchTerm, ...object } of seeds) {
-      if (items.length >= LIMIT) break;
-      if (
-        items.some((item) => item.searchTerm === searchTerm) ||
-        usedIDs.has(object.objectID)
-      ) {
-        continue;
-      }
+    for (const { searchTerm, replaceTerm, ...object } of seeds) {
+      if (!REPLACE_SEED && items.length >= LIMIT) break;
+      const targetTerm = replaceTerm ?? searchTerm;
+      const hasTerm = items.some((item) => item.searchTerm === targetTerm);
+      if ((hasTerm && !REPLACE_SEED) || usedIDs.has(object.objectID)) continue;
       try {
-        await appendObject(items, usedIDs, searchTerm, object);
+        await appendObject(items, usedIDs, searchTerm, object, replaceTerm);
       } catch (error) {
         console.warn(
           `Skipping unavailable seeded Met object ${object.objectID}: ${error.message}`,
