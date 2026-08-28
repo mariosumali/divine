@@ -16,7 +16,7 @@ Source policy: https://www.metmuseum.org/policies/image-resources
 | mirror | [Mirror](https://www.metmuseum.org/art/collection/search/207785) | 207785 | ca. 1710 |
 | heron | [Eagle with a Dead Heron](https://www.metmuseum.org/art/collection/search/198390) | 198390 | 19th century |
 | comb | [Comb](https://www.metmuseum.org/art/collection/search/544850) | 544850 | ca. 1550–1458 BCE |
-| hairpin | [Hairpin](https://www.metmuseum.org/art/collection/search/545607) | 545607 | ca. 2030–1640 B.C. |
+| seal box | [](http://www.metmuseum.org/art/collection/search/40537) | 40537 | 17th–18th century |
 | brooch | [Brooch](https://www.metmuseum.org/art/collection/search/702563) | 702563 | ca. 1900 |
 | pendant | [Pendant](https://www.metmuseum.org/art/collection/search/453008) | 453008 | 11th–12th century |
 | locket | [Locket](https://www.metmuseum.org/art/collection/search/16782) | 16782 | 1706 |
@@ -25,7 +25,7 @@ Source policy: https://www.metmuseum.org/policies/image-resources
 | diadem | [Diadem](https://www.metmuseum.org/art/collection/search/545957) | 545957 | 4th–2nd century BCE |
 | fibula | [Fibula](https://www.metmuseum.org/art/collection/search/852284) | 852284 | ca. 8th century BC |
 | belt buckle | [Belt Buckle](https://www.metmuseum.org/art/collection/search/466162) | 466162 | 550–600 |
-| key | [Key](https://www.metmuseum.org/art/collection/search/576267) | 576267 | 305–30 BCE |
+| reliquary box | [](http://www.metmuseum.org/art/collection/search/38673) | 38673 | 1st century |
 | lock | [Pair of Wheellock Pistols](https://www.metmuseum.org/art/collection/search/24784) | 24784 | mid-17th century |
 | door knocker | [Door knocker](https://www.metmuseum.org/art/collection/search/202014) | 202014 | probably last quarter 17th century |
 | bell | [Bell](https://www.metmuseum.org/art/collection/search/504974) | 504974 | 19th century |
@@ -57,7 +57,7 @@ Source policy: https://www.metmuseum.org/policies/image-resources
 | bow | [Bow](https://www.metmuseum.org/art/collection/search/505233) | 505233 | 19th century |
 | quiver | [Quiver](https://www.metmuseum.org/art/collection/search/27951) | 27951 | 14th–15th century |
 | spearhead | [Spearhead](https://www.metmuseum.org/art/collection/search/22455) | 22455 | unknown |
-| arrowhead | [Arrowhead](https://www.metmuseum.org/art/collection/search/573247) | 573247 | 30 BCE–364 CE |
+| covered cup | [](http://www.metmuseum.org/art/collection/search/46973) | 46973 | 19th century |
 | coin | [Coin](https://www.metmuseum.org/art/collection/search/453435) | 453435 | dated 1027 AH/1617–18 CE |
 | medal | [Medal](https://www.metmuseum.org/art/collection/search/202447) | 202447 | 16th century |
 | seal | [Seal](https://www.metmuseum.org/art/collection/search/57455) | 57455 | 12th century |
@@ -68,12 +68,12 @@ Source policy: https://www.metmuseum.org/policies/image-resources
 | sundial | [Sundial](https://www.metmuseum.org/art/collection/search/17560) | 17560 | 1731 |
 | telescope | [Telescope stand](https://www.metmuseum.org/art/collection/search/202025) | 202025 | 17th century |
 | microscope | [Microscope](https://www.metmuseum.org/art/collection/search/207549) | 207549 | ca. 1750 |
-| scissors | [Scissors](https://www.metmuseum.org/art/collection/search/188525) | 188525 | 1738 (?) |
-| needle case | [Needle case and bobbin](https://www.metmuseum.org/art/collection/search/57459) | 57459 | 12th–13th century |
+| lidded vessel | [Lidded Vessel](http://www.metmuseum.org/art/collection/search/315884) | 315884 | 3rd–4th century |
+| ink pot | [Mermaid with ink pot](http://www.metmuseum.org/art/collection/search/197069) | 197069 | 16th century |
 | spindle | [Spindle Bottle with Handle](https://www.metmuseum.org/art/collection/search/544861) | 544861 | ca. 1347–1330 BCE |
 | spoon | [Spoon](https://www.metmuseum.org/art/collection/search/236060) | 236060 | 1683–84 |
 | mandolin | [Mandolin](https://www.metmuseum.org/art/collection/search/500553) | 500553 | ca. 1770 |
-| knife | [Knife](https://www.metmuseum.org/art/collection/search/551247) | 551247 | ca. 1386–1347 BCE |
+| animal pendant | [Curly-Tailed Animal Pendant](http://www.metmuseum.org/art/collection/search/307500) | 307500 | 4th–5th century |
 | lyre | [Lyre](https://www.metmuseum.org/art/collection/search/502933) | 502933 | 19th century |
 | zither | [Zither](https://www.metmuseum.org/art/collection/search/501596) | 501596 | 19th century |
 | tambourine | [Riq  رق  (Tambourine)](https://www.metmuseum.org/art/collection/search/500950) | 500950 | late 19th century |
@@ -121,7 +121,7 @@ Source policy: https://www.metmuseum.org/policies/image-resources
 | skull | [Skull](https://www.metmuseum.org/art/collection/search/207770) | 207770 | 17th century |
 | skeleton | [Table clock with skeleton movement](https://www.metmuseum.org/art/collection/search/196395) | 196395 | mid-16th century or earlier |
 | wing | [Wing Brooch](https://www.metmuseum.org/art/collection/search/469961) | 469961 | 100–200 |
-| toggle | [Toggle](https://www.metmuseum.org/art/collection/search/546121) | 546121 | ca. 1648–1540 B.C. |
+| paperweight | [Paperweight](http://www.metmuseum.org/art/collection/search/5516) | 5516 | ca. 1850 |
 | canopic jar | [Canopic Jar (07.226.1) with a Lid Depicting a Queen (30.8.54)](https://www.metmuseum.org/art/collection/search/544689) | 544689 | ca. 1347–1330 BCE or shortly thereafter |
 | powder flask | [Powder Flask](https://www.metmuseum.org/art/collection/search/22392) | 22392 | ca. 1560–80 |
 | buckle | [Buckle](https://www.metmuseum.org/art/collection/search/1030) | 1030 | 1900–1924 |
