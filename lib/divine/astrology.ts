@@ -274,6 +274,218 @@ export const ASTROLOGY_CHARTS = [
       },
     ],
   },
+  {
+    slug: 'sextans-uraniae',
+    title: 'Sextans Uraniae',
+    date: '1690',
+    detail: 'Johannes Hevelius maps the sextant among Hydra, Leo, and Crater.',
+    src: '/astrology/backgrounds/hevelius-sextans-1690.webp',
+    alt: 'Johannes Hevelius engraving of Sextans Uraniae among neighboring constellations',
+    width: 2400,
+    height: 1800,
+    features: [
+      {
+        x: 52,
+        y: 37,
+        label: 'Celestial instrument',
+        note: 'The ornamental sextant becomes a constellation figure as well as an observing tool.',
+      },
+      {
+        x: 29,
+        y: 56,
+        label: 'Hydra',
+        note: 'Hydra carries the star field across the plate in one continuous engraved body.',
+      },
+      {
+        x: 72,
+        y: 15,
+        label: 'Measured sky',
+        note: 'Latitude, longitude, and ecliptic marks keep the illustrated field tied to observation.',
+      },
+    ],
+  },
+  {
+    slug: 'equus-woodcut',
+    title: 'Equus',
+    date: '1482',
+    detail: 'A constellation woodcut from an early illustrated Hyginus atlas.',
+    src: '/astrology/backgrounds/hyginus-equus-1482.webp',
+    alt: 'A 1482 woodcut of the winged constellation figure Equus',
+    width: 450,
+    height: 659,
+    features: [
+      {
+        x: 56,
+        y: 59,
+        label: 'Constellation figure',
+        note: 'The winged horse turns a star group into a compact emblematic figure.',
+      },
+      {
+        x: 56,
+        y: 21,
+        label: 'Printed account',
+        note: 'Dense blackletter text places the image inside a working astronomical book.',
+      },
+      {
+        x: 67,
+        y: 47,
+        label: 'Star marks',
+        note: 'Small marks are embedded directly in the body rather than separated into a grid.',
+      },
+    ],
+  },
+  {
+    slug: 'fixed-stars',
+    title: 'The fixed stars',
+    date: 'c. 1430',
+    detail: 'Paired constellation views from al-Sufi’s illustrated star book.',
+    src: '/astrology/backgrounds/al-sufi-fixed-stars-ca1430.webp',
+    alt: 'Two illustrated bear constellations with Arabic annotations and star positions',
+    width: 753,
+    height: 1079,
+    features: [
+      {
+        x: 51,
+        y: 27,
+        label: 'First orientation',
+        note: 'One figure presents the constellation as it appears on a celestial globe.',
+      },
+      {
+        x: 49,
+        y: 70,
+        label: 'Second orientation',
+        note: 'Its companion view reverses the figure for an observer looking into the night sky.',
+      },
+      {
+        x: 57,
+        y: 54,
+        label: 'Star notation',
+        note: 'Painted disks and annotations turn the animal figures into astronomical records.',
+      },
+    ],
+  },
+  {
+    slug: 'astrological-man',
+    title: 'Astrological man',
+    date: '15th century',
+    detail:
+      'A manuscript figure connecting celestial bodies with the human form.',
+    src: '/astrology/backgrounds/astrological-man-15c.webp',
+    alt: 'A fifteenth-century manuscript drawing of an astrological figure',
+    width: 1414,
+    height: 2200,
+    features: [
+      {
+        x: 50,
+        y: 13,
+        label: 'Lunar crown',
+        note: 'The moon appears above the head, joining the body to a celestial order.',
+      },
+      {
+        x: 53,
+        y: 48,
+        label: 'Bodily correspondences',
+        note: 'Planetary and anatomical labels are arranged directly across the figure.',
+      },
+      {
+        x: 50,
+        y: 81,
+        label: 'Living diagram',
+        note: 'The human silhouette becomes a vertical map rather than a separate chart.',
+      },
+    ],
+  },
+  {
+    slug: 'uranias-mirror',
+    title: 'Urania’s Mirror',
+    date: 'c. 1825',
+    detail: 'A hand-coloured constellation card designed to be held to light.',
+    src: '/astrology/backgrounds/uranias-mirror-1825.webp',
+    alt: 'Urania’s Mirror constellation card showing Cetus and neighboring figures',
+    width: 1200,
+    height: 829,
+    features: [
+      {
+        x: 50,
+        y: 43,
+        label: 'Cetus',
+        note: 'The central sea creature gives the constellation a memorable visual silhouette.',
+      },
+      {
+        x: 77,
+        y: 20,
+        label: 'Perforated stars',
+        note: 'Different star sizes were pierced so the card could be read against a light source.',
+      },
+      {
+        x: 28,
+        y: 73,
+        label: 'Scientific instruments',
+        note: 'Imagined machines share the same sky as classical constellation figures.',
+      },
+    ],
+  },
+  {
+    slug: 'aestas',
+    title: 'Aestas',
+    date: '1617',
+    detail: 'A summer landscape carrying its seasonal constellations overhead.',
+    src: '/astrology/backgrounds/aestas-1617.webp',
+    alt: 'A seventeenth-century summer landscape engraving with zodiac signs in the sky',
+    width: 2400,
+    height: 1789,
+    features: [
+      {
+        x: 49,
+        y: 40,
+        label: 'Seasonal landscape',
+        note: 'Agricultural work places celestial symbolism inside the rhythm of ordinary life.',
+      },
+      {
+        x: 47,
+        y: 7,
+        label: 'Summer signs',
+        note: 'Cancer, Leo, and Virgo are set lightly across the engraved sky.',
+      },
+      {
+        x: 52,
+        y: 96,
+        label: 'Aestas',
+        note: 'The Latin season title binds landscape, labor, and the zodiac together.',
+      },
+    ],
+  },
+  {
+    slug: 'planetary-personifications',
+    title: 'Planetary personifications',
+    date: 'shortly after 1464',
+    detail:
+      'Jupiter and Venus embodied as figures in an astronomical miscellany.',
+    src: '/astrology/backgrounds/planetary-personifications-1464.webp',
+    alt: 'Two medieval manuscript pages personifying Jupiter and Venus on horseback',
+    width: 1300,
+    height: 950,
+    features: [
+      {
+        x: 25,
+        y: 72,
+        label: 'Jupiter',
+        note: 'Jupiter appears as a bishop on horseback, carrying symbols of worldly order.',
+      },
+      {
+        x: 76,
+        y: 30,
+        label: 'Venus',
+        note: 'Venus rides a stag with a falcon, translating planetary qualities into character.',
+      },
+      {
+        x: 50,
+        y: 50,
+        label: 'Manuscript field',
+        note: 'Image, handwriting, and page wear create a layered record of celestial knowledge.',
+      },
+    ],
+  },
 ] as const;
 
 export type AstrologyChart = (typeof ASTROLOGY_CHARTS)[number];
@@ -295,6 +507,110 @@ const elementNeeds = {
   Air: 'room to talk it through',
   Water: 'honest reassurance',
 } satisfies Record<AstrologySign['element'], string>;
+
+const signBasedAspects = [
+  {
+    name: 'Conjunction',
+    symbol: '☌',
+    detail:
+      'The signs occupy the same position. Similar instincts are amplified, including the habits neither person questions.',
+  },
+  {
+    name: 'Semi-sextile',
+    symbol: '⚺',
+    detail:
+      'Neighboring signs share an edge but speak different elemental languages. Curiosity makes the difference useful.',
+  },
+  {
+    name: 'Sextile',
+    symbol: '⚹',
+    detail:
+      'A 60° relationship traditionally associated with openings and cooperation. It works best when someone acts on it.',
+  },
+  {
+    name: 'Square',
+    symbol: '□',
+    detail:
+      'A 90° relationship associated with friction and momentum. The tension can become productive when roles are explicit.',
+  },
+  {
+    name: 'Trine',
+    symbol: '△',
+    detail:
+      'A 120° relationship usually linking signs of one element. Understanding can feel natural enough to go unspoken.',
+  },
+  {
+    name: 'Quincunx',
+    symbol: '⚻',
+    detail:
+      'A 150° relationship with little obvious common ground. It asks for continuing adjustment rather than one solution.',
+  },
+  {
+    name: 'Opposition',
+    symbol: '☍',
+    detail:
+      'The signs face one another across the zodiac. Difference becomes a mirror: magnetic, clarifying, and sometimes tense.',
+  },
+] as const;
+
+const modalityActions = {
+  Cardinal: 'initiate',
+  Fixed: 'sustain',
+  Mutable: 'adapt',
+} satisfies Record<AstrologySign['modality'], string>;
+
+function elementReading(first: AstrologySign, second: AstrologySign) {
+  if (first.element === second.element) {
+    return {
+      label: 'Shared element',
+      detail: `${first.element} meets ${second.element}: the basic instinct is familiar, so the blind spot may be shared too.`,
+    };
+  }
+
+  if (complementaryElements.has(`${first.element}:${second.element}`)) {
+    return {
+      label: 'Complementary elements',
+      detail: `${first.element} and ${second.element} are traditionally paired as mutually supportive. Each supplies movement the other may lack.`,
+    };
+  }
+
+  return {
+    label: 'Contrasting elements',
+    detail: `${first.element} and ${second.element} prioritize different kinds of information. Translation matters more than agreement.`,
+  };
+}
+
+function modalityReading(first: AstrologySign, second: AstrologySign) {
+  if (first.modality === second.modality) {
+    return {
+      label: `Shared ${first.modality.toLowerCase()} rhythm`,
+      detail: `Both signs tend to ${modalityActions[first.modality]}. The pace feels recognizable, but they may compete for the same role.`,
+    };
+  }
+
+  return {
+    label: 'Different rhythms',
+    detail: `${first.name} tends to ${modalityActions[first.modality]}; ${second.name} tends to ${modalityActions[second.modality]}. Naming that handoff keeps timing from becoming a conflict.`,
+  };
+}
+
+export function alignmentProfileFor(firstIndex: number, secondIndex: number) {
+  const first = ASTROLOGY_SIGNS[firstIndex];
+  const second = ASTROLOGY_SIGNS[secondIndex];
+  const directDistance = Math.abs(firstIndex - secondIndex);
+  const signDistance = Math.min(
+    directDistance,
+    ASTROLOGY_SIGNS.length - directDistance,
+  );
+
+  return {
+    ...alignmentFor(firstIndex, secondIndex),
+    angle: signDistance * 30,
+    aspect: signBasedAspects[signDistance],
+    element: elementReading(first, second),
+    modality: modalityReading(first, second),
+  };
+}
 
 export function alignmentFor(firstIndex: number, secondIndex: number) {
   const first = ASTROLOGY_SIGNS[firstIndex];

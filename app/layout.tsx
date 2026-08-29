@@ -16,12 +16,20 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'DIVINE',
     description: EXPERIENCE_DESCRIPTION,
+    type: 'website',
+    siteName: 'DIVINE',
     images: [
       {
-        url: '/og.jpg',
-        width: 1536,
-        height: 1024,
-        alt: 'DIVINE — eight instruments for the unknown',
+        url: '/share/divine-og.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'DIVINE',
+      },
+      {
+        url: '/share/divine-mobile.jpg',
+        width: 1080,
+        height: 1350,
+        alt: 'DIVINE',
       },
     ],
   },
@@ -31,10 +39,17 @@ export const metadata: Metadata = {
     description: EXPERIENCE_DESCRIPTION,
     images: [
       {
-        url: '/og.jpg',
-        alt: 'DIVINE — eight instruments for the unknown',
+        url: '/share/divine-twitter.jpg',
+        width: 1200,
+        height: 675,
+        alt: 'DIVINE',
       },
     ],
+  },
+  icons: {
+    icon: [{ url: '/favicon.ico', sizes: 'any' }],
+    shortcut: '/favicon.ico',
+    apple: [{ url: '/apple-touch-icon.png', sizes: '180x180' }],
   },
 };
 

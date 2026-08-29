@@ -1,0 +1,541 @@
+'use client';
+
+import { Dialog } from '@base-ui/react/dialog';
+import { ArrowLeft, ArrowRight, ExternalLink, Search, X } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import type { CSSProperties } from 'react';
+import { useExperience } from '@/app/providers';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import type {
+  GalleryCategory,
+  GalleryItem,
+  GalleryKind,
+} from '@/lib/divine/gallery';
+
+const BATCH_SIZE = 72;
+
+type GalleryFilter = 'all' | GalleryCategory;
+
+const FILTERS: ReadonlyArray<{ key: GalleryFilter; label: string }> = [
+  { key: 'all', label: 'All works' },
+  { key: 'cards', label: 'Cards' },
+  { key: 'objects', label: 'Objects' },
+  { key: 'celestial', label: 'Celestial' },
+  { key: 'archive', label: 'Archive' },
+];
+
+function hash(value: string) {
+  let result = 0;
+  for (let index = 0; index < value.length; index += 1) {
+    result = (result * 31 + value.charCodeAt(index)) >>> 0;
+  }
+  return result;
+}
+
+function tileVariant(kind: GalleryKind, id: string) {
+  const value = hash(id);
+  if (kind === 'card') return value % 13 === 0 ? 'large' : 'standard';
+  if (kind === 'plate') return value % 4 === 0 ? 'panorama' : 'standard';
+  if (kind === 'portrait') return value % 3 === 0 ? 'large' : 'standard';
+  if (kind === 'portal') return value % 2 === 0 ? 'large' : 'standard';
+  return 'standard';
+}
+
+function itemStyle(item: GalleryItem) {
+  const value = hash(item.id);
+  return {
+    '--gallery-rotate': `${((value % 9) - 4) * 0.17}deg`,
+    '--gallery-shift-x': `${((value >> 3) % 9) - 4}px`,
+    '--gallery-shift-y': `${((value >> 5) % 7) - 3}px`,
+  } as CSSProperties;
+}
+
+function collageObjectStyle(item: GalleryItem, slot: number) {
+  const value = hash(`${item.id}-${slot}`);
+  const original = item.collection === 'DIVINE objects';
+  const width = (original ? 126 : 104) + (value % (original ? 76 : 62));
+  const horizontalRange = 128;
+  const left = -42 + ((value >> 4) % horizontalRange) + slot * 23;
+  const top = -34 + ((value >> 7) % 78) + slot * 11;
+  return {
+    '--object-left': `${Math.min(left, 62)}%`,
+    '--object-top': `${Math.min(top, 55)}%`,
+    '--object-width': `${width}%`,
+    '--object-rotate': `${((value % 31) - 15) * 0.72}deg`,
+    '--object-z': 12 + (value % 8),
+  } as CSSProperties;
+}
+
+export function GalleryCollection({ items }: { items: GalleryItem[] }) {
+  const { cue, deckFinishes } = useExperience();
+  const [filter, setFilter] = useState<GalleryFilter>('all');
+  const [query, setQuery] = useState('');
+  const [visibleCount, setVisibleCount] = useState(BATCH_SIZE);
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const sentinelRef = useRef<HTMLDivElement>(null);
+
+  const counts = useMemo(
+    () =>
+      items.reduce<Record<GalleryFilter, number>>(
+        (result, item) => {
+          result[item.category] += 1;
+          return result;
+        },
+        {
+          all: items.length,
+          cards: 0,
+          objects: 0,
+          celestial: 0,
+          archive: 0,
+        },
+      ),
+    [items],
+  );
+
+  const matchedItems = useMemo(() => {
+    const normalizedQuery = query.trim().toLocaleLowerCase();
+    return items.filter((item) => {
+      if (filter !== 'all' && item.category !== filter) return false;
+      if (!normalizedQuery) return true;
+      return `${item.title} ${item.collection} ${item.detail}`
+        .toLocaleLowerCase()
+        .includes(normalizedQuery);
+    });
+  }, [filter, items, query]);
+
+  const allBaseItems = useMemo(
+    () => items.filter((item) => item.kind !== 'cutout'),
+    [items],
+  );
+  const originalObjects = useMemo(
+    () =>
+      items.filter(
+        (item) =>
+          item.kind === 'cutout' && item.collection === 'DIVINE objects',
+      ),
+    [items],
+  );
+  const matchedBaseItems = useMemo(
+    () => matchedItems.filter((item) => item.kind !== 'cutout'),
+    [matchedItems],
+  );
+  const matchedObjectItems = useMemo(
+    () => matchedItems.filter((item) => item.kind === 'cutout'),
+    [matchedItems],
+  );
+  const overlayItems = useMemo(() => {
+    if (matchedItems.length === 0) return [];
+    if (filter === 'all' || filter === 'objects') return matchedObjectItems;
+    return originalObjects;
+  }, [filter, matchedItems.length, matchedObjectItems, originalObjects]);
+  const collectionBaseItems = useMemo(() => {
+    const result = [...matchedBaseItems];
+    const used = new Set(result.map((item) => item.id));
+    const requiredSupports = Math.ceil(overlayItems.length / 2);
+
+    if (result.length < requiredSupports) {
+      for (const item of allBaseItems) {
+        if (used.has(item.id)) continue;
+        result.push(item);
+        used.add(item.id);
+        if (result.length >= requiredSupports) break;
+      }
+    }
+
+    return result;
+  }, [allBaseItems, matchedBaseItems, overlayItems.length]);
+  const objectAssignments = useMemo(() => {
+    const assignments = new Map<string, GalleryItem[]>();
+    const baseCount = collectionBaseItems.length;
+    if (!baseCount) return assignments;
+
+    collectionBaseItems.forEach((baseItem, index) => {
+      const start = Math.floor((index * overlayItems.length) / baseCount);
+      const end = Math.floor(((index + 1) * overlayItems.length) / baseCount);
+      assignments.set(baseItem.id, overlayItems.slice(start, end));
+    });
+    return assignments;
+  }, [collectionBaseItems, overlayItems]);
+  const matchedIds = useMemo(
+    () => new Set(matchedItems.map((item) => item.id)),
+    [matchedItems],
+  );
+  const navigableItems = useMemo(() => {
+    const visibleIds = new Set([
+      ...matchedItems.map((item) => item.id),
+      ...overlayItems.map((item) => item.id),
+    ]);
+    return items.filter((item) => visibleIds.has(item.id));
+  }, [items, matchedItems, overlayItems]);
+  const sequence = useMemo(
+    () => new Map(navigableItems.map((item, index) => [item.id, index + 1])),
+    [navigableItems],
+  );
+  const visibleBaseItems = collectionBaseItems.slice(0, visibleCount);
+  const visibleOverlayItems = visibleBaseItems.flatMap(
+    (item) => objectAssignments.get(item.id) ?? [],
+  );
+  const visibleResultCount = new Set(
+    [...visibleBaseItems, ...visibleOverlayItems]
+      .filter((item) => matchedIds.has(item.id))
+      .map((item) => item.id),
+  ).size;
+  const hasMore = visibleCount < collectionBaseItems.length;
+  const activeIndex = activeId
+    ? navigableItems.findIndex((item) => item.id === activeId)
+    : -1;
+  const activeItem = activeIndex >= 0 ? navigableItems[activeIndex] : null;
+
+  const imageSource = useCallback(
+    (item: GalleryItem) => {
+      if (
+        item.systemSlug &&
+        deckFinishes[item.systemSlug] === 'ink' &&
+        item.inkSrc
+      ) {
+        return item.inkSrc;
+      }
+      return item.src;
+    },
+    [deckFinishes],
+  );
+
+  const isInk = useCallback(
+    (item: GalleryItem) =>
+      Boolean(item.systemSlug && deckFinishes[item.systemSlug] === 'ink'),
+    [deckFinishes],
+  );
+
+  const loadMore = useCallback(() => {
+    setVisibleCount((current) =>
+      Math.min(current + BATCH_SIZE, collectionBaseItems.length),
+    );
+  }, [collectionBaseItems.length]);
+
+  useEffect(() => {
+    const sentinel = sentinelRef.current;
+    if (!sentinel || !hasMore || !('IntersectionObserver' in window)) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) loadMore();
+      },
+      { rootMargin: '900px 0px' },
+    );
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [hasMore, loadMore]);
+
+  useEffect(() => {
+    if (!activeItem) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+      event.preventDefault();
+      const direction = event.key === 'ArrowRight' ? 1 : -1;
+      const nextIndex =
+        (activeIndex + direction + navigableItems.length) % navigableItems.length;
+      setActiveId(navigableItems[nextIndex]?.id ?? null);
+      cue('tick');
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [activeIndex, activeItem, cue, navigableItems]);
+
+  const chooseFilter = (nextFilter: GalleryFilter) => {
+    setFilter(nextFilter);
+    setVisibleCount(BATCH_SIZE);
+    setActiveId(null);
+    cue('tick');
+  };
+
+  const showAdjacent = (direction: -1 | 1) => {
+    if (!navigableItems.length) return;
+    const nextIndex =
+      (activeIndex + direction + navigableItems.length) % navigableItems.length;
+    setActiveId(navigableItems[nextIndex]?.id ?? null);
+    cue('tick');
+  };
+
+  return (
+    <main className="gallery-page">
+      <header className="gallery-masthead" aria-labelledby="gallery-title">
+        <span className="gallery-masthead-field" aria-hidden="true">
+          <Image
+            src="/library/backgrounds/library-masthead-sense-of-sight-1617.webp"
+            alt=""
+            fill
+            sizes="100vw"
+            priority
+          />
+        </span>
+        <span className="gallery-masthead-card" aria-hidden="true">
+          <Image
+            src="/tarot-color/major-2.webp"
+            alt=""
+            fill
+            sizes="240px"
+            priority
+          />
+        </span>
+        <span className="gallery-masthead-hand" aria-hidden="true">
+          <Image
+            src="/collage-v1/hand.webp"
+            alt=""
+            fill
+            sizes="300px"
+            priority
+          />
+        </span>
+        <span className="gallery-masthead-orbit" aria-hidden="true">
+          <Image
+            src="/astrology/zodiac-circle-medieval.webp"
+            alt=""
+            fill
+            sizes="360px"
+            priority
+          />
+        </span>
+
+        <p className="gallery-eyebrow">The visual world of DIVINE</p>
+        <h1 id="gallery-title">Gallery</h1>
+        <div className="gallery-masthead-meta">
+          <p>Cards, objects, paintings, and celestial charts in one living archive.</p>
+          <span>{items.length.toLocaleString()} works · 16 decks · one collection</span>
+        </div>
+      </header>
+
+      <section className="gallery-toolbar" aria-label="Filter the gallery">
+        <div className="gallery-filters">
+          {FILTERS.map((option) => (
+            <Button
+              className="gallery-filter"
+              variant="ghost"
+              size="sm"
+              type="button"
+              aria-pressed={filter === option.key}
+              key={option.key}
+              onClick={() => chooseFilter(option.key)}
+            >
+              {option.label}
+              <span>{counts[option.key].toLocaleString()}</span>
+            </Button>
+          ))}
+        </div>
+        <label className="gallery-search" htmlFor="gallery-search-input">
+          <Search aria-hidden="true" />
+          <span className="sr-only">Search the gallery</span>
+          <Input
+            id="gallery-search-input"
+            type="search"
+            value={query}
+            placeholder="Search the archive"
+            onChange={(event) => {
+              setQuery(event.currentTarget.value);
+              setVisibleCount(BATCH_SIZE);
+              setActiveId(null);
+            }}
+          />
+        </label>
+      </section>
+
+      <section className="gallery-collection" aria-label="Gallery works">
+        {visibleBaseItems.map((item, index) => {
+          const attachedObjects = objectAssignments.get(item.id) ?? [];
+          const isSupportingImage = !matchedIds.has(item.id);
+
+          return (
+            <figure
+              className="gallery-work"
+              data-kind={item.kind}
+              data-fit={item.fit}
+              data-finish={isInk(item) ? 'ink' : 'color'}
+              data-variant={tileVariant(item.kind, item.id)}
+              data-has-objects={attachedObjects.length ? 'true' : 'false'}
+              style={itemStyle(item)}
+              key={item.id}
+            >
+              {isSupportingImage ? (
+                <span className="gallery-work-support" aria-hidden="true">
+                  <span className="gallery-work-image">
+                    <Image
+                      src={imageSource(item)}
+                      alt=""
+                      fill
+                      sizes="(max-width: 720px) 50vw, (max-width: 1100px) 25vw, 17vw"
+                      priority={index < 8}
+                    />
+                  </span>
+                </span>
+              ) : (
+                <button
+                  type="button"
+                  className="gallery-work-trigger"
+                  aria-label={`Open ${item.title} from ${item.collection}`}
+                  onClick={() => {
+                    setActiveId(item.id);
+                    cue('turn');
+                  }}
+                >
+                  <span className="gallery-work-image">
+                    <Image
+                      src={imageSource(item)}
+                      alt=""
+                      fill
+                      sizes="(max-width: 720px) 50vw, (max-width: 1100px) 25vw, 17vw"
+                      priority={index < 8}
+                    />
+                  </span>
+                  <figcaption>
+                    <small>{item.collection}</small>
+                    <strong>{item.title}</strong>
+                    <i>
+                      {String(sequence.get(item.id) ?? 0).padStart(3, '0')}
+                    </i>
+                  </figcaption>
+                </button>
+              )}
+
+              {attachedObjects.map((object, objectIndex) => (
+                <button
+                  type="button"
+                  className="gallery-collage-object"
+                  data-original={
+                    object.collection === 'DIVINE objects' ? 'true' : 'false'
+                  }
+                  style={collageObjectStyle(object, objectIndex)}
+                  aria-label={`Open ${object.title} from ${object.collection}`}
+                  key={object.id}
+                  onClick={() => {
+                    setActiveId(object.id);
+                    cue('turn');
+                  }}
+                >
+                  <span className="gallery-collage-object-image">
+                    <Image
+                      src={object.src}
+                      alt=""
+                      fill
+                      sizes="(max-width: 720px) 45vw, 20vw"
+                    />
+                  </span>
+                  <span className="gallery-collage-object-caption">
+                    <small>{object.collection}</small>
+                    <strong>{object.title}</strong>
+                  </span>
+                </button>
+              ))}
+            </figure>
+          );
+        })}
+      </section>
+
+      {matchedItems.length === 0 && (
+        <div className="gallery-empty">
+          <span>Nothing found</span>
+          <p>Try another title, deck, or collection.</p>
+          <Button
+            variant="outline"
+            type="button"
+            onClick={() => {
+              setQuery('');
+              chooseFilter('all');
+            }}
+          >
+            Clear search
+          </Button>
+        </div>
+      )}
+
+      <div className="gallery-progress" ref={sentinelRef}>
+        <p aria-live="polite">
+          Showing {visibleResultCount.toLocaleString()} of{' '}
+          {matchedItems.length.toLocaleString()} works
+        </p>
+        {hasMore && (
+          <Button variant="outline" type="button" onClick={loadMore}>
+            Continue the collection
+          </Button>
+        )}
+      </div>
+
+      <Dialog.Root
+        open={Boolean(activeItem)}
+        onOpenChange={(open) => {
+          if (!open) setActiveId(null);
+        }}
+      >
+        <Dialog.Portal>
+          <Dialog.Backdrop className="gallery-lightbox-backdrop" />
+          {activeItem && (
+            <Dialog.Popup className="gallery-lightbox">
+              <Dialog.Close
+                type="button"
+                className="gallery-lightbox-close"
+                aria-label="Close image"
+              >
+                <X />
+              </Dialog.Close>
+              <div
+                className="gallery-lightbox-stage"
+                data-finish={isInk(activeItem) ? 'ink' : 'color'}
+              >
+                <Image
+                  src={imageSource(activeItem)}
+                  alt={`${activeItem.title} — ${activeItem.collection}`}
+                  fill
+                  sizes="(max-width: 720px) 100vw, 75vw"
+                />
+                <div className="gallery-lightbox-navigation">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    type="button"
+                    aria-label="Previous work"
+                    onClick={() => showAdjacent(-1)}
+                  >
+                    <ArrowLeft />
+                  </Button>
+                  <span>
+                    {String(activeIndex + 1).padStart(3, '0')} /{' '}
+                    {String(navigableItems.length).padStart(3, '0')}
+                  </span>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    type="button"
+                    aria-label="Next work"
+                    onClick={() => showAdjacent(1)}
+                  >
+                    <ArrowRight />
+                  </Button>
+                </div>
+              </div>
+              <div className="gallery-lightbox-copy">
+                <p>{activeItem.collection}</p>
+                <Dialog.Title>{activeItem.title}</Dialog.Title>
+                <Dialog.Description>{activeItem.detail}</Dialog.Description>
+                <div className="gallery-lightbox-links">
+                  {activeItem.readingHref && (
+                    <Link href={activeItem.readingHref}>Enter the reading ↗</Link>
+                  )}
+                  {activeItem.sourceUrl && (
+                    <a
+                      href={activeItem.sourceUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Museum source <ExternalLink />
+                    </a>
+                  )}
+                </div>
+                <small>Use the arrow keys to move through the collection.</small>
+              </div>
+            </Dialog.Popup>
+          )}
+        </Dialog.Portal>
+      </Dialog.Root>
+    </main>
+  );
+}

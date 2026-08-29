@@ -4,6 +4,7 @@ import {
   clearReadings,
   deleteReading,
   listReadings,
+  normalizeReading,
   saveReading,
 } from './storage';
 import type { ReadingRecord } from './types';
@@ -36,10 +37,27 @@ describe('device-local journal', () => {
 
   it('saves, updates, lists, and deletes complete immutable readings', async () => {
     await saveReading(record);
-    expect(await listReadings()).toEqual([record]);
+    expect(await listReadings()).toEqual([
+      { ...record, tags: [], followUp: '' },
+    ]);
     await saveReading({ ...record, note: 'Revised privately.' });
     expect((await listReadings())[0].note).toBe('Revised privately.');
     await deleteReading(record.id);
     expect(await listReadings()).toEqual([]);
+  });
+
+  it('normalizes records from older journal versions', () => {
+    const legacy: Record<string, unknown> = { ...record };
+    delete legacy.note;
+    delete legacy.favorite;
+    legacy.tags = [' decisions ', '', 'decisions', 7];
+    legacy.followUp = null;
+
+    expect(normalizeReading(legacy as unknown as ReadingRecord)).toMatchObject({
+      note: '',
+      favorite: false,
+      tags: ['decisions'],
+      followUp: '',
+    });
   });
 });

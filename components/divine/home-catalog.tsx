@@ -869,6 +869,20 @@ export function HomeCatalog() {
         </motion.a>
       </section>
 
+      <Link
+        className="today-home-entry"
+        href="/today"
+        onClick={() => cue('tick')}
+      >
+        <span>
+          <small>Daily constellation</small>
+          <strong>Today&apos;s Reading</strong>
+        </span>
+        <i>
+          Begin <span aria-hidden="true">↗</span>
+        </i>
+      </Link>
+
       <section className="reading-index" id="readings" aria-label="Readings">
         {CATALOG_SYSTEMS.map((system, index) => {
           const artMotion = ART_MOTIONS[index % ART_MOTIONS.length];

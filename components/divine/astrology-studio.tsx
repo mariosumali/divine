@@ -14,19 +14,137 @@ import { ArrowDown, ChevronDown, ChevronUp, X } from 'lucide-react';
 import Image from 'next/image';
 import { useExperience } from '@/app/providers';
 import {
-  alignmentFor,
+  alignmentProfileFor,
   ASTROLOGY_CHARTS,
   ASTROLOGY_SIGNS,
 } from '@/lib/divine/astrology';
 import { ZodiacMark } from './zodiac-mark';
 
+const ORBIT_CENTER = 260;
+
+function orbitPoint(index: number, radius: number) {
+  const angle = ((index * 30 - 90) * Math.PI) / 180;
+  return {
+    x: ORBIT_CENTER + Math.cos(angle) * radius,
+    y: ORBIT_CENTER + Math.sin(angle) * radius,
+  };
+}
+
+function orbitArc(firstIndex: number, secondIndex: number, radius: number) {
+  if (firstIndex === secondIndex) return '';
+
+  const start = orbitPoint(firstIndex, radius);
+  const end = orbitPoint(secondIndex, radius);
+  const clockwiseDistance =
+    (secondIndex - firstIndex + ASTROLOGY_SIGNS.length) %
+    ASTROLOGY_SIGNS.length;
+  const sweep = clockwiseDistance <= ASTROLOGY_SIGNS.length / 2 ? 1 : 0;
+
+  return `M ${start.x} ${start.y} A ${radius} ${radius} 0 0 ${sweep} ${end.x} ${end.y}`;
+}
+
+function AlignmentOrbit({
+  firstIndex,
+  secondIndex,
+  angle,
+  aspect,
+}: {
+  firstIndex: number;
+  secondIndex: number;
+  angle: number;
+  aspect: { name: string; symbol: string };
+}) {
+  const firstPoint = orbitPoint(firstIndex, 190);
+  const secondPoint = orbitPoint(secondIndex, 190);
+
+  return (
+    <figure className="alignment-orbit">
+      <svg viewBox="0 0 520 520">
+        <title>{`${ASTROLOGY_SIGNS[firstIndex].name} and ${ASTROLOGY_SIGNS[secondIndex].name} form a sign-based ${aspect.name.toLowerCase()} at ${angle} degrees.`}</title>
+        <circle className="alignment-orbit-frame" cx="260" cy="260" r="224" />
+        <circle className="alignment-orbit-ring" cx="260" cy="260" r="190" />
+        <circle className="alignment-orbit-ring" cx="260" cy="260" r="128" />
+        <circle className="alignment-orbit-ring" cx="260" cy="260" r="76" />
+
+        {ASTROLOGY_SIGNS.map((sign, index) => {
+          const tickStart = orbitPoint(index, 198);
+          const tickEnd = orbitPoint(index, 218);
+          const mark = orbitPoint(index, 190);
+          const isFirst = index === firstIndex;
+          const isSecond = index === secondIndex;
+          const state =
+            isFirst && isSecond
+              ? ' is-both'
+              : isFirst
+                ? ' is-first'
+                : isSecond
+                  ? ' is-second'
+                  : '';
+
+          return (
+            <g className={`alignment-orbit-sign${state}`} key={sign.name}>
+              <line
+                x1={tickStart.x}
+                y1={tickStart.y}
+                x2={tickEnd.x}
+                y2={tickEnd.y}
+              />
+              <circle cx={mark.x} cy={mark.y} r="18" />
+              <g transform={`translate(${mark.x - 10} ${mark.y - 10})`}>
+                <ZodiacMark sign={sign.name} size={20} />
+              </g>
+            </g>
+          );
+        })}
+
+        <path
+          className="alignment-orbit-arc"
+          d={orbitArc(firstIndex, secondIndex, 208)}
+        />
+        <line
+          className="alignment-orbit-connection"
+          x1={firstPoint.x}
+          y1={firstPoint.y}
+          x2={secondPoint.x}
+          y2={secondPoint.y}
+        />
+        <line
+          className="alignment-orbit-axis"
+          x1="260"
+          y1="260"
+          x2={firstPoint.x}
+          y2={firstPoint.y}
+        />
+        <line
+          className="alignment-orbit-axis"
+          x1="260"
+          y1="260"
+          x2={secondPoint.x}
+          y2={secondPoint.y}
+        />
+
+        <circle className="alignment-orbit-center" cx="260" cy="260" r="58" />
+        <text className="alignment-orbit-symbol" x="260" y="250">
+          {aspect.symbol}
+        </text>
+        <text className="alignment-orbit-angle" x="260" y="279">
+          {angle}° / {aspect.name}
+        </text>
+      </svg>
+      <figcaption>
+        <span>{ASTROLOGY_SIGNS[firstIndex].name}</span>
+        <i>{angle}°</i>
+        <span>{ASTROLOGY_SIGNS[secondIndex].name}</span>
+      </figcaption>
+    </figure>
+  );
+}
+
 function SignPrism({
-  id,
   label,
   value,
   onChange,
 }: {
-  id: string;
   label: string;
   value: number;
   onChange: (value: number) => void;
@@ -111,8 +229,7 @@ function SignPrism({
   };
 
   return (
-    <div className="sign-prism" aria-labelledby={`${id}-label`}>
-      <p id={`${id}-label`}>{label}</p>
+    <div className="sign-prism" aria-label={label}>
       <div className="sign-prism-control">
         <button
           type="button"
@@ -175,7 +292,6 @@ function SignPrism({
           <ChevronDown aria-hidden="true" />
         </button>
       </div>
-      <small className="sign-prism-hint">Drag the wheel or use ↑ ↓</small>
     </div>
   );
 }
@@ -187,7 +303,7 @@ export function AstrologyStudio() {
   const [secondIndex, setSecondIndex] = useState(6);
   const activeSign = ASTROLOGY_SIGNS[activeIndex];
   const alignment = useMemo(
-    () => alignmentFor(firstIndex, secondIndex),
+    () => alignmentProfileFor(firstIndex, secondIndex),
     [firstIndex, secondIndex],
   );
 
@@ -214,7 +330,7 @@ export function AstrologyStudio() {
         >
           <Image
             src="/astrology/zodiac-circle-medieval.webp"
-            alt="Medieval zodiac circle"
+            alt="A medieval manuscript zodiac circle with planetary symbols"
             fill
             sizes="(max-width: 760px) 100vw, 48vw"
             priority
@@ -225,7 +341,7 @@ export function AstrologyStudio() {
       <nav className="astrology-subnav" aria-label="Astrology sections">
         <a href="#today">Sign reading</a>
         <a href="#alignment">Alignment</a>
-        <a href="#atlas">Atlas</a>
+        <a href="#atlas">Source plates</a>
       </nav>
 
       <section
@@ -233,6 +349,28 @@ export function AstrologyStudio() {
         id="today"
         aria-labelledby="today-title"
       >
+        <div
+          className="astrology-plate-backdrop astrology-plate-hyginus"
+          aria-hidden="true"
+        >
+          <Image
+            src="/astrology/backgrounds/hyginus-equus-1482.webp"
+            alt=""
+            fill
+            sizes="32vw"
+          />
+        </div>
+        <div
+          className="astrology-plate-backdrop astrology-plate-stars"
+          aria-hidden="true"
+        >
+          <Image
+            src="/astrology/zodiac-star-charts-1750.webp"
+            alt=""
+            fill
+            sizes="75vw"
+          />
+        </div>
         <header className="astro-section-heading">
           <p>01 / Sign reading</p>
           <h2 id="today-title">A reading for your sign.</h2>
@@ -276,6 +414,7 @@ export function AstrologyStudio() {
                 alt={`${activeSign.name} from John Bevis's historical zodiac atlas`}
                 fill
                 sizes="(max-width: 720px) 100vw, 36vw"
+                style={{ objectFit: 'contain' }}
               />
             </div>
             <div className="horoscope-signature-label">
@@ -284,6 +423,14 @@ export function AstrologyStudio() {
             </div>
           </div>
           <div className="horoscope-copy">
+            <div className="horoscope-copy-backdrop" aria-hidden="true">
+              <Image
+                src="/astrology/backgrounds/al-sufi-fixed-stars-ca1430.webp"
+                alt=""
+                fill
+                sizes="(max-width: 720px) 100vw, 56vw"
+              />
+            </div>
             <p className="astro-kicker">Your reading</p>
             <h3>{activeSign.headline}</h3>
             <p>{activeSign.overview}</p>
@@ -296,14 +443,34 @@ export function AstrologyStudio() {
         id="alignment"
         aria-labelledby="alignment-title"
       >
-        <header className="astro-section-heading">
-          <p>02 / Alignment</p>
-          <h2 id="alignment-title">How you meet.</h2>
+        <div
+          className="astrology-plate-backdrop astrology-plate-urania"
+          aria-hidden="true"
+        >
+          <Image
+            src="/astrology/backgrounds/uranias-mirror-1825.webp"
+            alt=""
+            fill
+            sizes="58vw"
+          />
+        </div>
+        <div
+          className="astrology-plate-backdrop astrology-plate-zodiac-man"
+          aria-hidden="true"
+        >
+          <Image
+            src="/astrology/backgrounds/astrological-man-15c.webp"
+            alt=""
+            fill
+            sizes="42vw"
+          />
+        </div>
+        <header className="astro-section-heading alignment-section-heading">
+          <h2 id="alignment-title">ALIGNMENT</h2>
         </header>
 
         <div className="alignment-controls">
           <SignPrism
-            id="first-sign"
             label="First sign"
             value={firstIndex}
             onChange={(value) => {
@@ -313,7 +480,6 @@ export function AstrologyStudio() {
           />
           <span aria-hidden="true">×</span>
           <SignPrism
-            id="second-sign"
             label="Second sign"
             value={secondIndex}
             onChange={(value) => {
@@ -324,27 +490,94 @@ export function AstrologyStudio() {
         </div>
 
         <motion.article
-          className="alignment-result"
+          className="alignment-field"
           key={`${firstIndex}-${secondIndex}`}
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <div className="alignment-pair">
-            <div aria-hidden="true">
-              <ZodiacMark sign={ASTROLOGY_SIGNS[firstIndex].name} />
-              <span>×</span>
-              <ZodiacMark sign={ASTROLOGY_SIGNS[secondIndex].name} />
+          <div className="alignment-map">
+            <header>
+              <span>Sign-based aspect map</span>
+              <strong>
+                {alignment.aspect.symbol} {alignment.aspect.name}
+              </strong>
+            </header>
+            <AlignmentOrbit
+              firstIndex={firstIndex}
+              secondIndex={secondIndex}
+              angle={alignment.angle}
+              aspect={alignment.aspect}
+            />
+          </div>
+
+          <div className="alignment-interpretation">
+            <div className="alignment-signature" aria-hidden="true">
+              <span>
+                <ZodiacMark sign={ASTROLOGY_SIGNS[firstIndex].name} />
+                {ASTROLOGY_SIGNS[firstIndex].name}
+              </span>
+              <i>×</i>
+              <span>
+                <ZodiacMark sign={ASTROLOGY_SIGNS[secondIndex].name} />
+                {ASTROLOGY_SIGNS[secondIndex].name}
+              </span>
             </div>
-            <p>
-              {ASTROLOGY_SIGNS[firstIndex].name} +{' '}
-              {ASTROLOGY_SIGNS[secondIndex].name}
+            <p className="astro-kicker">
+              Relationship field / {alignment.label}
             </p>
-            <small>{alignment.label}</small>
-          </div>
-          <div className="alignment-message">
             <h3>{alignment.headline}</h3>
-            <p>{alignment.summary}</p>
+            <p className="alignment-summary">{alignment.summary}</p>
+
+            <div className="alignment-lenses">
+              <section>
+                <span>01 / Aspect</span>
+                <h4>
+                  {alignment.aspect.name} <i>{alignment.angle}°</i>
+                </h4>
+                <p>{alignment.aspect.detail}</p>
+              </section>
+              <section>
+                <span>02 / Element</span>
+                <h4>
+                  {ASTROLOGY_SIGNS[firstIndex].element} /{' '}
+                  {ASTROLOGY_SIGNS[secondIndex].element}
+                </h4>
+                <p>{alignment.element.detail}</p>
+              </section>
+              <section>
+                <span>03 / Modality</span>
+                <h4>
+                  {ASTROLOGY_SIGNS[firstIndex].modality} /{' '}
+                  {ASTROLOGY_SIGNS[secondIndex].modality}
+                </h4>
+                <p>{alignment.modality.detail}</p>
+              </section>
+            </div>
           </div>
+
+          <footer className="alignment-method">
+            <p>
+              A symbolic Sun-sign comparison using sign geometry, element, and
+              modality. Full synastry compares both complete birth charts,
+              including planets, houses, and exact degrees.
+            </p>
+            <nav aria-label="Alignment methodology sources">
+              <a
+                href="https://www.astro.com/astrology/in_aspect_e.htm"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Aspect framework ↗
+              </a>
+              <a
+                href="https://theastrologypodcast.com/2018/07/28/synastry-the-astrology-of-relationships/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Synastry method ↗
+              </a>
+            </nav>
+          </footer>
         </motion.article>
       </section>
 
@@ -353,23 +586,38 @@ export function AstrologyStudio() {
         id="atlas"
         aria-label="Historical astrology charts"
       >
+        <div className="atlas-figure-backdrop" aria-hidden="true">
+          <Image
+            src="/astrology/backgrounds/planetary-personification-detail-1464.webp"
+            alt=""
+            fill
+            sizes="100vw"
+          />
+        </div>
+        <header className="atlas-source-heading">
+          <p>Source plates</p>
+          <span>
+            Historical diagrams used throughout this page. Open any plate to
+            inspect the original composition.
+          </span>
+        </header>
         <div className="atlas-grid">
-          {ASTROLOGY_CHARTS.map((chart) => (
+          {ASTROLOGY_CHARTS.map((chart, index) => (
             <Dialog.Root key={chart.slug}>
               <Dialog.Trigger
                 type="button"
-                className="atlas-chart-trigger"
+                className="atlas-source-trigger"
                 aria-label={`View ${chart.title} full size`}
                 onClick={() => cue('turn')}
               >
-                <span className="atlas-image">
-                  <Image
-                    src={chart.src}
-                    alt={chart.alt}
-                    fill
-                    sizes="(max-width: 760px) 100vw, 33vw"
-                  />
+                <span className="atlas-source-number">
+                  {String(index + 1).padStart(2, '0')}
                 </span>
+                <span className="atlas-source-title">
+                  <strong>{chart.title}</strong>
+                  <small>{chart.date}</small>
+                </span>
+                <span className="atlas-source-action">View ↗</span>
               </Dialog.Trigger>
 
               <Dialog.Portal>

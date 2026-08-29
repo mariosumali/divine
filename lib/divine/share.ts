@@ -1,5 +1,6 @@
 import { interpretReading, objectInterpretation } from './reading';
 import { READING_INDEX_ART } from './catalog';
+import { interpretTodayConstellation, todaySpread } from './today';
 import type {
   Focus,
   ReadingRecord,
@@ -212,7 +213,13 @@ export function decodeReadingShareToken(
       return null;
 
     const spread =
-      system.spreads.find((item) => item.id === candidate.spread) ?? null;
+      system.spreads.find((item) => item.id === candidate.spread) ??
+      (system.slug === 'divine' &&
+      candidate.spread === 'today-constellation' &&
+      candidate.cards.length >= 4 &&
+      candidate.cards.length <= 8
+        ? todaySpread(candidate.cards.length)
+        : null);
     const isCardReading = system.kind === 'cards';
     const positions = spread?.positions ?? [];
     if (isCardReading && !spread) return null;
@@ -238,13 +245,15 @@ export function decodeReadingShareToken(
     const interpretation =
       isCardReading && spread
         ? {
-            ...interpretReading(
-              system,
-              spread,
-              draws,
-              candidate.focus,
-              candidate.created,
-            ),
+            ...(spread.id === 'today-constellation'
+              ? interpretTodayConstellation(draws)
+              : interpretReading(
+                  system,
+                  spread,
+                  draws,
+                  candidate.focus,
+                  candidate.created,
+                )),
             ...(candidate.headline ? { headline: candidate.headline } : {}),
           }
         : candidate.message

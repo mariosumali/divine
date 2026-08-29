@@ -2,7 +2,27 @@ import type { ReadingRecord } from './types';
 
 const DB_NAME = 'divine-journal';
 const STORE = 'readings';
-const VERSION = 1;
+const VERSION = 2;
+
+/** Keep records written by earlier app versions useful as the journal evolves. */
+export function normalizeReading(record: ReadingRecord): ReadingRecord {
+  return {
+    ...record,
+    note: typeof record.note === 'string' ? record.note : '',
+    favorite: Boolean(record.favorite),
+    tags: Array.isArray(record.tags)
+      ? Array.from(
+          new Set(
+            record.tags
+              .filter((tag): tag is string => typeof tag === 'string')
+              .map((tag) => tag.trim())
+              .filter(Boolean),
+          ),
+        ).slice(0, 12)
+      : [],
+    followUp: typeof record.followUp === 'string' ? record.followUp : '',
+  };
+}
 
 function openDatabase(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
@@ -11,11 +31,18 @@ function openDatabase(): Promise<IDBDatabase> {
     const request = indexedDB.open(DB_NAME, VERSION);
     request.onupgradeneeded = () => {
       const db = request.result;
+      let store: IDBObjectStore;
       if (!db.objectStoreNames.contains(STORE)) {
-        const store = db.createObjectStore(STORE, { keyPath: 'id' });
+        store = db.createObjectStore(STORE, { keyPath: 'id' });
         store.createIndex('createdAt', 'createdAt');
         store.createIndex('system', 'system');
+      } else {
+        store = request.transaction!.objectStore(STORE);
       }
+      if (!store.indexNames.contains('favorite'))
+        store.createIndex('favorite', 'favorite');
+      if (!store.indexNames.contains('focus'))
+        store.createIndex('focus', 'focus');
     };
     request.onsuccess = () => resolve(request.result);
     request.onerror = () =>
@@ -39,7 +66,7 @@ export async function saveReading(record: ReadingRecord): Promise<void> {
     (db) =>
       new Promise<void>((resolve, reject) => {
         const transaction = db.transaction(STORE, 'readwrite');
-        transaction.objectStore(STORE).put(record);
+        transaction.objectStore(STORE).put(normalizeReading(record));
         transaction.oncomplete = () => resolve();
         transaction.onerror = () =>
           reject(transaction.error ?? new Error('Unable to save reading'));
@@ -62,7 +89,9 @@ export async function listReadings(): Promise<ReadingRecord[]> {
           reject(request.error ?? new Error('Unable to read journal'));
       }),
   );
-  return records.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  return records
+    .map(normalizeReading)
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 }
 
 export async function deleteReading(id: string): Promise<void> {

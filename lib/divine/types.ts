@@ -99,4 +99,8 @@ export interface ReadingRecord {
   luckyNumbers?: number[];
   note: string;
   favorite: boolean;
+  /** Device-local labels used to gather related readings into collections. */
+  tags?: string[];
+  /** A reflection added after time has passed and the reading has unfolded. */
+  followUp?: string;
 }

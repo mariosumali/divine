@@ -8,6 +8,7 @@ import {
   decodeReadingShareToken,
 } from './share';
 import { SYSTEM_MAP, SYSTEMS } from './systems';
+import { createTodaySeed, todayRecord } from './today';
 import type { ReadingRecord } from './types';
 
 const record: ReadingRecord = {
@@ -134,6 +135,22 @@ describe('share composition privacy', () => {
     expect(decoded?.interpretation).toEqual(tarotRecord.interpretation);
     expect(decoded?.note).toBe('');
     expect(decoded?.favorite).toBe(false);
+  });
+
+  it('round-trips a dynamic Today constellation without exposing the response', () => {
+    const seed = createTodaySeed(
+      'Private words used only to shape the draw.',
+      new Date('2026-09-02T20:37:00.000Z'),
+      '2026-09-02T14:37@360',
+    );
+    const dailyRecord = todayRecord(seed);
+    const token = createReadingShareToken(dailyRecord);
+    const decoded = decodeReadingShareToken(token, SYSTEM_MAP.divine)?.record;
+
+    expect(decoded?.draws).toEqual(dailyRecord.draws);
+    expect(decoded?.interpretation).toEqual(dailyRecord.interpretation);
+    expect(decoded?.note).toBe('');
+    expect(token).not.toContain(seed.response);
   });
 
   it('keeps private fields out of the default share link', () => {

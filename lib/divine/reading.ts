@@ -65,7 +65,9 @@ function zodiacDraws(
       ).slice(0, 2),
     ];
   }
-  return [system.cards[secureIndex(system.cards.length)]];
+  if (spread.id === 'archetype')
+    return [system.cards[secureIndex(system.cards.length)]];
+  return secureShuffle(system.cards).slice(0, spread.positions.length);
 }
 
 function bellineDraws(
@@ -218,8 +220,7 @@ const METHOD_VOICES: Record<CardReadingSlug, MethodVoice> = {
       'Belline pairs a named event with one of seven classical planetary influences.',
     sequence:
       'Notice how each planet changes the pace, mood, or likely effect of its event.',
-    single:
-      'Read the event and its planet together.',
+    single: 'Read the event and its planet together.',
     closing:
       'Let the final planet suggest where to focus, not what must happen.',
   },
@@ -312,10 +313,7 @@ function methodVoice(system: SystemDefinition): MethodVoice | null {
   return METHOD_VOICES[system.slug];
 }
 
-function cardText(
-  _system: SystemDefinition,
-  draw: DrawnCard,
-): string {
+function cardText(_system: SystemDefinition, draw: DrawnCard): string {
   const base =
     draw.reversed && draw.card.reversedMeaning
       ? draw.card.reversedMeaning
@@ -626,7 +624,8 @@ export function objectInterpretation(
         text: message,
       },
     ],
-    synthesis: 'Chance supplied an answer; you still decide what to do with it.',
+    synthesis:
+      'Chance supplied an answer; you still decide what to do with it.',
     closing:
       'Keep it if it makes the choice clearer. Ignore it if it only adds confusion.',
     reflectionPrompt,

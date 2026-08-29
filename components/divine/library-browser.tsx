@@ -1,7 +1,8 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-import type { KeyboardEvent as ReactKeyboardEvent } from 'react';
+import { useMemo, useRef, useState } from 'react';
+import type { CSSProperties, KeyboardEvent as ReactKeyboardEvent } from 'react';
+import { animate as motionAnimate, motion, useMotionValue } from 'motion/react';
 import {
   ArrowRight,
   ChevronLeft,
@@ -18,7 +19,12 @@ import {
   imageForFinish,
   isCardSystemSlug,
 } from '@/lib/divine/decks';
-import { METHOD_HISTORIES } from '@/lib/divine/library';
+import {
+  LIBRARY_BACKGROUNDS,
+  LIBRARY_MASTHEAD_BACKGROUNDS,
+  LIBRARY_NAVIGATOR_BACKGROUNDS,
+  METHOD_HISTORIES,
+} from '@/lib/divine/library';
 import { SYSTEMS } from '@/lib/divine/systems';
 import type { CardDefinition, SystemSlug } from '@/lib/divine/types';
 
@@ -29,7 +35,11 @@ function CardPortrait({
   card: CardDefinition;
   systemSlug: SystemSlug;
 }) {
-  const { deckFinishes } = useExperience();
+  const { cue, deckFinishes } = useExperience();
+  const [faceUp, setFaceUp] = useState(true);
+  const tiltX = useMotionValue(0);
+  const tiltY = useMotionValue(0);
+  const suppressFlip = useRef(false);
   const visualSystem =
     card.sourceSystem && isCardSystemSlug(card.sourceSystem)
       ? card.sourceSystem
@@ -38,30 +48,106 @@ function CardPortrait({
     ? deckFinishes[visualSystem]
     : 'ink';
   const image = imageForFinish(card, finish);
+
+  const settle = () => {
+    motionAnimate(tiltX, 0, {
+      type: 'spring',
+      stiffness: 180,
+      damping: 20,
+    });
+    motionAnimate(tiltY, 0, {
+      type: 'spring',
+      stiffness: 180,
+      damping: 20,
+    });
+  };
+
+  const turn = () => {
+    if (suppressFlip.current) return;
+    setFaceUp((current) => !current);
+    cue('turn');
+  };
+
   return (
-    <div
-      className={`library-card-portrait deck-${finish}`}
+    <motion.button
+      type="button"
+      className="library-card-object"
       data-system={visualSystem}
-      style={{
-        ...(isCardSystemSlug(visualSystem)
-          ? deckColors(visualSystem, card.id, finish)
-          : undefined),
-        aspectRatio: card.aspectRatio,
+      aria-label={`${faceUp ? 'View the back of' : 'Return to'} ${card.name}`}
+      aria-pressed={!faceUp}
+      onClick={turn}
+      onKeyDown={(event) => {
+        if (event.key !== 'Enter' && event.key !== ' ') return;
+        event.preventDefault();
+        turn();
       }}
-      aria-hidden="true"
+      style={{
+        aspectRatio: card.aspectRatio,
+        rotateX: tiltX,
+        rotateY: tiltY,
+        rotateZ: -1.8,
+      }}
+      onPointerMove={(event) => {
+        if (event.pointerType === 'touch') return;
+        const bounds = event.currentTarget.getBoundingClientRect();
+        tiltY.set(((event.clientX - bounds.left) / bounds.width - 0.5) * 16);
+        tiltX.set(-((event.clientY - bounds.top) / bounds.height - 0.5) * 12);
+      }}
+      onPointerLeave={settle}
+      drag
+      dragConstraints={{ left: -22, right: 22, top: -18, bottom: 18 }}
+      dragElastic={0.12}
+      dragMomentum={false}
+      onDragStart={() => {
+        suppressFlip.current = true;
+      }}
+      onDrag={(_, info) => {
+        tiltY.set(Math.max(-16, Math.min(16, info.offset.x * 0.2)));
+        tiltX.set(Math.max(-12, Math.min(12, -info.offset.y * 0.16)));
+      }}
+      onDragEnd={() => {
+        settle();
+        window.setTimeout(() => {
+          suppressFlip.current = false;
+        }, 100);
+      }}
+      whileHover={{ y: -8, scale: 1.018 }}
+      whileTap={{ scale: 0.985 }}
     >
-      {image ? (
-        <Image
-          src={image}
-          alt=""
-          width={520}
-          height={820}
-          sizes="(max-width: 720px) 42vw, 230px"
+      <motion.span
+        className="library-card-turn"
+        animate={{ rotateY: faceUp ? 0 : 180 }}
+        transition={{ type: 'spring', stiffness: 170, damping: 21 }}
+      >
+        <span
+          className={`library-card-portrait deck-${finish}`}
+          data-system={visualSystem}
+          style={
+            isCardSystemSlug(visualSystem)
+              ? deckColors(visualSystem, card.id, finish)
+              : undefined
+          }
+        >
+          {image ? (
+            <Image
+              src={image}
+              alt=""
+              width={520}
+              height={820}
+              sizes="(max-width: 720px) 42vw, 230px"
+              draggable={false}
+            />
+          ) : (
+            <strong aria-hidden="true">{card.glyph}</strong>
+          )}
+        </span>
+        <span
+          className="library-card-back card-back"
+          data-system={visualSystem}
+          aria-hidden="true"
         />
-      ) : (
-        <strong>{card.glyph}</strong>
-      )}
-    </div>
+      </motion.span>
+    </motion.button>
   );
 }
 
@@ -79,6 +165,8 @@ export function LibraryBrowser() {
     SYSTEMS[(activeIndex - 1 + SYSTEMS.length) % SYSTEMS.length];
   const nextSystem = SYSTEMS[(activeIndex + 1) % SYSTEMS.length];
   const history = METHOD_HISTORIES[system.slug];
+  const navigatorBackgrounds = LIBRARY_NAVIGATOR_BACKGROUNDS[system.slug];
+  const cardBackground = navigatorBackgrounds.card;
   const filteredCards = useMemo(() => {
     const normalized = query.trim().toLowerCase();
     if (!normalized) return system.cards;
@@ -134,6 +222,41 @@ export function LibraryBrowser() {
   return (
     <main className="library-page">
       <header className="library-masthead">
+        <div className="library-masthead-backgrounds" aria-hidden="true">
+          {LIBRARY_MASTHEAD_BACKGROUNDS.map((background) => (
+            <div
+              className={`library-masthead-background is-${background.backgroundLayer}`}
+              data-fit={background.backgroundFit}
+              data-mobile-hidden={background.hideOnMobile || undefined}
+              data-tone={background.backgroundTone}
+              key={background.backgroundImage}
+              style={
+                {
+                  '--library-masthead-opacity': background.backgroundOpacity,
+                  '--library-masthead-position': background.backgroundPosition,
+                  '--library-masthead-position-mobile':
+                    background.backgroundPositionMobile,
+                  '--library-masthead-scale': background.backgroundScale,
+                } as CSSProperties
+              }
+            >
+              <Image
+                alt=""
+                draggable={false}
+                fill
+                priority={background.backgroundLayer === 'field'}
+                sizes={
+                  background.backgroundLayer === 'field'
+                    ? '100vw'
+                    : background.backgroundLayer === 'right'
+                      ? '(max-width: 760px) 52vw, 30vw'
+                      : '58vw'
+                }
+                src={background.backgroundImage}
+              />
+            </div>
+          ))}
+        </div>
         <p className="eyebrow">Reference</p>
         <h1>Library</h1>
       </header>
@@ -147,11 +270,37 @@ export function LibraryBrowser() {
           onKeyDown={handleRolodexKeyDown}
         >
           <ChevronLeft aria-hidden="true" />
-          <span>Previous</span>
         </button>
 
         <div className="library-rolodex-deck" aria-live="polite">
           <article className="library-rolodex-card" key={system.slug}>
+            <div
+              className="library-rolodex-card-art"
+              data-fit={navigatorBackgrounds.cardFit ?? 'cover'}
+              data-tone={cardBackground.backgroundTone}
+              aria-hidden="true"
+            >
+              <Image
+                alt=""
+                draggable={false}
+                fill
+                sizes="80vw"
+                src={cardBackground.backgroundImage}
+                style={
+                  {
+                    '--library-card-position':
+                      navigatorBackgrounds.cardPosition ??
+                      cardBackground.backgroundPosition,
+                    '--library-card-position-mobile':
+                      navigatorBackgrounds.cardPositionMobile ??
+                      cardBackground.backgroundPositionMobile,
+                    '--library-card-scale':
+                      navigatorBackgrounds.cardScale ??
+                      cardBackground.backgroundScale,
+                  } as CSSProperties
+                }
+              />
+            </div>
             <span className="library-rolodex-tab" aria-hidden="true">
               {`${activeIndex + 1}`.padStart(2, '0')}
             </span>
@@ -169,12 +318,47 @@ export function LibraryBrowser() {
           onClick={() => flipSystem(1)}
           onKeyDown={handleRolodexKeyDown}
         >
-          <span>Next</span>
           <ChevronRight aria-hidden="true" />
         </button>
       </nav>
 
       <section className="method-history" aria-labelledby="method-title">
+        <div className="method-history-backgrounds" aria-hidden="true">
+          {LIBRARY_BACKGROUNDS[system.slug].map((background) => (
+            <div
+              className={`method-history-background is-${background.backgroundLayer}`}
+              data-fit={background.backgroundFit ?? 'cover'}
+              data-tone={background.backgroundTone}
+              key={background.backgroundImage}
+              style={
+                {
+                  '--library-background-position':
+                    background.backgroundPosition,
+                  '--library-background-position-mobile':
+                    background.backgroundPositionMobile,
+                  '--library-background-scale': background.backgroundScale,
+                  '--library-background-scale-mobile':
+                    background.backgroundScaleMobile,
+                  '--library-background-opacity': background.backgroundOpacity,
+                } as CSSProperties
+              }
+            >
+              <Image
+                alt=""
+                draggable={false}
+                fill
+                sizes={
+                  background.backgroundLayer === 'field' ||
+                  background.backgroundLayer === 'top' ||
+                  background.backgroundLayer === 'bottom'
+                    ? '100vw'
+                    : '(max-width: 760px) 100vw, 46vw'
+                }
+                src={background.backgroundImage}
+              />
+            </div>
+          ))}
+        </div>
         <div className="method-history-layout">
           <header>
             <p>{history.period}</p>

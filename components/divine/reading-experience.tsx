@@ -16,7 +16,10 @@ import {
   ChevronDown,
   ChevronLeft,
   Heart,
+  Pencil,
+  Plus,
   RotateCcw,
+  Trash2,
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -47,6 +50,14 @@ import { setReadingAmbience } from '@/lib/divine/audio';
 import { READING_INDEX_ART } from '@/lib/divine/catalog';
 import { composeShare, decodeReadingShareToken } from '@/lib/divine/share';
 import { saveReading } from '@/lib/divine/storage';
+import {
+  createCustomSpread,
+  loadCustomSpreads,
+  storeCustomSpreads,
+  validateCustomSpread,
+  type CustomSpread,
+  type CustomSpreadLayout,
+} from '@/lib/divine/custom-spreads';
 import type {
   DrawnCard,
   Focus,
@@ -71,12 +82,13 @@ type ShareStatus =
   | 'cancelled'
   | 'error';
 interface StoredReadingSession {
-  version: 1 | 2 | 3 | 4;
+  version: 1 | 2 | 3 | 4 | 5;
   system: string;
   stage: Stage | 'intro';
   question: string;
   focus: Focus;
   spreadId: string | null;
+  customSpread?: SpreadDefinition | null;
   reversals: boolean;
   shuffled: boolean;
   draws: Array<{ cardId: string; position: string; reversed: boolean }>;
@@ -997,6 +1009,16 @@ export function ReadingExperience({
   const [spread, setSpread] = useState<SpreadDefinition | null>(
     system.spreads[0] ?? null,
   );
+  const [customSpreads, setCustomSpreads] = useState<CustomSpread[]>([]);
+  const [customSpreadsReady, setCustomSpreadsReady] = useState(
+    system.kind !== 'cards',
+  );
+  const [showSpreadBuilder, setShowSpreadBuilder] = useState(false);
+  const [editingSpreadId, setEditingSpreadId] = useState<string | null>(null);
+  const [spreadName, setSpreadName] = useState('');
+  const [spreadLayout, setSpreadLayout] = useState<CustomSpreadLayout>('line');
+  const [spreadPositions, setSpreadPositions] = useState(['']);
+  const [spreadBuilderError, setSpreadBuilderError] = useState('');
   const [reversals, setReversals] = useState(Boolean(system.reversalStyle));
   const [shuffled, setShuffled] = useState(false);
   const [draws, setDraws] = useState<DrawnCard[]>([]);
@@ -1030,6 +1052,7 @@ export function ReadingExperience({
   const motionHandler = useRef<((event: DeviceMotionEvent) => void) | null>(
     null,
   );
+  const customSpreadsRef = useRef<CustomSpread[]>([]);
   const ritualLock = useRef(false);
   const completionQueued = useRef(false);
   const revealTimers = useRef<number[]>([]);
@@ -1039,6 +1062,25 @@ export function ReadingExperience({
   const objectRitualSteps =
     system.kind === 'cookie' ? COOKIE_RITUAL_STEPS : OBJECT_RITUAL_STEPS;
   const readingAmbienceActive = sessionReady;
+
+  useEffect(() => {
+    if (system.kind !== 'cards') return;
+    let loaded: CustomSpread[] = [];
+    let failed = false;
+    try {
+      loaded = loadCustomSpreads().filter(
+        (item) => item.system === system.slug,
+      );
+      customSpreadsRef.current = loaded;
+    } catch {
+      failed = true;
+    }
+    queueMicrotask(() => {
+      setCustomSpreads(loaded);
+      if (failed) setStorageError(true);
+      setCustomSpreadsReady(true);
+    });
+  }, [system.kind, system.slug]);
 
   useEffect(() => {
     setReadingAmbience(readingAmbienceActive);
@@ -1071,6 +1113,7 @@ export function ReadingExperience({
   }, []);
 
   useEffect(() => {
+    if (!customSpreadsReady) return;
     let cancelled = false;
     let restored: StoredReadingSession | null = null;
     let sharedReading: ReturnType<typeof decodeReadingShareToken> = null;
@@ -1120,11 +1163,24 @@ export function ReadingExperience({
         (restored?.version === 1 ||
           restored?.version === 2 ||
           restored?.version === 3 ||
-          restored?.version === 4) &&
+          restored?.version === 4 ||
+          restored?.version === 5) &&
         restored.system === system.slug
       ) {
+        const savedCustomSpread = customSpreadsRef.current.find(
+          (item) => item.id === restored.spreadId,
+        );
+        const sessionCustomSpread =
+          restored.customSpread?.id === restored.spreadId &&
+          restored.customSpread.id.startsWith('custom:') &&
+          restored.customSpread.positions.length >= 1 &&
+          restored.customSpread.positions.length <= 10
+            ? restored.customSpread
+            : null;
         const restoredSpread =
           system.spreads.find((item) => item.id === restored.spreadId) ??
+          savedCustomSpread ??
+          sessionCustomSpread ??
           system.spreads[0] ??
           null;
         const restoredDraws = (
@@ -1257,17 +1313,18 @@ export function ReadingExperience({
     return () => {
       cancelled = true;
     };
-  }, [objectRitualSteps, sessionKey, system]);
+  }, [customSpreadsReady, objectRitualSteps, sessionKey, system]);
 
   useEffect(() => {
     if (!sessionReady) return;
     const session: StoredReadingSession = {
-      version: 4,
+      version: 5,
       system: system.slug,
       stage,
       question,
       focus,
       spreadId: spread?.id ?? null,
+      customSpread: spread?.id.startsWith('custom:') ? spread : null,
       reversals,
       shuffled,
       draws: draws.map((draw) => ({
@@ -1388,6 +1445,81 @@ export function ReadingExperience({
     setRecordId(nextRecord.id);
     setCreatedAt(nextRecord.createdAt);
     return nextRecord;
+  };
+
+  const closeSpreadBuilder = () => {
+    setShowSpreadBuilder(false);
+    setEditingSpreadId(null);
+    setSpreadName('');
+    setSpreadLayout('line');
+    setSpreadPositions(['']);
+    setSpreadBuilderError('');
+  };
+
+  const editCustomSpread = (item: CustomSpread) => {
+    setEditingSpreadId(item.id);
+    setSpreadName(item.name);
+    setSpreadLayout(item.layout);
+    setSpreadPositions([...item.positions]);
+    setSpreadBuilderError('');
+    setShowSpreadBuilder(true);
+  };
+
+  const persistSystemSpreads = (next: CustomSpread[]) => {
+    const otherSystems = loadCustomSpreads().filter(
+      (item) => item.system !== system.slug,
+    );
+    storeCustomSpreads([...otherSystems, ...next]);
+    customSpreadsRef.current = next;
+    setCustomSpreads(next);
+  };
+
+  const saveCustomSpread = () => {
+    const input = {
+      id: editingSpreadId ?? undefined,
+      name: spreadName,
+      positions: spreadPositions,
+      layout: spreadLayout,
+    };
+    const errors = validateCustomSpread(input);
+    if (errors.length) {
+      setSpreadBuilderError(errors[0]);
+      return;
+    }
+    try {
+      const existing = customSpreads.find(
+        (item) => item.id === editingSpreadId,
+      );
+      const created = createCustomSpread(system.slug, input);
+      const nextSpread = existing
+        ? { ...created, createdAt: existing.createdAt }
+        : created;
+      const next = existing
+        ? customSpreads.map((item) =>
+            item.id === existing.id ? nextSpread : item,
+          )
+        : [...customSpreads, nextSpread];
+      persistSystemSpreads(next);
+      setSpread(nextSpread);
+      closeSpreadBuilder();
+      cue('turn');
+    } catch {
+      setSpreadBuilderError('This spread could not be saved.');
+    }
+  };
+
+  const deleteCustomSpread = (item: CustomSpread) => {
+    try {
+      const next = customSpreads.filter(
+        (spreadItem) => spreadItem.id !== item.id,
+      );
+      persistSystemSpreads(next);
+      if (spread?.id === item.id) setSpread(system.spreads[0] ?? null);
+      if (editingSpreadId === item.id) closeSpreadBuilder();
+      cue('tick');
+    } catch {
+      setStorageError(true);
+    }
   };
 
   const clearRevealTimers = () => {
@@ -1807,7 +1939,7 @@ export function ReadingExperience({
             {...stageMotion}
           >
             <label className="sr-only" htmlFor="question">
-              Optional private question
+              Optional question
             </label>
             <Input
               id="question"
@@ -1859,6 +1991,165 @@ export function ReadingExperience({
                 </motion.button>
               ))}
             </div>
+            <section
+              className="custom-spreads"
+              aria-labelledby="custom-spreads-heading"
+            >
+              <div className="custom-spreads-heading">
+                <div>
+                  <h3 id="custom-spreads-heading">Your spreads</h3>
+                </div>
+                <button
+                  type="button"
+                  className="custom-spread-add"
+                  onClick={() => {
+                    if (showSpreadBuilder) closeSpreadBuilder();
+                    else setShowSpreadBuilder(true);
+                  }}
+                >
+                  <Plus aria-hidden="true" />
+                  {showSpreadBuilder ? 'Cancel' : 'New spread'}
+                </button>
+              </div>
+
+              {customSpreads.length > 0 && (
+                <div className="custom-spread-list">
+                  {customSpreads.map((item) => (
+                    <div
+                      className={spread?.id === item.id ? 'selected' : ''}
+                      key={item.id}
+                    >
+                      <button
+                        type="button"
+                        className="custom-spread-select"
+                        aria-pressed={spread?.id === item.id}
+                        onClick={() => {
+                          setSpread(item);
+                          cue('turn');
+                        }}
+                      >
+                        <strong>{item.name}</strong>
+                        <small>{item.positions.join(' · ')}</small>
+                      </button>
+                      <button
+                        type="button"
+                        className="custom-spread-icon"
+                        aria-label={`Edit ${item.name}`}
+                        onClick={() => editCustomSpread(item)}
+                      >
+                        <Pencil aria-hidden="true" />
+                      </button>
+                      <button
+                        type="button"
+                        className="custom-spread-icon"
+                        aria-label={`Delete ${item.name}`}
+                        onClick={() => deleteCustomSpread(item)}
+                      >
+                        <Trash2 aria-hidden="true" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {showSpreadBuilder && (
+                <div className="custom-spread-builder">
+                  <label htmlFor="custom-spread-name">
+                    <span>Spread name</span>
+                    <Input
+                      id="custom-spread-name"
+                      value={spreadName}
+                      maxLength={80}
+                      onChange={(event) => setSpreadName(event.target.value)}
+                      placeholder="A turning point"
+                    />
+                  </label>
+                  <div className="custom-spread-fields">
+                    <label htmlFor="custom-spread-card-count">
+                      <span>Cards</span>
+                      <select
+                        id="custom-spread-card-count"
+                        value={spreadPositions.length}
+                        onChange={(event) => {
+                          const count = Number(event.target.value);
+                          setSpreadPositions((current) =>
+                            Array.from(
+                              { length: count },
+                              (_, index) => current[index] ?? '',
+                            ),
+                          );
+                        }}
+                      >
+                        {Array.from({ length: 10 }, (_, index) => (
+                          <option value={index + 1} key={index + 1}>
+                            {index + 1}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                    <label htmlFor="custom-spread-layout">
+                      <span>Layout</span>
+                      <select
+                        id="custom-spread-layout"
+                        value={
+                          spreadPositions.length === 1 ? 'single' : spreadLayout
+                        }
+                        disabled={spreadPositions.length === 1}
+                        onChange={(event) =>
+                          setSpreadLayout(
+                            event.target.value as CustomSpreadLayout,
+                          )
+                        }
+                      >
+                        <option value="single">Single</option>
+                        <option value="line">Line</option>
+                        <option value="cross">Cross</option>
+                        <option value="grid">Grid</option>
+                        <option value="tableau">Tableau</option>
+                      </select>
+                    </label>
+                  </div>
+                  <fieldset>
+                    <legend>Position names</legend>
+                    {spreadPositions.map((position, index) => (
+                      <label
+                        htmlFor={`custom-spread-position-${index}`}
+                        key={index}
+                      >
+                        <span>{index + 1}</span>
+                        <Input
+                          id={`custom-spread-position-${index}`}
+                          value={position}
+                          maxLength={80}
+                          onChange={(event) =>
+                            setSpreadPositions((current) =>
+                              current.map((value, positionIndex) =>
+                                positionIndex === index
+                                  ? event.target.value
+                                  : value,
+                              ),
+                            )
+                          }
+                          placeholder={
+                            index === 0
+                              ? 'What is present'
+                              : `Position ${index + 1}`
+                          }
+                        />
+                      </label>
+                    ))}
+                  </fieldset>
+                  {spreadBuilderError && (
+                    <p className="custom-spread-error" role="alert">
+                      {spreadBuilderError}
+                    </p>
+                  )}
+                  <Button type="button" onClick={saveCustomSpread}>
+                    {editingSpreadId ? 'Save changes' : 'Save spread'}
+                  </Button>
+                </div>
+              )}
+            </section>
             <div className="method-footer">
               {system.reversalStyle && (
                 <label className="reversal-toggle">
@@ -2361,8 +2652,8 @@ export function ReadingExperience({
                 />
                 {storageError && (
                   <output className="error-note">
-                    The private journal is unavailable. You can still download
-                    this reading.
+                    The journal is unavailable. You can still download this
+                    reading.
                   </output>
                 )}
                 <div className="result-actions">
@@ -2410,7 +2701,7 @@ export function ReadingExperience({
           animate={{ opacity: 0 }}
           transition={{
             duration: 0.95,
-            delay: 0.12,
+            delay: 1.12,
             ease: [0.22, 1, 0.36, 1],
           }}
           onAnimationComplete={() => setShowOpening(false)}

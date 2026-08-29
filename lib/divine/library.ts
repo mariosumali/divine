@@ -1,5 +1,679 @@
 import type { SystemSlug } from './types';
 
+export type LibraryBackgroundTone =
+  | 'ink'
+  | 'sepia'
+  | 'color'
+  | 'nocturne'
+  | 'silver';
+
+export interface LibraryBackground {
+  backgroundImage: string;
+  backgroundLayer: 'field' | 'left' | 'right' | 'top' | 'bottom';
+  backgroundFit?: 'cover' | 'contain';
+  backgroundPosition: string;
+  backgroundPositionMobile: string;
+  backgroundScale: number;
+  backgroundScaleMobile: number;
+  backgroundTone: LibraryBackgroundTone;
+  backgroundOpacity: number;
+}
+
+type LibraryBackgroundSet = readonly [
+  LibraryBackground,
+  LibraryBackground,
+  ...LibraryBackground[],
+];
+
+export interface LibraryMastheadBackground {
+  backgroundImage: string;
+  backgroundLayer: 'field' | 'left' | 'right' | 'band';
+  backgroundFit: 'cover' | 'contain';
+  backgroundPosition: string;
+  backgroundPositionMobile: string;
+  backgroundScale: number;
+  backgroundTone: LibraryBackgroundTone;
+  backgroundOpacity: number;
+  hideOnMobile?: boolean;
+}
+
+/** A permanent archival identity for the Library, independent of method. */
+export const LIBRARY_MASTHEAD_BACKGROUNDS: readonly LibraryMastheadBackground[] =
+  [
+    {
+      backgroundImage:
+        '/library/backgrounds/library-masthead-sense-of-sight-1617.webp',
+      backgroundLayer: 'field',
+      backgroundFit: 'cover',
+      backgroundPosition: '58% 52%',
+      backgroundPositionMobile: '67% 50%',
+      backgroundScale: 1.04,
+      backgroundTone: 'color',
+      backgroundOpacity: 0.46,
+    },
+    {
+      backgroundImage:
+        '/library/backgrounds/library-masthead-marot-library-1703.webp',
+      backgroundLayer: 'left',
+      backgroundFit: 'cover',
+      backgroundPosition: '62% 48%',
+      backgroundPositionMobile: '50% 50%',
+      backgroundScale: 1.08,
+      backgroundTone: 'ink',
+      backgroundOpacity: 0.58,
+      hideOnMobile: true,
+    },
+    {
+      backgroundImage:
+        '/library/backgrounds/library-masthead-arcimboldo-librarian-1562.webp',
+      backgroundLayer: 'right',
+      backgroundFit: 'contain',
+      backgroundPosition: '100% 35%',
+      backgroundPositionMobile: '108% 34%',
+      backgroundScale: 1.02,
+      backgroundTone: 'nocturne',
+      backgroundOpacity: 0.7,
+    },
+    {
+      backgroundImage:
+        '/library/backgrounds/library-masthead-sainte-genevieve-1688.webp',
+      backgroundLayer: 'band',
+      backgroundFit: 'cover',
+      backgroundPosition: '50% 61%',
+      backgroundPositionMobile: '50% 50%',
+      backgroundScale: 1,
+      backgroundTone: 'sepia',
+      backgroundOpacity: 0.34,
+      hideOnMobile: true,
+    },
+  ];
+
+/** Quiet fixed texture below the method-specific navigator artwork. */
+export const LIBRARY_NAVIGATOR_FOUNDATION: LibraryMastheadBackground = {
+  backgroundImage:
+    '/library/backgrounds/library-navigator-francken-cabinet-1619.webp',
+  backgroundLayer: 'field',
+  backgroundFit: 'cover',
+  backgroundPosition: '50% 56%',
+  backgroundPositionMobile: '58% 52%',
+  backgroundScale: 1.03,
+  backgroundTone: 'color',
+  backgroundOpacity: 0.2,
+};
+
+/**
+ * Decorative archival plates for each Library entry. Keeping this exhaustive
+ * makes a new reading method fail type-checking until its imagery is assigned.
+ */
+export const LIBRARY_BACKGROUNDS: Record<SystemSlug, LibraryBackgroundSet> = {
+  divine: [
+    {
+      backgroundImage:
+        '/library/backgrounds/divine-fortune-teller-de-la-tour.webp',
+      backgroundLayer: 'field',
+      backgroundPosition: '52% 43%',
+      backgroundPositionMobile: '54% 28%',
+      backgroundScale: 1.04,
+      backgroundScaleMobile: 1.12,
+      backgroundTone: 'nocturne',
+      backgroundOpacity: 0.42,
+    },
+    {
+      backgroundImage: '/library/backgrounds/divine-museum-wormianum-1655.webp',
+      backgroundLayer: 'bottom',
+      backgroundPosition: '42% 50%',
+      backgroundPositionMobile: '50% 42%',
+      backgroundScale: 1.08,
+      backgroundScaleMobile: 1.04,
+      backgroundTone: 'sepia',
+      backgroundOpacity: 0.48,
+    },
+  ],
+  tarot: [
+    {
+      backgroundImage: '/library/backgrounds/tarot-tarocchi-cards-ca-1500.webp',
+      backgroundLayer: 'field',
+      backgroundPosition: '72% 47%',
+      backgroundPositionMobile: '52% 22%',
+      backgroundScale: 1.07,
+      backgroundScaleMobile: 1.08,
+      backgroundTone: 'sepia',
+      backgroundOpacity: 0.44,
+    },
+    {
+      backgroundImage:
+        '/library/backgrounds/tarot-high-priestess-smith-1909.webp',
+      backgroundLayer: 'left',
+      backgroundFit: 'contain',
+      backgroundPosition: '50% 36%',
+      backgroundPositionMobile: '50% 28%',
+      backgroundScale: 1.06,
+      backgroundScaleMobile: 1.02,
+      backgroundTone: 'ink',
+      backgroundOpacity: 0.52,
+    },
+  ],
+  oracle: [
+    {
+      backgroundImage:
+        '/library/backgrounds/oracle-petit-oracle-amour-1807.webp',
+      backgroundLayer: 'left',
+      backgroundFit: 'contain',
+      backgroundPosition: '76% 48%',
+      backgroundPositionMobile: '62% 24%',
+      backgroundScale: 1.12,
+      backgroundScaleMobile: 1.12,
+      backgroundTone: 'color',
+      backgroundOpacity: 0.4,
+    },
+    {
+      backgroundImage:
+        '/library/backgrounds/oracle-symbolique-milkmaid-1890.webp',
+      backgroundLayer: 'right',
+      backgroundFit: 'contain',
+      backgroundPosition: '50% 38%',
+      backgroundPositionMobile: '50% 26%',
+      backgroundScale: 1.05,
+      backgroundScaleMobile: 1.06,
+      backgroundTone: 'sepia',
+      backgroundOpacity: 0.5,
+    },
+  ],
+  lenormand: [
+    {
+      backgroundImage: '/library/backgrounds/lenormand-game-of-hope-1799.webp',
+      backgroundLayer: 'field',
+      backgroundPosition: '76% 50%',
+      backgroundPositionMobile: '55% 23%',
+      backgroundScale: 1.08,
+      backgroundScaleMobile: 1.16,
+      backgroundTone: 'color',
+      backgroundOpacity: 0.41,
+    },
+    {
+      backgroundImage: '/library/backgrounds/lenormand-portrait-ledoux.webp',
+      backgroundLayer: 'right',
+      backgroundFit: 'contain',
+      backgroundPosition: '50% 30%',
+      backgroundPositionMobile: '50% 24%',
+      backgroundScale: 1.03,
+      backgroundScaleMobile: 1.05,
+      backgroundTone: 'sepia',
+      backgroundOpacity: 0.51,
+    },
+  ],
+  spellcraft: [
+    {
+      backgroundImage:
+        '/library/backgrounds/spellcraft-baldung-witches-1510.webp',
+      backgroundLayer: 'left',
+      backgroundFit: 'contain',
+      backgroundPosition: '72% 48%',
+      backgroundPositionMobile: '58% 23%',
+      backgroundScale: 1.03,
+      backgroundScaleMobile: 1.14,
+      backgroundTone: 'ink',
+      backgroundOpacity: 0.43,
+    },
+    {
+      backgroundImage:
+        '/library/backgrounds/spellcraft-magic-circle-waterhouse-1886.webp',
+      backgroundLayer: 'right',
+      backgroundFit: 'contain',
+      backgroundPosition: '52% 42%',
+      backgroundPositionMobile: '50% 30%',
+      backgroundScale: 1.08,
+      backgroundScaleMobile: 1.08,
+      backgroundTone: 'nocturne',
+      backgroundOpacity: 0.5,
+    },
+  ],
+  'ancient-egypt': [
+    {
+      backgroundImage:
+        '/library/backgrounds/ancient-egypt-weighing-heart-ani.webp',
+      backgroundLayer: 'top',
+      backgroundPosition: '70% 48%',
+      backgroundPositionMobile: '56% 22%',
+      backgroundScale: 1.05,
+      backgroundScaleMobile: 1.2,
+      backgroundTone: 'color',
+      backgroundOpacity: 0.45,
+    },
+    {
+      backgroundImage:
+        '/library/backgrounds/ancient-egypt-nebamun-marsh-hunt.webp',
+      backgroundLayer: 'bottom',
+      backgroundPosition: '42% 46%',
+      backgroundPositionMobile: '44% 28%',
+      backgroundScale: 1.13,
+      backgroundScaleMobile: 1.1,
+      backgroundTone: 'color',
+      backgroundOpacity: 0.49,
+    },
+  ],
+  zodiac: [
+    {
+      backgroundImage:
+        '/library/backgrounds/zodiac-trouvelot-zodiacal-light-1882.webp',
+      backgroundLayer: 'field',
+      backgroundPosition: '74% 46%',
+      backgroundPositionMobile: '58% 22%',
+      backgroundScale: 1.04,
+      backgroundScaleMobile: 1.15,
+      backgroundTone: 'nocturne',
+      backgroundOpacity: 0.48,
+    },
+    {
+      backgroundImage: '/library/backgrounds/zodiac-jamieson-virgo-1822.webp',
+      backgroundLayer: 'bottom',
+      backgroundPosition: '50% 42%',
+      backgroundPositionMobile: '50% 28%',
+      backgroundScale: 1.06,
+      backgroundScaleMobile: 1.04,
+      backgroundTone: 'ink',
+      backgroundOpacity: 0.48,
+    },
+  ],
+  'magic-8-ball': [
+    {
+      backgroundImage:
+        '/library/backgrounds/magic-8-ball-billiard-room-rowlandson-1801.webp',
+      backgroundLayer: 'field',
+      backgroundPosition: '68% 50%',
+      backgroundPositionMobile: '66% 26%',
+      backgroundScale: 1.06,
+      backgroundScaleMobile: 1.18,
+      backgroundTone: 'color',
+      backgroundOpacity: 0.42,
+    },
+    {
+      backgroundImage:
+        '/library/backgrounds/magic-8-ball-crystal-ball-waterhouse-1902.webp',
+      backgroundLayer: 'right',
+      backgroundFit: 'contain',
+      backgroundPosition: '48% 30%',
+      backgroundPositionMobile: '50% 26%',
+      backgroundScale: 1.08,
+      backgroundScaleMobile: 1.08,
+      backgroundTone: 'nocturne',
+      backgroundOpacity: 0.52,
+    },
+  ],
+  'fortune-cookie': [
+    {
+      backgroundImage:
+        '/library/backgrounds/fortune-cookie-tsujiura-senbei-1878.webp',
+      backgroundLayer: 'right',
+      backgroundFit: 'contain',
+      backgroundPosition: '74% 50%',
+      backgroundPositionMobile: '60% 22%',
+      backgroundScale: 1.08,
+      backgroundScaleMobile: 1.2,
+      backgroundTone: 'sepia',
+      backgroundOpacity: 0.43,
+    },
+    {
+      backgroundImage:
+        '/library/backgrounds/fortune-cookie-sweetshop-takehara-1787.webp',
+      backgroundLayer: 'bottom',
+      backgroundPosition: '52% 45%',
+      backgroundPositionMobile: '50% 28%',
+      backgroundScale: 1.05,
+      backgroundScaleMobile: 1.08,
+      backgroundTone: 'ink',
+      backgroundOpacity: 0.48,
+    },
+  ],
+  kipper: [
+    {
+      backgroundImage:
+        '/library/backgrounds/kipper-letter-carrier-spitzweg-1858.webp',
+      backgroundLayer: 'right',
+      backgroundFit: 'contain',
+      backgroundPosition: '72% 72%',
+      backgroundPositionMobile: '58% 30%',
+      backgroundScale: 1.05,
+      backgroundScaleMobile: 1.13,
+      backgroundTone: 'sepia',
+      backgroundOpacity: 0.42,
+    },
+    {
+      backgroundImage:
+        '/library/backgrounds/kipper-munich-street-cleaner-1908.webp',
+      backgroundLayer: 'field',
+      backgroundPosition: '52% 68%',
+      backgroundPositionMobile: '50% 55%',
+      backgroundScale: 1.14,
+      backgroundScaleMobile: 1.16,
+      backgroundTone: 'ink',
+      backgroundOpacity: 0.54,
+    },
+  ],
+  belline: [
+    {
+      backgroundImage:
+        '/library/backgrounds/belline-mage-edmond-diagram-1870.webp',
+      backgroundLayer: 'field',
+      backgroundPosition: '76% 48%',
+      backgroundPositionMobile: '62% 24%',
+      backgroundScale: 1.08,
+      backgroundScaleMobile: 1.2,
+      backgroundTone: 'sepia',
+      backgroundOpacity: 0.44,
+    },
+    {
+      backgroundImage: '/library/backgrounds/belline-card-reader-wattier.webp',
+      backgroundLayer: 'right',
+      backgroundFit: 'contain',
+      backgroundPosition: '50% 34%',
+      backgroundPositionMobile: '50% 26%',
+      backgroundScale: 1.08,
+      backgroundScaleMobile: 1.08,
+      backgroundTone: 'color',
+      backgroundOpacity: 0.51,
+    },
+  ],
+  'playing-card-cartomancy': [
+    {
+      backgroundImage:
+        '/library/backgrounds/playing-card-cartomancy-cezanne-1890.webp',
+      backgroundLayer: 'left',
+      backgroundPosition: '71% 50%',
+      backgroundPositionMobile: '58% 24%',
+      backgroundScale: 1.05,
+      backgroundScaleMobile: 1.17,
+      backgroundTone: 'color',
+      backgroundOpacity: 0.4,
+    },
+    {
+      backgroundImage:
+        '/library/backgrounds/playing-card-cartomancy-boilly-1822.webp',
+      backgroundLayer: 'right',
+      backgroundPosition: '50% 42%',
+      backgroundPositionMobile: '50% 28%',
+      backgroundScale: 1.1,
+      backgroundScaleMobile: 1.08,
+      backgroundTone: 'ink',
+      backgroundOpacity: 0.5,
+    },
+  ],
+  sibilla: [
+    {
+      backgroundImage:
+        '/library/backgrounds/sibilla-cumaean-sibyl-veneziano-1516.webp',
+      backgroundLayer: 'left',
+      backgroundFit: 'contain',
+      backgroundPosition: '74% 43%',
+      backgroundPositionMobile: '60% 22%',
+      backgroundScale: 1.04,
+      backgroundScaleMobile: 1.14,
+      backgroundTone: 'ink',
+      backgroundOpacity: 0.43,
+    },
+    {
+      backgroundImage:
+        '/library/backgrounds/sibilla-cumaean-sibyl-domenichino-1617.webp',
+      backgroundLayer: 'right',
+      backgroundFit: 'contain',
+      backgroundPosition: '54% 30%',
+      backgroundPositionMobile: '52% 24%',
+      backgroundScale: 1.1,
+      backgroundScaleMobile: 1.08,
+      backgroundTone: 'color',
+      backgroundOpacity: 0.49,
+    },
+  ],
+  'runic-cards': [
+    {
+      backgroundImage: '/library/backgrounds/runic-cards-kylver-stone.webp',
+      backgroundLayer: 'left',
+      backgroundFit: 'contain',
+      backgroundPosition: '72% 30%',
+      backgroundPositionMobile: '60% 20%',
+      backgroundScale: 1.06,
+      backgroundScaleMobile: 1.18,
+      backgroundTone: 'silver',
+      backgroundOpacity: 0.45,
+    },
+    {
+      backgroundImage: '/library/backgrounds/runic-cards-ro-stone.webp',
+      backgroundLayer: 'right',
+      backgroundFit: 'contain',
+      backgroundPosition: '50% 46%',
+      backgroundPositionMobile: '50% 30%',
+      backgroundScale: 1.04,
+      backgroundScaleMobile: 1.03,
+      backgroundTone: 'ink',
+      backgroundOpacity: 0.53,
+    },
+  ],
+  'i-ching-cards': [
+    {
+      backgroundImage:
+        '/library/backgrounds/i-ching-leibniz-hexagrams-1701.webp',
+      backgroundLayer: 'right',
+      backgroundFit: 'contain',
+      backgroundPosition: '74% 50%',
+      backgroundPositionMobile: '58% 23%',
+      backgroundScale: 1.08,
+      backgroundScaleMobile: 1.17,
+      backgroundTone: 'ink',
+      backgroundOpacity: 0.42,
+    },
+    {
+      backgroundImage: '/library/backgrounds/i-ching-fuxi-eight-trigrams.webp',
+      backgroundLayer: 'left',
+      backgroundFit: 'contain',
+      backgroundPosition: '50% 34%',
+      backgroundPositionMobile: '50% 26%',
+      backgroundScale: 1.04,
+      backgroundScaleMobile: 1.04,
+      backgroundTone: 'sepia',
+      backgroundOpacity: 0.5,
+    },
+  ],
+  'fal-e-hafez': [
+    {
+      backgroundImage:
+        '/library/backgrounds/fal-e-hafez-dancing-dervishes.webp',
+      backgroundLayer: 'left',
+      backgroundFit: 'contain',
+      backgroundPosition: '73% 65%',
+      backgroundPositionMobile: '58% 48%',
+      backgroundScale: 1.06,
+      backgroundScaleMobile: 1.17,
+      backgroundTone: 'color',
+      backgroundOpacity: 0.43,
+    },
+    {
+      backgroundImage: '/library/backgrounds/fal-e-hafez-prince-and-poet.webp',
+      backgroundLayer: 'right',
+      backgroundFit: 'contain',
+      backgroundPosition: '52% 42%',
+      backgroundPositionMobile: '52% 28%',
+      backgroundScale: 1.05,
+      backgroundScaleMobile: 1.05,
+      backgroundTone: 'color',
+      backgroundOpacity: 0.52,
+    },
+  ],
+  hanafuda: [
+    {
+      backgroundImage:
+        '/library/backgrounds/hanafuda-cranes-snow-pine-hokusai.webp',
+      backgroundLayer: 'right',
+      backgroundFit: 'contain',
+      backgroundPosition: '76% 37%',
+      backgroundPositionMobile: '64% 20%',
+      backgroundScale: 1.04,
+      backgroundScaleMobile: 1.13,
+      backgroundTone: 'color',
+      backgroundOpacity: 0.44,
+    },
+    {
+      backgroundImage:
+        '/library/backgrounds/hanafuda-grasshopper-iris-hokusai.webp',
+      backgroundLayer: 'field',
+      backgroundPosition: '48% 50%',
+      backgroundPositionMobile: '48% 30%',
+      backgroundScale: 1.06,
+      backgroundScaleMobile: 1.06,
+      backgroundTone: 'color',
+      backgroundOpacity: 0.52,
+    },
+  ],
+  zigeunerkarten: [
+    {
+      backgroundImage:
+        '/library/backgrounds/zigeunerkarten-kartenlegerin-kurzbauer.webp',
+      backgroundLayer: 'left',
+      backgroundFit: 'contain',
+      backgroundPosition: '70% 48%',
+      backgroundPositionMobile: '58% 24%',
+      backgroundScale: 1.05,
+      backgroundScaleMobile: 1.17,
+      backgroundTone: 'silver',
+      backgroundOpacity: 0.52,
+    },
+    {
+      backgroundImage:
+        '/library/backgrounds/zigeunerkarten-letter-reader-bertuch.webp',
+      backgroundLayer: 'right',
+      backgroundFit: 'contain',
+      backgroundPosition: '50% 34%',
+      backgroundPositionMobile: '50% 25%',
+      backgroundScale: 1.04,
+      backgroundScaleMobile: 1.04,
+      backgroundTone: 'color',
+      backgroundOpacity: 0.5,
+    },
+  ],
+  'ilm-al-raml': [
+    {
+      backgroundImage: '/library/backgrounds/ilm-al-raml-figures-folio-32.webp',
+      backgroundLayer: 'left',
+      backgroundFit: 'contain',
+      backgroundPosition: '72% 48%',
+      backgroundPositionMobile: '58% 22%',
+      backgroundScale: 1.04,
+      backgroundScaleMobile: 1.15,
+      backgroundTone: 'ink',
+      backgroundOpacity: 0.52,
+    },
+    {
+      backgroundImage: '/library/backgrounds/ilm-al-raml-figures-folio-44.webp',
+      backgroundLayer: 'right',
+      backgroundFit: 'contain',
+      backgroundPosition: '50% 48%',
+      backgroundPositionMobile: '50% 28%',
+      backgroundScale: 1.08,
+      backgroundScaleMobile: 1.06,
+      backgroundTone: 'ink',
+      backgroundOpacity: 0.5,
+    },
+  ],
+};
+
+export interface LibraryNavigatorBackgrounds {
+  field: LibraryBackground;
+  card: LibraryBackground;
+  fieldFit?: 'cover' | 'contain';
+  fieldPosition?: string;
+  fieldPositionMobile?: string;
+  fieldScale?: number;
+  cardFit?: 'cover' | 'contain';
+  cardPosition?: string;
+  cardPositionMobile?: string;
+  cardScale?: number;
+}
+
+/**
+ * Explicit surface assignments for the method navigator. New systems must
+ * choose their field and card artwork rather than inheriting array order.
+ */
+export const LIBRARY_NAVIGATOR_BACKGROUNDS: Record<
+  SystemSlug,
+  LibraryNavigatorBackgrounds
+> = {
+  divine: {
+    field: LIBRARY_BACKGROUNDS.divine[0],
+    card: LIBRARY_BACKGROUNDS.divine[1],
+  },
+  tarot: {
+    field: LIBRARY_BACKGROUNDS.tarot[0],
+    card: LIBRARY_BACKGROUNDS.tarot[1],
+  },
+  oracle: {
+    field: LIBRARY_BACKGROUNDS.oracle[1],
+    card: LIBRARY_BACKGROUNDS.oracle[0],
+  },
+  lenormand: {
+    field: LIBRARY_BACKGROUNDS.lenormand[0],
+    card: LIBRARY_BACKGROUNDS.lenormand[1],
+  },
+  spellcraft: {
+    field: LIBRARY_BACKGROUNDS.spellcraft[1],
+    card: LIBRARY_BACKGROUNDS.spellcraft[0],
+  },
+  'ancient-egypt': {
+    field: LIBRARY_BACKGROUNDS['ancient-egypt'][0],
+    card: LIBRARY_BACKGROUNDS['ancient-egypt'][1],
+  },
+  zodiac: {
+    field: LIBRARY_BACKGROUNDS.zodiac[0],
+    card: LIBRARY_BACKGROUNDS.zodiac[1],
+  },
+  'magic-8-ball': {
+    field: LIBRARY_BACKGROUNDS['magic-8-ball'][0],
+    card: LIBRARY_BACKGROUNDS['magic-8-ball'][1],
+  },
+  'fortune-cookie': {
+    field: LIBRARY_BACKGROUNDS['fortune-cookie'][1],
+    card: LIBRARY_BACKGROUNDS['fortune-cookie'][0],
+  },
+  kipper: {
+    field: LIBRARY_BACKGROUNDS.kipper[1],
+    card: LIBRARY_BACKGROUNDS.kipper[0],
+  },
+  belline: {
+    field: LIBRARY_BACKGROUNDS.belline[0],
+    card: LIBRARY_BACKGROUNDS.belline[1],
+  },
+  'playing-card-cartomancy': {
+    field: LIBRARY_BACKGROUNDS['playing-card-cartomancy'][0],
+    card: LIBRARY_BACKGROUNDS['playing-card-cartomancy'][1],
+  },
+  sibilla: {
+    field: LIBRARY_BACKGROUNDS.sibilla[1],
+    card: LIBRARY_BACKGROUNDS.sibilla[0],
+  },
+  'runic-cards': {
+    field: LIBRARY_BACKGROUNDS['runic-cards'][0],
+    card: LIBRARY_BACKGROUNDS['runic-cards'][1],
+  },
+  'i-ching-cards': {
+    field: LIBRARY_BACKGROUNDS['i-ching-cards'][0],
+    card: LIBRARY_BACKGROUNDS['i-ching-cards'][1],
+  },
+  'fal-e-hafez': {
+    field: LIBRARY_BACKGROUNDS['fal-e-hafez'][0],
+    card: LIBRARY_BACKGROUNDS['fal-e-hafez'][1],
+  },
+  hanafuda: {
+    field: LIBRARY_BACKGROUNDS.hanafuda[0],
+    card: LIBRARY_BACKGROUNDS.hanafuda[1],
+  },
+  zigeunerkarten: {
+    field: LIBRARY_BACKGROUNDS.zigeunerkarten[0],
+    card: LIBRARY_BACKGROUNDS.zigeunerkarten[1],
+  },
+  'ilm-al-raml': {
+    field: LIBRARY_BACKGROUNDS['ilm-al-raml'][0],
+    card: LIBRARY_BACKGROUNDS['ilm-al-raml'][1],
+  },
+};
+
 export interface MethodHistory {
   slug: SystemSlug;
   period: string;

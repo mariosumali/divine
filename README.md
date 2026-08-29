@@ -1,8 +1,8 @@
 # DIVINE
 
-DIVINE is a private, account-free divination application with nineteen complete reading experiences: one unified DIVINE constellation, sixteen card traditions, and two chance oracles. The individual methods are Tarot, Oracle, Lenormand, Ritual, Temple, Zodiac, Kipper, Belline, Playing Card Cartomancy, Sibilla Italiana, Runic Cards, I Ching Cards, Fal-e Hafez Cards, Hanafuda, Zigeunerkarten, ʿIlm al-Raml Cards, Magic 8 Ball, and Fortune Cookie.
+DIVINE is a divination application with nineteen complete reading experiences: one unified DIVINE constellation, sixteen card traditions, and two chance oracles. The individual methods are Tarot, Oracle, Lenormand, Ritual, Temple, Zodiac, Kipper, Belline, Playing Card Cartomancy, Sibilla Italiana, Runic Cards, I Ching Cards, Fal-e Hafez Cards, Hanafuda, Zigeunerkarten, ʿIlm al-Raml Cards, Magic 8 Ball, and Fortune Cookie.
 
-The interface uses an editorial black-and-white visual system, procedural Web Audio, tactile motion, browser-only randomness, and an IndexedDB journal. Questions, notes, and saved readings never leave the browser.
+The interface uses an editorial black-and-white visual system, procedural Web Audio, tactile motion, browser-only randomness, and an IndexedDB journal.
 
 ## Run locally
 

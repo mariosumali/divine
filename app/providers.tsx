@@ -148,10 +148,12 @@ export function Providers({ children }: { children: React.ReactNode }) {
             DIVINE
           </Link>
           <nav aria-label="Primary navigation">
+            <Link href="/today">Today</Link>
             <Link href="/#readings">Readings</Link>
             <Link href="/astrology">Astrology</Link>
             <Link href="/journal">Journal</Link>
             <Link href="/library">Library</Link>
+            <Link href="/gallery">Gallery</Link>
           </nav>
           <div className="header-controls">
             <button

@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { METHOD_HISTORIES } from './library';
+import {
+  LIBRARY_BACKGROUNDS,
+  LIBRARY_MASTHEAD_BACKGROUNDS,
+  LIBRARY_NAVIGATOR_BACKGROUNDS,
+  LIBRARY_NAVIGATOR_FOUNDATION,
+  METHOD_HISTORIES,
+} from './library';
 import { SYSTEMS } from './systems';
 
 describe('DIVINE library', () => {
@@ -10,6 +16,70 @@ describe('DIVINE library', () => {
       expect(history.title.length).toBeGreaterThan(8);
       expect(history.history.length).toBeGreaterThanOrEqual(2);
     }
+  });
+
+  it('assigns multiple distinct archival backgrounds to every system', () => {
+    const layerKinds = new Set<string>();
+    const imagePaths = SYSTEMS.flatMap((system) => {
+      const backgrounds = LIBRARY_BACKGROUNDS[system.slug];
+
+      expect(backgrounds.length).toBeGreaterThanOrEqual(2);
+      for (const background of backgrounds) {
+        layerKinds.add(background.backgroundLayer);
+        expect(background.backgroundImage).toMatch(
+          /^\/library\/backgrounds\/[a-z0-9-]+\.webp$/,
+        );
+        expect(['field', 'left', 'right', 'top', 'bottom']).toContain(
+          background.backgroundLayer,
+        );
+        if (background.backgroundFit) {
+          expect(['cover', 'contain']).toContain(background.backgroundFit);
+        }
+        expect(background.backgroundPosition).toMatch(/% /);
+        expect(background.backgroundPositionMobile).toMatch(/% /);
+        expect(background.backgroundScale).toBeGreaterThanOrEqual(1);
+        expect(background.backgroundScaleMobile).toBeGreaterThanOrEqual(1);
+        expect(background.backgroundOpacity).toBeGreaterThan(0.3);
+      }
+
+      return backgrounds.map((background) => background.backgroundImage);
+    });
+
+    expect(imagePaths).toHaveLength(38);
+    expect(new Set(imagePaths).size).toBe(imagePaths.length);
+    expect(layerKinds).toEqual(
+      new Set(['field', 'left', 'right', 'top', 'bottom']),
+    );
+  });
+
+  it('assigns explicit, distinct navigator surfaces to every system', () => {
+    for (const system of SYSTEMS) {
+      const entryBackgrounds = LIBRARY_BACKGROUNDS[system.slug];
+      const navigatorBackgrounds = LIBRARY_NAVIGATOR_BACKGROUNDS[system.slug];
+
+      expect(navigatorBackgrounds.field.backgroundImage).not.toBe(
+        navigatorBackgrounds.card.backgroundImage,
+      );
+      expect(entryBackgrounds).toContain(navigatorBackgrounds.field);
+      expect(entryBackgrounds).toContain(navigatorBackgrounds.card);
+    }
+  });
+
+  it('keeps the permanent Library montage local and visually varied', () => {
+    const featureImages = [
+      ...LIBRARY_MASTHEAD_BACKGROUNDS.map(
+        (background) => background.backgroundImage,
+      ),
+      LIBRARY_NAVIGATOR_FOUNDATION.backgroundImage,
+    ];
+
+    expect(featureImages).toHaveLength(5);
+    expect(new Set(featureImages).size).toBe(featureImages.length);
+    expect(
+      featureImages.every((image) =>
+        /^\/library\/backgrounds\/[a-z0-9-]+\.webp$/.test(image),
+      ),
+    ).toBe(true);
   });
 
   it('indexes every authored card with a standalone meaning', () => {

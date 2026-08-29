@@ -4,6 +4,7 @@ interface ZodiacMarkProps {
   sign: string;
   className?: string;
   label?: string;
+  size?: number;
 }
 
 function markFor(sign: string): ReactNode {
@@ -86,10 +87,12 @@ function markFor(sign: string): ReactNode {
   }
 }
 
-export function ZodiacMark({ sign, className, label }: ZodiacMarkProps) {
+export function ZodiacMark({ sign, className, label, size }: ZodiacMarkProps) {
   return (
     <svg
       className={className}
+      width={size}
+      height={size}
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
