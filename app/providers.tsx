@@ -225,7 +225,6 @@ export function Providers({ children }: { children: React.ReactNode }) {
             className="entry-gate"
             aria-modal="true"
             aria-labelledby="entry-title"
-            aria-describedby="entry-description"
             initial={{ opacity: 1 }}
             exit={{ opacity: 0, y: '-100%' }}
             transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
@@ -238,15 +237,6 @@ export function Providers({ children }: { children: React.ReactNode }) {
             >
               DIVINE
             </motion.h1>
-            <motion.p
-              id="entry-description"
-              className="entry-note"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.75 }}
-            >
-              Readings stay on this device unless you choose to share them.
-            </motion.p>
             <motion.div
               className="entry-actions"
               initial={{ opacity: 0, y: 14 }}

@@ -275,18 +275,12 @@ button {
 .entry-gate h1 {
   position: relative;
   margin: 0;
+  padding: 0.1em 0.04em 0.06em;
   font-family: var(--font-bodoni), Georgia, serif;
   font-weight: 500;
   font-size: clamp(5rem, 18vw, 17rem);
-  line-height: 0.72;
+  line-height: 0.9;
   letter-spacing: -0.07em;
-}
-.entry-note {
-  position: relative;
-  margin: 7vh 0 28px;
-  color: #aaa7a0;
-  font-family: var(--font-bodoni), Georgia, serif;
-  font-size: 18px;
 }
 .entry-disclaimer {
   position: absolute;
@@ -303,6 +297,7 @@ button {
 .entry-actions {
   position: relative;
   display: flex;
+  margin-top: clamp(32px, 7vh, 68px);
   gap: 10px;
 }
 
