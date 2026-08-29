@@ -10,7 +10,6 @@ import {
 } from 'motion/react';
 import {
   ArrowDown,
-  ArrowLeft,
   ArrowRight,
   BookMarked,
   Check,
@@ -1710,12 +1709,6 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
     <main className={`reading-shell stage-${stage}`}>
       {stage !== 'ritual' && stage !== 'reveal' && (
         <>
-          <header className="reading-titlebar">
-            <Link href="/#readings" className="back-link">
-              <ArrowLeft /> Readings
-            </Link>
-            <span>{system.shortName}</span>
-          </header>
           <Progress stage={stage} systemKind={system.kind} />
           {stage !== 'intro' && stage !== 'result' && (
             <button type="button" className="stage-back" onClick={goBack}>
