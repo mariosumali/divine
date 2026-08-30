@@ -8508,19 +8508,18 @@ button {
   display: grid;
   place-items: center;
   padding: 0;
-  border: 1px solid rgba(244, 242, 236, 0.46);
-  border-radius: 50%;
-  background: rgba(5, 5, 5, 0.78);
-  color: #f4f2ec;
-  backdrop-filter: blur(10px);
+  border: 1px solid #050505;
+  border-radius: 0;
+  background: #f4f2ec;
+  color: #050505;
   cursor: pointer;
   transition:
     background 0.2s ease,
     color 0.2s ease;
 }
 .atlas-lightbox-close:hover {
-  background: #f4f2ec;
-  color: #050505;
+  background: #050505;
+  color: #f4f2ec;
 }
 .atlas-lightbox-close svg {
   width: 19px;
