@@ -43,6 +43,41 @@ describe('share composition privacy', () => {
     expect(composeShare(record, true).question).toBe(record.question);
   });
 
+  it('keeps a randomized object headline stable for the exact reading', () => {
+    const original = composeShare(record).displayHeadline;
+    const decoded = decodeReadingShareToken(
+      createReadingShareToken(record),
+      SYSTEM_MAP['magic-8-ball'],
+    )?.record;
+
+    expect(original).not.toBe('The answer has arrived.');
+    expect(decoded && composeShare(decoded).displayHeadline).toBe(original);
+  });
+
+  it('varies headlines across both object-reading systems', () => {
+    for (const system of [
+      SYSTEM_MAP['magic-8-ball'],
+      SYSTEM_MAP['fortune-cookie'],
+    ]) {
+      const headlines = Array.from(
+        { length: 36 },
+        (_, index) =>
+          composeShare({
+            ...record,
+            system: system.slug,
+            systemName: system.name,
+            spreadId: system.kind,
+            spreadName:
+              system.kind === 'ball' ? 'Ask & shake' : 'Crack & reveal',
+            createdAt: new Date(Date.UTC(2026, 8, 2, 10, index)).toISOString(),
+            luckyNumbers: system.kind === 'cookie' ? [3, 8, 13] : undefined,
+          }).displayHeadline,
+      );
+
+      expect(new Set(headlines).size).toBeGreaterThan(6);
+    }
+  });
+
   it('retains the complete spread in the export composition', () => {
     const draws = SYSTEMS[0].cards.slice(0, 12).map((card, index) => ({
       card,

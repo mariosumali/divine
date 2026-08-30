@@ -669,8 +669,8 @@ export function HomeCatalog() {
     if (departingSystem) return;
     setDepartingSystem(system);
     departureTimer.current = setTimeout(() => {
-      router.push(`/read/${system.slug}`);
-    }, 980);
+      router.push(`/read/${system.slug}?opening=1`);
+    }, 1350);
   };
 
   return (
@@ -693,21 +693,6 @@ export function HomeCatalog() {
           heroYSource.set(0);
         }}
       >
-        <div className="hero-shutters" aria-hidden="true">
-          {Array.from({ length: 6 }, (_, index) => (
-            <motion.i
-              key={index}
-              initial={{ scaleY: 1 }}
-              animate={{ scaleY: 0 }}
-              transition={{
-                duration: 0.82,
-                delay: 0.04 + index * 0.065,
-                ease: [0.76, 0, 0.24, 1],
-              }}
-            />
-          ))}
-        </div>
-
         {(['back', 'front'] as const).map((layer) => (
           <div
             className={`hero-sigils hero-sigils-${layer}`}
@@ -876,9 +861,9 @@ export function HomeCatalog() {
                   filter: 'blur(0px)',
                 }}
                 whileHover={{
-                  y: -8,
-                  rotate: -artMotion.angle * 1.35,
-                  scale: 1.035,
+                  y: -4,
+                  rotate: -artMotion.angle * 0.175,
+                  scale: 1.0175,
                 }}
                 viewport={{ once: true, amount: 0.22 }}
                 transition={{
@@ -911,9 +896,7 @@ export function HomeCatalog() {
               </motion.span>
               <span className="reading-index-name">
                 <span>{system.name}</span>
-                {system.slug === 'divine' && (
-                  <small>One card from every deck · one connected answer</small>
-                )}
+                <small>{system.description}</small>
               </span>
             </Link>
           );
@@ -933,8 +916,8 @@ export function HomeCatalog() {
                 key={index}
                 variants={{ closed: { y: '102%' }, open: { y: '0%' } }}
                 transition={{
-                  duration: 0.58,
-                  delay: index * 0.045,
+                  duration: 0.9,
+                  delay: index * 0.055,
                   ease: [0.76, 0, 0.24, 1],
                 }}
               />
@@ -945,8 +928,8 @@ export function HomeCatalog() {
             initial={{ opacity: 0, scale: 0.7, rotate: -8 }}
             animate={{ opacity: 1, scale: 1, rotate: 0 }}
             transition={{
-              duration: 0.62,
-              delay: 0.32,
+              duration: 0.72,
+              delay: 0.38,
               ease: [0.16, 1, 0.3, 1],
             }}
           >
@@ -962,9 +945,8 @@ export function HomeCatalog() {
             className="route-transition-copy"
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.42, delay: 0.43 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
           >
-            <small>Opening the reading</small>
             <strong>{departingSystem.name}</strong>
           </motion.div>
         </motion.div>

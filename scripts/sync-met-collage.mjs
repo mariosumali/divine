@@ -10,6 +10,9 @@ const LIMIT = Number(
     .find((argument) => argument.startsWith('--limit='))
     ?.split('=')[1] ?? 80,
 );
+const SEED_PATH = process.argv
+  .find((argument) => argument.startsWith('--seed='))
+  ?.split('=')[1];
 
 const SEARCH_TERMS = [
   'astrolabe',
@@ -129,6 +132,203 @@ const SEARCH_TERMS = [
   'skull',
   'skeleton',
   'wing',
+  // Sacred, ritual, and archaeological objects.
+  'ankh',
+  'canopic jar',
+  'canopic chest',
+  'heart scarab',
+  'wedjat eye',
+  'sistrum',
+  'menat',
+  'cartouche',
+  'funerary mask',
+  'mummy mask',
+  'funerary cone',
+  'votive figure',
+  'offering table',
+  'ritual vessel',
+  'libation vessel',
+  'oracle bone',
+  'talisman',
+  'prayer beads',
+  'rosary',
+  'reliquary cross',
+  'processional cross',
+  'pectoral cross',
+  'crucifix',
+  'triptych',
+  'diptych',
+  'monstrance',
+  'thurible',
+  'holy water vessel',
+  'pilgrim badge',
+  'votive hand',
+  // Celestial and scientific curiosities.
+  'armillary sphere',
+  'astronomical clock',
+  'equinoctial dial',
+  'nocturnal instrument',
+  'quadrant',
+  'sextant',
+  'orrery',
+  'celestial sphere',
+  'sun disk',
+  'crescent moon',
+  'comet',
+  'star ornament',
+  'zodiac medallion',
+  // Jewelry and personal adornment.
+  'earring',
+  'torc',
+  'pectoral',
+  'cameo',
+  'intaglio',
+  'hair ornament',
+  'aigrette',
+  'tiara',
+  'crown',
+  'coronet',
+  'scepter',
+  'orb',
+  'pomander',
+  'scent bottle',
+  'jewel box',
+  'vanity case',
+  'buckle',
+  'cloak pin',
+  'amulet case',
+  'toggle',
+  // Sculptural vessels with strong silhouettes.
+  'kylix',
+  'amphora',
+  'lekythos',
+  'rhyton',
+  'krater',
+  'hydria',
+  'oinochoe',
+  'alabastron',
+  'aryballos',
+  'kantharos',
+  'pyxis',
+  'askos',
+  'phiale',
+  'urn stand',
+  'decanter',
+  'cruet',
+  'beaker',
+  'bottle',
+  'jar',
+  'jug',
+  'ritual cup',
+  'ceremonial bowl',
+  // Cabinets of curiosity and ceremonial tools.
+  'magnifying glass',
+  'balance scale',
+  'mortar and pestle',
+  'inkstand',
+  'seal matrix',
+  'signet ring',
+  'pocket watch',
+  'snuff spoon',
+  'keyhole',
+  'escutcheon',
+  'padlock',
+  'hinge',
+  'doorknob',
+  'hand bell',
+  'candelabrum',
+  'torch',
+  'brazier',
+  'cauldron',
+  'ceremonial fan',
+  'ceremonial staff',
+  'crozier',
+  'walking stick',
+  'parasol',
+  'game piece',
+  'gaming counter',
+  'spindle whorl',
+  'distaff',
+  'lace bobbin',
+  'thimble',
+  // Creatures and familiars.
+  'scorpion',
+  'spider',
+  'bat',
+  'serpent',
+  'cobra',
+  'crocodile',
+  'turtle',
+  'tortoise',
+  'hare',
+  'stag',
+  'ram',
+  'ibex',
+  'goat',
+  'horse',
+  'boar',
+  'fox',
+  'wolf',
+  'peacock',
+  'swan',
+  'eagle',
+  'falcon',
+  'ibis',
+  'heron',
+  'dove',
+  'rooster',
+  'seahorse',
+  'dolphin',
+  'whale',
+  'octopus',
+  'salamander',
+  'monkey',
+  'elephant',
+  'camel',
+  // Botanical and symbolic forms.
+  'pine cone',
+  'seed pod',
+  'mushroom',
+  'fern',
+  'palm leaf',
+  'rose',
+  'iris',
+  'tulip',
+  'lily',
+  'poppy',
+  'chrysanthemum',
+  'sunflower',
+  'thistle',
+  'artichoke',
+  'pear',
+  'fig',
+  'gourd',
+  'egg',
+  'wheat sheaf',
+  'vine',
+  'branch',
+  // Arms, dress, and sound-making objects.
+  'crossbow',
+  'flintlock pistol',
+  'powder flask',
+  'gauntlet',
+  'gorget',
+  'spur',
+  'stirrup',
+  'ceremonial dagger',
+  'ceremonial sword',
+  'zither',
+  'cittern',
+  'mandolin',
+  'violin',
+  'tambourine',
+  'cymbals',
+  'gong',
+  'trumpet',
+  'musical whistle',
+  'ocarina',
+  'panpipes',
+  'music box',
 ];
 
 const preferredDepartments = new Set([
@@ -165,7 +365,11 @@ function wait(milliseconds) {
 
 async function fetchJson(url, attempt = 0) {
   const response = await fetch(url, {
-    headers: { 'User-Agent': 'DIVINE collage asset curator (Open Access)' },
+    headers: {
+      Accept: 'application/json',
+      'User-Agent':
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Safari/537.36',
+    },
   });
   if (response.ok) return response.json();
   if ([403, 429, 500, 502, 503].includes(response.status) && attempt < 5) {
@@ -436,6 +640,45 @@ async function processImage(imageUrl, outputPath) {
     .toFile(outputPath);
 }
 
+async function appendObject(items, usedIDs, term, object) {
+  if (!object?.isPublicDomain) {
+    throw new Error(`Met object ${object?.objectID ?? 'unknown'} is not CC0`);
+  }
+  const slug = `${slugify(term)}-${object.objectID}`;
+  const filename = `${slug}.webp`;
+  const outputPath = path.join(OUTPUT_DIR, filename);
+  try {
+    await processImage(object.primaryImageSmall, outputPath);
+  } catch (error) {
+    if (
+      !object.primaryImage ||
+      object.primaryImage === object.primaryImageSmall
+    ) {
+      throw error;
+    }
+    console.warn(
+      `Small image unavailable for Met object ${object.objectID}; trying original.`,
+    );
+    await processImage(object.primaryImage, outputPath);
+  }
+  const item = {
+    objectID: object.objectID,
+    searchTerm: term,
+    title: object.title,
+    objectName: object.objectName,
+    objectDate: object.objectDate,
+    department: object.department,
+    src: `/collage-archive/${filename}`,
+    imageURL: object.primaryImageSmall,
+    objectURL: object.objectURL,
+    license: 'CC0',
+  };
+  items.push(item);
+  usedIDs.add(object.objectID);
+  await writeFile(MANIFEST_PATH, `${JSON.stringify(items, null, 2)}\n`);
+  console.log(`${items.length}/${LIMIT} ${term}: ${object.title}`);
+}
+
 function buildProvenance(items) {
   const rows = items.map(
     (item) =>
@@ -454,38 +697,39 @@ async function main() {
   const usedIDs = new Set(previous.map((item) => item.objectID));
   const items = [...previous];
 
-  for (const term of SEARCH_TERMS) {
-    if (items.length >= LIMIT) break;
-    if (items.some((item) => item.searchTerm === term)) continue;
-
-    const object = await findObject(term, usedIDs);
-    if (!object) {
-      console.warn(`No suitable object found for ${term}`);
-      continue;
-    }
-
-    const slug = `${slugify(term)}-${object.objectID}`;
-    const filename = `${slug}.webp`;
-    await processImage(
-      object.primaryImageSmall,
-      path.join(OUTPUT_DIR, filename),
+  if (SEED_PATH) {
+    const seeds = JSON.parse(
+      await readFile(path.resolve(process.cwd(), SEED_PATH), 'utf8'),
     );
-    const item = {
-      objectID: object.objectID,
-      searchTerm: term,
-      title: object.title,
-      objectName: object.objectName,
-      objectDate: object.objectDate,
-      department: object.department,
-      src: `/collage-archive/${filename}`,
-      imageURL: object.primaryImageSmall,
-      objectURL: object.objectURL,
-      license: 'CC0',
-    };
-    items.push(item);
-    usedIDs.add(object.objectID);
-    await writeFile(MANIFEST_PATH, `${JSON.stringify(items, null, 2)}\n`);
-    console.log(`${items.length}/${LIMIT} ${term}: ${object.title}`);
+    for (const { searchTerm, ...object } of seeds) {
+      if (items.length >= LIMIT) break;
+      if (
+        items.some((item) => item.searchTerm === searchTerm) ||
+        usedIDs.has(object.objectID)
+      ) {
+        continue;
+      }
+      try {
+        await appendObject(items, usedIDs, searchTerm, object);
+      } catch (error) {
+        console.warn(
+          `Skipping unavailable seeded Met object ${object.objectID}: ${error.message}`,
+        );
+      }
+    }
+  } else {
+    for (const term of SEARCH_TERMS) {
+      if (items.length >= LIMIT) break;
+      if (items.some((item) => item.searchTerm === term)) continue;
+
+      const object = await findObject(term, usedIDs);
+      if (!object) {
+        console.warn(`No suitable object found for ${term}`);
+        continue;
+      }
+
+      await appendObject(items, usedIDs, term, object);
+    }
   }
 
   await writeFile(

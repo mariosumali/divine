@@ -245,7 +245,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.75 }}
             >
-              Enter.
+              Readings stay on this device unless you choose to share them.
             </motion.p>
             <motion.div
               className="entry-actions"

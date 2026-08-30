@@ -1,6 +1,6 @@
 'use client';
 
-import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   AnimatePresence,
   animate as motionAnimate,
@@ -44,6 +44,7 @@ import {
 } from '@/lib/divine/reading';
 import { DIVINE_RITUAL, ritualForSystem } from '@/lib/divine/rituals';
 import { setReadingAmbience } from '@/lib/divine/audio';
+import { READING_INDEX_ART } from '@/lib/divine/catalog';
 import { composeShare, decodeReadingShareToken } from '@/lib/divine/share';
 import { saveReading } from '@/lib/divine/storage';
 import type {
@@ -55,19 +56,10 @@ import type {
   SystemDefinition,
 } from '@/lib/divine/types';
 
-const FortuneCookie3D = lazy(() =>
-  import('@/components/divine/fortune-cookie-3d').then((module) => ({
-    default: module.FortuneCookie3D,
-  })),
-);
+// 3D ritual objects are temporarily benched in favor of the site's 2D artwork.
+// Keep their component files and models in place so they can be restored later.
 
-const MagicEightBall3D = lazy(() =>
-  import('@/components/divine/magic-eight-ball-3d').then((module) => ({
-    default: module.MagicEightBall3D,
-  })),
-);
-
-type Stage = 'intro' | 'frame' | 'method' | 'ritual' | 'reveal' | 'result';
+type Stage = 'frame' | 'method' | 'ritual' | 'reveal' | 'result';
 // Temporarily skip the card-unwrapping ritual between choosing a spread and
 // revealing the face-down cards. Keep the implementation below for re-enabling.
 const CARD_UNWRAPPING_ENABLED = false;
@@ -81,7 +73,7 @@ type ShareStatus =
 interface StoredReadingSession {
   version: 1 | 2 | 3 | 4;
   system: string;
-  stage: Stage;
+  stage: Stage | 'intro';
   question: string;
   focus: Focus;
   spreadId: string | null;
@@ -107,13 +99,19 @@ const focuses: Array<{ value: Focus; label: string }> = [
   { value: 'growth', label: 'Growth' },
 ];
 const readingStages: Stage[] = [
-  'intro',
   'frame',
   'method',
   'ritual',
   'reveal',
   'result',
 ];
+const stageLabels: Record<Stage, string> = {
+  frame: 'Your question',
+  method: 'Choose a spread',
+  ritual: 'Prepare the reading',
+  reveal: 'Reveal the cards',
+  result: 'Your reading',
+};
 const visibleReadingStages = (systemKind: SystemDefinition['kind']) =>
   systemKind === 'cards' && !CARD_UNWRAPPING_ENABLED
     ? readingStages.filter((stage) => stage !== 'ritual')
@@ -156,25 +154,6 @@ function KineticText({ text }: { text: string }) {
         </span>
       ))}
     </span>
-  );
-}
-
-type PerformanceNavigator = Navigator & {
-  connection?: { saveData?: boolean };
-  deviceMemory?: number;
-};
-
-function supportsEnhancedObjects() {
-  const performanceNavigator = navigator as PerformanceNavigator;
-  if (performanceNavigator.connection?.saveData) return false;
-  if (
-    performanceNavigator.deviceMemory !== undefined &&
-    performanceNavigator.deviceMemory <= 4
-  )
-    return false;
-  return (
-    navigator.hardwareConcurrency === undefined ||
-    navigator.hardwareConcurrency > 4
   );
 }
 
@@ -315,6 +294,21 @@ function drawShareImage(
   ctx.restore();
 }
 
+function shareArtworkSize(
+  image: HTMLImageElement | null,
+  fallbackRatio: number,
+  maxWidth: number,
+  maxHeight: number,
+) {
+  const naturalRatio = image
+    ? image.naturalWidth / image.naturalHeight
+    : fallbackRatio;
+  const ratio =
+    Number.isFinite(naturalRatio) && naturalRatio > 0 ? naturalRatio : 2 / 3;
+  const width = Math.min(maxWidth, maxHeight * ratio);
+  return { width, height: width / ratio };
+}
+
 async function exportReading(
   record: ReadingRecord,
   includeQuestion: boolean,
@@ -374,7 +368,7 @@ async function exportReading(
   ctx.font = '500 72px "Bodoni Moda", Georgia, serif';
   const headlineLines = canvasTextLines(
     ctx,
-    composition.cards.length ? composition.headline : 'The answer has arrived.',
+    composition.displayHeadline,
     750,
     3,
   );
@@ -383,13 +377,13 @@ async function exportReading(
   );
 
   if (methodImage) {
-    drawShareImage(ctx, methodImage, 880, 178, 210, 210);
+    drawShareImage(ctx, methodImage, 830, 158, 280, 280);
   }
   ctx.textAlign = 'center';
   ctx.fillStyle = 'rgba(5,5,5,.58)';
   ctx.font = '10px Arial, sans-serif';
   ctx.letterSpacing = '2px';
-  ctx.fillText(record.systemName.toUpperCase(), 985, 416);
+  ctx.fillText(record.systemName.toUpperCase(), 970, 456);
   ctx.letterSpacing = '0px';
 
   let contentStart = Math.max(500, 316 + headlineLines.length * 76);
@@ -420,11 +414,36 @@ async function exportReading(
           : 5,
     );
     const gap = dense ? 10 : 18;
-    const width = Math.min(180, (1040 - gap * (columns - 1)) / columns);
-    const height = width * 1.56;
+    const maxCellWidth =
+      preview.length === 1
+        ? 560
+        : preview.length <= 3
+          ? 340
+          : preview.length <= 5
+            ? 230
+            : 180;
+    const width = Math.min(
+      maxCellWidth,
+      (1040 - gap * (columns - 1)) / columns,
+    );
     const captionHeight = dense ? 0 : 62;
     const rowGap = dense ? 14 : 22;
-    const cellHeight = height + captionHeight;
+    const rows = Math.ceil(preview.length / columns);
+    const availableArtHeight =
+      (1332 - contentStart - captionHeight * rows - rowGap * (rows - 1)) / rows;
+    const idealArtHeight =
+      preview.length === 1
+        ? 620
+        : preview.length <= 3
+          ? 420
+          : preview.length <= 10
+            ? 290
+            : 190;
+    const artBoxHeight = Math.max(
+      100,
+      Math.min(idealArtHeight, availableArtHeight),
+    );
+    const cellHeight = artBoxHeight + captionHeight;
     const totalWidth = width * columns + gap * (columns - 1);
     ctx.beginPath();
     ctx.moveTo(80, contentStart - 20);
@@ -434,55 +453,70 @@ async function exportReading(
     preview.forEach((draw, index) => {
       const column = index % columns;
       const row = Math.floor(index / columns);
-      const x = (canvas.width - totalWidth) / 2 + column * (width + gap);
-      const y = contentStart + row * (cellHeight + rowGap);
-      ctx.fillStyle = '#dedbd2';
-      ctx.fillRect(x, y, width, height);
-      ctx.strokeStyle = 'rgba(5,5,5,.28)';
-      ctx.strokeRect(x, y, width, height);
+      const cellX = (canvas.width - totalWidth) / 2 + column * (width + gap);
+      const rowY = contentStart + row * (cellHeight + rowGap);
       const image = cardImages[index];
+      const artwork = shareArtworkSize(
+        image,
+        record.draws[index]?.card.aspectRatio ?? 2 / 3,
+        width,
+        artBoxHeight,
+      );
+      const x = cellX + (width - artwork.width) / 2;
+      const y = rowY + (artBoxHeight - artwork.height) / 2;
+      ctx.fillStyle = '#dedbd2';
+      ctx.fillRect(x, y, artwork.width, artwork.height);
+      ctx.strokeStyle = 'rgba(5,5,5,.28)';
+      ctx.strokeRect(x, y, artwork.width, artwork.height);
       if (image) {
         drawShareImage(
           ctx,
           image,
           x + 4,
           y + 4,
-          width - 8,
-          height - 8,
+          artwork.width - 8,
+          artwork.height - 8,
           draw.reversed,
         );
       } else {
         ctx.textAlign = 'center';
         ctx.fillStyle = '#050505';
         ctx.font = `400 ${dense ? 32 : 48}px "Bodoni Moda", Georgia, serif`;
-        ctx.fillText(draw.glyph, x + width / 2, y + height / 2 + 14);
+        ctx.fillText(
+          draw.glyph,
+          x + artwork.width / 2,
+          y + artwork.height / 2 + 14,
+        );
       }
       ctx.fillStyle = 'rgba(239,237,229,.9)';
-      ctx.fillRect(x + width - 28, y + height - 25, 24, 21);
+      ctx.fillRect(x + artwork.width - 28, y + artwork.height - 25, 24, 21);
       ctx.textAlign = 'center';
       ctx.fillStyle = '#050505';
       ctx.font = '8px Arial, sans-serif';
       ctx.fillText(
         String(index + 1).padStart(2, '0'),
-        x + width - 16,
-        y + height - 11,
+        x + artwork.width - 16,
+        y + artwork.height - 11,
       );
       if (!dense) {
         ctx.fillStyle = 'rgba(5,5,5,.5)';
         ctx.font = '8px Arial, sans-serif';
         ctx.fillText(
           draw.position.toUpperCase().slice(0, 22),
-          x + width / 2,
-          y + height + 19,
+          cellX + width / 2,
+          rowY + artBoxHeight + 19,
         );
         ctx.fillStyle = '#050505';
         ctx.font = '500 13px "Bodoni Moda", Georgia, serif';
         const label = `${draw.name}${draw.reversed ? ' · R' : ''}`;
-        ctx.fillText(label.slice(0, 25), x + width / 2, y + height + 42);
+        ctx.fillText(
+          label.slice(0, 25),
+          cellX + width / 2,
+          rowY + artBoxHeight + 42,
+        );
       }
     });
-    contentStart +=
-      Math.ceil(preview.length / columns) * (cellHeight + rowGap) + 8;
+    contentStart += rows * (cellHeight + rowGap) + 8;
   } else {
     ctx.beginPath();
     ctx.moveTo(80, contentStart - 20);
@@ -555,7 +589,13 @@ function Progress({
   const current = stages.indexOf(stage);
   return (
     <>
-      <div className="reading-progress" aria-hidden="true">
+      <div
+        className="reading-progress"
+        aria-hidden="true"
+        style={{
+          gridTemplateColumns: `repeat(${stages.length}, minmax(0, 1fr))`,
+        }}
+      >
         {stages.map((item, index) => (
           <span key={item} className={index <= current ? 'active' : ''} />
         ))}
@@ -565,7 +605,7 @@ function Progress({
         aria-label="Reading progress"
         max={stages.length}
         value={current + 1}
-        aria-valuetext={`Step ${current + 1} of ${stages.length}: ${stage}`}
+        aria-valuetext={`Step ${current + 1} of ${stages.length}: ${stageLabels[stage]}`}
       />
     </>
   );
@@ -942,9 +982,16 @@ function InteractiveResultCard({
   );
 }
 
-export function ReadingExperience({ system }: { system: SystemDefinition }) {
+export function ReadingExperience({
+  system,
+  startWithOpening = false,
+}: {
+  system: SystemDefinition;
+  startWithOpening?: boolean;
+}) {
   const { cue, deckFinishes } = useExperience();
-  const [stage, setStage] = useState<Stage>('intro');
+  const [stage, setStage] = useState<Stage>('frame');
+  const [showOpening, setShowOpening] = useState(startWithOpening);
   const [question, setQuestion] = useState('');
   const [focus, setFocus] = useState<Focus>('general');
   const [spread, setSpread] = useState<SpreadDefinition | null>(
@@ -980,7 +1027,6 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
   const [shareStatus, setShareStatus] = useState<ShareStatus>('idle');
   const [isSharedView, setIsSharedView] = useState(false);
   const [sessionReady, setSessionReady] = useState(false);
-  const [enhancedObjects, setEnhancedObjects] = useState(false);
   const motionHandler = useRef<((event: DeviceMotionEvent) => void) | null>(
     null,
   );
@@ -992,7 +1038,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
   const sessionKey = `divine-session:${system.slug}`;
   const objectRitualSteps =
     system.kind === 'cookie' ? COOKIE_RITUAL_STEPS : OBJECT_RITUAL_STEPS;
-  const readingAmbienceActive = sessionReady && stage !== 'intro';
+  const readingAmbienceActive = sessionReady;
 
   useEffect(() => {
     setReadingAmbience(readingAmbienceActive);
@@ -1000,8 +1046,18 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
   }, [readingAmbienceActive]);
 
   useEffect(() => {
+    if (!startWithOpening) return;
+    const url = new URL(window.location.href);
+    url.searchParams.delete('opening');
+    window.history.replaceState(
+      null,
+      '',
+      `${url.pathname}${url.search}${url.hash}`,
+    );
+  }, [startWithOpening]);
+
+  useEffect(() => {
     queueMicrotask(() => {
-      setEnhancedObjects(supportsEnhancedObjects());
       setMotionSupported('DeviceMotionEvent' in window);
     });
     return () => {
@@ -1079,9 +1135,10 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
             ? [{ card, position: draw.position, reversed: draw.reversed }]
             : [];
         });
-        const candidateStage = readingStages.includes(restored.stage)
-          ? restored.stage
-          : 'intro';
+        const candidateStage: Stage =
+          restored.stage !== 'intro' && readingStages.includes(restored.stage)
+            ? restored.stage
+            : 'frame';
         const canRestoreStage =
           candidateStage !== 'reveal' || restoredDraws.length > 0;
         const resolvedObject =
@@ -1193,8 +1250,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
             : 0,
         );
         ritualLock.current = nextStage === 'result';
-        if (nextStage !== 'intro')
-          setAnnouncement('Your unfinished reading has been restored.');
+        setAnnouncement('Your unfinished reading has been restored.');
       }
       setSessionReady(true);
     });
@@ -1369,7 +1425,6 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
       motionHandler.current = null;
     }
     setMotionEnabled(false);
-    if (stage === 'frame') move('intro');
     if (stage === 'method') move('frame');
     if (stage === 'ritual') {
       if (system.kind === 'cards') {
@@ -1701,6 +1756,27 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
       <main className="reading-shell session-loading" aria-busy="true">
         <span>DIVINE</span>
         <small>Preparing</small>
+        {showOpening && (
+          <div className="reading-route-transition" aria-hidden="true">
+            <div className="route-transition-panels">
+              {Array.from({ length: 6 }, (_, index) => (
+                <i key={index} />
+              ))}
+            </div>
+            <div className="route-transition-object">
+              <Image
+                src={READING_INDEX_ART[system.slug]}
+                alt=""
+                fill
+                sizes="380px"
+                style={{ objectFit: 'contain' }}
+              />
+            </div>
+            <div className="route-transition-copy">
+              <strong>{system.name}</strong>
+            </div>
+          </div>
+        )}
       </main>
     );
   }
@@ -1710,7 +1786,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
       {stage !== 'ritual' && stage !== 'reveal' && (
         <>
           <Progress stage={stage} systemKind={system.kind} />
-          {stage !== 'intro' && stage !== 'result' && (
+          {stage !== 'result' && stage !== 'frame' && (
             <button type="button" className="stage-back" onClick={goBack}>
               <ChevronLeft /> Back
             </button>
@@ -1719,32 +1795,11 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
       )}
       {(stage === 'ritual' || stage === 'reveal') && (
         <button type="button" className="field-exit sr-only" onClick={goBack}>
-          <ChevronLeft /> Leave the ritual
+          <ChevronLeft /> Back to reading options
         </button>
       )}
 
       <AnimatePresence mode="wait">
-        {stage === 'intro' && (
-          <motion.section
-            className="reading-stage intro-stage"
-            key="intro"
-            {...stageMotion}
-          >
-            <div className="stage-copy">
-              <h1>
-                <KineticText text={system.name} />
-              </h1>
-              <Button
-                className="primary-action"
-                onClick={() => move('frame')}
-                aria-label={`Begin ${system.name} reading`}
-              >
-                <ArrowRight />
-              </Button>
-            </div>
-          </motion.section>
-        )}
-
         {stage === 'frame' && (
           <motion.section
             className="reading-stage centered-stage ask-stage"
@@ -1796,7 +1851,10 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
                   whileHover={{ x: 8 }}
                   whileTap={{ scale: 0.99 }}
                 >
-                  <strong>{item.name}</strong>
+                  <span>
+                    <strong>{item.name}</strong>
+                    <small>{item.description}</small>
+                  </span>
                   <ArrowRight aria-hidden="true" />
                 </motion.button>
               ))}
@@ -1811,8 +1869,9 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
                     onChange={(event) => setReversals(event.target.checked)}
                   />
                   <span>
-                    Reversals
-                    {system.reversalStyle === 'required' ? ' · intrinsic' : ''}
+                    {system.reversalStyle === 'required'
+                      ? 'Reversed meanings are always included'
+                      : 'Include reversed cards'}
                   </span>
                 </label>
               )}
@@ -1860,38 +1919,21 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
             key="ritual-ball"
             {...stageMotion}
           >
-            {enhancedObjects ? (
-              <Suspense fallback={<span className="object-webgl-fallback" />}>
-                <MagicEightBall3D
-                  answer={objectMessage}
-                  step={objectStep}
-                  disabled={objectAnimating}
-                  onAdvance={advanceObjectRitual}
-                  ariaLabel={
-                    objectStep === 0
-                      ? 'Rotate the ball or press for the first shake'
-                      : objectStep === 1
-                        ? 'Rotate the ball or press for the second shake'
-                        : 'Rotate the ball or press for the final shake'
-                  }
-                />
-              </Suspense>
-            ) : (
-              <LightweightObject
-                kind="ball"
-                answer={objectMessage}
-                step={objectStep}
-                disabled={objectAnimating}
-                onAdvance={advanceObjectRitual}
-                ariaLabel={
-                  objectStep === 0
-                    ? 'Press for the first shake'
-                    : objectStep === 1
-                      ? 'Press for the second shake'
-                      : 'Press for the final shake'
-                }
-              />
-            )}
+            {/* MagicEightBall3D is temporarily benched. */}
+            <LightweightObject
+              kind="ball"
+              answer={objectMessage}
+              step={objectStep}
+              disabled={objectAnimating}
+              onAdvance={advanceObjectRitual}
+              ariaLabel={
+                objectStep === 0
+                  ? 'Press for the first shake'
+                  : objectStep === 1
+                    ? 'Press for the second shake'
+                    : 'Press for the final shake'
+              }
+            />
             <div className="system-ritual-caption object-ritual-caption">
               <span>A liquid answer chamber</span>
               <strong>
@@ -1901,7 +1943,7 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
                     ? 'Shake again'
                     : 'Final shake'}
               </strong>
-              <p>Move the ball or press to perform the shake.</p>
+              <p>Press the ball to perform the shake.</p>
               <div className="system-ritual-progress" aria-hidden="true">
                 {[0, 1, 2].map((index) => (
                   <i
@@ -1946,37 +1988,19 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
                   } as React.CSSProperties
                 }
               >
-                {enhancedObjects ? (
-                  <Suspense
-                    fallback={<span className="cookie-webgl-fallback" />}
-                  >
-                    <FortuneCookie3D
-                      step={objectStep}
-                      disabled={objectAnimating}
-                      onAdvance={advanceObjectRitual}
-                      onGestureProgress={setCookieGestureProgress}
-                      gestureProgress={cookieGestureProgress}
-                      ariaLabel={
-                        objectStep === 0
-                          ? 'Bend the cookie apart or press to begin cracking it'
-                          : 'Break the cookie open and unfurl the fortune'
-                      }
-                    />
-                  </Suspense>
-                ) : (
-                  <LightweightObject
-                    kind="cookie"
-                    answer={objectMessage}
-                    step={objectStep}
-                    disabled={objectAnimating}
-                    onAdvance={advanceObjectRitual}
-                    ariaLabel={
-                      objectStep === 0
-                        ? 'Press to begin cracking the cookie'
-                        : 'Press to break the cookie open and unfurl the fortune'
-                    }
-                  />
-                )}
+                {/* FortuneCookie3D is temporarily benched. */}
+                <LightweightObject
+                  kind="cookie"
+                  answer={objectMessage}
+                  step={objectStep}
+                  disabled={objectAnimating}
+                  onAdvance={advanceObjectRitual}
+                  ariaLabel={
+                    objectStep === 0
+                      ? 'Press to begin cracking the cookie'
+                      : 'Press to break the cookie open and unfurl the fortune'
+                  }
+                />
                 <span className="cookie-paper" aria-hidden="true">
                   <em>{objectMessage}</em>
                 </span>
@@ -2007,9 +2031,9 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
                 </strong>
                 <p>
                   {objectStep === 0
-                    ? 'Move the two sides apart and let the fracture deepen.'
+                    ? 'Press the cookie and let the fracture deepen.'
                     : objectStep === 1
-                      ? 'Pull firmly enough for the shell to give way.'
+                      ? 'Press again for the shell to give way.'
                       : 'The fortune opens itself.'}
                 </p>
                 <div className="system-ritual-progress" aria-hidden="true">
@@ -2171,8 +2195,8 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
                     <p className="eyebrow">Every deck in conversation</p>
                     <h2 id="connections-title">The cross-deck thread</h2>
                     <p>
-                      Follow the handoff from one tradition to the next. Every
-                      card changes what the one before it can mean.
+                      Compare each neighboring pair. These links suggest how one
+                      tradition may clarify or challenge the next.
                     </p>
                   </header>
                   <ol>
@@ -2191,107 +2215,116 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
                 </section>
               )}
             {draws.length > 0 && (
-              <details id="full-reading" className="result-reading">
-                <summary className="result-reading-summary">
-                  <span>The reading in full</span>
-                  <span>
-                    Read every card
-                    <ChevronDown aria-hidden="true" />
-                  </span>
-                </summary>
-                <div className="result-reading-content">
-                  <header className="result-reading-intro">
-                    <p>{resultOverview}</p>
-                  </header>
-                  <div
-                    id="result-cards"
-                    className="result-card-list"
-                    aria-label="Cards in this reading"
-                  >
-                    {draws.map((draw, index) => {
-                      const position = interpretation.positions[index];
-                      const orientationMeaning =
-                        draw.reversed && draw.card.reversedMeaning
-                          ? draw.card.reversedMeaning
-                          : draw.card.meaning;
-                      const focusMeaning = draw.card.focusModifiers?.[focus];
-                      const facts = cardFacts(draw.card);
+              <>
+                <details id="full-reading" className="result-reading">
+                  <summary className="result-reading-summary">
+                    <span>The reading in full</span>
+                    <span>
+                      Read the overview
+                      <ChevronDown aria-hidden="true" />
+                    </span>
+                  </summary>
+                  <div className="result-reading-content">
+                    <header className="result-reading-intro">
+                      <p>{resultOverview}</p>
+                    </header>
+                  </div>
+                </details>
+                <div
+                  id="result-cards"
+                  className="result-card-list"
+                  aria-label="Cards in this reading"
+                >
+                  {draws.map((draw, index) => {
+                    const position = interpretation.positions[index];
+                    const focusMeaning = draw.card.focusModifiers?.[focus];
+                    const facts = cardFacts(draw.card);
 
-                      return (
-                        <motion.article
-                          className="result-card-detail"
-                          key={`${draw.card.id}-${index}`}
-                          initial={{ opacity: 0, y: 72 }}
-                          whileInView={{ opacity: 1, y: 0 }}
-                          viewport={{ once: true, amount: 0.18 }}
-                          transition={{
-                            duration: 0.68,
-                            ease: [0.22, 1, 0.36, 1],
-                          }}
-                        >
-                          <InteractiveResultCard
-                            draw={draw}
-                            systemSlug={visualSystemFor(draw)}
-                            finish={finishFor(draw)}
-                            onTurn={() => cue('turn')}
-                          />
-                          <div className="result-card-copy">
-                            <p className="eyebrow">
-                              {`${index + 1}`.padStart(2, '0')} /{' '}
-                              {draw.card.sourceSystemName
-                                ? `${draw.card.sourceSystemName} · ${draw.position}`
-                                : draw.position}
-                            </p>
-                            <h2>
-                              <KineticText text={draw.card.name} />
-                            </h2>
+                    return (
+                      <motion.article
+                        className="result-card-detail"
+                        key={`${draw.card.id}-${index}`}
+                        initial={{ opacity: 0, y: 72 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, amount: 0.18 }}
+                        transition={{
+                          duration: 0.68,
+                          ease: [0.22, 1, 0.36, 1],
+                        }}
+                      >
+                        <InteractiveResultCard
+                          draw={draw}
+                          systemSlug={visualSystemFor(draw)}
+                          finish={finishFor(draw)}
+                          onTurn={() => cue('turn')}
+                        />
+                        <div className="result-card-copy">
+                          <p className="eyebrow">
+                            {`${index + 1}`.padStart(2, '0')} /{' '}
+                            {draw.card.sourceSystemName
+                              ? `${draw.card.sourceSystemName} · ${draw.position}`
+                              : draw.position}
+                          </p>
+                          <h2>
+                            <KineticText text={draw.card.name} />
+                          </h2>
+                          <details className="result-card-description" open>
+                            <summary>
+                              <span>Card description</span>
+                              <span aria-hidden="true">
+                                <span className="result-card-description-hide">
+                                  Collapse
+                                </span>
+                                <span className="result-card-description-show">
+                                  Read
+                                </span>
+                                <ChevronDown />
+                              </span>
+                            </summary>
                             <p className="result-position-meaning">
-                              {position?.text ?? orientationMeaning}
+                              {position?.text ??
+                                (draw.reversed && draw.card.reversedMeaning
+                                  ? draw.card.reversedMeaning
+                                  : draw.card.meaning)}
                             </p>
+                          </details>
+                          {focusMeaning && focus !== 'general' && (
                             <div className="result-meaning-grid">
                               <div>
-                                <small>
-                                  {draw.reversed ? 'Reversed' : 'Upright'}
-                                </small>
-                                <p>{orientationMeaning}</p>
+                                <small>{focus}</small>
+                                <p>{focusMeaning}</p>
                               </div>
-                              {focusMeaning && (
-                                <div>
-                                  <small>{focus}</small>
-                                  <p>{focusMeaning}</p>
-                                </div>
-                              )}
                             </div>
-                            <div
-                              className="result-keywords"
-                              aria-label="Keywords"
-                            >
-                              {draw.card.keywords.map((keyword) => (
-                                <span key={keyword}>{keyword}</span>
-                              ))}
-                            </div>
-                            {facts.length > 0 && (
-                              <dl className="result-card-facts">
-                                {facts.map(([label, value]) => (
-                                  <div key={label}>
-                                    <dt>{label}</dt>
-                                    <dd>{value}</dd>
-                                  </div>
-                                ))}
-                              </dl>
-                            )}
-                            {draw.card.provenance && (
-                              <p className="result-card-provenance">
-                                {draw.card.provenance}
-                              </p>
-                            )}
+                          )}
+                          <div
+                            className="result-keywords"
+                            aria-label="Keywords"
+                          >
+                            {draw.card.keywords.map((keyword) => (
+                              <span key={keyword}>{keyword}</span>
+                            ))}
                           </div>
-                        </motion.article>
-                      );
-                    })}
-                  </div>
+                          {facts.length > 0 && (
+                            <dl className="result-card-facts">
+                              {facts.map(([label, value]) => (
+                                <div key={label}>
+                                  <dt>{label}</dt>
+                                  <dd>{value}</dd>
+                                </div>
+                              ))}
+                            </dl>
+                          )}
+                          {draw.card.provenance && (
+                            <p className="result-card-provenance">
+                              {draw.card.provenance}
+                            </p>
+                          )}
+                        </div>
+                      </motion.article>
+                    );
+                  })}
                 </div>
-              </details>
+              </>
             )}
             {draws.length > 1 && (
               <section
@@ -2357,16 +2390,54 @@ export function ReadingExperience({ system }: { system: SystemDefinition }) {
               </div>
             </details>
             <div className="reading-again">
-              <Button className="quiet-action" onClick={restart}>
-                <RotateCcw /> Again
+              <Button
+                className="quiet-action icon-action"
+                onClick={restart}
+                aria-label="Start this reading again"
+                title="Start this reading again"
+              >
+                <RotateCcw />
               </Button>
-              <Link href="/#readings">
+              <Link className="quiet-action" href="/#readings">
                 Another reading <ArrowRight />
               </Link>
             </div>
           </motion.section>
         )}
       </AnimatePresence>
+
+      {showOpening && (
+        <motion.div
+          className="reading-route-transition route-transition-arrival"
+          aria-hidden="true"
+          initial={{ opacity: 1 }}
+          animate={{ opacity: 0 }}
+          transition={{
+            duration: 0.95,
+            delay: 0.12,
+            ease: [0.22, 1, 0.36, 1],
+          }}
+          onAnimationComplete={() => setShowOpening(false)}
+        >
+          <div className="route-transition-panels">
+            {Array.from({ length: 6 }, (_, index) => (
+              <i key={index} />
+            ))}
+          </div>
+          <div className="route-transition-object">
+            <Image
+              src={READING_INDEX_ART[system.slug]}
+              alt=""
+              fill
+              sizes="380px"
+              style={{ objectFit: 'contain' }}
+            />
+          </div>
+          <div className="route-transition-copy">
+            <strong>{system.name}</strong>
+          </div>
+        </motion.div>
+      )}
       <div className="sr-only" aria-live="polite">
         {stage === 'result' && interpretation
           ? `Reading complete. ${interpretation.headline}`
