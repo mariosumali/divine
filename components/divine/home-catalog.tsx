@@ -798,12 +798,13 @@ export function HomeCatalog() {
         <motion.a
           className="hero-enter"
           href="#readings"
+          aria-label="Explore readings"
           onClick={() => cue('tick')}
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.25, duration: 0.65 }}
         >
-          Enter <span aria-hidden="true">↓</span>
+          <span aria-hidden="true">↓</span>
         </motion.a>
       </section>
 
