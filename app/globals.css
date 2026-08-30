@@ -272,22 +272,6 @@ button {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.22'/%3E%3C/svg%3E");
   pointer-events: none;
 }
-.entry-orbit {
-  position: absolute;
-  width: min(68vw, 900px);
-  aspect-ratio: 1.9;
-  border: 1px solid rgba(244, 242, 236, 0.18);
-  border-radius: 50%;
-  transform: rotate(-8deg);
-  animation: orbit 18s linear infinite;
-}
-.entry-kicker {
-  position: relative;
-  margin: 0 0 8vh;
-  text-transform: uppercase;
-  letter-spacing: 0.28em;
-  font-size: 9px;
-}
 .entry-gate h1 {
   position: relative;
   margin: 0;
@@ -6136,11 +6120,6 @@ button {
   100% {
     background-position: -120% 0;
     opacity: 0.18;
-  }
-}
-@keyframes orbit {
-  to {
-    transform: rotate(352deg);
   }
 }
 @keyframes deck-riffle {
