@@ -1,6 +1,13 @@
 'use client';
 
-import { type CSSProperties, useMemo, useState } from 'react';
+import {
+  type CSSProperties,
+  type KeyboardEvent,
+  type PointerEvent,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { motion } from 'motion/react';
 import { Dialog } from '@base-ui/react/dialog';
 import { ArrowDown, ChevronDown, ChevronUp, X } from 'lucide-react';
@@ -24,12 +31,83 @@ function SignPrism({
   value: number;
   onChange: (value: number) => void;
 }) {
+  const dragStart = useRef<number | null>(null);
+  const didDrag = useRef(false);
+  const [dragOffset, setDragOffset] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
   const selectedSign = ASTROLOGY_SIGNS[value];
 
   const changeBy = (amount: number) => {
     onChange(
       (value + amount + ASTROLOGY_SIGNS.length) % ASTROLOGY_SIGNS.length,
     );
+  };
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
+    const changes: Partial<Record<string, number>> = {
+      ArrowUp: 1,
+      ArrowDown: -1,
+      ArrowLeft: -1,
+      ArrowRight: 1,
+      PageUp: 3,
+      PageDown: -3,
+    };
+    const change = changes[event.key];
+
+    if (change !== undefined) {
+      event.preventDefault();
+      changeBy(change);
+      return;
+    }
+
+    if (event.key === 'Home' || event.key === 'End') {
+      event.preventDefault();
+      onChange(event.key === 'Home' ? 0 : ASTROLOGY_SIGNS.length - 1);
+    }
+  };
+
+  const handlePointerDown = (event: PointerEvent<HTMLButtonElement>) => {
+    dragStart.current = event.clientY;
+    didDrag.current = false;
+    setDragOffset(0);
+    setIsDragging(true);
+    event.currentTarget.setPointerCapture(event.pointerId);
+  };
+
+  const handlePointerMove = (event: PointerEvent<HTMLButtonElement>) => {
+    if (dragStart.current === null) return;
+
+    const distance = event.clientY - dragStart.current;
+    didDrag.current ||= Math.abs(distance) > 4;
+    setDragOffset(Math.max(-96, Math.min(96, distance)));
+  };
+
+  const finishDrag = (event: PointerEvent<HTMLButtonElement>) => {
+    if (dragStart.current === null) return;
+
+    const distance = event.clientY - dragStart.current;
+    dragStart.current = null;
+    setDragOffset(0);
+    setIsDragging(false);
+
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+
+    if (Math.abs(distance) > 18) {
+      const steps = Math.min(
+        3,
+        Math.max(1, Math.round(Math.abs(distance) / 48)),
+      );
+      changeBy(distance > 0 ? steps : -steps);
+    }
+  };
+
+  const cancelDrag = () => {
+    dragStart.current = null;
+    didDrag.current = false;
+    setDragOffset(0);
+    setIsDragging(false);
   };
 
   return (
@@ -40,25 +118,37 @@ function SignPrism({
           type="button"
           className="sign-prism-step"
           aria-label={`Previous ${label.toLowerCase()}`}
-          onClick={() => changeBy(-1)}
+          onClick={() => changeBy(1)}
         >
           <ChevronUp aria-hidden="true" />
         </button>
-        <div className="sign-prism-stage">
-          <input
-            className="sign-prism-input"
-            type="range"
-            min={0}
-            max={ASTROLOGY_SIGNS.length - 1}
-            step={1}
-            value={value}
-            aria-labelledby={`${id}-label`}
-            aria-valuetext={selectedSign.name}
-            onChange={(event) => onChange(Number(event.target.value))}
-          />
+        <button
+          type="button"
+          className="sign-prism-stage"
+          aria-label={`${label}: ${selectedSign.name}. Drag vertically or use the arrow keys to choose a sign.`}
+          onKeyDown={handleKeyDown}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={finishDrag}
+          onPointerCancel={cancelDrag}
+          onClick={(event) => {
+            if (didDrag.current) {
+              event.preventDefault();
+              didDrag.current = false;
+              return;
+            }
+
+            changeBy(-1);
+          }}
+        >
           <div
-            className="sign-prism-ring"
-            style={{ '--prism-index': value } as CSSProperties}
+            className={`sign-prism-ring${isDragging ? ' is-dragging' : ''}`}
+            style={
+              {
+                '--prism-index': value,
+                '--prism-drag': `${dragOffset * -0.28}deg`,
+              } as CSSProperties
+            }
           >
             {ASTROLOGY_SIGNS.map((sign, index) => (
               <span
@@ -75,17 +165,17 @@ function SignPrism({
               </span>
             ))}
           </div>
-        </div>
+        </button>
         <button
           type="button"
           className="sign-prism-step"
           aria-label={`Next ${label.toLowerCase()}`}
-          onClick={() => changeBy(1)}
+          onClick={() => changeBy(-1)}
         >
           <ChevronDown aria-hidden="true" />
         </button>
       </div>
-      <small className="sign-prism-hint">Drag or use arrow keys</small>
+      <small className="sign-prism-hint">Drag the wheel or use ↑ ↓</small>
     </div>
   );
 }
