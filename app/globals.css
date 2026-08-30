@@ -1100,17 +1100,27 @@ button {
   letter-spacing: -0.02em;
   transform: translateX(4px);
 }
-.reading-index-item:hover .reading-index-art img,
-.reading-index-item:focus-visible .reading-index-art img {
+.reading-index-item:not([data-art-treatment='positive-tone']):hover
+  .reading-index-art
+  img,
+.reading-index-item:not([data-art-treatment='positive-tone']):focus-visible
+  .reading-index-art
+  img {
   filter: invert(1) grayscale(1) sepia(0.06) contrast(0.9);
   opacity: 1;
 }
-:root[data-theme='dark'] .reading-index-art img {
+:root[data-theme='dark']
+  .reading-index-item:not([data-art-treatment='positive-tone'])
+  .reading-index-art
+  img {
   filter: invert(1) grayscale(1) sepia(0.06) contrast(0.9);
 }
-:root[data-theme='dark'] .reading-index-item:hover .reading-index-art img,
 :root[data-theme='dark']
-  .reading-index-item:focus-visible
+  .reading-index-item:not([data-art-treatment='positive-tone']):hover
+  .reading-index-art
+  img,
+:root[data-theme='dark']
+  .reading-index-item:not([data-art-treatment='positive-tone']):focus-visible
   .reading-index-art
   img {
   filter: invert(0) grayscale(1) sepia(0.08) contrast(0.9) brightness(1.02);
@@ -1145,6 +1155,9 @@ button {
   margin-bottom: 0;
 }
 .route-transition-object img {
+  filter: grayscale(1) sepia(0.08) contrast(0.9) brightness(1.02);
+}
+.route-transition-object:not([data-art-treatment='positive-tone']) img {
   filter: invert(1) grayscale(1) sepia(0.06) contrast(0.9);
 }
 .route-transition-copy {
@@ -1381,13 +1394,10 @@ button {
   position: absolute !important;
   right: 0;
   top: 50%;
-  width: 48px !important;
-  height: 48px !important;
+  width: 54px !important;
+  height: 46px !important;
   padding: 0 !important;
-  border: 0 !important;
-  border-radius: 50% !important;
-  background: var(--ink) !important;
-  color: var(--paper) !important;
+  border-radius: 0 !important;
   transform: translateY(-56%);
 }
 .ask-submit:hover {
@@ -4183,6 +4193,21 @@ button {
 .result-reading-content {
   border-top: 1px solid var(--line);
 }
+.result-cards-summary {
+  border-bottom: 1px solid var(--line);
+}
+.result-cards-show {
+  display: none;
+}
+.result-cards-disclosure:not([open]) .result-cards-hide {
+  display: none;
+}
+.result-cards-disclosure:not([open]) .result-cards-show {
+  display: inline;
+}
+.result-cards-disclosure[open] .result-cards-summary svg {
+  transform: rotate(180deg);
+}
 .result-reading-intro {
   max-width: 1180px;
   display: grid;
@@ -4418,58 +4443,9 @@ button {
   font-size: clamp(3.2rem, 5.4vw, 6.4rem);
   line-height: 0.82;
 }
-.result-card-description {
-  margin-top: 22px;
-}
-.result-card-description > summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  padding: 13px 0;
-  border-block: 1px solid var(--line);
-  color: var(--muted);
-  cursor: pointer;
-  list-style: none;
-  font-size: 8px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-.result-card-description > summary::-webkit-details-marker {
-  display: none;
-}
-.result-card-description > summary > span:last-child {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-}
-.result-card-description-show {
-  display: none;
-}
-.result-card-description:not([open]) .result-card-description-hide {
-  display: none;
-}
-.result-card-description:not([open]) .result-card-description-show {
-  display: inline;
-}
-.result-card-description > summary svg {
-  width: 14px;
-  transition: transform 0.24s ease-out;
-}
-.result-card-description[open] > summary svg {
-  transform: rotate(180deg);
-}
-.result-card-description > summary:hover,
-.result-card-description > summary:focus-visible {
-  color: var(--ink);
-}
-.result-card-description > summary:focus-visible {
-  outline: 1px solid var(--ink);
-  outline-offset: 4px;
-}
-.result-card-description > .result-position-meaning {
+.result-card-copy > .result-position-meaning {
   max-width: 52ch;
-  margin: 22px 0 0;
+  margin: 0;
   color: var(--ink);
   font-family: var(--font-bodoni), Georgia, serif;
   font-size: clamp(19px, 1.7vw, 24px);

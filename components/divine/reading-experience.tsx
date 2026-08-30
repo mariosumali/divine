@@ -1822,7 +1822,7 @@ export function ReadingExperience({
               placeholder="Ask, if you want."
             />
             <Button
-              className="ask-submit"
+              className="primary-action ask-submit"
               onClick={continueFromFrame}
               aria-label="Continue"
             >
@@ -2230,100 +2230,96 @@ export function ReadingExperience({
                     </header>
                   </div>
                 </details>
-                <div
-                  id="result-cards"
-                  className="result-card-list"
-                  aria-label="Cards in this reading"
-                >
-                  {draws.map((draw, index) => {
-                    const position = interpretation.positions[index];
-                    const focusMeaning = draw.card.focusModifiers?.[focus];
-                    const facts = cardFacts(draw.card);
+                <details className="result-cards-disclosure" open>
+                  <summary className="result-reading-summary result-cards-summary">
+                    <span>All card information</span>
+                    <span>
+                      <span className="result-cards-hide">Hide all cards</span>
+                      <span className="result-cards-show">Show all cards</span>
+                      <ChevronDown aria-hidden="true" />
+                    </span>
+                  </summary>
+                  <div
+                    id="result-cards"
+                    className="result-card-list"
+                    aria-label="Cards in this reading"
+                  >
+                    {draws.map((draw, index) => {
+                      const position = interpretation.positions[index];
+                      const focusMeaning = draw.card.focusModifiers?.[focus];
+                      const facts = cardFacts(draw.card);
 
-                    return (
-                      <motion.article
-                        className="result-card-detail"
-                        key={`${draw.card.id}-${index}`}
-                        initial={{ opacity: 0, y: 72 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, amount: 0.18 }}
-                        transition={{
-                          duration: 0.68,
-                          ease: [0.22, 1, 0.36, 1],
-                        }}
-                      >
-                        <InteractiveResultCard
-                          draw={draw}
-                          systemSlug={visualSystemFor(draw)}
-                          finish={finishFor(draw)}
-                          onTurn={() => cue('turn')}
-                        />
-                        <div className="result-card-copy">
-                          <p className="eyebrow">
-                            {`${index + 1}`.padStart(2, '0')} /{' '}
-                            {draw.card.sourceSystemName
-                              ? `${draw.card.sourceSystemName} · ${draw.position}`
-                              : draw.position}
-                          </p>
-                          <h2>
-                            <KineticText text={draw.card.name} />
-                          </h2>
-                          <details className="result-card-description" open>
-                            <summary>
-                              <span>Card description</span>
-                              <span aria-hidden="true">
-                                <span className="result-card-description-hide">
-                                  Collapse
-                                </span>
-                                <span className="result-card-description-show">
-                                  Read
-                                </span>
-                                <ChevronDown />
-                              </span>
-                            </summary>
+                      return (
+                        <motion.article
+                          className="result-card-detail"
+                          key={`${draw.card.id}-${index}`}
+                          initial={{ opacity: 0, y: 72 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          viewport={{ once: true, amount: 0.18 }}
+                          transition={{
+                            duration: 0.68,
+                            ease: [0.22, 1, 0.36, 1],
+                          }}
+                        >
+                          <InteractiveResultCard
+                            draw={draw}
+                            systemSlug={visualSystemFor(draw)}
+                            finish={finishFor(draw)}
+                            onTurn={() => cue('turn')}
+                          />
+                          <div className="result-card-copy">
+                            <p className="eyebrow">
+                              {`${index + 1}`.padStart(2, '0')} /{' '}
+                              {draw.card.sourceSystemName
+                                ? `${draw.card.sourceSystemName} · ${draw.position}`
+                                : draw.position}
+                            </p>
+                            <h2>
+                              <KineticText text={draw.card.name} />
+                            </h2>
                             <p className="result-position-meaning">
                               {position?.text ??
                                 (draw.reversed && draw.card.reversedMeaning
                                   ? draw.card.reversedMeaning
                                   : draw.card.meaning)}
                             </p>
-                          </details>
-                          {focusMeaning && focus !== 'general' && (
-                            <div className="result-meaning-grid">
-                              <div>
-                                <small>{focus}</small>
-                                <p>{focusMeaning}</p>
-                              </div>
-                            </div>
-                          )}
-                          <div
-                            className="result-keywords"
-                            aria-label="Keywords"
-                          >
-                            {draw.card.keywords.map((keyword) => (
-                              <span key={keyword}>{keyword}</span>
-                            ))}
-                          </div>
-                          {facts.length > 0 && (
-                            <dl className="result-card-facts">
-                              {facts.map(([label, value]) => (
-                                <div key={label}>
-                                  <dt>{label}</dt>
-                                  <dd>{value}</dd>
+                            {focusMeaning && focus !== 'general' && (
+                              <div className="result-meaning-grid">
+                                <div>
+                                  <small>{focus}</small>
+                                  <p>{focusMeaning}</p>
                                 </div>
+                              </div>
+                            )}
+                            <div
+                              className="result-keywords"
+                              aria-label="Keywords"
+                            >
+                              {draw.card.keywords.map((keyword) => (
+                                <span key={keyword}>{keyword}</span>
                               ))}
-                            </dl>
-                          )}
-                          {draw.card.provenance && (
-                            <p className="result-card-provenance">
-                              {draw.card.provenance}
-                            </p>
-                          )}
-                        </div>
-                      </motion.article>
-                    );
-                  })}
-                </div>
+                            </div>
+                            {facts.length > 0 && (
+                              <dl className="result-card-facts">
+                                {facts.map(([label, value]) => (
+                                  <div key={label}>
+                                    <dt>{label}</dt>
+                                    <dd>{value}</dd>
+                                  </div>
+                                ))}
+                              </dl>
+                            )}
+                            {draw.card.provenance && (
+                              <p className="result-card-provenance">
+                                {draw.card.provenance}
+                              </p>
+                            )}
+                          </div>
+                        </motion.article>
+                      );
+                    })}
+                  </div>
+                </details>
               </>
             )}
             {draws.length > 1 && (
