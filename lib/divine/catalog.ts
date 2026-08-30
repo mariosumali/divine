@@ -4,28 +4,101 @@ import type { SystemSlug } from './types';
 export interface CatalogSystem {
   slug: SystemSlug;
   name: string;
+  description: string;
 }
 
 export const CATALOG_SYSTEMS = [
-  { slug: 'divine', name: 'DIVINE Reading' },
-  { slug: 'tarot', name: 'Tarot' },
-  { slug: 'oracle', name: 'Oracle' },
-  { slug: 'lenormand', name: 'Lenormand' },
-  { slug: 'spellcraft', name: 'Ritual' },
-  { slug: 'ancient-egypt', name: 'Temple' },
-  { slug: 'zodiac', name: 'Zodiac' },
-  { slug: 'magic-8-ball', name: 'Magic 8 Ball' },
-  { slug: 'fortune-cookie', name: 'Fortune Cookie' },
-  { slug: 'kipper', name: 'Kipper' },
-  { slug: 'belline', name: 'Belline' },
-  { slug: 'playing-card-cartomancy', name: 'Playing Card Cartomancy' },
-  { slug: 'sibilla', name: 'Sibilla Italiana' },
-  { slug: 'runic-cards', name: 'Runic Cards' },
-  { slug: 'i-ching-cards', name: 'I Ching Cards' },
-  { slug: 'fal-e-hafez', name: 'Fal-e Hafez Cards' },
-  { slug: 'hanafuda', name: 'Hanafuda' },
-  { slug: 'zigeunerkarten', name: 'Zigeunerkarten' },
-  { slug: 'ilm-al-raml', name: 'ʿIlm al-Raml Cards' },
+  {
+    slug: 'divine',
+    name: 'DIVINE Reading',
+    description: 'One card from every deck · one connected reading',
+  },
+  { slug: 'tarot', name: 'Tarot', description: 'Archetypes · choice · change' },
+  {
+    slug: 'oracle',
+    name: 'Oracle',
+    description: 'Images · intuition · reflection',
+  },
+  {
+    slug: 'lenormand',
+    name: 'Lenormand',
+    description: 'Practical symbols · events · timing',
+  },
+  {
+    slug: 'spellcraft',
+    name: 'Ritual',
+    description: 'Intention · objects · action',
+  },
+  {
+    slug: 'ancient-egypt',
+    name: 'Temple',
+    description: 'Historical images · balance · renewal',
+  },
+  {
+    slug: 'zodiac',
+    name: 'Zodiac',
+    description: 'Signs · planets · houses',
+  },
+  {
+    slug: 'magic-8-ball',
+    name: 'Magic 8 Ball',
+    description: 'A clear answer by chance',
+  },
+  {
+    slug: 'fortune-cookie',
+    name: 'Fortune Cookie',
+    description: 'A short message to reflect on',
+  },
+  {
+    slug: 'kipper',
+    name: 'Kipper',
+    description: 'People · places · circumstances',
+  },
+  {
+    slug: 'belline',
+    name: 'Belline',
+    description: 'Events under planetary influence',
+  },
+  {
+    slug: 'playing-card-cartomancy',
+    name: 'Playing Card Cartomancy',
+    description: 'Suit and rank in everyday life',
+  },
+  {
+    slug: 'sibilla',
+    name: 'Sibilla Italiana',
+    description: 'Everyday scenes in conversation',
+  },
+  {
+    slug: 'runic-cards',
+    name: 'Runic Cards',
+    description: 'Historical runes · modern reflection',
+  },
+  {
+    slug: 'i-ching-cards',
+    name: 'I Ching Cards',
+    description: 'Hexagrams · conditions · change',
+  },
+  {
+    slug: 'fal-e-hafez',
+    name: 'Fal-e Hafez Cards',
+    description: 'Original poetic images and counsel',
+  },
+  {
+    slug: 'hanafuda',
+    name: 'Hanafuda',
+    description: 'Flowers · seasons · changing pace',
+  },
+  {
+    slug: 'zigeunerkarten',
+    name: 'Zigeunerkarten',
+    description: 'People · events · fortunes',
+  },
+  {
+    slug: 'ilm-al-raml',
+    name: 'ʿIlm al-Raml Cards',
+    description: 'Geomantic figures for reflection',
+  },
 ] as const satisfies readonly CatalogSystem[];
 
 export const CATALOG_NAME_MAP = Object.fromEntries(
@@ -59,4 +132,4 @@ export const CARD_TRADITION_COUNT = CARD_SYSTEM_SLUGS.length;
 export const INDIVIDUAL_READING_COUNT = CATALOG_SYSTEMS.length - 1;
 export const TOTAL_READING_EXPERIENCE_COUNT = CATALOG_SYSTEMS.length;
 
-export const EXPERIENCE_DESCRIPTION = `${TOTAL_READING_EXPERIENCE_COUNT} interactive reading experiences: one unified constellation, ${CARD_TRADITION_COUNT} card traditions, and two chance oracles.`;
+export const EXPERIENCE_DESCRIPTION = `${TOTAL_READING_EXPERIENCE_COUNT} interactive reading experiences: one unified reading, ${CARD_TRADITION_COUNT} card traditions, and two chance oracles.`;

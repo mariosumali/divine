@@ -223,7 +223,7 @@ export function AstrologyStudio() {
       </section>
 
       <nav className="astrology-subnav" aria-label="Astrology sections">
-        <a href="#today">Today</a>
+        <a href="#today">Sign reading</a>
         <a href="#alignment">Alignment</a>
         <a href="#atlas">Atlas</a>
       </nav>
@@ -234,8 +234,8 @@ export function AstrologyStudio() {
         aria-labelledby="today-title"
       >
         <header className="astro-section-heading">
-          <p>01 / Daily signal</p>
-          <h2 id="today-title">Today, briefly.</h2>
+          <p>01 / Sign reading</p>
+          <h2 id="today-title">A reading for your sign.</h2>
         </header>
 
         <div
@@ -284,7 +284,7 @@ export function AstrologyStudio() {
             </div>
           </div>
           <div className="horoscope-copy">
-            <p className="astro-kicker">Your signal</p>
+            <p className="astro-kicker">Your reading</p>
             <h3>{activeSign.headline}</h3>
             <p>{activeSign.overview}</p>
           </div>

@@ -38,12 +38,17 @@ async function bytes(path) {
   return (await readFile(path)).byteLength;
 }
 
-async function isComplete(slug, count) {
+async function isComplete(slug, count, treatment) {
   try {
     const manifest = JSON.parse(
       await readFile(join(outputRoot, slug, 'manifest.json'), 'utf8'),
     );
     if (manifest.cards?.length !== count) return false;
+    if (
+      treatment &&
+      manifest.cards.some((card) => card.treatment !== treatment)
+    )
+      return false;
     await Promise.all(
       manifest.cards.map(({ file }) => access(join(outputRoot, slug, file))),
     );
@@ -183,9 +188,12 @@ const zigeunerSources = [
   ],
 ];
 
+const zigeunerTreatment =
+  'Fit in full within the DIVINE card ratio over a soft edge-fill backdrop for a modern historical-art edition; this is not original Zigeunerkarten pack artwork.';
+
 async function renderZigeunerkarten() {
   const slug = 'zigeunerkarten';
-  if (await isComplete(slug, zigeunerSources.length)) return;
+  if (await isComplete(slug, zigeunerSources.length, zigeunerTreatment)) return;
   const directory = join(outputRoot, slug);
   await mkdir(directory, { recursive: true });
   const cards = [];
@@ -213,27 +221,41 @@ async function renderZigeunerkarten() {
     const source = join(scratch, `zigeuner-${index + 1}.source`);
     const filename = `zigeunerkarten-${String(index + 1).padStart(2, '0')}.webp`;
     const output = join(directory, filename);
-    try {
-      await access(output);
-    } catch {
-      await download(imageUrl, source);
-      await execFileAsync('magick', [
-        source,
-        '-auto-orient',
-        '-colorspace',
-        'sRGB',
-        '-resize',
-        '720x1080^',
-        '-gravity',
-        'center',
-        '-extent',
-        '720x1080',
-        '-strip',
-        '-quality',
-        '84',
-        output,
-      ]);
-    }
+    await download(imageUrl, source);
+    await execFileAsync('magick', [
+      source,
+      '-auto-orient',
+      '-colorspace',
+      'sRGB',
+      '-write',
+      'mpr:source',
+      '+delete',
+      '(',
+      'mpr:source',
+      '-resize',
+      '720x1080^',
+      '-gravity',
+      'center',
+      '-extent',
+      '720x1080',
+      '-blur',
+      '0x28',
+      ')',
+      '(',
+      'mpr:source',
+      '-resize',
+      '680x1040',
+      ')',
+      '-gravity',
+      'center',
+      '-compose',
+      'over',
+      '-composite',
+      '-strip',
+      '-quality',
+      '84',
+      output,
+    ]);
     cards.push({
       cardIndex: index + 1,
       subject,
@@ -244,8 +266,7 @@ async function renderZigeunerkarten() {
       imageUrl,
       license,
       artist: metadataValue(info, 'Artist') || 'Artist unknown',
-      treatment:
-        'Center-cropped to the DIVINE card ratio for a modern historical-art edition; this is not original Zigeunerkarten pack artwork.',
+      treatment: zigeunerTreatment,
     });
     process.stdout.write(`${slug}: ${index + 1}/${zigeunerSources.length}\n`);
   }

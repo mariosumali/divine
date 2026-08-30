@@ -47,10 +47,18 @@ export async function generateMetadata({
 
 export default async function ReadingPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ opening?: string | string[] }>;
 }) {
   const { slug } = await params;
+  const { opening } = await searchParams;
   if (!isSystemSlug(slug)) notFound();
-  return <ReadingExperience system={SYSTEM_MAP[slug]} />;
+  return (
+    <ReadingExperience
+      system={SYSTEM_MAP[slug]}
+      startWithOpening={opening === '1'}
+    />
+  );
 }

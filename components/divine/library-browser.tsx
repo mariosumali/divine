@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import type { CSSProperties, KeyboardEvent as ReactKeyboardEvent } from 'react';
+import type { KeyboardEvent as ReactKeyboardEvent } from 'react';
 import {
   ArrowRight,
   ChevronLeft,
@@ -21,16 +21,6 @@ import {
 import { METHOD_HISTORIES } from '@/lib/divine/library';
 import { SYSTEMS } from '@/lib/divine/systems';
 import type { CardDefinition, SystemSlug } from '@/lib/divine/types';
-
-function circularOffset(index: number, activeIndex: number, total: number) {
-  let offset = index - activeIndex;
-  const midpoint = total / 2;
-
-  if (offset > midpoint) offset -= total;
-  if (offset < -midpoint) offset += total;
-
-  return offset;
-}
 
 function CardPortrait({
   card,
@@ -85,6 +75,9 @@ export function LibraryBrowser() {
     SYSTEMS.findIndex((item) => item.slug === activeSlug),
   );
   const system = SYSTEMS[activeIndex] ?? SYSTEMS[0];
+  const previousSystem =
+    SYSTEMS[(activeIndex - 1 + SYSTEMS.length) % SYSTEMS.length];
+  const nextSystem = SYSTEMS[(activeIndex + 1) % SYSTEMS.length];
   const history = METHOD_HISTORIES[system.slug];
   const filteredCards = useMemo(() => {
     const normalized = query.trim().toLowerCase();
@@ -146,15 +139,10 @@ export function LibraryBrowser() {
       </header>
 
       <nav className="library-system-nav" aria-label="Reading methods">
-        <div className="library-rolodex-heading" aria-hidden="true">
-          <span>Reading index</span>
-          <span>Flip through the archive</span>
-        </div>
-
         <button
           className="library-rolodex-control is-previous"
           type="button"
-          aria-label="Previous reading method"
+          aria-label={`Previous reading method: ${previousSystem.name}`}
           onClick={() => flipSystem(-1)}
           onKeyDown={handleRolodexKeyDown}
         >
@@ -162,92 +150,28 @@ export function LibraryBrowser() {
           <span>Previous</span>
         </button>
 
-        <div className="library-rolodex-deck">
-          {SYSTEMS.map((item, index) => {
-            const offset = circularOffset(index, activeIndex, SYSTEMS.length);
-            const distance = Math.abs(offset);
-            const itemHistory = METHOD_HISTORIES[item.slug];
-            const isActive = item.slug === system.slug;
-
-            return (
-              <button
-                type="button"
-                key={item.slug}
-                className={`library-rolodex-card${isActive ? ' active' : ''}${distance > 2 ? ' is-hidden' : ''}`}
-                aria-pressed={isActive}
-                aria-label={`Select ${item.name}`}
-                tabIndex={distance <= 2 ? 0 : -1}
-                onClick={() => chooseSystem(item.slug)}
-                style={
-                  {
-                    '--rolodex-x': `${offset * 44}%`,
-                    '--rolodex-mobile-x': `${offset * 78}%`,
-                    '--rolodex-y': `${distance * 14}px`,
-                    '--rolodex-z': `${distance * -72}px`,
-                    '--rolodex-rotate-y': `${offset * -7}deg`,
-                    '--rolodex-rotate-z': `${offset * 0.8}deg`,
-                    '--rolodex-hover-rotate-y': `${offset * -4}deg`,
-                    '--rolodex-hover-rotate-z': `${offset * 0.4}deg`,
-                    zIndex: SYSTEMS.length - distance,
-                  } as CSSProperties
-                }
-              >
-                <span className="library-rolodex-tab" aria-hidden="true">
-                  {`${index + 1}`.padStart(2, '0')}
-                </span>
-                <span className="library-rolodex-card-top">
-                  <small>Reading method</small>
-                  <small>
-                    {`${index + 1}`.padStart(2, '0')} / {SYSTEMS.length}
-                  </small>
-                </span>
-                <strong>{item.name}</strong>
-                <span className="library-rolodex-card-bottom">
-                  <small>{itemHistory.origin}</small>
-                  <small>{itemHistory.period}</small>
-                </span>
-              </button>
-            );
-          })}
-          <span className="library-rolodex-spindle" aria-hidden="true">
-            <i />
-            <i />
-          </span>
+        <div className="library-rolodex-deck" aria-live="polite">
+          <article className="library-rolodex-card" key={system.slug}>
+            <span className="library-rolodex-tab" aria-hidden="true">
+              {`${activeIndex + 1}`.padStart(2, '0')}
+            </span>
+            <strong>{system.name}</strong>
+            <small>
+              {`${activeIndex + 1}`.padStart(2, '0')} / {SYSTEMS.length}
+            </small>
+          </article>
         </div>
 
         <button
           className="library-rolodex-control is-next"
           type="button"
-          aria-label="Next reading method"
+          aria-label={`Next reading method: ${nextSystem.name}`}
           onClick={() => flipSystem(1)}
           onKeyDown={handleRolodexKeyDown}
         >
           <span>Next</span>
           <ChevronRight aria-hidden="true" />
         </button>
-
-        <div
-          className="library-rolodex-index"
-          aria-label="Choose a reading method"
-        >
-          {SYSTEMS.map((item, index) => (
-            <button
-              type="button"
-              key={item.slug}
-              className={item.slug === system.slug ? 'active' : ''}
-              aria-label={item.name}
-              aria-current={item.slug === system.slug ? 'true' : undefined}
-              onClick={() => chooseSystem(item.slug)}
-              onKeyDown={handleRolodexKeyDown}
-            >
-              <span>{`${index + 1}`.padStart(2, '0')}</span>
-            </button>
-          ))}
-        </div>
-
-        <p className="sr-only" aria-live="polite">
-          {system.name}, method {activeIndex + 1} of {SYSTEMS.length}
-        </p>
       </nav>
 
       <section className="method-history" aria-labelledby="method-title">
@@ -332,7 +256,7 @@ export function LibraryBrowser() {
                 </button>
               ))}
               {filteredCards.length === 0 && (
-                <p className="library-empty">No symbol answers that name.</p>
+                <p className="library-empty">No cards match that search.</p>
               )}
             </div>
             <article className="card-profile" key={selected.id}>
@@ -388,11 +312,11 @@ export function LibraryBrowser() {
           </div>
         ) : (
           <div className="library-no-deck">
-            <strong>Chance has no index.</strong>
+            <strong>This method has no fixed deck.</strong>
             <p>
               {system.kind === 'ball'
-                ? 'Twenty-four original verdicts appear only after the object is disturbed.'
-                : 'One of 144 original messages appears only after the shell is broken.'}
+                ? 'Ask a yes-or-no question, then shake the ball for one of twenty-four answers.'
+                : 'Choose and break a cookie to receive one of 144 messages.'}
             </p>
             <Link href={`/read/${system.slug}`}>
               Begin <ArrowRight />

@@ -129,8 +129,12 @@ describe('DIVINE content libraries', () => {
     expect(new Set(images).size).toBe(cards.length);
 
     for (const image of images) {
-      expect(image).toMatch(/^\/.+\.webp$/);
-      const path = join(process.cwd(), 'public', image!.slice(1));
+      expect(image).toMatch(/^\/.+\.webp(?:\?v=\d+)?$/);
+      const path = join(
+        process.cwd(),
+        'public',
+        image!.slice(1).split('?')[0],
+      );
       expect(existsSync(path)).toBe(true);
       expect(statSync(path).size).toBeGreaterThan(150);
     }
@@ -177,7 +181,7 @@ describe('DIVINE content libraries', () => {
         Array.from(
           { length: count },
           (_, index) =>
-            `/traditional-decks-v1/${collection}/${collection}-${String(index + 1).padStart(2, '0')}.webp`,
+            `/traditional-decks-v1/${collection}/${collection}-${String(index + 1).padStart(2, '0')}.webp${collection === 'sibilla' ? '?v=4' : ''}`,
         ),
       );
     }
@@ -288,8 +292,11 @@ describe('reading engine', () => {
     expect(openingHeroHeadlines(system.slug, draws[0], 'general')).toContain(
       result.headline,
     );
-    for (const draw of draws) {
-      expect(result.synthesis).toContain(draw.card.name);
+    expect(result.synthesis).toContain(draws[0].card.name);
+    expect(result.synthesis).toContain(draws[1].card.name);
+    expect(result.synthesis).toContain(draws.at(-1)!.card.name);
+    for (const [index, draw] of draws.entries()) {
+      expect(result.positions[index].text).toContain(draw.card.name);
       expect(
         result.connections?.some(
           (connection) =>
@@ -401,7 +408,7 @@ describe('reading engine', () => {
     expect(result.positions[0].text).toContain('Timing:');
   });
 
-  it('gives every card an expanded interpretation and connects multi-card positions', () => {
+  it('gives every card a concise interpretation and connects the spread in its synthesis', () => {
     const system = SYSTEM_MAP.tarot;
     const singleSpread = system.spreads.find((item) => item.id === 'insight')!;
     const singleDraws = [
@@ -417,7 +424,9 @@ describe('reading engine', () => {
       singleDraws,
       'general',
     );
-    expect(single.positions[0].text.length).toBeGreaterThan(220);
+    expect(single.positions[0].text.length).toBeGreaterThan(80);
+    expect(single.positions[0].text.length).toBeLessThan(500);
+    expect(single.positions[0].text).toContain(singleDraws[0].card.name);
     expect(single.synthesis).toContain(singleDraws[0].card.name);
 
     const spread = system.spreads.find((item) => item.id === 'three')!;
@@ -428,33 +437,33 @@ describe('reading engine', () => {
     }));
     const result = interpretReading(system, spread, draws, 'love');
     for (const [index, position] of result.positions.entries()) {
-      expect(position.text.length).toBeGreaterThan(300);
-      const neighbor = draws[index === 0 ? 1 : index - 1];
-      expect(position.text).toContain(neighbor.card.name);
+      expect(position.text.length).toBeGreaterThan(80);
+      expect(position.text.length).toBeLessThan(500);
+      expect(position.text).toContain(draws[index].card.name);
     }
     for (const draw of draws)
       expect(result.synthesis).toContain(draw.card.name);
-    expect(result.synthesis).toContain('no card stands alone');
+    expect(result.synthesis).toContain('Read the cards from first to last');
   });
 
   it('uses a distinct interpretive grammar for every card tradition', () => {
     const signatures = {
-      tarot: 'archetype, suit, number, element',
-      oracle: 'image and association',
-      lenormand: 'concrete syntax',
-      spellcraft: 'material instruction',
-      'ancient-egypt': 'balance, continuity, and renewal',
-      zodiac: 'three-part grammar',
-      kipper: 'social field',
-      belline: 'planetary families',
-      'playing-card-cartomancy': 'suit, rank, color, court',
-      sibilla: 'social conversation',
+      tarot: 'traditional theme, suit, number, element',
+      oracle: 'images, associations',
+      lenormand: 'literal subject',
+      spellcraft: 'something practical',
+      'ancient-egypt': 'historical Egyptian images',
+      zodiac: 'signs describe how',
+      kipper: 'everyday situation',
+      belline: 'planetary influences',
+      'playing-card-cartomancy': 'suit and rank',
+      sibilla: 'named scenes',
       'runic-cards': 'Elder Futhark character',
-      'i-ching-cards': 'stable King Wen hexagrams',
-      'fal-e-hafez': 'echo of bibliomancy',
-      hanafuda: 'month, flower, motif',
-      zigeunerkarten: 'one practical sentence',
-      'ilm-al-raml': 'sixteen canonical figures',
+      'i-ching-cards': 'King Wen hexagrams',
+      'fal-e-hafez': 'inspired by bibliomancy',
+      hanafuda: 'month, flower, pictured motif',
+      zigeunerkarten: 'concrete people',
+      'ilm-al-raml': 'sixteen traditional figures',
     } as const;
 
     for (const [slug, signature] of Object.entries(signatures)) {

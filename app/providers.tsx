@@ -97,12 +97,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
     return () => document.removeEventListener('visibilitychange', onVisibility);
   }, []);
 
-  const chooseEntry = async (withSound: boolean) => {
+  const chooseEntry = () => {
     writePreference('divine-entered', 'yes');
-    writePreference('divine-sound', withSound ? 'on' : 'off');
-    setSound(withSound);
-    await setSoundEnabled(withSound);
-    if (withSound) playSound('enter');
     setEntered(true);
   };
 
@@ -234,15 +230,6 @@ export function Providers({ children }: { children: React.ReactNode }) {
             exit={{ opacity: 0, y: '-100%' }}
             transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
           >
-            <div className="entry-orbit" aria-hidden="true" />
-            <motion.p
-              className="entry-kicker"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3 }}
-            >
-              Private by design
-            </motion.p>
             <motion.h1
               id="entry-title"
               initial={{ clipPath: 'inset(100% 0 0)' }}
@@ -258,7 +245,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.75 }}
             >
-              Enter.
+              Readings stay on this device unless you choose to share them.
             </motion.p>
             <motion.div
               className="entry-actions"
@@ -269,16 +256,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
               <button
                 type="button"
                 className="primary-action"
-                onClick={() => void chooseEntry(true)}
+                onClick={chooseEntry}
               >
-                Enter with sound
-              </button>
-              <button
-                type="button"
-                className="quiet-action"
-                onClick={() => void chooseEntry(false)}
-              >
-                Enter silently
+                ENTER
               </button>
             </motion.div>
             <motion.p
@@ -287,8 +267,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
               animate={{ opacity: 1 }}
               transition={{ delay: 1.15 }}
             >
-              For entertainment and personal reflection. Not professional
-              advice.
+              CREATED BY MARIO SUMALI
             </motion.p>
           </motion.dialog>
         )}
