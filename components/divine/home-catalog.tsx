@@ -8,7 +8,11 @@ import { useEffect, useRef, useState } from 'react';
 import type { CSSProperties, MouseEvent as ReactMouseEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { useExperience } from '@/app/providers';
-import { CATALOG_SYSTEMS, READING_INDEX_ART } from '@/lib/divine/catalog';
+import {
+  CATALOG_SYSTEMS,
+  READING_INDEX_ART,
+  readingIndexArtTreatment,
+} from '@/lib/divine/catalog';
 import archiveManifest from '@/public/collage-archive/manifest.json';
 
 const ART_MOTIONS = [
@@ -793,28 +797,6 @@ export function HomeCatalog() {
         </motion.a>
       </section>
 
-      <Link
-        className="astrology-home-entry"
-        href="/astrology"
-        onClick={() => cue('tick')}
-      >
-        <span className="astrology-home-art">
-          <Image
-            src="/astrology/zodiac-circle-medieval.webp"
-            alt=""
-            fill
-            sizes="(max-width: 720px) 100vw, 50vw"
-          />
-        </span>
-        <span className="astrology-home-copy">
-          <small>New / Astrology studio</small>
-          <strong>Read the sky.</strong>
-          <i>
-            Enter <span aria-hidden="true">↗</span>
-          </i>
-        </span>
-      </Link>
-
       <section className="reading-index" id="readings" aria-label="Readings">
         {CATALOG_SYSTEMS.map((system, index) => {
           const artMotion = ART_MOTIONS[index % ART_MOTIONS.length];
@@ -823,6 +805,7 @@ export function HomeCatalog() {
             <Link
               className="reading-index-item"
               data-system={system.slug}
+              data-art-treatment={readingIndexArtTreatment(system.slug)}
               href={`/read/${system.slug}`}
               key={system.slug}
               onClick={(event) => enterReading(event, system)}
@@ -903,6 +886,28 @@ export function HomeCatalog() {
         })}
       </section>
 
+      <Link
+        className="astrology-home-entry"
+        href="/astrology"
+        onClick={() => cue('tick')}
+      >
+        <span className="astrology-home-art">
+          <Image
+            src="/astrology/zodiac-circle-medieval.webp"
+            alt=""
+            fill
+            sizes="(max-width: 720px) 100vw, 50vw"
+          />
+        </span>
+        <span className="astrology-home-copy">
+          <small>New / Astrology studio</small>
+          <strong>Read the sky.</strong>
+          <i>
+            Enter <span aria-hidden="true">↗</span>
+          </i>
+        </span>
+      </Link>
+
       {departingSystem && (
         <motion.div
           className="reading-route-transition"
@@ -925,6 +930,7 @@ export function HomeCatalog() {
           </div>
           <motion.div
             className="route-transition-object"
+            data-art-treatment={readingIndexArtTreatment(departingSystem.slug)}
             initial={{ opacity: 0, scale: 0.7, rotate: -8 }}
             animate={{ opacity: 1, scale: 1, rotate: 0 }}
             transition={{

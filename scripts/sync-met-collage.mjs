@@ -13,6 +13,17 @@ const LIMIT = Number(
 const SEED_PATH = process.argv
   .find((argument) => argument.startsWith('--seed='))
   ?.split('=')[1];
+const REPROCESS = process.argv.includes('--reprocess');
+const REPROCESS_IDS = new Set(
+  (
+    process.argv
+      .find((argument) => argument.startsWith('--object-ids='))
+      ?.split('=')[1]
+      ?.split(',') ?? []
+  )
+    .map(Number)
+    .filter(Number.isFinite),
+);
 
 const SEARCH_TERMS = [
   'astrolabe',
@@ -452,6 +463,85 @@ function colorDistance(r, g, b, background) {
   return Math.sqrt(red * red * 0.3 + green * green * 0.59 + blue * blue * 0.11);
 }
 
+function removeDetachedArtifacts(alpha, width, height) {
+  const pixelCount = width * height;
+  const labels = new Int32Array(pixelCount);
+  const queue = new Int32Array(pixelCount);
+  const components = [];
+
+  for (let start = 0; start < pixelCount; start += 1) {
+    if (alpha[start] < 48 || labels[start]) continue;
+
+    const label = components.length + 1;
+    let head = 0;
+    let tail = 0;
+    let area = 0;
+    let minX = width;
+    let minY = height;
+    let maxX = 0;
+    let maxY = 0;
+    labels[start] = label;
+    queue[tail++] = start;
+
+    while (head < tail) {
+      const index = queue[head++];
+      const x = index % width;
+      const y = Math.floor(index / width);
+      area += 1;
+      minX = Math.min(minX, x);
+      minY = Math.min(minY, y);
+      maxX = Math.max(maxX, x);
+      maxY = Math.max(maxY, y);
+
+      for (let offsetY = -1; offsetY <= 1; offsetY += 1) {
+        for (let offsetX = -1; offsetX <= 1; offsetX += 1) {
+          if (!offsetX && !offsetY) continue;
+          const neighborX = x + offsetX;
+          const neighborY = y + offsetY;
+          if (
+            neighborX < 0 ||
+            neighborX >= width ||
+            neighborY < 0 ||
+            neighborY >= height
+          ) {
+            continue;
+          }
+          const neighbor = neighborY * width + neighborX;
+          if (alpha[neighbor] < 48 || labels[neighbor]) continue;
+          labels[neighbor] = label;
+          queue[tail++] = neighbor;
+        }
+      }
+    }
+
+    components.push({ area, minX, minY, maxX, maxY });
+  }
+
+  if (components.length < 2) return;
+  const largestArea = Math.max(
+    ...components.map((component) => component.area),
+  );
+  const minimumArea = Math.max(16, largestArea * 0.003);
+  const keep = components.map((component) => {
+    if (component.area === largestArea) return true;
+    if (component.area < minimumArea) return false;
+    const componentWidth = component.maxX - component.minX + 1;
+    const componentHeight = component.maxY - component.minY + 1;
+    const aspectRatio = Math.max(
+      componentWidth / componentHeight,
+      componentHeight / componentWidth,
+    );
+    const isDetachedLine =
+      aspectRatio > 6 && component.area < largestArea * 0.14;
+    return !isDetachedLine;
+  });
+
+  for (let index = 0; index < pixelCount; index += 1) {
+    const label = labels[index];
+    if (!label || !keep[label - 1]) alpha[index] = 0;
+  }
+}
+
 function buildCutout(pixels, width, height, channels) {
   const edgeWidth = Math.max(3, Math.floor(width * 0.075));
   const rowBackgrounds = Array.from({ length: height }, (_, y) => {
@@ -470,6 +560,7 @@ function buildCutout(pixels, width, height, channels) {
 
   const pixelCount = width * height;
   const backgroundCandidate = new Uint8Array(pixelCount);
+  const obviousInteriorBackground = new Uint8Array(pixelCount);
   for (let y = 0; y < height; y += 1) {
     for (let x = 0; x < width; x += 1) {
       const pixelIndex = y * width + x;
@@ -486,6 +577,7 @@ function buildCutout(pixels, width, height, channels) {
         background,
       );
       backgroundCandidate[pixelIndex] = distance < 43 ? 1 : 0;
+      obviousInteriorBackground[pixelIndex] = distance < 12 ? 1 : 0;
     }
   }
 
@@ -520,7 +612,8 @@ function buildCutout(pixels, width, height, channels) {
 
   const alpha = new Uint8Array(pixelCount);
   for (let index = 0; index < pixelCount; index += 1) {
-    alpha[index] = isBackground[index] ? 0 : 255;
+    alpha[index] =
+      isBackground[index] || obviousInteriorBackground[index] ? 0 : 255;
   }
 
   for (let pass = 0; pass < 2; pass += 1) {
@@ -541,6 +634,8 @@ function buildCutout(pixels, width, height, channels) {
     }
     alpha.set(next);
   }
+
+  removeDetachedArtifacts(alpha, width, height);
 
   let minX = width;
   let minY = height;
@@ -696,6 +791,26 @@ async function main() {
 
   const usedIDs = new Set(previous.map((item) => item.objectID));
   const items = [...previous];
+
+  if (REPROCESS) {
+    for (const item of items) {
+      if (REPROCESS_IDS.size && !REPROCESS_IDS.has(item.objectID)) continue;
+      try {
+        await processImage(
+          item.imageURL,
+          path.join(OUTPUT_DIR, item.src.split('/').at(-1)),
+        );
+        console.log(
+          `Reprocessed ${item.objectID} ${item.searchTerm}: ${item.title}`,
+        );
+      } catch (error) {
+        console.warn(
+          `Could not reprocess Met object ${item.objectID}: ${error.message}`,
+        );
+      }
+    }
+    return;
+  }
 
   if (SEED_PATH) {
     const seeds = JSON.parse(

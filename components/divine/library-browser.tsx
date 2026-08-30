@@ -103,7 +103,7 @@ export function LibraryBrowser() {
     null;
 
   const chooseSystem = (slug: SystemSlug) => {
-    cue('tick');
+    cue('turn');
     setActiveSlug(slug);
     setQuery('');
     setSelectedId(null);
