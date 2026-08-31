@@ -679,6 +679,7 @@ button {
   text-transform: uppercase;
 }
 .today-hero {
+  position: relative;
   display: grid;
   min-height: clamp(260px, 43svh, 500px);
   place-items: center;
