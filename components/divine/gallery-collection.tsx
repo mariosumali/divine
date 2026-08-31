@@ -9,6 +9,11 @@ import type { CSSProperties } from 'react';
 import { useExperience } from '@/app/providers';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import {
+  CATALOG_SYSTEMS,
+  READING_INDEX_ART,
+  readingIndexArtTreatment,
+} from '@/lib/divine/catalog';
 import type { GalleryCategory, GalleryItem } from '@/lib/divine/gallery';
 
 const BATCH_SIZE = 56;
@@ -23,6 +28,14 @@ const FILTERS: ReadonlyArray<{ key: GalleryFilter; label: string }> = [
   { key: 'objects', label: 'Objects' },
   { key: 'celestial', label: 'Celestial' },
   { key: 'archive', label: 'Archive' },
+];
+
+const READING_SYMBOLS = [
+  ...new Set(
+    CATALOG_SYSTEMS.filter(
+      (system) => readingIndexArtTreatment(system.slug) === 'cutout',
+    ).map((system) => READING_INDEX_ART[system.slug]),
+  ),
 ];
 
 function hash(value: string) {
@@ -263,12 +276,15 @@ export function GalleryCollection({ items }: { items: GalleryItem[] }) {
     return {
       field,
       card: galleryItems.find((item) => item.kind === 'card'),
-      object: galleryItems.find((item) => item.kind === 'cutout'),
+      symbol:
+        READING_SYMBOLS[
+          hash(`masthead-symbol-${visitSeed}`) % READING_SYMBOLS.length
+        ],
       orbit: galleryItems.find(
         (item) => item.category === 'celestial' && item.id !== field?.id,
       ),
     };
-  }, [galleryItems]);
+  }, [galleryItems, visitSeed]);
 
   const imageSource = useCallback(
     (item: GalleryItem) => {
@@ -355,7 +371,16 @@ export function GalleryCollection({ items }: { items: GalleryItem[] }) {
             priority
           />
         </span>
-        <span className="gallery-masthead-card" aria-hidden="true">
+        <span
+          className="gallery-masthead-card"
+          style={{
+            top: 'clamp(14px, 3vw, 30px)',
+            left: 'clamp(10px, 3vw, 52px)',
+            width: 'clamp(96px, 12vw, 182px)',
+            height: '44%',
+          }}
+          aria-hidden="true"
+        >
           <Image
             src={
               mastheadItems.card
@@ -370,7 +395,7 @@ export function GalleryCollection({ items }: { items: GalleryItem[] }) {
         </span>
         <span className="gallery-masthead-hand" aria-hidden="true">
           <Image
-            src={mastheadItems.object?.src ?? '/collage-v1/hand.webp'}
+            src={mastheadItems.symbol ?? '/collage-v1/hand.webp'}
             alt=""
             fill
             sizes="300px"
