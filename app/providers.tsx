@@ -25,6 +25,7 @@ interface ExperienceContextValue {
   toggleTheme: () => void;
   toggleSound: () => void;
   setDeckFinish: (slug: CardSystemSlug, finish: DeckFinish) => void;
+  setAllDeckFinishes: (finish: DeckFinish) => void;
   cue: typeof playSound;
 }
 
