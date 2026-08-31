@@ -11765,9 +11765,11 @@ button {
   font-size: 9px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
+  transition: opacity 0.2s ease;
 }
-.gallery-search input::placeholder {
-  color: rgba(244, 242, 236, 0.48);
+.gallery-search:focus-within input,
+.gallery-search[data-has-query='true'] input {
+  opacity: 1;
 }
 .gallery-search input:focus-visible {
   outline: 0;
