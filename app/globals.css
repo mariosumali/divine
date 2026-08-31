@@ -8624,59 +8624,6 @@ button {
   .reading-again > a {
     justify-content: center;
   }
-  .journal-tools {
-    align-items: stretch;
-    flex-direction: column;
-  }
-  .journal-tools > label {
-    min-width: 0;
-  }
-  .journal-navigation,
-  .journal-insights {
-    grid-template-columns: 1fr;
-  }
-  .journal-navigation {
-    gap: 24px;
-  }
-  .journal-filter-groups > div > span {
-    width: 100%;
-    margin-bottom: 2px;
-  }
-  .journal-insights {
-    gap: 25px;
-  }
-  .journal-insight-list button {
-    border-top: 1px solid var(--line);
-    border-left: 0;
-  }
-  .filter-row {
-    justify-content: flex-start;
-    overflow-x: auto;
-    flex-wrap: nowrap;
-  }
-  .journal-summary {
-    grid-template-columns: 1fr auto;
-    gap: 8px;
-    padding: 20px 6px;
-  }
-  .journal-summary > strong {
-    grid-column: 1 / -1;
-  }
-  .journal-summary > small {
-    grid-column: 1;
-  }
-  .journal-summary > i {
-    grid-column: 2;
-    grid-row: 1;
-  }
-  .journal-draws > div {
-    grid-template-columns: 1fr;
-    gap: 6px;
-  }
-  .journal-reflection-fields {
-    grid-template-columns: 1fr;
-    gap: 18px;
-  }
   .library-masthead {
     min-height: 250px;
     grid-template-columns: 1fr;
