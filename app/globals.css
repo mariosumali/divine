@@ -1084,7 +1084,7 @@ button {
     max-width: none;
   }
   .today-reading-header {
-    padding-top: 54px;
+    padding-block: 54px 64px;
   }
   .today-response,
   .today-interpretation > header {
