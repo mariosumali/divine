@@ -14,21 +14,11 @@ import {
   READING_INDEX_ART,
   readingIndexArtTreatment,
 } from '@/lib/divine/catalog';
-import type { GalleryCategory, GalleryItem } from '@/lib/divine/gallery';
+import type { GalleryItem } from '@/lib/divine/gallery';
 
 const BATCH_SIZE = 56;
 const BASES_PER_BOARD = 14;
 const OBJECTS_PER_BOARD = 5;
-
-type GalleryFilter = 'all' | GalleryCategory;
-
-const FILTERS: ReadonlyArray<{ key: GalleryFilter; label: string }> = [
-  { key: 'all', label: 'All works' },
-  { key: 'cards', label: 'Cards' },
-  { key: 'objects', label: 'Objects' },
-  { key: 'celestial', label: 'Celestial' },
-  { key: 'archive', label: 'Archive' },
-];
 
 const READING_SYMBOLS = [
   ...new Set(
