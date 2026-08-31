@@ -133,6 +133,12 @@ export function Providers({ children }: { children: React.ReactNode }) {
           playSound('turn');
           return next;
         }),
+      setAllDeckFinishes: (finish) => {
+        const next = deckFinishesFor(finish);
+        writePreference('divine-decks', JSON.stringify(next));
+        playSound('turn');
+        setDeckFinishes(next);
+      },
       cue: playSound,
     }),
     [theme, sound, deckFinishes],
