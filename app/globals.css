@@ -10620,8 +10620,8 @@ button {
   position: relative;
   isolation: isolate;
   width: 100%;
-  height: clamp(780px, 78vw, 1120px);
-  margin-top: clamp(-210px, -13vw, -118px);
+  height: clamp(760px, 76vw, 1080px);
+  margin-top: clamp(-36px, -2vw, -18px);
   overflow: visible;
 }
 .gallery-collage-board:first-child {
@@ -10636,8 +10636,8 @@ button {
 }
 .gallery-collage-backdrop img {
   object-fit: cover;
-  filter: saturate(0.82) contrast(1.05) brightness(0.66);
-  transform: scale(1.025);
+  filter: saturate(0.42) contrast(0.95) brightness(0.34) blur(6px);
+  transform: scale(1.055);
 }
 .gallery-collage-piece {
   position: absolute;
@@ -10649,7 +10649,7 @@ button {
   margin: 0;
   transform: rotate(var(--piece-rotate));
   transform-origin: 50% 52%;
-  filter: drop-shadow(0 28px 22px rgba(0, 0, 0, 0.5));
+  filter: drop-shadow(0 22px 20px rgba(0, 0, 0, 0.48));
   transition:
     transform 0.55s cubic-bezier(0.16, 1, 0.3, 1),
     filter 0.35s ease;
@@ -10775,7 +10775,7 @@ button {
   background: transparent;
   color: #f4f2ec;
   transform: rotate(var(--object-rotate));
-  filter: drop-shadow(0 28px 22px rgba(0, 0, 0, 0.6));
+  filter: drop-shadow(0 22px 20px rgba(0, 0, 0, 0.56));
 }
 .gallery-collage-board > .gallery-collage-object[data-original='true'] {
   filter: drop-shadow(0 34px 26px rgba(0, 0, 0, 0.66));
@@ -10789,8 +10789,8 @@ button {
 
 @media (max-width: 720px) {
   .gallery-collage-board {
-    height: clamp(700px, 182vw, 900px);
-    margin-top: -92px;
+    height: clamp(720px, 176vw, 880px);
+    margin-top: -24px;
   }
   .gallery-collage-piece {
     min-width: 112px;
@@ -10806,8 +10806,8 @@ button {
     left: 5px;
   }
   .gallery-collage-board > .gallery-collage-object {
-    min-width: 96px;
-    max-width: 49vw;
+    min-width: 76px;
+    max-width: 36vw;
   }
 }
 
@@ -11740,4 +11740,7 @@ button {
   padding: 0;
   overflow: hidden;
   background: #090806;
+}
+.gallery-page .gallery-collection::before {
+  display: none;
 }

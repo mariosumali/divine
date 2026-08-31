@@ -11,8 +11,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import type { GalleryCategory, GalleryItem } from '@/lib/divine/gallery';
 
-const BATCH_SIZE = 72;
-const BASES_PER_BOARD = 18;
+const BATCH_SIZE = 40;
+const BASES_PER_BOARD = 10;
+const OBJECTS_PER_BOARD = 4;
 
 type GalleryFilter = 'all' | GalleryCategory;
 
@@ -33,37 +34,23 @@ function hash(value: string) {
 }
 
 const PIECE_SLOTS = [
-  { left: -8, top: -5, width: 34, rotate: -5, z: 4 },
-  { left: 15, top: -7, width: 30, rotate: 3, z: 7 },
-  { left: 38, top: -3, width: 35, rotate: -2, z: 5 },
-  { left: 66, top: -8, width: 32, rotate: 5, z: 6 },
-  { left: 84, top: 4, width: 25, rotate: -4, z: 9 },
-  { left: -6, top: 21, width: 33, rotate: 4, z: 8 },
-  { left: 17, top: 17, width: 31, rotate: -6, z: 6 },
-  { left: 34, top: 24, width: 45, rotate: 1, z: 10 },
-  { left: 69, top: 18, width: 30, rotate: -4, z: 7 },
-  { left: 87, top: 27, width: 24, rotate: 6, z: 9 },
-  { left: -8, top: 48, width: 34, rotate: -4, z: 5 },
-  { left: 13, top: 44, width: 36, rotate: 5, z: 7 },
-  { left: 38, top: 51, width: 30, rotate: -5, z: 8 },
-  { left: 56, top: 44, width: 44, rotate: 3, z: 9 },
-  { left: 85, top: 49, width: 27, rotate: -2, z: 10 },
-  { left: -7, top: 72, width: 36, rotate: 5, z: 7 },
-  { left: 21, top: 68, width: 44, rotate: -3, z: 9 },
-  { left: 58, top: 69, width: 49, rotate: 3, z: 6 },
+  { left: -5, top: 3, width: 34, rotate: -4, z: 5 },
+  { left: 20, top: -3, width: 36, rotate: 2, z: 7 },
+  { left: 49, top: 6, width: 43, rotate: -1, z: 10 },
+  { left: 82, top: 0, width: 29, rotate: 4, z: 6 },
+  { left: 1, top: 38, width: 39, rotate: 3, z: 9 },
+  { left: 31, top: 31, width: 41, rotate: -3, z: 8 },
+  { left: 69, top: 37, width: 37, rotate: 3, z: 9 },
+  { left: -5, top: 68, width: 36, rotate: -3, z: 6 },
+  { left: 25, top: 62, width: 41, rotate: 2, z: 10 },
+  { left: 65, top: 66, width: 43, rotate: -2, z: 7 },
 ] as const;
 
 const OBJECT_SLOTS = [
-  { left: -5, top: 5, width: 30, rotate: -13 },
-  { left: 22, top: 8, width: 25, rotate: 8 },
-  { left: 52, top: 10, width: 33, rotate: -8 },
-  { left: 79, top: 5, width: 27, rotate: 13 },
-  { left: 4, top: 38, width: 34, rotate: 7 },
-  { left: 38, top: 34, width: 30, rotate: -12 },
-  { left: 70, top: 41, width: 35, rotate: 7 },
-  { left: 12, top: 68, width: 29, rotate: -8 },
-  { left: 47, top: 65, width: 37, rotate: 10 },
-  { left: 82, top: 70, width: 25, rotate: -13 },
+  { left: 9, top: 16, width: 19, rotate: -10 },
+  { left: 73, top: 18, width: 18, rotate: 8 },
+  { left: 15, top: 58, width: 21, rotate: 7 },
+  { left: 68, top: 61, width: 20, rotate: -9 },
 ] as const;
 
 function collagePieceStyle(
@@ -71,10 +58,10 @@ function collagePieceStyle(
   index: number,
   boardIndex: number,
 ) {
-  const slot = PIECE_SLOTS[(index + boardIndex * 5) % PIECE_SLOTS.length];
+  const slot = PIECE_SLOTS[(index + boardIndex * 3) % PIECE_SLOTS.length];
   const value = hash(`${item.id}-${boardIndex}`);
   const isPortrait = item.kind === 'card' || item.kind === 'portrait';
-  const scale = isPortrait ? 0.78 : item.kind === 'portal' ? 0.88 : 1.08;
+  const scale = isPortrait ? 0.86 : item.kind === 'portal' ? 0.9 : 1;
   return {
     '--piece-left': `${slot.left + ((value >> 3) % 5) - 2}%`,
     '--piece-top': `${slot.top + ((value >> 5) % 5) - 2}%`,
@@ -96,7 +83,7 @@ function collageObjectStyle(
   return {
     '--object-left': `${slot.left + ((value >> 3) % 7) - 3}%`,
     '--object-top': `${slot.top + ((value >> 6) % 7) - 3}%`,
-    '--object-width': `${slot.width * (original ? 1.18 : 0.92)}%`,
+    '--object-width': `${slot.width * (original ? 1.1 : 0.88)}%`,
     '--object-rotate': `${slot.rotate + ((value % 9) - 4) * 0.65}deg`,
     '--object-z': 18 + (value % 9),
   } as CSSProperties;
@@ -171,7 +158,10 @@ export function GalleryCollection({ items }: { items: GalleryItem[] }) {
   const collectionBaseItems = useMemo(() => {
     const result = [...matchedBaseItems];
     const used = new Set(result.map((item) => item.id));
-    const requiredSupports = Math.ceil(overlayItems.length / 2);
+    const supportStride = Math.ceil(BASES_PER_BOARD / OBJECTS_PER_BOARD);
+    const requiredSupports = matchedItems.length
+      ? Math.max(BASES_PER_BOARD, overlayItems.length * supportStride)
+      : 0;
 
     if (result.length < requiredSupports) {
       for (const item of allBaseItems) {
@@ -183,7 +173,12 @@ export function GalleryCollection({ items }: { items: GalleryItem[] }) {
     }
 
     return result;
-  }, [allBaseItems, matchedBaseItems, overlayItems.length]);
+  }, [
+    allBaseItems,
+    matchedBaseItems,
+    matchedItems.length,
+    overlayItems.length,
+  ]);
   const objectAssignments = useMemo(() => {
     const assignments = new Map<string, GalleryItem[]>();
     const baseCount = collectionBaseItems.length;
