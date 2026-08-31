@@ -607,8 +607,67 @@ button {
 
 /* Today v2 — one prompt opens a cross-deck daily constellation. */
 .today-page {
+  position: relative;
+  isolation: isolate;
   min-height: calc(100svh - 62px);
+  overflow: clip;
   padding-bottom: clamp(72px, 9vw, 132px);
+}
+.today-page > :not(.today-opening-art) {
+  position: relative;
+  z-index: 1;
+}
+.today-opening-art {
+  position: absolute;
+  z-index: 0;
+  inset: 0 0 auto;
+  height: clamp(720px, 108svh, 1120px);
+  overflow: hidden;
+  pointer-events: none;
+}
+.today-opening-art::before,
+.today-opening-art::after {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+}
+.today-opening-art::before {
+  background:
+    radial-gradient(
+      ellipse 34% 22% at 50% 23%,
+      color-mix(in srgb, var(--paper) 94%, transparent),
+      color-mix(in srgb, var(--paper) 66%, transparent) 58%,
+      transparent 100%
+    ),
+    radial-gradient(
+      ellipse 39% 30% at 50% 67%,
+      color-mix(in srgb, var(--paper) 88%, transparent),
+      color-mix(in srgb, var(--paper) 52%, transparent) 62%,
+      transparent 100%
+    );
+}
+.today-opening-art::after {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--paper) 8%, transparent),
+    transparent 58%,
+    var(--paper) 100%
+  );
+}
+.today-opening-chart {
+  object-fit: cover;
+  object-position: center 36%;
+  opacity: 0.27;
+  filter: grayscale(1) sepia(0.12) contrast(1.34) brightness(0.92);
+  mix-blend-mode: multiply;
+  transform: scale(1.025);
+}
+:root[data-theme='dark'] .today-opening-chart {
+  opacity: 0.2;
+  filter: grayscale(1) contrast(1.28) brightness(1.06) invert(1);
+  mix-blend-mode: screen;
 }
 .today-loading {
   min-height: 70svh;
