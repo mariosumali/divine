@@ -9,13 +9,10 @@ import type { CSSProperties } from 'react';
 import { useExperience } from '@/app/providers';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import type {
-  GalleryCategory,
-  GalleryItem,
-  GalleryKind,
-} from '@/lib/divine/gallery';
+import type { GalleryCategory, GalleryItem } from '@/lib/divine/gallery';
 
 const BATCH_SIZE = 72;
+const BASES_PER_BOARD = 18;
 
 type GalleryFilter = 'all' | GalleryCategory;
 
@@ -35,37 +32,73 @@ function hash(value: string) {
   return result;
 }
 
-function tileVariant(kind: GalleryKind, id: string) {
-  const value = hash(id);
-  if (kind === 'card') return value % 13 === 0 ? 'large' : 'standard';
-  if (kind === 'plate') return value % 4 === 0 ? 'panorama' : 'standard';
-  if (kind === 'portrait') return value % 3 === 0 ? 'large' : 'standard';
-  if (kind === 'portal') return value % 2 === 0 ? 'large' : 'standard';
-  return 'standard';
-}
+const PIECE_SLOTS = [
+  { left: -8, top: -5, width: 34, rotate: -5, z: 4 },
+  { left: 15, top: -7, width: 30, rotate: 3, z: 7 },
+  { left: 38, top: -3, width: 35, rotate: -2, z: 5 },
+  { left: 66, top: -8, width: 32, rotate: 5, z: 6 },
+  { left: 84, top: 4, width: 25, rotate: -4, z: 9 },
+  { left: -6, top: 21, width: 33, rotate: 4, z: 8 },
+  { left: 17, top: 17, width: 31, rotate: -6, z: 6 },
+  { left: 34, top: 24, width: 45, rotate: 1, z: 10 },
+  { left: 69, top: 18, width: 30, rotate: -4, z: 7 },
+  { left: 87, top: 27, width: 24, rotate: 6, z: 9 },
+  { left: -8, top: 48, width: 34, rotate: -4, z: 5 },
+  { left: 13, top: 44, width: 36, rotate: 5, z: 7 },
+  { left: 38, top: 51, width: 30, rotate: -5, z: 8 },
+  { left: 56, top: 44, width: 44, rotate: 3, z: 9 },
+  { left: 85, top: 49, width: 27, rotate: -2, z: 10 },
+  { left: -7, top: 72, width: 36, rotate: 5, z: 7 },
+  { left: 21, top: 68, width: 44, rotate: -3, z: 9 },
+  { left: 58, top: 69, width: 49, rotate: 3, z: 6 },
+] as const;
 
-function itemStyle(item: GalleryItem) {
-  const value = hash(item.id);
+const OBJECT_SLOTS = [
+  { left: -5, top: 5, width: 30, rotate: -13 },
+  { left: 22, top: 8, width: 25, rotate: 8 },
+  { left: 52, top: 10, width: 33, rotate: -8 },
+  { left: 79, top: 5, width: 27, rotate: 13 },
+  { left: 4, top: 38, width: 34, rotate: 7 },
+  { left: 38, top: 34, width: 30, rotate: -12 },
+  { left: 70, top: 41, width: 35, rotate: 7 },
+  { left: 12, top: 68, width: 29, rotate: -8 },
+  { left: 47, top: 65, width: 37, rotate: 10 },
+  { left: 82, top: 70, width: 25, rotate: -13 },
+] as const;
+
+function collagePieceStyle(
+  item: GalleryItem,
+  index: number,
+  boardIndex: number,
+) {
+  const slot = PIECE_SLOTS[(index + boardIndex * 5) % PIECE_SLOTS.length];
+  const value = hash(`${item.id}-${boardIndex}`);
+  const isPortrait = item.kind === 'card' || item.kind === 'portrait';
+  const scale = isPortrait ? 0.78 : item.kind === 'portal' ? 0.88 : 1.08;
   return {
-    '--gallery-rotate': `${((value % 9) - 4) * 0.17}deg`,
-    '--gallery-shift-x': `${((value >> 3) % 9) - 4}px`,
-    '--gallery-shift-y': `${((value >> 5) % 7) - 3}px`,
+    '--piece-left': `${slot.left + ((value >> 3) % 5) - 2}%`,
+    '--piece-top': `${slot.top + ((value >> 5) % 5) - 2}%`,
+    '--piece-width': `${Math.max(17, slot.width * scale)}%`,
+    '--piece-aspect': `${Math.min(2.05, Math.max(0.52, item.aspectRatio))}`,
+    '--piece-rotate': `${slot.rotate + ((value % 7) - 3) * 0.4}deg`,
+    '--piece-z': slot.z + (value % 3),
   } as CSSProperties;
 }
 
-function collageObjectStyle(item: GalleryItem, slot: number) {
-  const value = hash(`${item.id}-${slot}`);
+function collageObjectStyle(
+  item: GalleryItem,
+  index: number,
+  boardIndex: number,
+) {
+  const value = hash(`${item.id}-${boardIndex}`);
+  const slot = OBJECT_SLOTS[(index + boardIndex * 3) % OBJECT_SLOTS.length];
   const original = item.collection === 'DIVINE objects';
-  const width = (original ? 126 : 104) + (value % (original ? 76 : 62));
-  const horizontalRange = 128;
-  const left = -42 + ((value >> 4) % horizontalRange) + slot * 23;
-  const top = -34 + ((value >> 7) % 78) + slot * 11;
   return {
-    '--object-left': `${Math.min(left, 62)}%`,
-    '--object-top': `${Math.min(top, 55)}%`,
-    '--object-width': `${width}%`,
-    '--object-rotate': `${((value % 31) - 15) * 0.72}deg`,
-    '--object-z': 12 + (value % 8),
+    '--object-left': `${slot.left + ((value >> 3) % 7) - 3}%`,
+    '--object-top': `${slot.top + ((value >> 6) % 7) - 3}%`,
+    '--object-width': `${slot.width * (original ? 1.18 : 0.92)}%`,
+    '--object-rotate': `${slot.rotate + ((value % 9) - 4) * 0.65}deg`,
+    '--object-z': 18 + (value % 9),
   } as CSSProperties;
 }
 
@@ -109,6 +142,10 @@ export function GalleryCollection({ items }: { items: GalleryItem[] }) {
   const allBaseItems = useMemo(
     () => items.filter((item) => item.kind !== 'cutout'),
     [items],
+  );
+  const backdropItems = useMemo(
+    () => allBaseItems.filter((item) => item.kind === 'plate'),
+    [allBaseItems],
   );
   const originalObjects = useMemo(
     () =>
@@ -235,7 +272,8 @@ export function GalleryCollection({ items }: { items: GalleryItem[] }) {
       event.preventDefault();
       const direction = event.key === 'ArrowRight' ? 1 : -1;
       const nextIndex =
-        (activeIndex + direction + navigableItems.length) % navigableItems.length;
+        (activeIndex + direction + navigableItems.length) %
+        navigableItems.length;
       setActiveId(navigableItems[nextIndex]?.id ?? null);
       cue('tick');
     };
@@ -301,8 +339,13 @@ export function GalleryCollection({ items }: { items: GalleryItem[] }) {
         <p className="gallery-eyebrow">The visual world of DIVINE</p>
         <h1 id="gallery-title">Gallery</h1>
         <div className="gallery-masthead-meta">
-          <p>Cards, objects, paintings, and celestial charts in one living archive.</p>
-          <span>{items.length.toLocaleString()} works · 16 decks · one collection</span>
+          <p>
+            Cards, objects, paintings, and celestial charts in one living
+            archive.
+          </p>
+          <span>
+            {items.length.toLocaleString()} works · 16 decks · one collection
+          </span>
         </div>
       </header>
 
@@ -341,94 +384,129 @@ export function GalleryCollection({ items }: { items: GalleryItem[] }) {
       </section>
 
       <section className="gallery-collection" aria-label="Gallery works">
-        {visibleBaseItems.map((item, index) => {
-          const attachedObjects = objectAssignments.get(item.id) ?? [];
-          const isSupportingImage = !matchedIds.has(item.id);
+        {Array.from(
+          { length: Math.ceil(visibleBaseItems.length / BASES_PER_BOARD) },
+          (_, boardIndex) => {
+            const boardItems = visibleBaseItems.slice(
+              boardIndex * BASES_PER_BOARD,
+              (boardIndex + 1) * BASES_PER_BOARD,
+            );
+            const boardObjects = boardItems.flatMap(
+              (item) => objectAssignments.get(item.id) ?? [],
+            );
+            const backdrop = backdropItems[boardIndex % backdropItems.length];
 
-          return (
-            <figure
-              className="gallery-work"
-              data-kind={item.kind}
-              data-fit={item.fit}
-              data-finish={isInk(item) ? 'ink' : 'color'}
-              data-variant={tileVariant(item.kind, item.id)}
-              data-has-objects={attachedObjects.length ? 'true' : 'false'}
-              style={itemStyle(item)}
-              key={item.id}
-            >
-              {isSupportingImage ? (
-                <span className="gallery-work-support" aria-hidden="true">
-                  <span className="gallery-work-image">
+            return (
+              <div
+                className="gallery-collage-board"
+                key={`board-${boardIndex}`}
+              >
+                {backdrop && (
+                  <span className="gallery-collage-backdrop" aria-hidden="true">
                     <Image
-                      src={imageSource(item)}
+                      src={backdrop.src}
                       alt=""
                       fill
-                      sizes="(max-width: 720px) 50vw, (max-width: 1100px) 25vw, 17vw"
-                      priority={index < 8}
+                      sizes="100vw"
+                      priority={boardIndex === 0}
                     />
                   </span>
-                </span>
-              ) : (
-                <button
-                  type="button"
-                  className="gallery-work-trigger"
-                  aria-label={`Open ${item.title} from ${item.collection}`}
-                  onClick={() => {
-                    setActiveId(item.id);
-                    cue('turn');
-                  }}
-                >
-                  <span className="gallery-work-image">
-                    <Image
-                      src={imageSource(item)}
-                      alt=""
-                      fill
-                      sizes="(max-width: 720px) 50vw, (max-width: 1100px) 25vw, 17vw"
-                      priority={index < 8}
-                    />
-                  </span>
-                  <figcaption>
-                    <small>{item.collection}</small>
-                    <strong>{item.title}</strong>
-                    <i>
-                      {String(sequence.get(item.id) ?? 0).padStart(3, '0')}
-                    </i>
-                  </figcaption>
-                </button>
-              )}
+                )}
 
-              {attachedObjects.map((object, objectIndex) => (
-                <button
-                  type="button"
-                  className="gallery-collage-object"
-                  data-original={
-                    object.collection === 'DIVINE objects' ? 'true' : 'false'
-                  }
-                  style={collageObjectStyle(object, objectIndex)}
-                  aria-label={`Open ${object.title} from ${object.collection}`}
-                  key={object.id}
-                  onClick={() => {
-                    setActiveId(object.id);
-                    cue('turn');
-                  }}
-                >
-                  <span className="gallery-collage-object-image">
-                    <Image
-                      src={object.src}
-                      alt=""
-                      fill
-                      sizes="(max-width: 720px) 45vw, 20vw"
-                    />
-                  </span>
-                  <span className="gallery-collage-object-caption">
-                    <small>{object.collection}</small>
-                    <strong>{object.title}</strong>
-                  </span>
-                </button>
-              ))}
-            </figure>
-          );
-        })}
+                {boardItems.map((item, itemIndex) => {
+                  const isSupportingImage = !matchedIds.has(item.id);
+                  return (
+                    <figure
+                      className="gallery-collage-piece"
+                      data-kind={item.kind}
+                      data-fit={item.fit}
+                      data-finish={isInk(item) ? 'ink' : 'color'}
+                      style={collagePieceStyle(item, itemIndex, boardIndex)}
+                      key={item.id}
+                    >
+                      {isSupportingImage ? (
+                        <span
+                          className="gallery-work-support"
+                          aria-hidden="true"
+                        >
+                          <span className="gallery-work-image">
+                            <Image
+                              src={imageSource(item)}
+                              alt=""
+                              fill
+                              sizes="(max-width: 720px) 55vw, 35vw"
+                              priority={boardIndex === 0 && itemIndex < 6}
+                            />
+                          </span>
+                        </span>
+                      ) : (
+                        <button
+                          type="button"
+                          className="gallery-work-trigger"
+                          aria-label={`Open ${item.title} from ${item.collection}`}
+                          onClick={() => {
+                            setActiveId(item.id);
+                            cue('turn');
+                          }}
+                        >
+                          <span className="gallery-work-image">
+                            <Image
+                              src={imageSource(item)}
+                              alt=""
+                              fill
+                              sizes="(max-width: 720px) 55vw, 35vw"
+                              priority={boardIndex === 0 && itemIndex < 6}
+                            />
+                          </span>
+                          <figcaption>
+                            <small>{item.collection}</small>
+                            <strong>{item.title}</strong>
+                            <i>
+                              {String(sequence.get(item.id) ?? 0).padStart(
+                                3,
+                                '0',
+                              )}
+                            </i>
+                          </figcaption>
+                        </button>
+                      )}
+                    </figure>
+                  );
+                })}
+
+                {boardObjects.map((object, objectIndex) => (
+                  <button
+                    type="button"
+                    className="gallery-collage-object"
+                    data-original={
+                      object.collection === 'DIVINE objects' ? 'true' : 'false'
+                    }
+                    style={collageObjectStyle(object, objectIndex, boardIndex)}
+                    aria-label={`Open ${object.title} from ${object.collection}`}
+                    key={object.id}
+                    onClick={() => {
+                      setActiveId(object.id);
+                      cue('turn');
+                    }}
+                  >
+                    <span className="gallery-collage-object-image">
+                      <Image
+                        src={object.src}
+                        alt=""
+                        fill
+                        sizes="(max-width: 720px) 46vw, 28vw"
+                      />
+                    </span>
+                    <span className="gallery-collage-object-caption">
+                      <small>{object.collection}</small>
+                      <strong>{object.title}</strong>
+                    </span>
+                  </button>
+                ))}
+              </div>
+            );
+          },
+        )}
       </section>
 
       {matchedItems.length === 0 && (
@@ -518,7 +596,9 @@ export function GalleryCollection({ items }: { items: GalleryItem[] }) {
                 <Dialog.Description>{activeItem.detail}</Dialog.Description>
                 <div className="gallery-lightbox-links">
                   {activeItem.readingHref && (
-                    <Link href={activeItem.readingHref}>Enter the reading ↗</Link>
+                    <Link href={activeItem.readingHref}>
+                      Enter the reading ↗
+                    </Link>
                   )}
                   {activeItem.sourceUrl && (
                     <a
@@ -530,7 +610,9 @@ export function GalleryCollection({ items }: { items: GalleryItem[] }) {
                     </a>
                   )}
                 </div>
-                <small>Use the arrow keys to move through the collection.</small>
+                <small>
+                  Use the arrow keys to move through the collection.
+                </small>
               </div>
             </Dialog.Popup>
           )}
