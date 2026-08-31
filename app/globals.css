@@ -12358,17 +12358,18 @@ button {
     white-space: normal;
   }
   .gallery-toolbar {
-    grid-template-columns: 1fr;
-  }
-  .gallery-filters {
-    border-bottom: 1px solid rgba(244, 242, 236, 0.18);
-  }
-  .gallery-filter {
-    height: 50px;
+    min-height: 50px;
+    grid-template-columns: minmax(0, 1fr) auto;
   }
   .gallery-search {
+    width: 50px;
     height: 50px;
-    border-left: 0;
+    padding: 0 17px;
+  }
+  .gallery-search:focus-within,
+  .gallery-search[data-has-query='true'] {
+    width: min(230px, 60vw);
+    padding: 0 16px;
   }
   .gallery-search input {
     height: 49px;
