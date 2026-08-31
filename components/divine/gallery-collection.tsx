@@ -11,9 +11,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import type { GalleryCategory, GalleryItem } from '@/lib/divine/gallery';
 
-const BATCH_SIZE = 40;
-const BASES_PER_BOARD = 10;
-const OBJECTS_PER_BOARD = 4;
+const BATCH_SIZE = 56;
+const BASES_PER_BOARD = 14;
+const OBJECTS_PER_BOARD = 5;
 
 type GalleryFilter = 'all' | GalleryCategory;
 
@@ -34,34 +34,56 @@ function hash(value: string) {
 }
 
 const PIECE_SLOTS = [
-  { left: -8, top: -4, width: 42, rotate: -4, z: 5 },
-  { left: 17, top: -7, width: 39, rotate: 2, z: 7 },
-  { left: 48, top: -2, width: 47, rotate: -1, z: 10 },
-  { left: 80, top: -5, width: 34, rotate: 4, z: 6 },
-  { left: -3, top: 35, width: 42, rotate: 3, z: 9 },
-  { left: 31, top: 31, width: 41, rotate: -3, z: 8 },
-  { left: 69, top: 37, width: 37, rotate: 3, z: 9 },
-  { left: -5, top: 68, width: 36, rotate: -3, z: 6 },
-  { left: 25, top: 62, width: 41, rotate: 2, z: 10 },
-  { left: 65, top: 66, width: 43, rotate: -2, z: 7 },
+  { left: -3, top: -4, width: 29, rotate: -4, z: 5 },
+  { left: 16, top: 3, width: 28, rotate: 2, z: 7 },
+  { left: 36, top: -5, width: 31, rotate: -1, z: 10 },
+  { left: 59, top: 3, width: 29, rotate: 3, z: 6 },
+  { left: 81, top: -3, width: 25, rotate: -3, z: 8 },
+  { left: -5, top: 29, width: 30, rotate: 3, z: 8 },
+  { left: 16, top: 34, width: 27, rotate: -4, z: 6 },
+  { left: 36, top: 29, width: 33, rotate: 1, z: 10 },
+  { left: 62, top: 34, width: 29, rotate: -3, z: 7 },
+  { left: 84, top: 30, width: 24, rotate: 4, z: 9 },
+  { left: -4, top: 63, width: 31, rotate: -3, z: 7 },
+  { left: 22, top: 60, width: 30, rotate: 3, z: 9 },
+  { left: 48, top: 65, width: 31, rotate: -2, z: 8 },
+  { left: 74, top: 60, width: 33, rotate: 3, z: 7 },
 ] as const;
 
 const OBJECT_SLOTS = [
-  { left: 9, top: 16, width: 19, rotate: -10 },
-  { left: 73, top: 18, width: 18, rotate: 8 },
-  { left: 15, top: 58, width: 21, rotate: 7 },
-  { left: 68, top: 61, width: 20, rotate: -9 },
+  { left: 8, top: 14, width: 14, rotate: -10 },
+  { left: 43, top: 12, width: 13, rotate: 8 },
+  { left: 78, top: 18, width: 14, rotate: -8 },
+  { left: 20, top: 57, width: 15, rotate: 7 },
+  { left: 67, top: 60, width: 14, rotate: -9 },
 ] as const;
+
+function shuffleItems(items: GalleryItem[], seed: number) {
+  const shuffled = [...items];
+  let state = seed || 0x6d2b79f5;
+
+  for (let index = shuffled.length - 1; index > 0; index -= 1) {
+    state = (Math.imul(state, 1664525) + 1013904223) >>> 0;
+    const swapIndex = state % (index + 1);
+    [shuffled[index], shuffled[swapIndex]] = [
+      shuffled[swapIndex],
+      shuffled[index],
+    ];
+  }
+
+  return shuffled;
+}
 
 function collagePieceStyle(
   item: GalleryItem,
   index: number,
   boardIndex: number,
+  visitSeed: number,
 ) {
   const slot = PIECE_SLOTS[(index + boardIndex * 3) % PIECE_SLOTS.length];
-  const value = hash(`${item.id}-${boardIndex}`);
+  const value = hash(`${visitSeed}-${item.id}-${boardIndex}`);
   const isPortrait = item.kind === 'card' || item.kind === 'portrait';
-  const scale = isPortrait ? 0.92 : item.kind === 'portal' ? 1 : 1.08;
+  const scale = isPortrait ? 0.82 : item.kind === 'portal' ? 0.88 : 1;
   return {
     '--piece-left': `${slot.left + ((value >> 3) % 5) - 2}%`,
     '--piece-top': `${slot.top + ((value >> 5) % 5) - 2}%`,
@@ -76,14 +98,15 @@ function collageObjectStyle(
   item: GalleryItem,
   index: number,
   boardIndex: number,
+  visitSeed: number,
 ) {
-  const value = hash(`${item.id}-${boardIndex}`);
+  const value = hash(`${visitSeed}-${item.id}-${boardIndex}`);
   const slot = OBJECT_SLOTS[(index + boardIndex * 3) % OBJECT_SLOTS.length];
   const original = item.collection === 'DIVINE objects';
   return {
     '--object-left': `${slot.left + ((value >> 3) % 7) - 3}%`,
     '--object-top': `${slot.top + ((value >> 6) % 7) - 3}%`,
-    '--object-width': `${slot.width * (original ? 1.1 : 0.88)}%`,
+    '--object-width': `${slot.width * (original ? 1.08 : 0.9)}%`,
     '--object-rotate': `${slot.rotate + ((value % 9) - 4) * 0.65}deg`,
     '--object-z': 18 + (value % 9),
   } as CSSProperties;
@@ -91,44 +114,59 @@ function collageObjectStyle(
 
 export function GalleryCollection({ items }: { items: GalleryItem[] }) {
   const { cue, deckFinishes } = useExperience();
+  const [visitSeed, setVisitSeed] = useState(0);
   const [filter, setFilter] = useState<GalleryFilter>('all');
   const [query, setQuery] = useState('');
   const [visibleCount, setVisibleCount] = useState(BATCH_SIZE);
   const [activeId, setActiveId] = useState<string | null>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => {
+      const values = new Uint32Array(1);
+      window.crypto.getRandomValues(values);
+      setVisitSeed(values[0] || Date.now());
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, []);
+
+  const galleryItems = useMemo(
+    () => (visitSeed ? shuffleItems(items, visitSeed) : items),
+    [items, visitSeed],
+  );
+
   const counts = useMemo(
     () =>
-      items.reduce<Record<GalleryFilter, number>>(
+      galleryItems.reduce<Record<GalleryFilter, number>>(
         (result, item) => {
           result[item.category] += 1;
           return result;
         },
         {
-          all: items.length,
+          all: galleryItems.length,
           cards: 0,
           objects: 0,
           celestial: 0,
           archive: 0,
         },
       ),
-    [items],
+    [galleryItems],
   );
 
   const matchedItems = useMemo(() => {
     const normalizedQuery = query.trim().toLocaleLowerCase();
-    return items.filter((item) => {
+    return galleryItems.filter((item) => {
       if (filter !== 'all' && item.category !== filter) return false;
       if (!normalizedQuery) return true;
       return `${item.title} ${item.collection} ${item.detail}`
         .toLocaleLowerCase()
         .includes(normalizedQuery);
     });
-  }, [filter, items, query]);
+  }, [filter, galleryItems, query]);
 
   const allBaseItems = useMemo(
-    () => items.filter((item) => item.kind !== 'cutout'),
-    [items],
+    () => galleryItems.filter((item) => item.kind !== 'cutout'),
+    [galleryItems],
   );
   const backdropItems = useMemo(
     () => allBaseItems.filter((item) => item.kind === 'plate'),
@@ -136,11 +174,11 @@ export function GalleryCollection({ items }: { items: GalleryItem[] }) {
   );
   const originalObjects = useMemo(
     () =>
-      items.filter(
+      galleryItems.filter(
         (item) =>
           item.kind === 'cutout' && item.collection === 'DIVINE objects',
       ),
-    [items],
+    [galleryItems],
   );
   const matchedBaseItems = useMemo(
     () => matchedItems.filter((item) => item.kind !== 'cutout'),
@@ -200,8 +238,8 @@ export function GalleryCollection({ items }: { items: GalleryItem[] }) {
       ...matchedItems.map((item) => item.id),
       ...overlayItems.map((item) => item.id),
     ]);
-    return items.filter((item) => visibleIds.has(item.id));
-  }, [items, matchedItems, overlayItems]);
+    return galleryItems.filter((item) => visibleIds.has(item.id));
+  }, [galleryItems, matchedItems, overlayItems]);
   const sequence = useMemo(
     () => new Map(navigableItems.map((item, index) => [item.id, index + 1])),
     [navigableItems],
@@ -220,6 +258,17 @@ export function GalleryCollection({ items }: { items: GalleryItem[] }) {
     ? navigableItems.findIndex((item) => item.id === activeId)
     : -1;
   const activeItem = activeIndex >= 0 ? navigableItems[activeIndex] : null;
+  const mastheadItems = useMemo(() => {
+    const field = galleryItems.find((item) => item.kind === 'plate');
+    return {
+      field,
+      card: galleryItems.find((item) => item.kind === 'card'),
+      object: galleryItems.find((item) => item.kind === 'cutout'),
+      orbit: galleryItems.find(
+        (item) => item.category === 'celestial' && item.id !== field?.id,
+      ),
+    };
+  }, [galleryItems]);
 
   const imageSource = useCallback(
     (item: GalleryItem) => {
@@ -296,7 +345,10 @@ export function GalleryCollection({ items }: { items: GalleryItem[] }) {
       <header className="gallery-masthead" aria-labelledby="gallery-title">
         <span className="gallery-masthead-field" aria-hidden="true">
           <Image
-            src="/library/backgrounds/library-masthead-sense-of-sight-1617.webp"
+            src={
+              mastheadItems.field?.src ??
+              '/library/backgrounds/library-masthead-sense-of-sight-1617.webp'
+            }
             alt=""
             fill
             sizes="100vw"
@@ -305,7 +357,11 @@ export function GalleryCollection({ items }: { items: GalleryItem[] }) {
         </span>
         <span className="gallery-masthead-card" aria-hidden="true">
           <Image
-            src="/tarot-color/major-2.webp"
+            src={
+              mastheadItems.card
+                ? imageSource(mastheadItems.card)
+                : '/tarot-color/major-2.webp'
+            }
             alt=""
             fill
             sizes="240px"
@@ -314,7 +370,7 @@ export function GalleryCollection({ items }: { items: GalleryItem[] }) {
         </span>
         <span className="gallery-masthead-hand" aria-hidden="true">
           <Image
-            src="/collage-v1/hand.webp"
+            src={mastheadItems.object?.src ?? '/collage-v1/hand.webp'}
             alt=""
             fill
             sizes="300px"
@@ -323,7 +379,10 @@ export function GalleryCollection({ items }: { items: GalleryItem[] }) {
         </span>
         <span className="gallery-masthead-orbit" aria-hidden="true">
           <Image
-            src="/astrology/zodiac-circle-medieval.webp"
+            src={
+              mastheadItems.orbit?.src ??
+              '/astrology/zodiac-circle-medieval.webp'
+            }
             alt=""
             fill
             sizes="360px"
@@ -338,9 +397,6 @@ export function GalleryCollection({ items }: { items: GalleryItem[] }) {
             Cards, objects, paintings, and celestial charts in one living
             archive.
           </p>
-          <span>
-            {items.length.toLocaleString()} works · 16 decks · one collection
-          </span>
         </div>
       </header>
 
@@ -416,7 +472,12 @@ export function GalleryCollection({ items }: { items: GalleryItem[] }) {
                       data-kind={item.kind}
                       data-fit={item.fit}
                       data-finish={isInk(item) ? 'ink' : 'color'}
-                      style={collagePieceStyle(item, itemIndex, boardIndex)}
+                      style={collagePieceStyle(
+                        item,
+                        itemIndex,
+                        boardIndex,
+                        visitSeed,
+                      )}
                       key={item.id}
                     >
                       {isSupportingImage ? (
@@ -429,7 +490,7 @@ export function GalleryCollection({ items }: { items: GalleryItem[] }) {
                               src={imageSource(item)}
                               alt=""
                               fill
-                              sizes="(max-width: 720px) 55vw, 35vw"
+                              sizes="(max-width: 720px) 48vw, 28vw"
                               priority={boardIndex === 0 && itemIndex < 6}
                             />
                           </span>
@@ -449,7 +510,7 @@ export function GalleryCollection({ items }: { items: GalleryItem[] }) {
                               src={imageSource(item)}
                               alt=""
                               fill
-                              sizes="(max-width: 720px) 55vw, 35vw"
+                              sizes="(max-width: 720px) 48vw, 28vw"
                               priority={boardIndex === 0 && itemIndex < 6}
                             />
                           </span>
@@ -476,7 +537,12 @@ export function GalleryCollection({ items }: { items: GalleryItem[] }) {
                     data-original={
                       object.collection === 'DIVINE objects' ? 'true' : 'false'
                     }
-                    style={collageObjectStyle(object, objectIndex, boardIndex)}
+                    style={collageObjectStyle(
+                      object,
+                      objectIndex,
+                      boardIndex,
+                      visitSeed,
+                    )}
                     aria-label={`Open ${object.title} from ${object.collection}`}
                     key={object.id}
                     onClick={() => {
@@ -489,7 +555,7 @@ export function GalleryCollection({ items }: { items: GalleryItem[] }) {
                         src={object.src}
                         alt=""
                         fill
-                        sizes="(max-width: 720px) 46vw, 28vw"
+                        sizes="(max-width: 720px) 34vw, 20vw"
                       />
                     </span>
                     <span className="gallery-collage-object-caption">
