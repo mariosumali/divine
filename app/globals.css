@@ -1121,8 +1121,11 @@ button {
     flex-basis: var(--today-card-width);
     scroll-snap-align: center;
   }
-  .today-interpretation {
-    padding-top: 70px;
+  .today-pattern {
+    padding-block: 64px 42px;
+  }
+  .today-pattern > h2 {
+    font-size: clamp(2.45rem, 12vw, 4rem);
   }
   .today-closing {
     font-size: clamp(2rem, 10vw, 3.4rem);
