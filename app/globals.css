@@ -11755,6 +11755,7 @@ button {
 }
 .gallery-search input {
   height: 61px;
+  opacity: 0;
   padding: 0;
   border: 0;
   border-radius: 0;
