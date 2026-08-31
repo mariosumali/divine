@@ -1092,10 +1092,14 @@ button {
     gap: 18px;
   }
   .today-response {
-    margin-bottom: 64px;
+    gap: 28px;
+    padding: 28px 24px 32px;
   }
-  .today-reading-header > h2 {
-    font-size: clamp(2.25rem, 11vw, 3.8rem);
+  .today-response-context .eyebrow {
+    margin-bottom: 12px;
+  }
+  .today-response blockquote {
+    font-size: clamp(1.85rem, 9vw, 3rem);
   }
   .today-constellation {
     --today-card-width: min(58vw, 220px);
