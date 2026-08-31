@@ -34,11 +34,11 @@ function hash(value: string) {
 }
 
 const PIECE_SLOTS = [
-  { left: -5, top: 3, width: 34, rotate: -4, z: 5 },
-  { left: 20, top: -3, width: 36, rotate: 2, z: 7 },
-  { left: 49, top: 6, width: 43, rotate: -1, z: 10 },
-  { left: 82, top: 0, width: 29, rotate: 4, z: 6 },
-  { left: 1, top: 38, width: 39, rotate: 3, z: 9 },
+  { left: -8, top: -4, width: 42, rotate: -4, z: 5 },
+  { left: 17, top: -7, width: 39, rotate: 2, z: 7 },
+  { left: 48, top: -2, width: 47, rotate: -1, z: 10 },
+  { left: 80, top: -5, width: 34, rotate: 4, z: 6 },
+  { left: -3, top: 35, width: 42, rotate: 3, z: 9 },
   { left: 31, top: 31, width: 41, rotate: -3, z: 8 },
   { left: 69, top: 37, width: 37, rotate: 3, z: 9 },
   { left: -5, top: 68, width: 36, rotate: -3, z: 6 },
@@ -61,7 +61,7 @@ function collagePieceStyle(
   const slot = PIECE_SLOTS[(index + boardIndex * 3) % PIECE_SLOTS.length];
   const value = hash(`${item.id}-${boardIndex}`);
   const isPortrait = item.kind === 'card' || item.kind === 'portrait';
-  const scale = isPortrait ? 0.86 : item.kind === 'portal' ? 0.9 : 1;
+  const scale = isPortrait ? 0.92 : item.kind === 'portal' ? 1 : 1.08;
   return {
     '--piece-left': `${slot.left + ((value >> 3) % 5) - 2}%`,
     '--piece-top': `${slot.top + ((value >> 5) % 5) - 2}%`,

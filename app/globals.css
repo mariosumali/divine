@@ -10620,7 +10620,7 @@ button {
   position: relative;
   isolation: isolate;
   width: 100%;
-  height: clamp(760px, 76vw, 1080px);
+  height: clamp(740px, 74vw, 1040px);
   margin-top: clamp(-36px, -2vw, -18px);
   overflow: visible;
 }
@@ -10636,8 +10636,8 @@ button {
 }
 .gallery-collage-backdrop img {
   object-fit: cover;
-  filter: saturate(0.42) contrast(0.95) brightness(0.34) blur(6px);
-  transform: scale(1.055);
+  filter: saturate(0.5) contrast(0.96) brightness(0.46) blur(4px);
+  transform: scale(1.045);
 }
 .gallery-collage-piece {
   position: absolute;
