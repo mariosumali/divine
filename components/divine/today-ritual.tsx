@@ -230,6 +230,7 @@ export function TodayRitual() {
         favorite: existing?.favorite ?? false,
         tags: existing?.tags ?? record.tags,
         followUp: existing?.followUp ?? record.followUp,
+        journalIcon: existing?.journalIcon ?? record.journalIcon,
       };
       await saveReading(next);
       setSavedRecords((items) => [
