@@ -1,4 +1,5 @@
 import type { ReadingRecord } from './types';
+import { isDivineHeroIconId } from './hero-icons';
 
 const DB_NAME = 'divine-journal';
 const STORE = 'readings';
