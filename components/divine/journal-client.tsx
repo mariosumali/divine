@@ -60,22 +60,502 @@ const parseTags = (value: string) =>
     ),
   ).slice(0, 12);
 
+const entryDate = (createdAt: string) =>
+  new Date(createdAt).toLocaleDateString(undefined, {
+    weekday: 'long',
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+  });
+
+const focusLabel = (focus: Focus) =>
+  journalFocuses.find((item) => item.value === focus)?.label ?? focus;
+
+function JournalReadingVisual({
+  record,
+  deckFinishes,
+}: {
+  record: ReadingRecord;
+  deckFinishes: DeckFinishes;
+}) {
+  const cardCount = record.draws.length;
+  const columns = cardCount === 1 ? 1 : cardCount <= 3 ? cardCount : 4;
+
+  if (cardCount === 0) {
+    return (
+      <figure className="journal-object-reading">
+        <div>
+          <Image
+            src={READING_INDEX_ART[record.system]}
+            alt={`${record.systemName} reading object`}
+            fill
+            sizes="(max-width: 980px) 70vw, 360px"
+          />
+        </div>
+        <figcaption>
+          <span>The answer</span>
+          <strong>{record.interpretation.headline}</strong>
+          {record.luckyNumbers && record.luckyNumbers.length > 0 && (
+            <small>{record.luckyNumbers.join(' · ')}</small>
+          )}
+        </figcaption>
+      </figure>
+    );
+  }
+
+  return (
+    <div
+      className="journal-reading-grid"
+      data-card-count={cardCount}
+      style={{ '--journal-card-columns': columns } as CSSProperties}
+      aria-label={`${cardCount} ${cardCount === 1 ? 'card' : 'cards'} drawn`}
+    >
+      {record.draws.map((draw, index) => {
+        const sourceSystem = draw.card.sourceSystem ?? record.system;
+        const finish = isCardSystemSlug(sourceSystem)
+          ? deckFinishes[sourceSystem]
+          : 'ink';
+        const image = imageForFinish(draw.card, finish);
+
+        return (
+          <figure key={`${draw.card.id}-${index}`}>
+            <span
+              className={`journal-drawn-card deck-${finish}`}
+              style={
+                {
+                  '--journal-card-ratio': draw.card.aspectRatio ?? 2 / 3,
+                } as CSSProperties
+              }
+            >
+              {image ? (
+                <Image
+                  src={image}
+                  alt={`${draw.card.name} card artwork${draw.reversed ? ', reversed' : ''}`}
+                  fill
+                  sizes="(max-width: 720px) 42vw, (max-width: 980px) 22vw, 120px"
+                  className={draw.reversed ? 'is-reversed' : undefined}
+                />
+              ) : (
+                <strong
+                  className={draw.reversed ? 'is-reversed' : undefined}
+                  aria-hidden="true"
+                >
+                  {draw.card.glyph}
+                </strong>
+              )}
+              <i>{`${index + 1}`.padStart(2, '0')}</i>
+            </span>
+            <figcaption>
+              <span>{draw.position}</span>
+              <strong>
+                {draw.card.sourceSystemName && (
+                  <small>{draw.card.sourceSystemName} · </small>
+                )}
+                {draw.card.name}
+                {draw.reversed ? ' · reversed' : ''}
+              </strong>
+            </figcaption>
+          </figure>
+        );
+      })}
+    </div>
+  );
+}
+
+function JournalEntry({
+  record,
+  deckFinishes,
+  error,
+  onBack,
+  onUpdate,
+  onUpdateLocal,
+  onRemove,
+}: {
+  record: ReadingRecord;
+  deckFinishes: DeckFinishes;
+  error: boolean;
+  onBack: () => void;
+  onUpdate: (record: ReadingRecord) => Promise<void>;
+  onUpdateLocal: (record: ReadingRecord) => void;
+  onRemove: (id: string) => Promise<void>;
+}) {
+  const [tagDraft, setTagDraft] = useState((record.tags ?? []).join(', '));
+  const [iconPickerOpen, setIconPickerOpen] = useState(false);
+  const selectedJournalIcon = divineHeroIcon(record.journalIcon);
+  const hasSynthesis = Boolean(
+    record.interpretation.synthesis || record.interpretation.closing,
+  );
+
+  return (
+    <main className="journal-page journal-entry-view">
+      <header className="journal-entry-header">
+        <div className="journal-entry-toolbar">
+          <button type="button" className="journal-back" onClick={onBack}>
+            <ArrowLeft /> Back to journal
+          </button>
+          <div className="journal-entry-actions">
+            <Button
+              type="button"
+              className="quiet-action"
+              aria-pressed={record.favorite}
+              onClick={() =>
+                void onUpdate({
+                  ...record,
+                  favorite: !record.favorite,
+                })
+              }
+            >
+              <Heart fill={record.favorite ? 'currentColor' : 'none'} />
+              {record.favorite ? 'Favorited' : 'Favorite'}
+            </Button>
+            <CopyReadingLinkButton record={record} showLabel />
+          </div>
+        </div>
+        <p className="journal-entry-kicker">
+          <time dateTime={record.createdAt}>{entryDate(record.createdAt)}</time>
+          <span aria-hidden="true">·</span>
+          {record.systemName}
+        </p>
+        <h1>{record.interpretation.headline}</h1>
+        {record.question && <blockquote>“{record.question}”</blockquote>}
+      </header>
+
+      {error && (
+        <output className="journal-warning">
+          This page could not be saved. Your latest changes may only last for
+          this visit.
+        </output>
+      )}
+
+      <div className="journal-entry-layout">
+        <aside
+          className={`journal-visual-panel${record.draws.length > 8 ? ' is-long' : ''}`}
+          aria-label="Reading at a glance"
+        >
+          <JournalReadingVisual record={record} deckFinishes={deckFinishes} />
+          <dl className="journal-entry-facts">
+            <div>
+              <dt>Reading</dt>
+              <dd>{record.spreadName}</dd>
+            </div>
+            <div>
+              <dt>Focus</dt>
+              <dd>{focusLabel(record.focus)}</dd>
+            </div>
+            <div>
+              <dt>Cards</dt>
+              <dd>{record.draws.length || 'Object reading'}</dd>
+            </div>
+            <div>
+              <dt>Collections</dt>
+              <dd>
+                {record.tags && record.tags.length > 0
+                  ? record.tags.join(', ')
+                  : 'Unfiled'}
+              </dd>
+            </div>
+          </dl>
+        </aside>
+
+        <div className="journal-entry-body">
+          <section
+            className="journal-reading-narrative"
+            aria-labelledby="journal-reading-title"
+          >
+            <p className="journal-eyebrow">Your reading</p>
+            <h2 id="journal-reading-title">What the reading said</h2>
+            {record.interpretation.overview && (
+              <p className="journal-reading-overview">
+                {record.interpretation.overview}
+              </p>
+            )}
+
+            {record.draws.length > 0 && (
+              <div className="journal-position-list">
+                {record.draws.map((draw, index) => {
+                  const position = record.interpretation.positions[index];
+                  const text =
+                    position?.text ||
+                    (draw.reversed && draw.card.reversedMeaning
+                      ? draw.card.reversedMeaning
+                      : draw.card.meaning);
+
+                  return (
+                    <article key={`${draw.card.id}-${index}`}>
+                      <p>
+                        {`${index + 1}`.padStart(2, '0')} ·{' '}
+                        {position?.label || draw.position}
+                      </p>
+                      <h3>
+                        {draw.card.name}
+                        {draw.reversed && <small>Reversed</small>}
+                      </h3>
+                      <span>{text}</span>
+                    </article>
+                  );
+                })}
+              </div>
+            )}
+
+            {record.interpretation.connections &&
+              record.interpretation.connections.length > 0 && (
+                <section className="journal-entry-connections">
+                  <p className="journal-eyebrow">The connecting thread</p>
+                  {record.interpretation.connections.map((connection) => (
+                    <article key={`${connection.from}-${connection.to}`}>
+                      <h3>
+                        {connection.from} <span aria-hidden="true">→</span>{' '}
+                        {connection.to}
+                      </h3>
+                      <p>{connection.text}.</p>
+                    </article>
+                  ))}
+                </section>
+              )}
+
+            {hasSynthesis && (
+              <section className="journal-entry-synthesis">
+                <p className="journal-eyebrow">How the meanings meet</p>
+                {record.interpretation.synthesis && (
+                  <p>{record.interpretation.synthesis}</p>
+                )}
+                {record.interpretation.closing && (
+                  <blockquote>{record.interpretation.closing}</blockquote>
+                )}
+              </section>
+            )}
+          </section>
+
+          <section className="journal-writing" aria-labelledby="writing-title">
+            <header>
+              <div>
+                <p className="journal-eyebrow">Journal</p>
+                <h2 id="writing-title">Your thoughts</h2>
+              </div>
+              <small>Changes save when you leave a field.</small>
+            </header>
+            <div className="journal-writing-fields">
+              <label htmlFor={`note-${record.id}`}>
+                <span>Reflection</span>
+                <Textarea
+                  id={`note-${record.id}`}
+                  value={record.note}
+                  rows={7}
+                  placeholder="What stayed with you?"
+                  onChange={(event) =>
+                    onUpdateLocal({ ...record, note: event.target.value })
+                  }
+                  onBlur={(event) =>
+                    void onUpdate({
+                      ...record,
+                      note: event.currentTarget.value,
+                    })
+                  }
+                />
+              </label>
+              <label htmlFor={`follow-up-${record.id}`}>
+                <span>What became clear?</span>
+                <Textarea
+                  id={`follow-up-${record.id}`}
+                  value={record.followUp ?? ''}
+                  rows={7}
+                  placeholder="Return later. What changed, resolved, or surprised you?"
+                  onChange={(event) =>
+                    onUpdateLocal({
+                      ...record,
+                      followUp: event.target.value,
+                    })
+                  }
+                  onBlur={(event) =>
+                    void onUpdate({
+                      ...record,
+                      followUp: event.currentTarget.value,
+                    })
+                  }
+                />
+              </label>
+            </div>
+
+            <div className="journal-entry-editors">
+              <label htmlFor={`tags-${record.id}`}>
+                <span>
+                  <Tag /> Collections
+                </span>
+                <Input
+                  id={`tags-${record.id}`}
+                  value={tagDraft}
+                  placeholder="Dreams, decisions, new moon"
+                  onChange={(event) => setTagDraft(event.target.value)}
+                  onBlur={(event) => {
+                    const nextTags = parseTags(event.currentTarget.value);
+                    setTagDraft(nextTags.join(', '));
+                    void onUpdate({ ...record, tags: nextTags });
+                  }}
+                />
+                <small>Separate collection names with commas.</small>
+              </label>
+              <fieldset>
+                <legend>Focus</legend>
+                <div className="journal-choice-row">
+                  {journalFocuses.map((item) => (
+                    <button
+                      type="button"
+                      key={item.value}
+                      className={record.focus === item.value ? 'active' : ''}
+                      aria-pressed={record.focus === item.value}
+                      onClick={() =>
+                        void onUpdate({ ...record, focus: item.value })
+                      }
+                    >
+                      {item.label}
+                    </button>
+                  ))}
+                </div>
+              </fieldset>
+              <details
+                className="journal-icon-editor"
+                open={iconPickerOpen}
+                onToggle={(event) =>
+                  setIconPickerOpen(event.currentTarget.open)
+                }
+              >
+                <summary>
+                  <span>Page icon</span>
+                  <small>{selectedJournalIcon?.label ?? 'None'}</small>
+                  <span
+                    className={`journal-icon-current${selectedJournalIcon ? '' : ' is-empty'}`}
+                    aria-hidden="true"
+                  >
+                    {selectedJournalIcon ? (
+                      <Image
+                        src={selectedJournalIcon.src}
+                        alt=""
+                        fill
+                        sizes="42px"
+                      />
+                    ) : (
+                      '—'
+                    )}
+                  </span>
+                  <ChevronDown aria-hidden="true" />
+                </summary>
+                <fieldset>
+                  <legend className="sr-only">
+                    Choose an icon for this journal page
+                  </legend>
+                  <div className="journal-icon-grid">
+                    <label
+                      className={record.journalIcon ? undefined : 'active'}
+                    >
+                      <input
+                        className="sr-only"
+                        type="radio"
+                        name={`journal-icon-${record.id}`}
+                        checked={!record.journalIcon}
+                        onChange={() => {
+                          setIconPickerOpen(false);
+                          void onUpdate({ ...record, journalIcon: undefined });
+                        }}
+                      />
+                      <span
+                        className="journal-icon-choice-art is-empty"
+                        aria-hidden="true"
+                      >
+                        —
+                      </span>
+                      <span>None</span>
+                    </label>
+                    {DIVINE_HERO_ICONS.map((icon) => (
+                      <label
+                        key={icon.id}
+                        className={
+                          record.journalIcon === icon.id ? 'active' : undefined
+                        }
+                      >
+                        <input
+                          className="sr-only"
+                          type="radio"
+                          name={`journal-icon-${record.id}`}
+                          value={icon.id}
+                          checked={record.journalIcon === icon.id}
+                          onChange={() => {
+                            setIconPickerOpen(false);
+                            void onUpdate({ ...record, journalIcon: icon.id });
+                          }}
+                        />
+                        <span
+                          className="journal-icon-choice-art"
+                          aria-hidden="true"
+                        >
+                          <Image src={icon.src} alt="" fill sizes="52px" />
+                        </span>
+                        <span>{icon.label}</span>
+                      </label>
+                    ))}
+                  </div>
+                </fieldset>
+              </details>
+            </div>
+          </section>
+
+          <details className="journal-entry-manage">
+            <summary>
+              <span>Manage entry</span>
+              <ChevronDown />
+            </summary>
+            <div>
+              <p>
+                Permanently remove this reading, its question, and your notes.
+              </p>
+              <AlertDialog>
+                <AlertDialogTrigger
+                  render={<Button className="quiet-action" />}
+                >
+                  <Trash2 /> Delete entry
+                </AlertDialogTrigger>
+                <AlertDialogContent className="divine-dialog">
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Delete this reading?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      The reading, its question, and your reflection will be
+                      permanently removed. This cannot be undone.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Keep reading</AlertDialogCancel>
+                    <AlertDialogAction onClick={() => void onRemove(record.id)}>
+                      Delete reading
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </div>
+          </details>
+        </div>
+      </div>
+    </main>
+  );
+}
+
 export function JournalClient() {
+  const { deckFinishes } = useExperience();
+  const returnScroll = useRef(0);
   const [records, setRecords] = useState<ReadingRecord[]>([]);
+  const [loaded, setLoaded] = useState(false);
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState<'all' | SystemSlug>('all');
   const [focus, setFocus] = useState<'all' | Focus>('all');
   const [favoritesOnly, setFavoritesOnly] = useState(false);
   const [tag, setTag] = useState<string | null>(null);
   const [month, setMonth] = useState<string | null>(null);
-  const [tagDrafts, setTagDrafts] = useState<Record<string, string>>({});
   const [error, setError] = useState(false);
   const [expanded, setExpanded] = useState<string | null>(null);
 
   useEffect(() => {
     void listReadings()
       .then(setRecords)
-      .catch(() => setError(true));
+      .catch(() => setError(true))
+      .finally(() => setLoaded(true));
   }, []);
 
   const systems = useMemo(
