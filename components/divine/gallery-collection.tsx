@@ -137,34 +137,15 @@ export function GalleryCollection({ items }: { items: GalleryItem[] }) {
     [items, visitSeed],
   );
 
-  const counts = useMemo(
-    () =>
-      galleryItems.reduce<Record<GalleryFilter, number>>(
-        (result, item) => {
-          result[item.category] += 1;
-          return result;
-        },
-        {
-          all: galleryItems.length,
-          cards: 0,
-          objects: 0,
-          celestial: 0,
-          archive: 0,
-        },
-      ),
-    [galleryItems],
-  );
-
   const matchedItems = useMemo(() => {
     const normalizedQuery = query.trim().toLocaleLowerCase();
     return galleryItems.filter((item) => {
-      if (filter !== 'all' && item.category !== filter) return false;
       if (!normalizedQuery) return true;
       return `${item.title} ${item.collection} ${item.detail}`
         .toLocaleLowerCase()
         .includes(normalizedQuery);
     });
-  }, [filter, galleryItems, query]);
+  }, [galleryItems, query]);
 
   const allBaseItems = useMemo(
     () => galleryItems.filter((item) => item.kind !== 'cutout'),
