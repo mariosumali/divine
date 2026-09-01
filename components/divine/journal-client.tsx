@@ -635,16 +635,53 @@ export function JournalClient() {
   const clear = async () => {
     try {
       await clearReadings();
+      setExpanded(null);
       setRecords([]);
     } catch {
       setError(true);
     }
   };
 
+  const resetFilters = () => {
+    setQuery('');
+    setFilter('all');
+    setFocus('all');
+    setFavoritesOnly(false);
+    setTag(null);
+    setMonth(null);
+  };
+
+  const openEntry = (id: string) => {
+    returnScroll.current = window.scrollY;
+    setExpanded(id);
+    window.requestAnimationFrame(() => window.scrollTo({ top: 0 }));
+  };
+
+  const closeEntry = () => {
+    const scrollTop = returnScroll.current;
+    setExpanded(null);
+    window.requestAnimationFrame(() => window.scrollTo({ top: scrollTop }));
+  };
+
+  if (activeRecord) {
+    return (
+      <JournalEntry
+        key={activeRecord.id}
+        record={activeRecord}
+        deckFinishes={deckFinishes}
+        error={error}
+        onBack={closeEntry}
+        onUpdate={update}
+        onUpdateLocal={updateLocal}
+        onRemove={remove}
+      />
+    );
+  }
+
   return (
-    <main className="journal-page">
-      <header className="page-hero">
-        <h1>The Journal</h1>
+    <main className="journal-page journal-index-view">
+      <header className="journal-index-header">
+        <h1>Journal</h1>
       </header>
 
       {error && (
