@@ -571,32 +571,44 @@ export function JournalClient() {
     [records],
   );
   const insights = useMemo(() => journalInsights(records), [records]);
-  const visible = useMemo(
-    () =>
-      records.filter((record) => {
-        const matchesFilter = filter === 'all' || record.system === filter;
-        const matchesFocus = focus === 'all' || record.focus === focus;
-        const matchesFavorite = !favoritesOnly || record.favorite;
-        const matchesTag = !tag || record.tags?.includes(tag);
-        const matchesMonth =
-          !month || readingMonthKey(record.createdAt) === month;
-        const haystack =
-          `${record.systemName} ${record.spreadName} ${record.question ?? ''} ${record.note} ${record.followUp ?? ''} ${(record.tags ?? []).join(' ')} ${record.draws.flatMap((draw) => [draw.card.name, ...draw.card.keywords]).join(' ')} ${record.interpretation.headline}`.toLowerCase();
-        return (
-          matchesFilter &&
-          matchesFocus &&
-          matchesFavorite &&
-          matchesTag &&
-          matchesMonth &&
-          haystack.includes(query.toLowerCase())
-        );
-      }),
-    [records, query, filter, focus, favoritesOnly, tag, month],
-  );
+  const visible = useMemo(() => {
+    const search = query.trim().toLocaleLowerCase();
+    return records.filter((record) => {
+      const matchesFilter = filter === 'all' || record.system === filter;
+      const matchesFocus = focus === 'all' || record.focus === focus;
+      const matchesFavorite = !favoritesOnly || record.favorite;
+      const matchesTag = !tag || record.tags?.includes(tag);
+      const matchesMonth =
+        !month || readingMonthKey(record.createdAt) === month;
+      const haystack =
+        `${record.systemName} ${record.spreadName} ${record.question ?? ''} ${record.note} ${record.followUp ?? ''} ${(record.tags ?? []).join(' ')} ${record.draws.flatMap((draw) => [draw.card.name, ...draw.card.keywords]).join(' ')} ${record.interpretation.headline}`.toLocaleLowerCase();
+
+      return (
+        matchesFilter &&
+        matchesFocus &&
+        matchesFavorite &&
+        matchesTag &&
+        matchesMonth &&
+        haystack.includes(search)
+      );
+    });
+  }, [records, query, filter, focus, favoritesOnly, tag, month]);
+
+  const activeFilterCount = [
+    Boolean(query.trim()),
+    filter !== 'all',
+    focus !== 'all',
+    favoritesOnly,
+    Boolean(tag),
+    Boolean(month),
+  ].filter(Boolean).length;
+
+  const activeRecord = records.find((record) => record.id === expanded);
 
   const update = async (record: ReadingRecord) => {
-    const next = records.map((item) => (item.id === record.id ? record : item));
-    setRecords(next);
+    setRecords((items) =>
+      items.map((item) => (item.id === record.id ? record : item)),
+    );
     try {
       await saveReading(record);
     } catch {
