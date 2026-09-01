@@ -11,6 +11,9 @@ export function normalizeReading(record: ReadingRecord): ReadingRecord {
     ...record,
     note: typeof record.note === 'string' ? record.note : '',
     favorite: Boolean(record.favorite),
+    journalIcon: isDivineHeroIconId(record.journalIcon)
+      ? record.journalIcon
+      : undefined,
     tags: Array.isArray(record.tags)
       ? Array.from(
           new Set(
