@@ -51,14 +51,25 @@ describe('device-local journal', () => {
     const legacy: Record<string, unknown> = { ...record };
     delete legacy.note;
     delete legacy.favorite;
+    delete legacy.journalIcon;
     legacy.tags = [' decisions ', '', 'decisions', 7];
     legacy.followUp = null;
 
     expect(normalizeReading(legacy as unknown as ReadingRecord)).toMatchObject({
       note: '',
       favorite: false,
+      journalIcon: undefined,
       tags: ['decisions'],
       followUp: '',
     });
+  });
+
+  it('rejects journal icons outside the DIVINE hero set', () => {
+    expect(
+      normalizeReading({
+        ...record,
+        journalIcon: 'unknown-object',
+      } as unknown as ReadingRecord).journalIcon,
+    ).toBeUndefined();
   });
 });
