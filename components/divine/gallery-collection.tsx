@@ -118,7 +118,6 @@ function collageObjectStyle(
 export function GalleryCollection({ items }: { items: GalleryItem[] }) {
   const { cue, deckFinishes } = useExperience();
   const [visitSeed, setVisitSeed] = useState(0);
-  const [filter, setFilter] = useState<GalleryFilter>('all');
   const [query, setQuery] = useState('');
   const [visibleCount, setVisibleCount] = useState(BATCH_SIZE);
   const [activeId, setActiveId] = useState<string | null>(null);
