@@ -315,11 +315,12 @@ export function TodayRitual() {
         >
           <header className="today-reading-header">
             <div className="today-response">
-              <span>{displayedPrompt}</span>
+              <div className="today-response-context">
+                <p className="eyebrow">Your answer</p>
+                <p>{displayedPrompt}</p>
+              </div>
               <blockquote>{displayedResponse}</blockquote>
             </div>
-            <p className="eyebrow">Today’s pattern</p>
-            <h2>{record.interpretation.headline}</h2>
           </header>
 
           <section
