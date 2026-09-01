@@ -344,14 +344,33 @@ export function GalleryCollection({ items }: { items: GalleryItem[] }) {
             priority
           />
         </span>
-        <span className="gallery-masthead-hand" aria-hidden="true">
-          <Image
-            src={mastheadItems.symbol ?? '/collage-v1/hand.webp'}
-            alt=""
-            fill
-            sizes="300px"
-            priority
-          />
+        <span
+          className="gallery-masthead-hand"
+          style={{
+            top: 'clamp(8px, 1.5vw, 22px)',
+            right: 'clamp(24px, 7vw, 110px)',
+            width: 'clamp(220px, 28vw, 450px)',
+            height: '76%',
+            transform: 'rotate(6deg)',
+          }}
+          aria-hidden="true"
+        >
+          <span
+            style={{
+              position: 'absolute',
+              display: 'block',
+              inset: 'clamp(18px, 2.5vw, 40px)',
+            }}
+          >
+            <Image
+              src={mastheadItems.symbol ?? '/collage-v1/hand.webp'}
+              alt=""
+              fill
+              sizes="300px"
+              style={{ objectFit: 'contain' }}
+              priority
+            />
+          </span>
         </span>
         <span className="gallery-masthead-orbit" aria-hidden="true">
           <Image
