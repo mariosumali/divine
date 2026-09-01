@@ -21,6 +21,7 @@ const record: ReadingRecord = {
   draws: [],
   note: 'A private note.',
   favorite: true,
+  journalIcon: 'star',
   interpretation: {
     headline: 'The Open Door arrives.',
     overview: 'An answer.',
