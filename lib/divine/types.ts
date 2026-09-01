@@ -1,3 +1,5 @@
+import type { DivineHeroIconId } from './hero-icons';
+
 export type SystemSlug =
   | 'divine'
   | 'tarot'
