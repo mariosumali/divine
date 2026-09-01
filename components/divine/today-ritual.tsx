@@ -386,6 +386,16 @@ export function TodayRitual() {
             })}
           </section>
 
+          <section
+            className="today-pattern"
+            aria-labelledby="today-pattern-title"
+          >
+            <p className="eyebrow">Today’s pattern</p>
+            <h2 id="today-pattern-title">
+              {record.interpretation.headline}
+            </h2>
+          </section>
+
           <section className="today-interpretation">
             <header>
               <div>
