@@ -564,7 +564,8 @@ export function GalleryCollection({ items }: { items: GalleryItem[] }) {
             type="button"
             onClick={() => {
               setQuery('');
-              chooseFilter('all');
+              setVisibleCount(BATCH_SIZE);
+              setActiveId(null);
             }}
           >
             Clear search
