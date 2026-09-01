@@ -299,13 +299,6 @@ export function GalleryCollection({ items }: { items: GalleryItem[] }) {
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [activeIndex, activeItem, cue, navigableItems]);
 
-  const chooseFilter = (nextFilter: GalleryFilter) => {
-    setFilter(nextFilter);
-    setVisibleCount(BATCH_SIZE);
-    setActiveId(null);
-    cue('tick');
-  };
-
   const showAdjacent = (direction: -1 | 1) => {
     if (!navigableItems.length) return;
     const nextIndex =
