@@ -1,19 +1,21 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import type { CSSProperties } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { motion } from 'motion/react';
 import {
-  BookOpen,
-  CalendarDays,
+  ArrowLeft,
+  ChevronDown,
   Heart,
   Search,
-  Sparkles,
   Tag,
   Trash2,
 } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
+import { useExperience } from '@/app/providers';
 import { CopyReadingLinkButton } from '@/components/divine/reading-share';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import {
