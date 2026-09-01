@@ -29,18 +29,25 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import { READING_INDEX_ART } from '@/lib/divine/catalog';
 import {
-  clearReadings,
-  deleteReading,
-  listReadings,
-  saveReading,
-} from '@/lib/divine/storage';
+  imageForFinish,
+  isCardSystemSlug,
+  type DeckFinishes,
+} from '@/lib/divine/decks';
+import { divineHeroIcon, DIVINE_HERO_ICONS } from '@/lib/divine/hero-icons';
 import {
   journalFocuses,
   journalInsights,
   journalMonths,
   readingMonthKey,
 } from '@/lib/divine/journal';
+import {
+  clearReadings,
+  deleteReading,
+  listReadings,
+  saveReading,
+} from '@/lib/divine/storage';
 import type { Focus, ReadingRecord, SystemSlug } from '@/lib/divine/types';
 
 const parseTags = (value: string) =>
