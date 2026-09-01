@@ -625,6 +625,7 @@ export function JournalClient() {
   const remove = async (id: string) => {
     try {
       await deleteReading(id);
+      setExpanded(null);
       setRecords((items) => items.filter((item) => item.id !== id));
     } catch {
       setError(true);
