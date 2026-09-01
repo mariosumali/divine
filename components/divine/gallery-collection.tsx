@@ -163,11 +163,7 @@ export function GalleryCollection({ items }: { items: GalleryItem[] }) {
     () => matchedItems.filter((item) => item.kind === 'cutout'),
     [matchedItems],
   );
-  const overlayItems = useMemo(() => {
-    if (matchedItems.length === 0) return [];
-    if (filter === 'all' || filter === 'objects') return matchedObjectItems;
-    return originalObjects;
-  }, [filter, matchedItems.length, matchedObjectItems, originalObjects]);
+  const overlayItems = matchedObjectItems;
   const collectionBaseItems = useMemo(() => {
     const result = [...matchedBaseItems];
     const used = new Set(result.map((item) => item.id));
