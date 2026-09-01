@@ -381,6 +381,15 @@ export function CopyReadingLinkButton({
       }
     >
       {status === 'copied' ? <Check /> : <Copy />}
+      {showLabel && (
+        <span>
+          {status === 'copied'
+            ? 'Copied'
+            : status === 'error'
+              ? 'Try again'
+              : 'Copy link'}
+        </span>
+      )}
     </Button>
   );
 }
