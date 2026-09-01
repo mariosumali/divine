@@ -691,395 +691,324 @@ export function JournalClient() {
         </output>
       )}
 
-      <div className="journal-tools">
-        <label htmlFor="journal-search">
-          <Search />
-          <span className="sr-only">Search readings</span>
-          <Input
-            id="journal-search"
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            placeholder="Search the journal"
-            autoComplete="off"
-          />
-        </label>
-        <div className="filter-row">
-          <button
-            type="button"
-            className={filter === 'all' ? 'active' : ''}
-            aria-pressed={filter === 'all'}
-            onClick={() => setFilter('all')}
-          >
-            All
-          </button>
-          {systems.map((system) => (
-            <button
-              type="button"
-              key={system}
-              className={filter === system ? 'active' : ''}
-              aria-pressed={filter === system}
-              onClick={() => setFilter(system)}
-            >
-              {records.find((record) => record.system === system)?.systemName}
-            </button>
-          ))}
-          <button
-            type="button"
-            className={favoritesOnly ? 'active' : ''}
-            aria-pressed={favoritesOnly}
-            onClick={() => setFavoritesOnly((value) => !value)}
-          >
-            <Heart fill={favoritesOnly ? 'currentColor' : 'none'} /> Favorites
-          </button>
-        </div>
-      </div>
-
-      {records.length > 0 && (
-        <section className="journal-navigation" aria-label="Journal filters">
-          <div className="journal-calendar">
-            <div className="journal-section-title">
-              <CalendarDays />
-              <span>Calendar</span>
-            </div>
-            <div className="journal-calendar-months">
-              <button
-                type="button"
-                className={month === null ? 'active' : ''}
-                onClick={() => setMonth(null)}
-              >
-                All time <small>{records.length}</small>
-              </button>
-              {months.map((item) => (
-                <button
-                  type="button"
-                  key={item.key}
-                  className={month === item.key ? 'active' : ''}
-                  onClick={() => setMonth(item.key)}
-                >
-                  {item.label} <small>{item.count}</small>
-                </button>
-              ))}
-            </div>
-          </div>
-          <div className="journal-filter-groups">
-            <div>
-              <span>Focus</span>
-              <button
-                type="button"
-                className={focus === 'all' ? 'active' : ''}
-                onClick={() => setFocus('all')}
-              >
-                All
-              </button>
-              {journalFocuses.map((item) => (
-                <button
-                  type="button"
-                  key={item.value}
-                  className={focus === item.value ? 'active' : ''}
-                  onClick={() => setFocus(item.value)}
-                >
-                  {item.label}
-                </button>
-              ))}
-            </div>
-            {tags.length > 0 && (
-              <div>
-                <span>Collections</span>
-                <button
-                  type="button"
-                  className={tag === null ? 'active' : ''}
-                  onClick={() => setTag(null)}
-                >
-                  All
-                </button>
-                {tags.map((item) => (
-                  <button
-                    type="button"
-                    key={item}
-                    className={tag === item ? 'active' : ''}
-                    onClick={() => setTag(item)}
-                  >
-                    {item}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-        </section>
-      )}
-
-      {insights.length > 0 && (
-        <section className="journal-insights" aria-labelledby="insights-title">
-          <div>
-            <Sparkles />
-            <h2 id="insights-title">Patterns in your pages</h2>
-            <p>Quiet recurrences across your saved readings—not predictions.</p>
-          </div>
-          <div className="journal-insight-list">
-            {insights.map((insight) => (
-              <button
-                type="button"
-                key={`${insight.kind}-${insight.label}`}
-                onClick={() => setQuery(insight.label)}
-              >
-                <small>{insight.kind}</small>
-                <strong>{insight.label}</strong>
-                <span>{insight.count} appearances</span>
-              </button>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {visible.length === 0 ? (
-        <section className="journal-empty">
-          <BookOpen />
-          <h2>
-            {records.length
-              ? 'No readings match.'
-              : 'The pages are still blank.'}
-          </h2>
-          <p>
-            {records.length
-              ? 'Try another word or method.'
-              : 'Complete a reading and choose “Save to journal.”'}
-          </p>
-          <Link className="primary-action" href="/#readings">
-            Begin a reading
-          </Link>
-        </section>
-      ) : (
-        <section className="journal-list" aria-label="Saved readings">
-          {visible.map((record, index) => {
-            const currentMonth = readingMonthKey(record.createdAt);
-            const previousMonth =
-              index > 0 ? readingMonthKey(visible[index - 1].createdAt) : null;
-            return (
-              <div className="journal-timeline-entry" key={record.id}>
-                {currentMonth !== previousMonth && (
-                  <h2 className="journal-timeline-heading">
-                    {new Date(record.createdAt).toLocaleDateString(undefined, {
-                      month: 'long',
-                      year: 'numeric',
-                    })}
-                  </h2>
+      <div className="journal-index-shell">
+        {!loaded ? (
+          <p className="journal-loading">Opening your pages…</p>
+        ) : records.length === 0 ? (
+          <section className="journal-empty">
+            <p className="journal-eyebrow">First page</p>
+            <h2>The pages are still blank.</h2>
+            <p>
+              When a reading stays with you, save it here and return when you
+              are ready to write.
+            </p>
+            <Link className="primary-action" href="/#readings">
+              Begin a reading
+            </Link>
+          </section>
+        ) : (
+          <>
+            <details className="journal-disclosure journal-more">
+              <summary>
+                <span>More</span>
+                {activeFilterCount > 0 && (
+                  <small>
+                    {activeFilterCount} active · {visible.length} found
+                  </small>
                 )}
-                <motion.article
-                  key={record.id}
-                  initial={{ opacity: 0, y: 18 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: Math.min(index * 0.04, 0.35) }}
-                  className={record.favorite ? 'favorite' : ''}
-                >
-                  <button
-                    type="button"
-                    className="journal-summary"
-                    onClick={() =>
-                      setExpanded(expanded === record.id ? null : record.id)
-                    }
-                    aria-expanded={expanded === record.id}
-                  >
-                    <span>
-                      {new Date(record.createdAt).toLocaleDateString(
-                        undefined,
-                        {
-                          month: 'short',
-                          day: 'numeric',
-                          year: 'numeric',
-                        },
-                      )}
-                    </span>
-                    <strong>{record.interpretation.headline}</strong>
-                    <small>
-                      {record.systemName} · {record.spreadName}
-                    </small>
-                    <i>{expanded === record.id ? 'Close' : 'Reopen'} ↗</i>
-                  </button>
-                  {expanded === record.id && (
-                    <div className="journal-detail">
-                      {record.question && (
-                        <blockquote>“{record.question}”</blockquote>
-                      )}
-                      {record.spreadId !== 'today-constellation' && (
-                        <p>{record.interpretation.overview}</p>
-                      )}
-                      <div className="journal-draws">
-                        {record.interpretation.positions.map(
-                          (position, itemIndex) => (
-                            <div key={`${position.card}-${itemIndex}`}>
-                              <span>{position.label}</span>
-                              <strong>{position.card}</strong>
-                              <p>{position.text}</p>
-                            </div>
-                          ),
-                        )}
-                      </div>
-                      {record.interpretation.connections && (
-                        <div className="journal-connections">
-                          <span>The connecting thread</span>
-                          {record.interpretation.connections.map(
-                            (connection) => (
-                              <p key={`${connection.from}-${connection.to}`}>
-                                <strong>
-                                  {connection.from} → {connection.to}
-                                </strong>{' '}
-                                {connection.text}.
-                              </p>
-                            ),
-                          )}
-                        </div>
-                      )}
-                      {record.draws.length > 1 && (
-                        <div className="journal-synthesis">
-                          <span>How the meanings meet</span>
-                          <p>{record.interpretation.synthesis}</p>
-                          <p>{record.interpretation.closing}</p>
-                        </div>
-                      )}
-                      <label htmlFor={`note-${record.id}`}>
-                        Reflection
-                        <Textarea
-                          id={`note-${record.id}`}
-                          value={record.note}
-                          onChange={(event) =>
-                            updateLocal({ ...record, note: event.target.value })
-                          }
-                          onBlur={(event) =>
-                            void update({
-                              ...record,
-                              note: event.currentTarget.value,
-                            })
-                          }
+                <ChevronDown />
+              </summary>
+              <div className="journal-more-panel">
+                <section className="journal-more-section">
+                  <h2>Find a page</h2>
+                  <div className="journal-filter-panel">
+                    <div className="journal-filter-top">
+                      <label htmlFor="journal-search">
+                        <Search />
+                        <span className="sr-only">Search journal</span>
+                        <Input
+                          id="journal-search"
+                          value={query}
+                          onChange={(event) => setQuery(event.target.value)}
+                          placeholder="Search words, cards, or collections"
+                          autoComplete="off"
                         />
                       </label>
-                      <div className="journal-reflection-fields">
-                        <label htmlFor={`follow-up-${record.id}`}>
-                          What became clear?
-                          <Textarea
-                            id={`follow-up-${record.id}`}
-                            value={record.followUp ?? ''}
-                            placeholder="Return later. What changed, resolved, or surprised you?"
-                            onChange={(event) =>
-                              updateLocal({
-                                ...record,
-                                followUp: event.target.value,
-                              })
-                            }
-                            onBlur={(event) =>
-                              void update({
-                                ...record,
-                                followUp: event.currentTarget.value,
-                              })
-                            }
-                          />
-                        </label>
-                        <label htmlFor={`tags-${record.id}`}>
-                          <span>
-                            <Tag /> Collections
-                          </span>
-                          <Input
-                            id={`tags-${record.id}`}
-                            value={
-                              tagDrafts[record.id] ??
-                              (record.tags ?? []).join(', ')
-                            }
-                            placeholder="Dreams, decisions, new moon"
-                            onChange={(event) =>
-                              setTagDrafts((drafts) => ({
-                                ...drafts,
-                                [record.id]: event.target.value,
-                              }))
-                            }
-                            onBlur={(event) => {
-                              const nextTags = parseTags(
-                                event.currentTarget.value,
-                              );
-                              setTagDrafts((drafts) => ({
-                                ...drafts,
-                                [record.id]: nextTags.join(', '),
-                              }));
-                              void update({ ...record, tags: nextTags });
-                            }}
-                          />
-                          <small>Separate labels with commas.</small>
-                        </label>
-                      </div>
-                      <div className="journal-actions">
-                        <Button
-                          className="quiet-action"
-                          onClick={() =>
-                            void update({
-                              ...record,
-                              favorite: !record.favorite,
-                            })
-                          }
-                        >
-                          <Heart
-                            fill={record.favorite ? 'currentColor' : 'none'}
-                          />{' '}
-                          {record.favorite ? 'Favorited' : 'Favorite'}
-                        </Button>
-                        <CopyReadingLinkButton record={record} />
-                        <AlertDialog>
-                          <AlertDialogTrigger
-                            render={<Button className="quiet-action" />}
-                          >
-                            <Trash2 /> Delete
-                          </AlertDialogTrigger>
-                          <AlertDialogContent className="divine-dialog">
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>
-                                Delete this reading?
-                              </AlertDialogTitle>
-                              <AlertDialogDescription>
-                                The reading, its question, and your reflection
-                                will be permanently removed from this browser.
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>
-                                Keep reading
-                              </AlertDialogCancel>
-                              <AlertDialogAction
-                                onClick={() => void remove(record.id)}
-                              >
-                                Delete reading
-                              </AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
-                      </div>
+                      {activeFilterCount > 0 && (
+                        <button type="button" onClick={resetFilters}>
+                          Clear filters
+                        </button>
+                      )}
                     </div>
-                  )}
-                </motion.article>
-              </div>
-            );
-          })}
-        </section>
-      )}
 
-      {records.length > 0 && (
-        <AlertDialog>
-          <AlertDialogTrigger render={<Button className="danger-link" />}>
-            Clear all journal data
-          </AlertDialogTrigger>
-          <AlertDialogContent className="divine-dialog">
-            <AlertDialogHeader>
-              <AlertDialogTitle>Clear the entire journal?</AlertDialogTitle>
-              <AlertDialogDescription>
-                This permanently removes every reading and note stored in this
-                browser. It cannot be undone.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Keep journal</AlertDialogCancel>
-              <AlertDialogAction onClick={() => void clear()}>
-                Clear everything
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      )}
+                    <div className="journal-filter-grid">
+                      <fieldset>
+                        <legend>Reading</legend>
+                        <div className="journal-choice-row">
+                          <button
+                            type="button"
+                            className={filter === 'all' ? 'active' : ''}
+                            aria-pressed={filter === 'all'}
+                            onClick={() => setFilter('all')}
+                          >
+                            All
+                          </button>
+                          {systems.map((system) => (
+                            <button
+                              type="button"
+                              key={system}
+                              className={filter === system ? 'active' : ''}
+                              aria-pressed={filter === system}
+                              onClick={() => setFilter(system)}
+                            >
+                              {
+                                records.find(
+                                  (record) => record.system === system,
+                                )?.systemName
+                              }
+                            </button>
+                          ))}
+                          <button
+                            type="button"
+                            className={favoritesOnly ? 'active' : ''}
+                            aria-pressed={favoritesOnly}
+                            onClick={() => setFavoritesOnly((value) => !value)}
+                          >
+                            <Heart
+                              fill={favoritesOnly ? 'currentColor' : 'none'}
+                            />
+                            Favorites
+                          </button>
+                        </div>
+                      </fieldset>
+
+                      <fieldset>
+                        <legend>Time</legend>
+                        <div className="journal-choice-row">
+                          <button
+                            type="button"
+                            className={month === null ? 'active' : ''}
+                            aria-pressed={month === null}
+                            onClick={() => setMonth(null)}
+                          >
+                            All time
+                          </button>
+                          {months.map((item) => (
+                            <button
+                              type="button"
+                              key={item.key}
+                              className={month === item.key ? 'active' : ''}
+                              aria-pressed={month === item.key}
+                              onClick={() => setMonth(item.key)}
+                            >
+                              {item.label} <small>{item.count}</small>
+                            </button>
+                          ))}
+                        </div>
+                      </fieldset>
+
+                      <fieldset>
+                        <legend>Focus</legend>
+                        <div className="journal-choice-row">
+                          <button
+                            type="button"
+                            className={focus === 'all' ? 'active' : ''}
+                            aria-pressed={focus === 'all'}
+                            onClick={() => setFocus('all')}
+                          >
+                            All
+                          </button>
+                          {journalFocuses.map((item) => (
+                            <button
+                              type="button"
+                              key={item.value}
+                              className={focus === item.value ? 'active' : ''}
+                              aria-pressed={focus === item.value}
+                              onClick={() => setFocus(item.value)}
+                            >
+                              {item.label}
+                            </button>
+                          ))}
+                        </div>
+                      </fieldset>
+
+                      {tags.length > 0 && (
+                        <fieldset>
+                          <legend>Collections</legend>
+                          <div className="journal-choice-row">
+                            <button
+                              type="button"
+                              className={tag === null ? 'active' : ''}
+                              aria-pressed={tag === null}
+                              onClick={() => setTag(null)}
+                            >
+                              All
+                            </button>
+                            {tags.map((item) => (
+                              <button
+                                type="button"
+                                key={item}
+                                className={tag === item ? 'active' : ''}
+                                aria-pressed={tag === item}
+                                onClick={() => setTag(item)}
+                              >
+                                {item}
+                              </button>
+                            ))}
+                          </div>
+                        </fieldset>
+                      )}
+                    </div>
+                  </div>
+                </section>
+
+                {insights.length > 0 && (
+                  <section className="journal-more-section">
+                    <h2>Patterns in your pages</h2>
+                    <div className="journal-pattern-list">
+                      {insights.map((insight) => (
+                        <button
+                          type="button"
+                          key={`${insight.kind}-${insight.label}`}
+                          onClick={() => setQuery(insight.label)}
+                        >
+                          <small>{insight.kind}</small>
+                          <strong>{insight.label}</strong>
+                          <span>{insight.count} appearances</span>
+                        </button>
+                      ))}
+                    </div>
+                  </section>
+                )}
+
+                <section className="journal-more-section journal-more-manage">
+                  <h2>Manage journal</h2>
+                  <div>
+                    <p>
+                      Clearing the journal permanently removes every reading and
+                      note.
+                    </p>
+                    <AlertDialog>
+                      <AlertDialogTrigger
+                        render={<Button className="quiet-action" />}
+                      >
+                        <Trash2 /> Clear all journal data
+                      </AlertDialogTrigger>
+                      <AlertDialogContent className="divine-dialog">
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>
+                            Clear the entire journal?
+                          </AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This permanently removes every reading and note. It
+                            cannot be undone.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Keep journal</AlertDialogCancel>
+                          <AlertDialogAction onClick={() => void clear()}>
+                            Clear everything
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </div>
+                </section>
+              </div>
+            </details>
+
+            {visible.length === 0 ? (
+              <section className="journal-empty is-filtered">
+                <h2>No pages here.</h2>
+                <p>Try a different word or return to the whole journal.</p>
+                <button
+                  type="button"
+                  className="quiet-action"
+                  onClick={resetFilters}
+                >
+                  Show all pages
+                </button>
+              </section>
+            ) : (
+              <section
+                className="journal-index-list"
+                aria-label="Saved readings"
+              >
+                {visible.map((record, index) => {
+                  const currentMonth = readingMonthKey(record.createdAt);
+                  const previousMonth =
+                    index > 0
+                      ? readingMonthKey(visible[index - 1].createdAt)
+                      : null;
+                  const reflection = record.note.trim();
+                  const pageIcon = divineHeroIcon(record.journalIcon);
+
+                  return (
+                    <div className="journal-timeline-entry" key={record.id}>
+                      {currentMonth !== previousMonth && (
+                        <h2 className="journal-month-heading">
+                          {new Date(record.createdAt).toLocaleDateString(
+                            undefined,
+                            { month: 'long', year: 'numeric' },
+                          )}
+                        </h2>
+                      )}
+                      <motion.article
+                        initial={{ opacity: 0, y: 12 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: Math.min(index * 0.035, 0.28) }}
+                        className={record.favorite ? 'favorite' : undefined}
+                      >
+                        <button
+                          type="button"
+                          className={`journal-entry-summary${pageIcon ? ' has-icon' : ''}`}
+                          aria-label={`Open journal entry from ${entryDate(record.createdAt)}: ${record.interpretation.headline}${pageIcon ? ` Page icon: ${pageIcon.label}.` : ''}`}
+                          onClick={() => openEntry(record.id)}
+                        >
+                          <span className="journal-entry-excerpt">
+                            <strong>
+                              {reflection || record.interpretation.headline}
+                            </strong>
+                            <small>
+                              <time dateTime={record.createdAt}>
+                                {new Date(record.createdAt).toLocaleDateString(
+                                  undefined,
+                                  { month: 'short', day: 'numeric' },
+                                )}
+                              </time>
+                              <span aria-hidden="true">·</span>
+                              {record.favorite && (
+                                <Heart fill="currentColor" aria-hidden="true" />
+                              )}
+                              <span>
+                                {record.systemName} · {record.spreadName}
+                              </span>
+                            </small>
+                          </span>
+                          {pageIcon && (
+                            <span
+                              className="journal-entry-icon"
+                              aria-hidden="true"
+                            >
+                              <Image
+                                src={pageIcon.src}
+                                alt=""
+                                fill
+                                sizes="58px"
+                              />
+                            </span>
+                          )}
+                          <i aria-hidden="true">↗</i>
+                        </button>
+                      </motion.article>
+                    </div>
+                  );
+                })}
+              </section>
+            )}
+          </>
+        )}
+      </div>
     </main>
   );
 }
