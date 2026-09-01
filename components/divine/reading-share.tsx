@@ -362,7 +362,8 @@ export function CopyReadingLinkButton({
   };
   return (
     <Button
-      className="quiet-action icon-action"
+      type="button"
+      className={`quiet-action${showLabel ? '' : ' icon-action'}`}
       onClick={() => void copy()}
       aria-label={
         status === 'copied'
