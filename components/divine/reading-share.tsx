@@ -344,7 +344,13 @@ export function ReadingShare({
   );
 }
 
-export function CopyReadingLinkButton({ record }: { record: ReadingRecord }) {
+export function CopyReadingLinkButton({
+  record,
+  showLabel = false,
+}: {
+  record: ReadingRecord;
+  showLabel?: boolean;
+}) {
   const [status, setStatus] = useState<'idle' | 'copied' | 'error'>('idle');
   const copy = async () => {
     try {
