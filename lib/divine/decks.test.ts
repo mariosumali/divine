@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { DEFAULT_DECK_FINISHES, deckColors, imageForFinish } from './decks';
+import {
+  CARD_SYSTEM_SLUGS,
+  DEFAULT_DECK_FINISHES,
+  deckColors,
+  deckFinishesFor,
+  imageForFinish,
+} from './decks';
 import type { CardDefinition } from './types';
 
 const card: CardDefinition = {
