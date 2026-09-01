@@ -155,14 +155,6 @@ export function GalleryCollection({ items }: { items: GalleryItem[] }) {
     () => allBaseItems.filter((item) => item.kind === 'plate'),
     [allBaseItems],
   );
-  const originalObjects = useMemo(
-    () =>
-      galleryItems.filter(
-        (item) =>
-          item.kind === 'cutout' && item.collection === 'DIVINE objects',
-      ),
-    [galleryItems],
-  );
   const matchedBaseItems = useMemo(
     () => matchedItems.filter((item) => item.kind !== 'cutout'),
     [matchedItems],
