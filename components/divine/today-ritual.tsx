@@ -247,6 +247,17 @@ export function TodayRitual() {
 
   return (
     <main className={`today-page${record ? ' has-reading' : ''}`}>
+      <div className="today-opening-art" aria-hidden="true">
+        <Image
+          className="today-opening-chart"
+          src="/astrology/astrological-charts-1715.webp"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+        />
+      </div>
+
       <header className="today-hero">
         <h1 aria-label={dateLabel}>
           <span className="today-date-weekday" aria-hidden="true">
