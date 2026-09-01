@@ -395,31 +395,21 @@ export function GalleryCollection({ items }: { items: GalleryItem[] }) {
         </div>
       </header>
 
-      <section className="gallery-toolbar" aria-label="Filter the gallery">
-        <div className="gallery-filters">
-          {FILTERS.map((option) => (
-            <Button
-              className="gallery-filter"
-              variant="ghost"
-              size="sm"
-              type="button"
-              aria-pressed={filter === option.key}
-              key={option.key}
-              onClick={() => chooseFilter(option.key)}
-            >
-              {option.label}
-              <span>{counts[option.key].toLocaleString()}</span>
-            </Button>
-          ))}
-        </div>
-        <label className="gallery-search" htmlFor="gallery-search-input">
+      <section
+        className="gallery-toolbar"
+        aria-label="Browse and search the gallery"
+      >
+        <label
+          className="gallery-search"
+          data-has-query={query.length > 0}
+          htmlFor="gallery-search-input"
+        >
           <Search aria-hidden="true" />
-          <span className="sr-only">Search the gallery</span>
           <Input
             id="gallery-search-input"
             type="search"
             value={query}
-            placeholder="Search the archive"
+            aria-label="Search the gallery"
             onChange={(event) => {
               setQuery(event.currentTarget.value);
               setVisibleCount(BATCH_SIZE);
