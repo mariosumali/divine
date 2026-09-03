@@ -684,7 +684,6 @@ button {
   min-height: clamp(260px, 43svh, 500px);
   place-items: center;
   padding: clamp(70px, 10vw, 140px) clamp(20px, 5vw, 72px);
-  border-bottom: 1px solid var(--line);
   text-align: center;
 }
 .today-hero h1 {
