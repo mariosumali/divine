@@ -21,6 +21,7 @@
     "clsx": "2.1.1",
     "lucide-react": "1.31.0",
     "motion": "^13.1.1",
+    "nitro": "3.0.260903-beta",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-server-dom-webpack": "^19.2.8",
@@ -34,7 +35,8 @@
     "@cloudflare/vite-plugin": "^1.54.3",
     "@cloudflare/workers-types": "^5.20260902.1",
     "@openai/sites-vite-plugin": "0.2.0",
-    "@tailwindcss/postcss": "4.2.1",
+    "@tailwindcss/postcss": "4.3.3",
+    "@tailwindcss/vite": "^4.3.3",
     "@types/node": "22.19.19",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
@@ -45,15 +47,21 @@
     "oxfmt": "0.61.0",
     "oxlint": "1.76.0",
     "oxlint-tsgolint": "7.0.2001",
-    "tailwindcss": "4.2.1",
+    "tailwindcss": "4.3.3",
     "typescript": "5.9.3",
-    "vite": "^8.2.2",
+    "vite": "8.1.5",
     "vitest": "^4.1.11",
     "wrangler": "^4.128.0"
   },
   "overrides": {
     "esbuild": "0.28.1",
+    "rolldown": "1.1.5",
     "undici": "7.29.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "rolldown": "1.1.5"
+    }
   },
   "type": "module"
 }
