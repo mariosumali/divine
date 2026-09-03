@@ -53,7 +53,7 @@ type HeroBounds = {
 };
 
 const DEFAULT_HERO_BOUNDS: HeroBounds = { width: 1440, height: 838 };
-const ARCHIVE_OBJECT_AREA = 9_900;
+const ARCHIVE_OBJECT_AREA = 5_500;
 const MIN_ARCHIVE_OBJECTS = 18;
 const MAX_ARCHIVE_OBJECTS = 900;
 
