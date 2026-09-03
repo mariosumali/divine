@@ -14,21 +14,11 @@ import {
   READING_INDEX_ART,
   readingIndexArtTreatment,
 } from '@/lib/divine/catalog';
-import type { GalleryCategory, GalleryItem } from '@/lib/divine/gallery';
+import type { GalleryItem } from '@/lib/divine/gallery';
 
 const BATCH_SIZE = 56;
 const BASES_PER_BOARD = 14;
 const OBJECTS_PER_BOARD = 5;
-
-type GalleryFilter = 'all' | GalleryCategory;
-
-const FILTERS: ReadonlyArray<{ key: GalleryFilter; label: string }> = [
-  { key: 'all', label: 'All works' },
-  { key: 'cards', label: 'Cards' },
-  { key: 'objects', label: 'Objects' },
-  { key: 'celestial', label: 'Celestial' },
-  { key: 'archive', label: 'Archive' },
-];
 
 const READING_SYMBOLS = [
   ...new Set(
@@ -128,7 +118,6 @@ function collageObjectStyle(
 export function GalleryCollection({ items }: { items: GalleryItem[] }) {
   const { cue, deckFinishes } = useExperience();
   const [visitSeed, setVisitSeed] = useState(0);
-  const [filter, setFilter] = useState<GalleryFilter>('all');
   const [query, setQuery] = useState('');
   const [visibleCount, setVisibleCount] = useState(BATCH_SIZE);
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -148,34 +137,15 @@ export function GalleryCollection({ items }: { items: GalleryItem[] }) {
     [items, visitSeed],
   );
 
-  const counts = useMemo(
-    () =>
-      galleryItems.reduce<Record<GalleryFilter, number>>(
-        (result, item) => {
-          result[item.category] += 1;
-          return result;
-        },
-        {
-          all: galleryItems.length,
-          cards: 0,
-          objects: 0,
-          celestial: 0,
-          archive: 0,
-        },
-      ),
-    [galleryItems],
-  );
-
   const matchedItems = useMemo(() => {
     const normalizedQuery = query.trim().toLocaleLowerCase();
     return galleryItems.filter((item) => {
-      if (filter !== 'all' && item.category !== filter) return false;
       if (!normalizedQuery) return true;
       return `${item.title} ${item.collection} ${item.detail}`
         .toLocaleLowerCase()
         .includes(normalizedQuery);
     });
-  }, [filter, galleryItems, query]);
+  }, [galleryItems, query]);
 
   const allBaseItems = useMemo(
     () => galleryItems.filter((item) => item.kind !== 'cutout'),
@@ -185,14 +155,6 @@ export function GalleryCollection({ items }: { items: GalleryItem[] }) {
     () => allBaseItems.filter((item) => item.kind === 'plate'),
     [allBaseItems],
   );
-  const originalObjects = useMemo(
-    () =>
-      galleryItems.filter(
-        (item) =>
-          item.kind === 'cutout' && item.collection === 'DIVINE objects',
-      ),
-    [galleryItems],
-  );
   const matchedBaseItems = useMemo(
     () => matchedItems.filter((item) => item.kind !== 'cutout'),
     [matchedItems],
@@ -201,11 +163,7 @@ export function GalleryCollection({ items }: { items: GalleryItem[] }) {
     () => matchedItems.filter((item) => item.kind === 'cutout'),
     [matchedItems],
   );
-  const overlayItems = useMemo(() => {
-    if (matchedItems.length === 0) return [];
-    if (filter === 'all' || filter === 'objects') return matchedObjectItems;
-    return originalObjects;
-  }, [filter, matchedItems.length, matchedObjectItems, originalObjects]);
+  const overlayItems = matchedObjectItems;
   const collectionBaseItems = useMemo(() => {
     const result = [...matchedBaseItems];
     const used = new Set(result.map((item) => item.id));
@@ -341,13 +299,6 @@ export function GalleryCollection({ items }: { items: GalleryItem[] }) {
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [activeIndex, activeItem, cue, navigableItems]);
 
-  const chooseFilter = (nextFilter: GalleryFilter) => {
-    setFilter(nextFilter);
-    setVisibleCount(BATCH_SIZE);
-    setActiveId(null);
-    cue('tick');
-  };
-
   const showAdjacent = (direction: -1 | 1) => {
     if (!navigableItems.length) return;
     const nextIndex =
@@ -393,14 +344,33 @@ export function GalleryCollection({ items }: { items: GalleryItem[] }) {
             priority
           />
         </span>
-        <span className="gallery-masthead-hand" aria-hidden="true">
-          <Image
-            src={mastheadItems.symbol ?? '/collage-v1/hand.webp'}
-            alt=""
-            fill
-            sizes="300px"
-            priority
-          />
+        <span
+          className="gallery-masthead-hand"
+          style={{
+            top: 'clamp(8px, 1.5vw, 22px)',
+            right: 'clamp(24px, 7vw, 110px)',
+            width: 'clamp(220px, 28vw, 450px)',
+            height: '76%',
+            transform: 'rotate(6deg)',
+          }}
+          aria-hidden="true"
+        >
+          <span
+            style={{
+              position: 'absolute',
+              display: 'block',
+              inset: 'clamp(18px, 2.5vw, 40px)',
+            }}
+          >
+            <Image
+              src={mastheadItems.symbol ?? '/collage-v1/hand.webp'}
+              alt=""
+              fill
+              sizes="300px"
+              style={{ objectFit: 'contain' }}
+              priority
+            />
+          </span>
         </span>
         <span className="gallery-masthead-orbit" aria-hidden="true">
           <Image
@@ -425,31 +395,21 @@ export function GalleryCollection({ items }: { items: GalleryItem[] }) {
         </div>
       </header>
 
-      <section className="gallery-toolbar" aria-label="Filter the gallery">
-        <div className="gallery-filters">
-          {FILTERS.map((option) => (
-            <Button
-              className="gallery-filter"
-              variant="ghost"
-              size="sm"
-              type="button"
-              aria-pressed={filter === option.key}
-              key={option.key}
-              onClick={() => chooseFilter(option.key)}
-            >
-              {option.label}
-              <span>{counts[option.key].toLocaleString()}</span>
-            </Button>
-          ))}
-        </div>
-        <label className="gallery-search" htmlFor="gallery-search-input">
+      <section
+        className="gallery-toolbar"
+        aria-label="Browse and search the gallery"
+      >
+        <label
+          className="gallery-search"
+          data-has-query={query.length > 0}
+          htmlFor="gallery-search-input"
+        >
           <Search aria-hidden="true" />
-          <span className="sr-only">Search the gallery</span>
           <Input
             id="gallery-search-input"
             type="search"
             value={query}
-            placeholder="Search the archive"
+            aria-label="Search the gallery"
             onChange={(event) => {
               setQuery(event.currentTarget.value);
               setVisibleCount(BATCH_SIZE);
@@ -604,7 +564,8 @@ export function GalleryCollection({ items }: { items: GalleryItem[] }) {
             type="button"
             onClick={() => {
               setQuery('');
-              chooseFilter('all');
+              setVisibleCount(BATCH_SIZE);
+              setActiveId(null);
             }}
           >
             Clear search

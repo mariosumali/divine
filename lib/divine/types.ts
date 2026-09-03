@@ -1,3 +1,5 @@
+import type { DivineHeroIconId } from './hero-icons';
+
 export type SystemSlug =
   | 'divine'
   | 'tarot'
@@ -99,6 +101,8 @@ export interface ReadingRecord {
   luckyNumbers?: number[];
   note: string;
   favorite: boolean;
+  /** Optional DIVINE collage mark shown with this journal page. */
+  journalIcon?: DivineHeroIconId;
   /** Device-local labels used to gather related readings into collections. */
   tags?: string[];
   /** A reflection added after time has passed and the reading has unfolded. */

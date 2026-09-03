@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { DEFAULT_DECK_FINISHES, deckColors, imageForFinish } from './decks';
+import {
+  CARD_SYSTEM_SLUGS,
+  DEFAULT_DECK_FINISHES,
+  deckColors,
+  deckFinishesFor,
+  imageForFinish,
+} from './decks';
 import type { CardDefinition } from './types';
 
 const card: CardDefinition = {
@@ -33,4 +39,16 @@ describe('deck appearance', () => {
     );
     expect(deckColors('zodiac', 'zodiac-11', 'ink')).toBeUndefined();
   });
+
+  it.each(['color', 'ink'] as const)(
+    'switches every card system to the %s deck at once',
+    (finish) => {
+      const deckFinishes = deckFinishesFor(finish);
+
+      expect(Object.keys(deckFinishes)).toEqual([...CARD_SYSTEM_SLUGS]);
+      expect(Object.values(deckFinishes)).toEqual(
+        CARD_SYSTEM_SLUGS.map(() => finish),
+      );
+    },
+  );
 });

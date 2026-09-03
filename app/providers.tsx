@@ -10,6 +10,7 @@ import {
   CARD_SYSTEM_SLUGS,
   DECK_LABELS,
   DEFAULT_DECK_FINISHES,
+  deckFinishesFor,
   type CardSystemSlug,
   type DeckFinish,
   type DeckFinishes,
@@ -24,6 +25,7 @@ interface ExperienceContextValue {
   toggleTheme: () => void;
   toggleSound: () => void;
   setDeckFinish: (slug: CardSystemSlug, finish: DeckFinish) => void;
+  setAllDeckFinishes: (finish: DeckFinish) => void;
   cue: typeof playSound;
 }
 
@@ -131,6 +133,12 @@ export function Providers({ children }: { children: React.ReactNode }) {
           playSound('turn');
           return next;
         }),
+      setAllDeckFinishes: (finish) => {
+        const next = deckFinishesFor(finish);
+        writePreference('divine-decks', JSON.stringify(next));
+        playSound('turn');
+        setDeckFinishes(next);
+      },
       cue: playSound,
     }),
     [theme, sound, deckFinishes],
@@ -188,6 +196,28 @@ export function Providers({ children }: { children: React.ReactNode }) {
                     </Dialog.Close>
                   </header>
                   <div className="deck-settings">
+                    <section className="deck-setting deck-setting-all">
+                      <span>All decks</span>
+                      <fieldset aria-label="Set finish for all decks">
+                        {(['color', 'ink'] as const).map((finish) => {
+                          const isActive = CARD_SYSTEM_SLUGS.every(
+                            (slug) => deckFinishes[slug] === finish,
+                          );
+                          return (
+                            <button
+                              type="button"
+                              key={finish}
+                              className={isActive ? 'active' : ''}
+                              aria-label={`Set all decks to ${finish}`}
+                              aria-pressed={isActive}
+                              onClick={() => value.setAllDeckFinishes(finish)}
+                            >
+                              {finish}
+                            </button>
+                          );
+                        })}
+                      </fieldset>
+                    </section>
                     {CARD_SYSTEM_SLUGS.map((slug) => (
                       <section className="deck-setting" key={slug}>
                         <span>{CATALOG_NAME_MAP[slug]}</span>

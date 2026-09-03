@@ -25,24 +25,13 @@ export const CARD_SYSTEM_SLUGS = [
 export type CardSystemSlug = (typeof CARD_SYSTEM_SLUGS)[number];
 export type DeckFinishes = Record<CardSystemSlug, DeckFinish>;
 
-export const DEFAULT_DECK_FINISHES: DeckFinishes = {
-  tarot: 'color',
-  oracle: 'color',
-  lenormand: 'color',
-  spellcraft: 'color',
-  'ancient-egypt': 'color',
-  zodiac: 'color',
-  kipper: 'color',
-  belline: 'color',
-  'playing-card-cartomancy': 'color',
-  sibilla: 'color',
-  'runic-cards': 'color',
-  'i-ching-cards': 'color',
-  'fal-e-hafez': 'color',
-  hanafuda: 'color',
-  zigeunerkarten: 'color',
-  'ilm-al-raml': 'color',
-};
+export function deckFinishesFor(finish: DeckFinish): DeckFinishes {
+  return Object.fromEntries(
+    CARD_SYSTEM_SLUGS.map((slug) => [slug, finish]),
+  ) as DeckFinishes;
+}
+
+export const DEFAULT_DECK_FINISHES = deckFinishesFor('color');
 
 export const DECK_LABELS: Record<
   CardSystemSlug,

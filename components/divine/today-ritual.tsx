@@ -230,6 +230,7 @@ export function TodayRitual() {
         favorite: existing?.favorite ?? false,
         tags: existing?.tags ?? record.tags,
         followUp: existing?.followUp ?? record.followUp,
+        journalIcon: existing?.journalIcon ?? record.journalIcon,
       };
       await saveReading(next);
       setSavedRecords((items) => [
@@ -246,6 +247,17 @@ export function TodayRitual() {
 
   return (
     <main className={`today-page${record ? ' has-reading' : ''}`}>
+      <div className="today-opening-art" aria-hidden="true">
+        <Image
+          className="today-opening-chart"
+          src="/astrology/astrological-charts-1715.webp"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+        />
+      </div>
+
       <header className="today-hero">
         <h1 aria-label={dateLabel}>
           <span className="today-date-weekday" aria-hidden="true">
@@ -303,11 +315,12 @@ export function TodayRitual() {
         >
           <header className="today-reading-header">
             <div className="today-response">
-              <span>{displayedPrompt}</span>
+              <div className="today-response-context">
+                <p className="eyebrow">Your answer</p>
+                <p>{displayedPrompt}</p>
+              </div>
               <blockquote>{displayedResponse}</blockquote>
             </div>
-            <p className="eyebrow">Today’s pattern</p>
-            <h2>{record.interpretation.headline}</h2>
           </header>
 
           <section
@@ -371,6 +384,16 @@ export function TodayRitual() {
                 </motion.figure>
               );
             })}
+          </section>
+
+          <section
+            className="today-pattern"
+            aria-labelledby="today-pattern-title"
+          >
+            <p className="eyebrow">Today’s pattern</p>
+            <h2 id="today-pattern-title">
+              {record.interpretation.headline}
+            </h2>
           </section>
 
           <section className="today-interpretation">

@@ -344,7 +344,13 @@ export function ReadingShare({
   );
 }
 
-export function CopyReadingLinkButton({ record }: { record: ReadingRecord }) {
+export function CopyReadingLinkButton({
+  record,
+  showLabel = false,
+}: {
+  record: ReadingRecord;
+  showLabel?: boolean;
+}) {
   const [status, setStatus] = useState<'idle' | 'copied' | 'error'>('idle');
   const copy = async () => {
     try {
@@ -356,7 +362,8 @@ export function CopyReadingLinkButton({ record }: { record: ReadingRecord }) {
   };
   return (
     <Button
-      className="quiet-action icon-action"
+      type="button"
+      className={`quiet-action${showLabel ? '' : ' icon-action'}`}
       onClick={() => void copy()}
       aria-label={
         status === 'copied'
@@ -374,6 +381,15 @@ export function CopyReadingLinkButton({ record }: { record: ReadingRecord }) {
       }
     >
       {status === 'copied' ? <Check /> : <Copy />}
+      {showLabel && (
+        <span>
+          {status === 'copied'
+            ? 'Copied'
+            : status === 'error'
+              ? 'Try again'
+              : 'Copy link'}
+        </span>
+      )}
     </Button>
   );
 }
