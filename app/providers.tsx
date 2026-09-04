@@ -184,8 +184,13 @@ export function Providers({ children }: { children: React.ReactNode }) {
   const isEntryFramed = entryPhase !== 'ready';
   const isRevealing =
     entryPhase === 'first-reveal' || entryPhase === 'reload-reveal';
+  // Motion cannot interpolate circle() and none reliably. Keep both animated
+  // endpoints compatible, then remove the clip once the reveal is complete.
+  const entryClipPath = isRevealing
+    ? 'circle(150vmax at 50vw 50svh)'
+    : 'circle(0vmax at 50vw 50svh)';
   const revealDuration = reduceMotion
-    ? 0.18
+    ? 0.01
     : entryPhase === 'first-reveal'
       ? 1.45
       : 0.92;
@@ -243,21 +248,12 @@ export function Providers({ children }: { children: React.ReactNode }) {
         inert={isEntryFramed ? true : undefined}
         aria-hidden={isEntryFramed ? true : undefined}
         initial={false}
-        animate={{
-          clipPath: reduceMotion
-            ? isRevealing || entryPhase === 'ready'
-              ? 'none'
-              : 'circle(0vmax at 50vw 50svh)'
-            : isRevealing
-              ? 'circle(150vmax at 50vw 50svh)'
-              : entryPhase === 'ready'
-                ? 'none'
-                : 'circle(0vmax at 50vw 50svh)',
-          opacity:
-            reduceMotion && (entryPhase === 'checking' || entryPhase === 'gate')
-              ? 0
-              : 1,
-        }}
+        animate={
+          entryPhase === 'ready'
+            ? { opacity: 1 }
+            : { clipPath: entryClipPath, opacity: 1 }
+        }
+        style={entryPhase === 'ready' ? { clipPath: 'none' } : undefined}
         transition={{
           duration: isRevealing ? revealDuration : 0,
           ease: reduceMotion ? 'linear' : [0.76, 0, 0.24, 1],
