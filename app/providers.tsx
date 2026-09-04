@@ -168,7 +168,6 @@ export function Providers({ children }: { children: React.ReactNode }) {
   const chooseEntry = () => {
     if (entryPhase !== 'gate') return;
     if (pathname === '/') resetScrollPosition();
-    writePreference('divine-entered', 'yes');
     playSound('enter');
     setEntryPhase('first-reveal');
   };
@@ -261,6 +260,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
         onAnimationComplete={() => {
           if (!isRevealing) return;
           const shouldMoveFocus = entryPhase === 'first-reveal';
+          if (shouldMoveFocus) writePreference('divine-entered', 'yes');
           setEntryPhase('ready');
           if (shouldMoveFocus) {
             requestAnimationFrame(() => {
