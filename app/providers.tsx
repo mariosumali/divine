@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  useCallback,
   createContext,
   useContext,
   useEffect,
@@ -8,7 +9,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import { AnimatePresence, MotionConfig, motion } from 'motion/react';
 import {
   Check,
   ChevronDown,
@@ -110,7 +111,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
     DEFAULT_DECK_FINISHES,
   );
   const [entryPhase, setEntryPhase] = useState<EntryPhase>('checking');
-  const reduceMotion = useReducedMotion();
+  // This experience intentionally keeps its cinematic motion enabled.
+  const reduceMotion = false;
 
   useEffect(() => {
     // Dark mode is temporarily disabled.
@@ -193,6 +195,28 @@ export function Providers({ children }: { children: React.ReactNode }) {
     : entryPhase === 'first-reveal'
       ? 1.45
       : 0.92;
+  const completeEntryReveal = useCallback(() => {
+    if (!isRevealing) return;
+    const shouldMoveFocus = entryPhase === 'first-reveal';
+    if (shouldMoveFocus) writePreference('divine-entered', 'yes');
+    setEntryPhase('ready');
+    if (shouldMoveFocus) {
+      requestAnimationFrame(() => {
+        document
+          .querySelector<HTMLAnchorElement>('.mini-wordmark')
+          ?.focus({ preventScroll: true });
+      });
+    }
+  }, [entryPhase, isRevealing]);
+
+  useEffect(() => {
+    if (!isRevealing) return;
+    const fallbackTimer = window.setTimeout(
+      completeEntryReveal,
+      revealDuration * 1000 + 250,
+    );
+    return () => window.clearTimeout(fallbackTimer);
+  }, [completeEntryReveal, isRevealing, revealDuration]);
   const activeNavItem =
     NAV_ITEMS.find((item) => isActiveNavigationItem(pathname, item.match)) ??
     NAV_ITEMS[1];
@@ -241,122 +265,111 @@ export function Providers({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <ExperienceContext.Provider value={value}>
-      {isEntryFramed && <div className="entry-backdrop" aria-hidden="true" />}
+    <MotionConfig reducedMotion="never">
+      <ExperienceContext.Provider value={value}>
+        {isEntryFramed && <div className="entry-backdrop" aria-hidden="true" />}
 
-      <motion.div
-        className={`app-frame${isEntryFramed ? ' entry-framed' : ''}`}
-        inert={isEntryFramed ? true : undefined}
-        aria-hidden={isEntryFramed ? true : undefined}
-        initial={false}
-        animate={
-          entryPhase === 'ready'
-            ? { opacity: 1 }
-            : { clipPath: entryClipPath, opacity: 1 }
-        }
-        style={entryPhase === 'ready' ? { clipPath: 'none' } : undefined}
-        transition={{
-          duration: isRevealing ? revealDuration : 0,
-          ease: reduceMotion ? 'linear' : [0.76, 0, 0.24, 1],
-        }}
-        onAnimationComplete={() => {
-          if (!isRevealing) return;
-          const shouldMoveFocus = entryPhase === 'first-reveal';
-          if (shouldMoveFocus) writePreference('divine-entered', 'yes');
-          setEntryPhase('ready');
-          if (shouldMoveFocus) {
-            requestAnimationFrame(() => {
-              document
-                .querySelector<HTMLAnchorElement>('.mini-wordmark')
-                ?.focus({ preventScroll: true });
-            });
+        <motion.div
+          className={`app-frame${isEntryFramed ? ' entry-framed' : ''}`}
+          inert={isEntryFramed ? true : undefined}
+          aria-hidden={isEntryFramed ? true : undefined}
+          initial={false}
+          animate={
+            entryPhase === 'ready'
+              ? { opacity: 1 }
+              : { clipPath: entryClipPath, opacity: 1 }
           }
-        }}
-      >
-        <header className="global-header">
-          <Link className="mini-wordmark" href="/" aria-label="DIVINE home">
-            DIVINE
-          </Link>
-          <nav className="desktop-navigation" aria-label="Primary navigation">
-            {NAV_ITEMS.map((item) => {
-              const isActive = isActiveNavigationItem(pathname, item.match);
-              return (
-                <Link
-                  href={item.href}
-                  key={item.href}
-                  aria-current={isActive ? 'page' : undefined}
-                >
-                  {item.label}
-                </Link>
-              );
-            })}
-          </nav>
-          <nav className="mobile-navigation" aria-label="Primary navigation">
-            <Menu.Root>
-              <Menu.Trigger
-                type="button"
-                className="mobile-nav-trigger"
-                aria-label={`Current page: ${activeNavItem.label}. Choose a page`}
-              >
-                <span>{activeNavItem.label}</span>
-                <ChevronDown aria-hidden="true" />
-              </Menu.Trigger>
-              <Menu.Portal>
-                <Menu.Backdrop className="mobile-nav-backdrop" />
-                <Menu.Positioner
-                  className="mobile-nav-positioner"
-                  sideOffset={9}
-                  align="center"
-                >
-                  <Menu.Popup className="mobile-nav-menu">
-                    {NAV_ITEMS.map((item) => {
-                      const isActive = isActiveNavigationItem(
-                        pathname,
-                        item.match,
-                      );
-                      return (
-                        <Menu.LinkItem
-                          key={item.href}
-                          className="mobile-nav-item"
-                          render={<Link href={item.href} />}
-                          closeOnClick
-                          aria-current={isActive ? 'page' : undefined}
-                        >
-                          <span>{item.label}</span>
-                          {isActive && <Check aria-hidden="true" />}
-                        </Menu.LinkItem>
-                      );
-                    })}
-                  </Menu.Popup>
-                </Menu.Positioner>
-              </Menu.Portal>
-            </Menu.Root>
-          </nav>
-          <div className="header-controls">
-            <Dialog.Root>
-              <Dialog.Trigger
-                type="button"
-                className="settings-trigger"
-                aria-label="Open options"
-              >
-                <Settings2 />
-              </Dialog.Trigger>
-              <Dialog.Portal>
-                <Dialog.Backdrop className="settings-backdrop" />
-                <Dialog.Popup className="settings-panel">
-                  <header>
-                    <Dialog.Title>Options</Dialog.Title>
-                    <Dialog.Close type="button" aria-label="Close options">
-                      <X />
-                    </Dialog.Close>
-                  </header>
-                  <section
-                    className="settings-group"
-                    aria-labelledby="experience-options"
+          style={entryPhase === 'ready' ? { clipPath: 'none' } : undefined}
+          transition={{
+            duration: isRevealing ? revealDuration : 0,
+            ease: reduceMotion ? 'linear' : [0.76, 0, 0.24, 1],
+          }}
+          onAnimationComplete={completeEntryReveal}
+        >
+          <header className="global-header">
+            <Link className="mini-wordmark" href="/" aria-label="DIVINE home">
+              DIVINE
+            </Link>
+            <nav className="desktop-navigation" aria-label="Primary navigation">
+              {NAV_ITEMS.map((item) => {
+                const isActive = isActiveNavigationItem(pathname, item.match);
+                return (
+                  <Link
+                    href={item.href}
+                    key={item.href}
+                    aria-current={isActive ? 'page' : undefined}
                   >
-                    <h3 id="experience-options">Experience</h3>
-                    <div className="preference-settings">
-                      {/* Dark mode is temporarily disabled.
+                    {item.label}
+                  </Link>
+                );
+              })}
+            </nav>
+            <nav className="mobile-navigation" aria-label="Primary navigation">
+              <Menu.Root>
+                <Menu.Trigger
+                  type="button"
+                  className="mobile-nav-trigger"
+                  aria-label={`Current page: ${activeNavItem.label}. Choose a page`}
+                >
+                  <span>{activeNavItem.label}</span>
+                  <ChevronDown aria-hidden="true" />
+                </Menu.Trigger>
+                <Menu.Portal>
+                  <Menu.Backdrop className="mobile-nav-backdrop" />
+                  <Menu.Positioner
+                    className="mobile-nav-positioner"
+                    sideOffset={9}
+                    align="center"
+                  >
+                    <Menu.Popup className="mobile-nav-menu">
+                      {NAV_ITEMS.map((item) => {
+                        const isActive = isActiveNavigationItem(
+                          pathname,
+                          item.match,
+                        );
+                        return (
+                          <Menu.LinkItem
+                            key={item.href}
+                            className="mobile-nav-item"
+                            render={<Link href={item.href} />}
+                            closeOnClick
+                            aria-current={isActive ? 'page' : undefined}
+                          >
+                            <span>{item.label}</span>
+                            {isActive && <Check aria-hidden="true" />}
+                          </Menu.LinkItem>
+                        );
+                      })}
+                    </Menu.Popup>
+                  </Menu.Positioner>
+                </Menu.Portal>
+              </Menu.Root>
+            </nav>
+            <div className="header-controls">
+              <Dialog.Root>
+                <Dialog.Trigger
+                  type="button"
+                  className="settings-trigger"
+                  aria-label="Open options"
+                >
+                  <Settings2 />
+                </Dialog.Trigger>
+                <Dialog.Portal>
+                  <Dialog.Backdrop className="settings-backdrop" />
+                  <Dialog.Popup className="settings-panel">
+                    <header>
+                      <Dialog.Title>Options</Dialog.Title>
+                      <Dialog.Close type="button" aria-label="Close options">
+                        <X />
+                      </Dialog.Close>
+                    </header>
+                    <section
+                      className="settings-group"
+                      aria-labelledby="experience-options"
+                    >
+                      <h3 id="experience-options">Experience</h3>
+                      <div className="preference-settings">
+                        {/* Dark mode is temporarily disabled.
                       <section className="preference-setting">
                         <span>Theme</span>
                         <fieldset
@@ -384,203 +397,208 @@ export function Providers({ children }: { children: React.ReactNode }) {
                         </fieldset>
                       </section>
                       */}
-                      <section className="preference-setting">
-                        <span>Sound</span>
-                        <fieldset
-                          className="segmented-options"
-                          aria-label="Sound effects"
-                        >
-                          {([true, false] as const).map((enabled) => (
-                            <button
-                              type="button"
-                              key={enabled ? 'on' : 'muted'}
-                              className={sound === enabled ? 'active' : ''}
-                              aria-pressed={sound === enabled}
-                              onClick={() => {
-                                if (sound !== enabled) value.toggleSound();
-                              }}
-                            >
-                              {enabled ? (
-                                <Volume2 aria-hidden="true" />
-                              ) : (
-                                <VolumeX aria-hidden="true" />
-                              )}
-                              {enabled ? 'On' : 'Muted'}
-                            </button>
-                          ))}
+                        <section className="preference-setting">
+                          <span>Sound</span>
+                          <fieldset
+                            className="segmented-options"
+                            aria-label="Sound effects"
+                          >
+                            {([true, false] as const).map((enabled) => (
+                              <button
+                                type="button"
+                                key={enabled ? 'on' : 'muted'}
+                                className={sound === enabled ? 'active' : ''}
+                                aria-pressed={sound === enabled}
+                                onClick={() => {
+                                  if (sound !== enabled) value.toggleSound();
+                                }}
+                              >
+                                {enabled ? (
+                                  <Volume2 aria-hidden="true" />
+                                ) : (
+                                  <VolumeX aria-hidden="true" />
+                                )}
+                                {enabled ? 'On' : 'Muted'}
+                              </button>
+                            ))}
+                          </fieldset>
+                        </section>
+                      </div>
+                    </section>
+                    <h3 className="deck-options-title">Decks</h3>
+                    <div className="deck-settings">
+                      <section className="deck-setting deck-setting-all">
+                        <span>All decks</span>
+                        <fieldset aria-label="Set finish for all decks">
+                          {(['color', 'ink'] as const).map((finish) => {
+                            const isActive = CARD_SYSTEM_SLUGS.every(
+                              (slug) => deckFinishes[slug] === finish,
+                            );
+                            return (
+                              <button
+                                type="button"
+                                key={finish}
+                                className={isActive ? 'active' : ''}
+                                aria-label={`Set all decks to ${finish}`}
+                                aria-pressed={isActive}
+                                onClick={() => value.setAllDeckFinishes(finish)}
+                              >
+                                {finish}
+                              </button>
+                            );
+                          })}
                         </fieldset>
                       </section>
+                      {CARD_SYSTEM_SLUGS.map((slug) => (
+                        <section className="deck-setting" key={slug}>
+                          <span>{CATALOG_NAME_MAP[slug]}</span>
+                          <div>
+                            {(['color', 'ink'] as const).map((finish) => (
+                              <button
+                                type="button"
+                                key={finish}
+                                className={
+                                  deckFinishes[slug] === finish ? 'active' : ''
+                                }
+                                aria-pressed={deckFinishes[slug] === finish}
+                                onClick={() =>
+                                  value.setDeckFinish(slug, finish)
+                                }
+                              >
+                                {DECK_LABELS[slug][finish]}
+                              </button>
+                            ))}
+                          </div>
+                        </section>
+                      ))}
                     </div>
-                  </section>
-                  <h3 className="deck-options-title">Decks</h3>
-                  <div className="deck-settings">
-                    <section className="deck-setting deck-setting-all">
-                      <span>All decks</span>
-                      <fieldset aria-label="Set finish for all decks">
-                        {(['color', 'ink'] as const).map((finish) => {
-                          const isActive = CARD_SYSTEM_SLUGS.every(
-                            (slug) => deckFinishes[slug] === finish,
-                          );
-                          return (
-                            <button
-                              type="button"
-                              key={finish}
-                              className={isActive ? 'active' : ''}
-                              aria-label={`Set all decks to ${finish}`}
-                              aria-pressed={isActive}
-                              onClick={() => value.setAllDeckFinishes(finish)}
-                            >
-                              {finish}
-                            </button>
-                          );
-                        })}
-                      </fieldset>
-                    </section>
-                    {CARD_SYSTEM_SLUGS.map((slug) => (
-                      <section className="deck-setting" key={slug}>
-                        <span>{CATALOG_NAME_MAP[slug]}</span>
-                        <div>
-                          {(['color', 'ink'] as const).map((finish) => (
-                            <button
-                              type="button"
-                              key={finish}
-                              className={
-                                deckFinishes[slug] === finish ? 'active' : ''
-                              }
-                              aria-pressed={deckFinishes[slug] === finish}
-                              onClick={() => value.setDeckFinish(slug, finish)}
-                            >
-                              {DECK_LABELS[slug][finish]}
-                            </button>
-                          ))}
-                        </div>
-                      </section>
-                    ))}
-                  </div>
-                </Dialog.Popup>
-              </Dialog.Portal>
-            </Dialog.Root>
-          </div>
-        </header>
-        {children}
-        <footer className="site-footer">
-          <a href="https://mariosumali.com">Created by Mario Sumali</a>
-        </footer>
-      </motion.div>
+                  </Dialog.Popup>
+                </Dialog.Portal>
+              </Dialog.Root>
+            </div>
+          </header>
+          {children}
+          <footer className="site-footer">
+            <a href="https://mariosumali.com">Created by Mario Sumali</a>
+          </footer>
+        </motion.div>
 
-      <AnimatePresence>
-        {isEntryFramed && (
-          <motion.dialog
-            open
-            className="entry-gate"
-            aria-modal={entryPhase === 'gate' ? 'true' : undefined}
-            aria-labelledby={entryPhase === 'gate' ? 'entry-title' : undefined}
-            aria-label={entryPhase === 'gate' ? undefined : 'Opening DIVINE'}
-            initial={false}
-            exit={{ opacity: 0 }}
-            transition={{ duration: reduceMotion ? 0.01 : 0.15 }}
-          >
-            {isRevealing && !reduceMotion && (
-              <motion.i
-                className="entry-eclipse-ring"
-                aria-hidden="true"
-                initial={{ scale: 0.001, opacity: 0.92 }}
-                animate={{
-                  scale: 3,
-                  opacity: [0.92, 0.54, 0],
-                }}
-                transition={{
-                  duration: revealDuration,
-                  ease: [0.76, 0, 0.24, 1],
-                  opacity: {
-                    duration: revealDuration,
-                    times: [0, 0.58, 1],
-                  },
-                }}
-              />
-            )}
-
-            {(entryPhase === 'gate' || entryPhase === 'first-reveal') && (
-              <div className="entry-gate-content">
-                <motion.h1
-                  id="entry-title"
-                  initial={{ clipPath: 'inset(100% 0 0)' }}
-                  animate={
-                    entryPhase === 'first-reveal'
-                      ? {
-                          clipPath: 'inset(0)',
-                          opacity: 0,
-                          scale: reduceMotion ? 1 : 1.14,
-                          filter: reduceMotion ? 'blur(0px)' : 'blur(8px)',
-                        }
-                      : {
-                          clipPath: 'inset(0)',
-                          opacity: 1,
-                          scale: 1,
-                          filter: 'blur(0px)',
-                        }
-                  }
-                  transition={
-                    entryPhase === 'first-reveal'
-                      ? {
-                          duration: reduceMotion ? 0.12 : 0.48,
-                          ease: 'easeOut',
-                        }
-                      : {
-                          duration: reduceMotion ? 0.18 : 1.1,
-                          ease: [0.22, 1, 0.36, 1],
-                        }
-                  }
-                >
-                  DIVINE
-                </motion.h1>
-                <motion.div
-                  className="entry-actions"
-                  initial={{ opacity: 0, y: 14 }}
-                  animate={
-                    entryPhase === 'first-reveal'
-                      ? {
-                          opacity: 0,
-                          y: reduceMotion ? 0 : -10,
-                          scale: reduceMotion ? 1 : 0.94,
-                        }
-                      : { opacity: 1, y: 0, scale: 1 }
-                  }
-                  transition={
-                    entryPhase === 'first-reveal'
-                      ? { duration: reduceMotion ? 0.1 : 0.3 }
-                      : { delay: reduceMotion ? 0 : 0.95 }
-                  }
-                >
-                  <button
-                    ref={entryButtonRef}
-                    type="button"
-                    className="primary-action"
-                    onClick={chooseEntry}
-                    disabled={entryPhase !== 'gate'}
-                  >
-                    ENTER
-                  </button>
-                </motion.div>
-                <motion.p
-                  className="entry-disclaimer"
-                  initial={{ opacity: 0 }}
+        <AnimatePresence>
+          {isEntryFramed && (
+            <motion.dialog
+              open
+              className="entry-gate"
+              aria-modal={entryPhase === 'gate' ? 'true' : undefined}
+              aria-labelledby={
+                entryPhase === 'gate' ? 'entry-title' : undefined
+              }
+              aria-label={entryPhase === 'gate' ? undefined : 'Opening DIVINE'}
+              initial={false}
+              exit={{ opacity: 0 }}
+              transition={{ duration: reduceMotion ? 0.01 : 0.15 }}
+            >
+              {isRevealing && !reduceMotion && (
+                <motion.i
+                  className="entry-eclipse-ring"
+                  aria-hidden="true"
+                  initial={{ scale: 0.001, opacity: 0.92 }}
                   animate={{
-                    opacity: entryPhase === 'first-reveal' ? 0 : 1,
+                    scale: 3,
+                    opacity: [0.92, 0.54, 0],
                   }}
-                  transition={
-                    entryPhase === 'first-reveal'
-                      ? { duration: reduceMotion ? 0.1 : 0.25 }
-                      : { delay: reduceMotion ? 0 : 1.15 }
-                  }
-                >
-                  CREATED BY MARIO SUMALI
-                </motion.p>
-              </div>
-            )}
-          </motion.dialog>
-        )}
-      </AnimatePresence>
-    </ExperienceContext.Provider>
+                  transition={{
+                    duration: revealDuration,
+                    ease: [0.76, 0, 0.24, 1],
+                    opacity: {
+                      duration: revealDuration,
+                      times: [0, 0.58, 1],
+                    },
+                  }}
+                />
+              )}
+
+              {(entryPhase === 'gate' || entryPhase === 'first-reveal') && (
+                <div className="entry-gate-content">
+                  <motion.h1
+                    id="entry-title"
+                    initial={{ clipPath: 'inset(100% 0 0)' }}
+                    animate={
+                      entryPhase === 'first-reveal'
+                        ? {
+                            clipPath: 'inset(0)',
+                            opacity: 0,
+                            scale: reduceMotion ? 1 : 1.14,
+                            filter: reduceMotion ? 'blur(0px)' : 'blur(8px)',
+                          }
+                        : {
+                            clipPath: 'inset(0)',
+                            opacity: 1,
+                            scale: 1,
+                            filter: 'blur(0px)',
+                          }
+                    }
+                    transition={
+                      entryPhase === 'first-reveal'
+                        ? {
+                            duration: reduceMotion ? 0.12 : 0.48,
+                            ease: 'easeOut',
+                          }
+                        : {
+                            duration: reduceMotion ? 0.18 : 1.1,
+                            ease: [0.22, 1, 0.36, 1],
+                          }
+                    }
+                  >
+                    DIVINE
+                  </motion.h1>
+                  <motion.div
+                    className="entry-actions"
+                    initial={{ opacity: 0, y: 14 }}
+                    animate={
+                      entryPhase === 'first-reveal'
+                        ? {
+                            opacity: 0,
+                            y: reduceMotion ? 0 : -10,
+                            scale: reduceMotion ? 1 : 0.94,
+                          }
+                        : { opacity: 1, y: 0, scale: 1 }
+                    }
+                    transition={
+                      entryPhase === 'first-reveal'
+                        ? { duration: reduceMotion ? 0.1 : 0.3 }
+                        : { delay: reduceMotion ? 0 : 0.95 }
+                    }
+                  >
+                    <button
+                      ref={entryButtonRef}
+                      type="button"
+                      className="primary-action"
+                      onClick={chooseEntry}
+                      disabled={entryPhase !== 'gate'}
+                    >
+                      ENTER
+                    </button>
+                  </motion.div>
+                  <motion.p
+                    className="entry-disclaimer"
+                    initial={{ opacity: 0 }}
+                    animate={{
+                      opacity: entryPhase === 'first-reveal' ? 0 : 1,
+                    }}
+                    transition={
+                      entryPhase === 'first-reveal'
+                        ? { duration: reduceMotion ? 0.1 : 0.25 }
+                        : { delay: reduceMotion ? 0 : 1.15 }
+                    }
+                  >
+                    CREATED BY MARIO SUMALI
+                  </motion.p>
+                </div>
+              )}
+            </motion.dialog>
+          )}
+        </AnimatePresence>
+      </ExperienceContext.Provider>
+    </MotionConfig>
   );
 }

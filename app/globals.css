@@ -8379,6 +8379,7 @@ body:has(.entry-gate) {
   }
 }
 
+/* Reduced-motion overrides are intentionally disabled for this experience.
 @media (prefers-reduced-motion: reduce) {
   .hero-stage h1,
   .hero-sigil > span,
@@ -8390,6 +8391,7 @@ body:has(.entry-gate) {
     will-change: auto;
   }
 }
+*/
 
 @media (max-height: 800px) and (min-width: 721px) {
   .result-card-object.is-opening {
@@ -11557,6 +11559,7 @@ body:has(.entry-gate) {
   }
 }
 
+/* Reduced-motion overrides are intentionally disabled for this experience.
 @media (prefers-reduced-motion: reduce) {
   .atlas-lightbox,
   .atlas-lightbox-backdrop,
@@ -11570,6 +11573,7 @@ body:has(.entry-gate) {
     transition: none;
   }
 }
+*/
 
 /* Gallery pile — full-bleed boards with physical, overlapping pieces. */
 .gallery-collection {
@@ -11775,6 +11779,7 @@ body:has(.entry-gate) {
   }
 }
 
+/* Reduced-motion overrides are intentionally disabled for this experience.
 @media (prefers-reduced-motion: reduce) {
   .gallery-collage-piece,
   .gallery-collage-piece figcaption,
@@ -11782,6 +11787,7 @@ body:has(.entry-gate) {
     transition: none;
   }
 }
+*/
 
 /* Gallery — a single overlapping visual field. */
 .gallery-page {
@@ -12662,6 +12668,7 @@ body:has(.entry-gate) {
   }
 }
 
+/* Reduced-motion overrides are intentionally disabled for this experience.
 @media (prefers-reduced-motion: reduce) {
   .gallery-masthead-field,
   .gallery-masthead-card,
@@ -12677,6 +12684,7 @@ body:has(.entry-gate) {
     transition: none;
   }
 }
+*/
 
 /* Keep the pile layout authoritative after the legacy grid declarations. */
 .gallery-page .gallery-collection {

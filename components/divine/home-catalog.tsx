@@ -1,12 +1,6 @@
 'use client';
 
-import {
-  motion,
-  useMotionValue,
-  useReducedMotion,
-  useSpring,
-  useTransform,
-} from 'motion/react';
+import { motion, useMotionValue, useSpring, useTransform } from 'motion/react';
 import type { MotionStyle, MotionValue } from 'motion/react';
 import Image from '@/components/divine/responsive-image';
 import Link from 'next/link';
@@ -682,7 +676,8 @@ function ArchiveHeroObject({
 
 export function HomeCatalog() {
   const { cue, landingIntro } = useExperience();
-  const reduceMotion = useReducedMotion() ?? false;
+  // This experience intentionally keeps its cinematic motion enabled.
+  const reduceMotion = false;
   const router = useRouter();
   const heroRef = useRef<HTMLElement | null>(null);
   const departureTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
