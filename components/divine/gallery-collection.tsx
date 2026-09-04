@@ -326,7 +326,7 @@ export function GalleryCollection({ items }: { items: GalleryItem[] }) {
           className="gallery-masthead-card"
           style={{
             top: 'clamp(14px, 3vw, 30px)',
-            left: 'clamp(10px, 3vw, 52px)',
+            left: 'clamp(18px, 3vw, 52px)',
             width: 'clamp(96px, 12vw, 182px)',
             height: '44%',
           }}
