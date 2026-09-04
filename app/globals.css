@@ -11542,10 +11542,11 @@ button {
 
 @media (max-width: 720px) {
   .gallery-collage-board {
-    height: clamp(720px, 176vw, 880px);
+    height: clamp(500px, 132vw, 620px);
     margin-top: -24px;
   }
   .gallery-collage-piece {
+    left: max(12px, var(--piece-left));
     min-width: 112px;
     max-width: 64vw;
   }
