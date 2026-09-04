@@ -2,7 +2,7 @@
 
 import { motion } from 'motion/react';
 import { ArrowRight, BookOpen, Check } from 'lucide-react';
-import Image from 'next/image';
+import Image from '@/components/divine/responsive-image';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { useExperience } from '@/app/providers';
@@ -372,7 +372,6 @@ export function TodayRitual() {
                         alt=""
                         fill
                         sizes="(max-width: 640px) 42vw, (max-width: 1000px) 24vw, 16vw"
-                        priority={index < 4}
                       />
                     ) : (
                       <span aria-hidden="true">{draw.card.glyph}</span>
@@ -391,9 +390,7 @@ export function TodayRitual() {
             aria-labelledby="today-pattern-title"
           >
             <p className="eyebrow">Today’s pattern</p>
-            <h2 id="today-pattern-title">
-              {record.interpretation.headline}
-            </h2>
+            <h2 id="today-pattern-title">{record.interpretation.headline}</h2>
           </section>
 
           <section className="today-interpretation">

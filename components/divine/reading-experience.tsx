@@ -21,7 +21,7 @@ import {
   RotateCcw,
   Trash2,
 } from 'lucide-react';
-import Image from 'next/image';
+import Image from '@/components/divine/responsive-image';
 import Link from 'next/link';
 // import { SystemRitual } from '@/components/divine/system-ritual';
 import { ReadingShare } from '@/components/divine/reading-share';
@@ -50,6 +50,10 @@ import { setReadingAmbience } from '@/lib/divine/audio';
 import { READING_INDEX_ART } from '@/lib/divine/catalog';
 import { composeShare, decodeReadingShareToken } from '@/lib/divine/share';
 import { saveReading } from '@/lib/divine/storage';
+import {
+  optimizedImageSource,
+  prewarmResponsiveImages,
+} from '@/lib/divine/responsive-images';
 import {
   createCustomSpread,
   loadCustomSpreads,
@@ -221,7 +225,10 @@ function createId() {
     : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
 
-function loadShareImage(source?: string): Promise<HTMLImageElement | null> {
+function loadShareImage(
+  source?: string,
+  requestedWidth = 768,
+): Promise<HTMLImageElement | null> {
   if (!source) return Promise.resolve(null);
   return new Promise((resolve) => {
     const image = new window.Image();
@@ -236,7 +243,7 @@ function loadShareImage(source?: string): Promise<HTMLImageElement | null> {
     image.decoding = 'async';
     image.onload = () => finish(image);
     image.onerror = () => finish(null);
-    image.src = source;
+    image.src = optimizedImageSource(source, requestedWidth);
     if (image.complete && image.naturalWidth > 0) finish(image);
   });
 }
@@ -333,7 +340,7 @@ async function exportReading(
   const ctx = canvas.getContext('2d');
   if (!ctx) throw new Error('Canvas unavailable');
   const [methodImage, ...cardImages] = await Promise.all([
-    loadShareImage(composition.methodArt),
+    loadShareImage(composition.methodArt, 640),
     ...composition.cards.map((card) => loadShareImage(card.image)),
   ]);
 
@@ -630,6 +637,7 @@ function CardFace({
   revealed,
   index,
   compact,
+  imageSizes,
   disabled,
   onPeelStart,
   onReveal,
@@ -640,6 +648,7 @@ function CardFace({
   revealed: boolean;
   index: number;
   compact: boolean;
+  imageSizes: string;
   disabled: boolean;
   onPeelStart: () => void;
   onReveal: () => void;
@@ -782,7 +791,7 @@ function CardFace({
                 alt=""
                 width={520}
                 height={820}
-                sizes="(max-width: 720px) 25vw, 18vw"
+                sizes={imageSizes}
               />
             </span>
           ) : (
@@ -976,6 +985,7 @@ function InteractiveResultCard({
                     ? '(max-width: 720px) 64vw, 34vw'
                     : '(max-width: 720px) 74vw, 34vw'
                 }
+                priority={opening}
               />
             </span>
           ) : (
@@ -1436,6 +1446,17 @@ export function ReadingExperience({
       ? deckFinishes[sourceSystem]
       : deckFinish;
   };
+  const revealImageSizes = spread
+    ? spread.layout === 'single'
+      ? '(max-width: 720px) 62vw, 330px'
+      : spread.layout === 'tableau'
+        ? '(max-width: 720px) 16vw, 84px'
+        : spread.layout === 'grid'
+          ? '(max-width: 720px) 31vw, 140px'
+          : spread.layout === 'cross'
+            ? '(max-width: 720px) 31vw, 180px'
+            : '(max-width: 720px) 32vw, 250px'
+    : '(max-width: 720px) 25vw, 18vw';
 
   const beginRecord = () => {
     const nextRecord = {
@@ -1596,6 +1617,10 @@ export function ReadingExperience({
       );
       next[0] = { ...next[0], card: system.cards[figureIndex] };
     }
+    prewarmResponsiveImages(
+      next.map((draw) => imageForFinish(draw.card, finishFor(draw))),
+      next.length <= 3 ? 768 : next.length > 10 ? 192 : 384,
+    );
     completionQueued.current = false;
     ritualLock.current = false;
     setDraws(next);
@@ -1902,6 +1927,7 @@ export function ReadingExperience({
                 fill
                 sizes="380px"
                 style={{ objectFit: 'contain' }}
+                priority
               />
             </div>
             <div className="route-transition-copy">
@@ -2375,6 +2401,7 @@ export function ReadingExperience({
                   finish={finishFor(draw)}
                   index={index}
                   compact={draws.length > 10}
+                  imageSizes={revealImageSizes}
                   disabled={isRevealingAll}
                   revealed={revealed.has(index)}
                   onPeelStart={() => cue('peel')}
@@ -2718,6 +2745,7 @@ export function ReadingExperience({
               fill
               sizes="380px"
               style={{ objectFit: 'contain' }}
+              priority
             />
           </div>
           <div className="route-transition-copy">

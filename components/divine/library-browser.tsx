@@ -10,7 +10,7 @@ import {
   ExternalLink,
   Search,
 } from 'lucide-react';
-import Image from 'next/image';
+import Image from '@/components/divine/responsive-image';
 import Link from 'next/link';
 import { Input } from '@/components/ui/input';
 import { useExperience } from '@/app/providers';

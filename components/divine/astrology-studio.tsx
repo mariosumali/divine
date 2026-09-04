@@ -11,7 +11,7 @@ import {
 import { motion } from 'motion/react';
 import { Dialog } from '@base-ui/react/dialog';
 import { ArrowDown, ChevronDown, ChevronUp, X } from 'lucide-react';
-import Image from 'next/image';
+import Image from '@/components/divine/responsive-image';
 import { useExperience } from '@/app/providers';
 import {
   alignmentProfileFor,
@@ -633,13 +633,7 @@ export function AstrologyStudio() {
                     <X aria-hidden="true" />
                   </Dialog.Close>
                   <div className="atlas-lightbox-image">
-                    <Image
-                      src={chart.src}
-                      alt={chart.alt}
-                      fill
-                      sizes="100vw"
-                      priority
-                    />
+                    <Image src={chart.src} alt={chart.alt} fill sizes="100vw" />
                   </div>
                 </Dialog.Popup>
               </Dialog.Portal>

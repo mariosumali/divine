@@ -10,7 +10,7 @@ import type {
   WheelEvent as ReactWheelEvent,
 } from 'react';
 import { ArrowLeft, ArrowRight, Minus, Plus, RotateCcw } from 'lucide-react';
-import Image from 'next/image';
+import Image from '@/components/divine/responsive-image';
 import Link from 'next/link';
 import type { AstrologyChart } from '@/lib/divine/astrology';
 

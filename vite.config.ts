@@ -3,6 +3,7 @@ import tailwindcssPostcss from '@tailwindcss/postcss';
 import vinext from 'vinext';
 import { defineConfig } from 'vite';
 import hostingConfig from './.openai/hosting.json' with { type: 'json' };
+import { responsiveImageAssets } from './scripts/generate-image-derivatives';
 
 const SITE_CREATOR_PLACEHOLDER_DATABASE_ID =
   '00000000-0000-4000-8000-000000000000';
@@ -51,7 +52,7 @@ export default defineConfig(async () => {
 
     return {
       ...sharedConfig,
-      plugins: [tailwindcssVite(), vinext(), nitro()],
+      plugins: [responsiveImageAssets(), tailwindcssVite(), vinext(), nitro()],
     };
   }
 
@@ -68,6 +69,7 @@ export default defineConfig(async () => {
     ...sharedConfig,
     css: { postcss: { plugins: [tailwindcssPostcss()] } },
     plugins: [
+      responsiveImageAssets(),
       vinext(),
       sites(),
       cloudflare({

@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import type { CSSProperties } from 'react';
-import Image from 'next/image';
+import Image from '@/components/divine/responsive-image';
 import { Check, Copy, ImageDown, LoaderCircle, Share2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { READING_INDEX_ART } from '@/lib/divine/catalog';

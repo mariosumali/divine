@@ -2,7 +2,7 @@
 
 import { Dialog } from '@base-ui/react/dialog';
 import { ArrowLeft, ArrowRight, ExternalLink, Search, X } from 'lucide-react';
-import Image from 'next/image';
+import Image from '@/components/divine/responsive-image';
 import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { CSSProperties } from 'react';
@@ -341,7 +341,6 @@ export function GalleryCollection({ items }: { items: GalleryItem[] }) {
             alt=""
             fill
             sizes="240px"
-            priority
           />
         </span>
         <span
@@ -368,7 +367,6 @@ export function GalleryCollection({ items }: { items: GalleryItem[] }) {
               fill
               sizes="300px"
               style={{ objectFit: 'contain' }}
-              priority
             />
           </span>
         </span>
@@ -381,7 +379,6 @@ export function GalleryCollection({ items }: { items: GalleryItem[] }) {
             alt=""
             fill
             sizes="360px"
-            priority
           />
         </span>
 
@@ -439,13 +436,7 @@ export function GalleryCollection({ items }: { items: GalleryItem[] }) {
               >
                 {backdrop && (
                   <span className="gallery-collage-backdrop" aria-hidden="true">
-                    <Image
-                      src={backdrop.src}
-                      alt=""
-                      fill
-                      sizes="100vw"
-                      priority={boardIndex === 0}
-                    />
+                    <Image src={backdrop.src} alt="" fill sizes="100vw" />
                   </span>
                 )}
 
@@ -476,7 +467,6 @@ export function GalleryCollection({ items }: { items: GalleryItem[] }) {
                               alt=""
                               fill
                               sizes="(max-width: 720px) 48vw, 28vw"
-                              priority={boardIndex === 0 && itemIndex < 6}
                             />
                           </span>
                         </span>
@@ -496,7 +486,6 @@ export function GalleryCollection({ items }: { items: GalleryItem[] }) {
                               alt=""
                               fill
                               sizes="(max-width: 720px) 48vw, 28vw"
-                              priority={boardIndex === 0 && itemIndex < 6}
                             />
                           </span>
                           <figcaption>

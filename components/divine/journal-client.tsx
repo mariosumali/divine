@@ -11,7 +11,7 @@ import {
   Tag,
   Trash2,
 } from 'lucide-react';
-import Image from 'next/image';
+import Image from '@/components/divine/responsive-image';
 import Link from 'next/link';
 import { useExperience } from '@/app/providers';
 import { CopyReadingLinkButton } from '@/components/divine/reading-share';

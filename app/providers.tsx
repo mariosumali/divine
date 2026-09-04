@@ -1,10 +1,28 @@
 'use client';
 
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
-import { AnimatePresence, motion } from 'motion/react';
-import { Moon, Settings2, Sun, Volume2, VolumeX, X } from 'lucide-react';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import {
+  Check,
+  ChevronDown,
+  Moon,
+  Settings2,
+  Sun,
+  Volume2,
+  VolumeX,
+  X,
+} from 'lucide-react';
 import { Dialog } from '@base-ui/react/dialog';
+import { Menu } from '@base-ui/react/menu';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { playSound, setSoundEnabled, suspendSound } from '@/lib/divine/audio';
 import {
   CARD_SYSTEM_SLUGS,
@@ -18,10 +36,33 @@ import {
 import { CATALOG_NAME_MAP } from '@/lib/divine/catalog';
 
 type Theme = 'light' | 'dark';
+type EntryPhase =
+  | 'checking'
+  | 'gate'
+  | 'first-reveal'
+  | 'reload-reveal'
+  | 'ready';
+export type LandingIntroPhase = 'hold' | 'first' | 'reload' | 'settled';
+
+const NAV_ITEMS = [
+  { href: '/today', label: 'Today', match: '/today' },
+  { href: '/#readings', label: 'Readings', match: '/' },
+  { href: '/astrology', label: 'Astrology', match: '/astrology' },
+  { href: '/journal', label: 'Journal', match: '/journal' },
+  { href: '/library', label: 'Library', match: '/library' },
+  { href: '/gallery', label: 'Gallery', match: '/gallery' },
+] as const;
+
+function isActiveNavigationItem(pathname: string, match: string) {
+  if (match === '/') return pathname === '/' || pathname.startsWith('/read/');
+  return pathname === match || pathname.startsWith(`${match}/`);
+}
+
 interface ExperienceContextValue {
   theme: Theme;
   sound: boolean;
   deckFinishes: DeckFinishes;
+  landingIntro: LandingIntroPhase;
   toggleTheme: () => void;
   toggleSound: () => void;
   setDeckFinish: (slug: CardSystemSlug, finish: DeckFinish) => void;
@@ -47,6 +88,14 @@ function writePreference(key: string, value: string) {
   }
 }
 
+function resetScrollPosition() {
+  const root = document.documentElement;
+  const previousBehavior = root.style.scrollBehavior;
+  root.style.scrollBehavior = 'auto';
+  window.scrollTo(0, 0);
+  root.style.scrollBehavior = previousBehavior;
+}
+
 export function useExperience() {
   const value = useContext(ExperienceContext);
   if (!value) throw new Error('useExperience must be used within Providers');
@@ -54,12 +103,16 @@ export function useExperience() {
 }
 
 export function Providers({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const [initialPathname] = useState(pathname);
+  const entryButtonRef = useRef<HTMLButtonElement>(null);
   const [theme, setTheme] = useState<Theme>('light');
   const [sound, setSound] = useState(false);
   const [deckFinishes, setDeckFinishes] = useState<DeckFinishes>(
     DEFAULT_DECK_FINISHES,
   );
-  const [entered, setEntered] = useState<boolean | null>(null);
+  const [entryPhase, setEntryPhase] = useState<EntryPhase>('checking');
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
     const storedTheme = readPreference('divine-theme') as Theme | null;
@@ -88,7 +141,16 @@ export function Providers({ children }: { children: React.ReactNode }) {
       setTheme(nextTheme);
       setSound(storedSound);
       setDeckFinishes(storedDecks);
-      setEntered(readPreference('divine-entered') === 'yes');
+      const shouldAnimateHomeArrival =
+        initialPathname === '/' && window.location.hash === '';
+      if (shouldAnimateHomeArrival) resetScrollPosition();
+      setEntryPhase(
+        readPreference('divine-entered') === 'yes'
+          ? shouldAnimateHomeArrival
+            ? 'reload-reveal'
+            : 'ready'
+          : 'gate',
+      );
     });
     const onVisibility = () => {
       if (document.hidden) suspendSound();
@@ -97,18 +159,46 @@ export function Providers({ children }: { children: React.ReactNode }) {
     };
     document.addEventListener('visibilitychange', onVisibility);
     return () => document.removeEventListener('visibilitychange', onVisibility);
-  }, []);
+  }, [initialPathname]);
+
+  useEffect(() => {
+    if (entryPhase === 'gate') entryButtonRef.current?.focus();
+  }, [entryPhase]);
 
   const chooseEntry = () => {
+    if (entryPhase !== 'gate') return;
+    if (pathname === '/') resetScrollPosition();
     writePreference('divine-entered', 'yes');
-    setEntered(true);
+    playSound('enter');
+    setEntryPhase('first-reveal');
   };
+
+  const landingIntro: LandingIntroPhase =
+    entryPhase === 'checking' || entryPhase === 'gate'
+      ? 'hold'
+      : entryPhase === 'first-reveal'
+        ? 'first'
+        : entryPhase === 'reload-reveal'
+          ? 'reload'
+          : 'settled';
+  const isEntryFramed = entryPhase !== 'ready';
+  const isRevealing =
+    entryPhase === 'first-reveal' || entryPhase === 'reload-reveal';
+  const revealDuration = reduceMotion
+    ? 0.18
+    : entryPhase === 'first-reveal'
+      ? 1.45
+      : 0.92;
+  const activeNavItem =
+    NAV_ITEMS.find((item) => isActiveNavigationItem(pathname, item.match)) ??
+    NAV_ITEMS[1];
 
   const value = useMemo<ExperienceContextValue>(
     () => ({
       theme,
       sound,
       deckFinishes,
+      landingIntro,
       toggleTheme: () =>
         setTheme((current) => {
           const next = current === 'light' ? 'dark' : 'light';
@@ -141,48 +231,115 @@ export function Providers({ children }: { children: React.ReactNode }) {
       },
       cue: playSound,
     }),
-    [theme, sound, deckFinishes],
+    [theme, sound, deckFinishes, landingIntro],
   );
 
   return (
     <ExperienceContext.Provider value={value}>
-      <div
-        className="app-frame"
-        inert={entered === false ? true : undefined}
-        aria-hidden={entered === false ? true : undefined}
+      {isEntryFramed && <div className="entry-backdrop" aria-hidden="true" />}
+
+      <motion.div
+        className={`app-frame${isEntryFramed ? ' entry-framed' : ''}`}
+        inert={isEntryFramed ? true : undefined}
+        aria-hidden={isEntryFramed ? true : undefined}
+        initial={false}
+        animate={{
+          clipPath: reduceMotion
+            ? isRevealing || entryPhase === 'ready'
+              ? 'none'
+              : 'circle(0vmax at 50vw 50svh)'
+            : isRevealing
+              ? 'circle(150vmax at 50vw 50svh)'
+              : entryPhase === 'ready'
+                ? 'none'
+                : 'circle(0vmax at 50vw 50svh)',
+          opacity:
+            reduceMotion && (entryPhase === 'checking' || entryPhase === 'gate')
+              ? 0
+              : 1,
+        }}
+        transition={{
+          duration: isRevealing ? revealDuration : 0,
+          ease: reduceMotion ? 'linear' : [0.76, 0, 0.24, 1],
+        }}
+        onAnimationComplete={() => {
+          if (!isRevealing) return;
+          const shouldMoveFocus = entryPhase === 'first-reveal';
+          setEntryPhase('ready');
+          if (shouldMoveFocus) {
+            requestAnimationFrame(() => {
+              document
+                .querySelector<HTMLAnchorElement>('.mini-wordmark')
+                ?.focus({ preventScroll: true });
+            });
+          }
+        }}
       >
         <header className="global-header">
           <Link className="mini-wordmark" href="/" aria-label="DIVINE home">
             DIVINE
           </Link>
-          <nav aria-label="Primary navigation">
-            <Link href="/today">Today</Link>
-            <Link href="/#readings">Readings</Link>
-            <Link href="/astrology">Astrology</Link>
-            <Link href="/journal">Journal</Link>
-            <Link href="/library">Library</Link>
-            <Link href="/gallery">Gallery</Link>
+          <nav className="desktop-navigation" aria-label="Primary navigation">
+            {NAV_ITEMS.map((item) => {
+              const isActive = isActiveNavigationItem(pathname, item.match);
+              return (
+                <Link
+                  href={item.href}
+                  key={item.href}
+                  aria-current={isActive ? 'page' : undefined}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
+          </nav>
+          <nav className="mobile-navigation" aria-label="Primary navigation">
+            <Menu.Root>
+              <Menu.Trigger
+                type="button"
+                className="mobile-nav-trigger"
+                aria-label={`Current page: ${activeNavItem.label}. Choose a page`}
+              >
+                <span>{activeNavItem.label}</span>
+                <ChevronDown aria-hidden="true" />
+              </Menu.Trigger>
+              <Menu.Portal>
+                <Menu.Backdrop className="mobile-nav-backdrop" />
+                <Menu.Positioner
+                  className="mobile-nav-positioner"
+                  sideOffset={9}
+                  align="center"
+                >
+                  <Menu.Popup className="mobile-nav-menu">
+                    {NAV_ITEMS.map((item) => {
+                      const isActive = isActiveNavigationItem(
+                        pathname,
+                        item.match,
+                      );
+                      return (
+                        <Menu.LinkItem
+                          key={item.href}
+                          className="mobile-nav-item"
+                          render={<Link href={item.href} />}
+                          closeOnClick
+                          aria-current={isActive ? 'page' : undefined}
+                        >
+                          <span>{item.label}</span>
+                          {isActive && <Check aria-hidden="true" />}
+                        </Menu.LinkItem>
+                      );
+                    })}
+                  </Menu.Popup>
+                </Menu.Positioner>
+              </Menu.Portal>
+            </Menu.Root>
           </nav>
           <div className="header-controls">
-            <button
-              type="button"
-              onClick={value.toggleTheme}
-              aria-label={`Use ${theme === 'light' ? 'dark' : 'light'} theme`}
-            >
-              {theme === 'light' ? <Moon /> : <Sun />}
-            </button>
-            <button
-              type="button"
-              onClick={value.toggleSound}
-              aria-label={sound ? 'Mute sound effects' : 'Enable sound effects'}
-            >
-              {sound ? <Volume2 /> : <VolumeX />}
-            </button>
             <Dialog.Root>
               <Dialog.Trigger
                 type="button"
                 className="settings-trigger"
-                aria-label="Deck settings"
+                aria-label="Open options"
               >
                 <Settings2 />
               </Dialog.Trigger>
@@ -190,11 +347,72 @@ export function Providers({ children }: { children: React.ReactNode }) {
                 <Dialog.Backdrop className="settings-backdrop" />
                 <Dialog.Popup className="settings-panel">
                   <header>
-                    <Dialog.Title>Decks</Dialog.Title>
-                    <Dialog.Close type="button" aria-label="Close settings">
+                    <Dialog.Title>Options</Dialog.Title>
+                    <Dialog.Close type="button" aria-label="Close options">
                       <X />
                     </Dialog.Close>
                   </header>
+                  <section
+                    className="settings-group"
+                    aria-labelledby="experience-options"
+                  >
+                    <h3 id="experience-options">Experience</h3>
+                    <div className="preference-settings">
+                      <section className="preference-setting">
+                        <span>Theme</span>
+                        <fieldset
+                          className="segmented-options"
+                          aria-label="Theme"
+                        >
+                          {(['light', 'dark'] as const).map((mode) => (
+                            <button
+                              type="button"
+                              key={mode}
+                              className={theme === mode ? 'active' : ''}
+                              aria-pressed={theme === mode}
+                              onClick={() => {
+                                if (theme !== mode) value.toggleTheme();
+                              }}
+                            >
+                              {mode === 'light' ? (
+                                <Sun aria-hidden="true" />
+                              ) : (
+                                <Moon aria-hidden="true" />
+                              )}
+                              {mode}
+                            </button>
+                          ))}
+                        </fieldset>
+                      </section>
+                      <section className="preference-setting">
+                        <span>Sound</span>
+                        <fieldset
+                          className="segmented-options"
+                          aria-label="Sound effects"
+                        >
+                          {([true, false] as const).map((enabled) => (
+                            <button
+                              type="button"
+                              key={enabled ? 'on' : 'muted'}
+                              className={sound === enabled ? 'active' : ''}
+                              aria-pressed={sound === enabled}
+                              onClick={() => {
+                                if (sound !== enabled) value.toggleSound();
+                              }}
+                            >
+                              {enabled ? (
+                                <Volume2 aria-hidden="true" />
+                              ) : (
+                                <VolumeX aria-hidden="true" />
+                              )}
+                              {enabled ? 'On' : 'Muted'}
+                            </button>
+                          ))}
+                        </fieldset>
+                      </section>
+                    </div>
+                  </section>
+                  <h3 className="deck-options-title">Decks</h3>
                   <div className="deck-settings">
                     <section className="deck-setting deck-setting-all">
                       <span>All decks</span>
@@ -248,49 +466,118 @@ export function Providers({ children }: { children: React.ReactNode }) {
         <footer className="site-footer">
           <a href="https://mariosumali.com">Created by Mario Sumali</a>
         </footer>
-      </div>
+      </motion.div>
 
       <AnimatePresence>
-        {entered === false && (
+        {isEntryFramed && (
           <motion.dialog
             open
             className="entry-gate"
-            aria-modal="true"
-            aria-labelledby="entry-title"
-            initial={{ opacity: 1 }}
-            exit={{ opacity: 0, y: '-100%' }}
-            transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
+            aria-modal={entryPhase === 'gate' ? 'true' : undefined}
+            aria-labelledby={entryPhase === 'gate' ? 'entry-title' : undefined}
+            aria-label={entryPhase === 'gate' ? undefined : 'Opening DIVINE'}
+            initial={false}
+            exit={{ opacity: 0 }}
+            transition={{ duration: reduceMotion ? 0.01 : 0.15 }}
           >
-            <motion.h1
-              id="entry-title"
-              initial={{ clipPath: 'inset(100% 0 0)' }}
-              animate={{ clipPath: 'inset(0)' }}
-              transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
-            >
-              DIVINE
-            </motion.h1>
-            <motion.div
-              className="entry-actions"
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.95 }}
-            >
-              <button
-                type="button"
-                className="primary-action"
-                onClick={chooseEntry}
-              >
-                ENTER
-              </button>
-            </motion.div>
-            <motion.p
-              className="entry-disclaimer"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1.15 }}
-            >
-              CREATED BY MARIO SUMALI
-            </motion.p>
+            {isRevealing && !reduceMotion && (
+              <motion.i
+                className="entry-eclipse-ring"
+                aria-hidden="true"
+                initial={{ scale: 0.001, opacity: 0.92 }}
+                animate={{
+                  scale: 3,
+                  opacity: [0.92, 0.54, 0],
+                }}
+                transition={{
+                  duration: revealDuration,
+                  ease: [0.76, 0, 0.24, 1],
+                  opacity: {
+                    duration: revealDuration,
+                    times: [0, 0.58, 1],
+                  },
+                }}
+              />
+            )}
+
+            {(entryPhase === 'gate' || entryPhase === 'first-reveal') && (
+              <div className="entry-gate-content">
+                <motion.h1
+                  id="entry-title"
+                  initial={{ clipPath: 'inset(100% 0 0)' }}
+                  animate={
+                    entryPhase === 'first-reveal'
+                      ? {
+                          clipPath: 'inset(0)',
+                          opacity: 0,
+                          scale: reduceMotion ? 1 : 1.14,
+                          filter: reduceMotion ? 'blur(0px)' : 'blur(8px)',
+                        }
+                      : {
+                          clipPath: 'inset(0)',
+                          opacity: 1,
+                          scale: 1,
+                          filter: 'blur(0px)',
+                        }
+                  }
+                  transition={
+                    entryPhase === 'first-reveal'
+                      ? {
+                          duration: reduceMotion ? 0.12 : 0.48,
+                          ease: 'easeOut',
+                        }
+                      : {
+                          duration: reduceMotion ? 0.18 : 1.1,
+                          ease: [0.22, 1, 0.36, 1],
+                        }
+                  }
+                >
+                  DIVINE
+                </motion.h1>
+                <motion.div
+                  className="entry-actions"
+                  initial={{ opacity: 0, y: 14 }}
+                  animate={
+                    entryPhase === 'first-reveal'
+                      ? {
+                          opacity: 0,
+                          y: reduceMotion ? 0 : -10,
+                          scale: reduceMotion ? 1 : 0.94,
+                        }
+                      : { opacity: 1, y: 0, scale: 1 }
+                  }
+                  transition={
+                    entryPhase === 'first-reveal'
+                      ? { duration: reduceMotion ? 0.1 : 0.3 }
+                      : { delay: reduceMotion ? 0 : 0.95 }
+                  }
+                >
+                  <button
+                    ref={entryButtonRef}
+                    type="button"
+                    className="primary-action"
+                    onClick={chooseEntry}
+                    disabled={entryPhase !== 'gate'}
+                  >
+                    ENTER
+                  </button>
+                </motion.div>
+                <motion.p
+                  className="entry-disclaimer"
+                  initial={{ opacity: 0 }}
+                  animate={{
+                    opacity: entryPhase === 'first-reveal' ? 0 : 1,
+                  }}
+                  transition={
+                    entryPhase === 'first-reveal'
+                      ? { duration: reduceMotion ? 0.1 : 0.25 }
+                      : { delay: reduceMotion ? 0 : 1.15 }
+                  }
+                >
+                  CREATED BY MARIO SUMALI
+                </motion.p>
+              </div>
+            )}
           </motion.dialog>
         )}
       </AnimatePresence>
