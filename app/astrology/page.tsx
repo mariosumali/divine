@@ -10,10 +10,10 @@ export const metadata: Metadata = {
     description: 'Explore signs, horoscopes, alignment, and celestial charts.',
     images: [
       {
-        url: '/og.jpg',
-        width: 1536,
-        height: 1024,
-        alt: 'DIVINE — eight instruments for the unknown',
+        url: '/share/divine-og.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'DIVINE',
       },
     ],
   },
@@ -23,8 +23,10 @@ export const metadata: Metadata = {
     description: 'Explore signs, horoscopes, alignment, and celestial charts.',
     images: [
       {
-        url: '/og.jpg',
-        alt: 'DIVINE — eight instruments for the unknown',
+        url: '/share/divine-og.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'DIVINE',
       },
     ],
   },

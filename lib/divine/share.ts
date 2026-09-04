@@ -199,7 +199,10 @@ export function createReadingShareUrl(
   includeQuestion = false,
 ): string {
   const base = origin.replace(/\/$/u, '');
-  return `${base}/read/${record.system}#reading=${createReadingShareToken(record, includeQuestion)}`;
+  const token = createReadingShareToken(record, includeQuestion);
+  // Keep the reading in the query string so link-preview crawlers can see it.
+  // Fragments are browser-only and are never included in HTTP requests.
+  return `${base}/read/${record.system}?reading=${encodeURIComponent(token)}`;
 }
 
 export function decodeReadingShareToken(

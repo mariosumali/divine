@@ -164,7 +164,10 @@ describe('share composition privacy', () => {
     expect(decoded?.question).toBeUndefined();
     expect(decoded?.note).toBe('');
     expect(url).toMatch(
-      /^https:\/\/divine\.example\/read\/magic-8-ball#reading=/,
+      /^https:\/\/divine\.example\/read\/magic-8-ball\?reading=/,
+    );
+    expect(new URL(url).searchParams.get('reading')).toBe(
+      createReadingShareToken(record),
     );
   });
 

@@ -1128,9 +1128,12 @@ export function ReadingExperience({
     let restored: StoredReadingSession | null = null;
     let sharedReading: ReturnType<typeof decodeReadingShareToken> = null;
     try {
-      const token = new URLSearchParams(window.location.hash.slice(1)).get(
-        'reading',
-      );
+      const url = new URL(window.location.href);
+      // Query parameters make new links visible to social preview crawlers.
+      // Continue accepting fragment links that were shared by older versions.
+      const token =
+        url.searchParams.get('reading') ??
+        new URLSearchParams(url.hash.slice(1)).get('reading');
       sharedReading = token ? decodeReadingShareToken(token, system) : null;
       const raw = sessionStorage.getItem(sessionKey);
       restored = raw ? (JSON.parse(raw) as StoredReadingSession) : null;
