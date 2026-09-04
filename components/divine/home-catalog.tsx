@@ -1,13 +1,19 @@
 'use client';
 
-import { motion, useMotionValue, useSpring, useTransform } from 'motion/react';
+import {
+  motion,
+  useMotionValue,
+  useReducedMotion,
+  useSpring,
+  useTransform,
+} from 'motion/react';
 import type { MotionStyle, MotionValue } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { CSSProperties, MouseEvent as ReactMouseEvent } from 'react';
 import { useRouter } from 'next/navigation';
-import { useExperience } from '@/app/providers';
+import { useExperience, type LandingIntroPhase } from '@/app/providers';
 import {
   CATALOG_SYSTEMS,
   READING_INDEX_ART,
@@ -563,11 +569,15 @@ function FloatingHeroObject({
   index,
   pointerX,
   pointerY,
+  landingIntro,
+  reduceMotion,
 }: {
   object: HeroObject;
   index: number;
   pointerX: MotionValue<number>;
   pointerY: MotionValue<number>;
+  landingIntro: LandingIntroPhase;
+  reduceMotion: boolean;
 }) {
   const parallaxX = useTransform(pointerX, (value) => value * object.depth);
   const parallaxY = useTransform(pointerY, (value) => value * object.depth);
@@ -585,16 +595,25 @@ function FloatingHeroObject({
     '--sigil-mobile-size': mobilePlacement.size,
     '--sigil-mobile-rotate': `${mobilePlacement.rotate}deg`,
   };
+  const held = landingIntro === 'hold';
+  const compactIntro = landingIntro === 'reload' || landingIntro === 'settled';
+  const hiddenState = reduceMotion
+    ? { opacity: 0, scale: 1, y: 0 }
+    : { opacity: 0, scale: 0.65, y: 24 };
 
   return (
     <motion.span
       className={`hero-sigil hero-sigil-${object.position}`}
       style={sigilStyle}
-      initial={{ opacity: 0, scale: 0.65, y: 24 }}
-      animate={{ opacity: 1, scale: 1, y: 0 }}
+      initial={hiddenState}
+      animate={held ? hiddenState : { opacity: 1, scale: 1, y: 0 }}
       transition={{
-        duration: 1.1,
-        delay: 0.7 + index * 0.06,
+        duration: reduceMotion ? 0.18 : compactIntro ? 0.76 : 1.1,
+        delay: reduceMotion
+          ? 0
+          : compactIntro
+            ? 0.2 + index * 0.035
+            : 0.46 + index * 0.055,
         ease: [0.16, 1, 0.3, 1],
       }}
     >
@@ -662,7 +681,8 @@ function ArchiveHeroObject({
 }
 
 export function HomeCatalog() {
-  const { cue } = useExperience();
+  const { cue, landingIntro } = useExperience();
+  const reduceMotion = useReducedMotion() ?? false;
   const router = useRouter();
   const heroRef = useRef<HTMLElement | null>(null);
   const departureTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -680,6 +700,11 @@ export function HomeCatalog() {
   const heroY = useSpring(heroYSource, { stiffness: 80, damping: 18 });
   const heroRotateY = useTransform(heroX, [-28, 28], [-5, 5]);
   const heroRotateX = useTransform(heroY, [-20, 20], [4, -4]);
+  const heroHeld = landingIntro === 'hold';
+  const compactIntro = landingIntro === 'reload' || landingIntro === 'settled';
+  const archiveHidden = reduceMotion
+    ? { opacity: 0, scale: 1 }
+    : { opacity: 0, scale: 1.035 };
 
   useEffect(
     () => () => {
@@ -770,10 +795,23 @@ export function HomeCatalog() {
         }}
       >
         {(['back', 'front'] as const).map((layer) => (
-          <div
+          <motion.div
             className={`hero-sigils hero-sigils-${layer}`}
             aria-hidden="true"
             key={layer}
+            initial={layer === 'back' ? archiveHidden : false}
+            animate={
+              layer === 'back'
+                ? heroHeld
+                  ? archiveHidden
+                  : { opacity: 1, scale: 1 }
+                : undefined
+            }
+            transition={{
+              duration: reduceMotion ? 0.18 : compactIntro ? 0.72 : 1.12,
+              delay: reduceMotion ? 0 : compactIntro ? 0.02 : 0.08,
+              ease: [0.16, 1, 0.3, 1],
+            }}
           >
             {layer === 'back'
               ? archiveObjects.map((object, index) => (
@@ -791,11 +829,13 @@ export function HomeCatalog() {
                   index={index}
                   pointerX={heroX}
                   pointerY={heroY}
+                  landingIntro={landingIntro}
+                  reduceMotion={reduceMotion}
                   key={object.position}
                 />
               ) : null,
             )}
-          </div>
+          </motion.div>
         ))}
 
         <div className="hero-stage">
@@ -803,11 +843,33 @@ export function HomeCatalog() {
             {HERO_LETTERS.map((letter, index) => (
               <span className="hero-letter-mask" key={`${letter}-${index}`}>
                 <motion.span
-                  initial={{ y: '112%', rotate: index % 2 ? 3 : -3 }}
-                  animate={{ y: '0%', rotate: 0 }}
+                  initial={
+                    reduceMotion
+                      ? { opacity: 0, y: '0%', rotate: 0 }
+                      : {
+                          opacity: 1,
+                          y: '112%',
+                          rotate: index % 2 ? 3 : -3,
+                        }
+                  }
+                  animate={
+                    heroHeld
+                      ? reduceMotion
+                        ? { opacity: 0, y: '0%', rotate: 0 }
+                        : {
+                            opacity: 1,
+                            y: '112%',
+                            rotate: index % 2 ? 3 : -3,
+                          }
+                      : { opacity: 1, y: '0%', rotate: 0 }
+                  }
                   transition={{
-                    duration: 0.92,
-                    delay: 0.42 + index * 0.065,
+                    duration: reduceMotion ? 0.18 : compactIntro ? 0.7 : 0.92,
+                    delay: reduceMotion
+                      ? 0
+                      : compactIntro
+                        ? 0.1 + index * 0.045
+                        : 0.3 + index * 0.065,
                     ease: [0.16, 1, 0.3, 1],
                   }}
                 >
@@ -828,16 +890,31 @@ export function HomeCatalog() {
           >
             <motion.span
               className="hero-crystal-entry"
-              initial={{
-                opacity: 0,
-                scale: 0.62,
-                y: 76,
-                filter: 'blur(16px)',
-              }}
-              animate={{ opacity: 1, scale: 1, y: 0, filter: 'blur(0px)' }}
+              initial={
+                reduceMotion
+                  ? { opacity: 0, scale: 1, y: 0, filter: 'blur(0px)' }
+                  : {
+                      opacity: 0,
+                      scale: 0.56,
+                      y: 52,
+                      filter: 'blur(18px)',
+                    }
+              }
+              animate={
+                heroHeld
+                  ? reduceMotion
+                    ? { opacity: 0, scale: 1, y: 0, filter: 'blur(0px)' }
+                    : {
+                        opacity: 0,
+                        scale: 0.56,
+                        y: 52,
+                        filter: 'blur(18px)',
+                      }
+                  : { opacity: 1, scale: 1, y: 0, filter: 'blur(0px)' }
+              }
               transition={{
-                duration: 1.35,
-                delay: 0.24,
+                duration: reduceMotion ? 0.18 : compactIntro ? 0.9 : 1.28,
+                delay: reduceMotion ? 0 : compactIntro ? 0.02 : 0.08,
                 ease: [0.16, 1, 0.3, 1],
               }}
             >
@@ -862,8 +939,15 @@ export function HomeCatalog() {
           aria-label="Explore readings"
           onClick={() => cue('tick')}
           initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.25, duration: 0.65 }}
+          animate={
+            heroHeld
+              ? { opacity: 0, y: reduceMotion ? 0 : 12 }
+              : { opacity: 1, y: 0 }
+          }
+          transition={{
+            delay: reduceMotion ? 0 : compactIntro ? 0.58 : 1.02,
+            duration: reduceMotion ? 0.18 : compactIntro ? 0.42 : 0.62,
+          }}
         >
           <span aria-hidden="true">↓</span>
         </motion.a>
