@@ -12,9 +12,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import {
   Check,
   ChevronDown,
-  Moon,
   Settings2,
-  Sun,
   Volume2,
   VolumeX,
   X,
@@ -115,10 +113,12 @@ export function Providers({ children }: { children: React.ReactNode }) {
   const reduceMotion = useReducedMotion();
 
   useEffect(() => {
-    const storedTheme = readPreference('divine-theme') as Theme | null;
-    const nextTheme =
-      storedTheme ??
-      (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    // Dark mode is temporarily disabled.
+    // const storedTheme = readPreference('divine-theme') as Theme | null;
+    // const nextTheme =
+    //   storedTheme ??
+    //   (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    const nextTheme: Theme = 'light';
     const storedSound = readPreference('divine-sound') === 'on';
     let storedDecks = DEFAULT_DECK_FINISHES;
     try {
@@ -203,14 +203,16 @@ export function Providers({ children }: { children: React.ReactNode }) {
       sound,
       deckFinishes,
       landingIntro,
-      toggleTheme: () =>
-        setTheme((current) => {
-          const next = current === 'light' ? 'dark' : 'light';
-          document.documentElement.dataset.theme = next;
-          writePreference('divine-theme', next);
-          playSound('tick');
-          return next;
-        }),
+      // Dark mode is temporarily disabled.
+      // toggleTheme: () =>
+      //   setTheme((current) => {
+      //     const next = current === 'light' ? 'dark' : 'light';
+      //     document.documentElement.dataset.theme = next;
+      //     writePreference('divine-theme', next);
+      //     playSound('tick');
+      //     return next;
+      //   }),
+      toggleTheme: () => {},
       toggleSound: () =>
         setSound((current) => {
           const next = !current;
@@ -354,6 +356,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
                   >
                     <h3 id="experience-options">Experience</h3>
                     <div className="preference-settings">
+                      {/* Dark mode is temporarily disabled.
                       <section className="preference-setting">
                         <span>Theme</span>
                         <fieldset
@@ -380,6 +383,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
                           ))}
                         </fieldset>
                       </section>
+                      */}
                       <section className="preference-setting">
                         <span>Sound</span>
                         <fieldset
